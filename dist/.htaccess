@@ -6,10 +6,6 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
-  
-  # Redirigir peticiones viejas de src/main.jsx al bundle compilado
-  RewriteRule ^src/main\.jsx$ assets/index-C03x969k.js [L,QSA]
-  
   RewriteRule ^index\.html$ - [L]
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
