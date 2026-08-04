@@ -203,6 +203,7 @@ export const KanbanBoard = () => {
   }, [leads]);
 
   const [filterDateRange, setFilterDateRange] = useState('ALL');
+  const [filterSpecificDate, setFilterSpecificDate] = useState('');
 
   // Filtrado de Leads en Tiempo Real
   const filteredLeads = useMemo(() => {
@@ -237,6 +238,12 @@ export const KanbanBoard = () => {
         return false;
       }
 
+      // Filtro Día Específico
+      if (filterSpecificDate && l.created_at) {
+        const leadDateStr = new Date(l.created_at).toISOString().split('T')[0];
+        if (leadDateStr !== filterSpecificDate) return false;
+      }
+
       // Filtro Rango de Fechas
       if (filterDateRange !== 'ALL' && l.created_at) {
         const leadDate = new Date(l.created_at);
@@ -262,7 +269,7 @@ export const KanbanBoard = () => {
 
       return true;
     });
-  }, [leads, searchQuery, filterAdvisor, filterProduct, filterLotStatus, filterDateRange]);
+  }, [leads, searchQuery, filterAdvisor, filterProduct, filterLotStatus, filterDateRange, filterSpecificDate]);
 
   // Cálculo de KPIs Globales en Tiempo Real
   const kpis = useMemo(() => {
@@ -512,15 +519,26 @@ export const KanbanBoard = () => {
               onChange={(e) => setFilterDateRange(e.target.value)}
               className="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-white/5 text-slate-700 dark:text-slate-200 text-xs font-semibold rounded-xl px-3 py-2 focus:outline-none cursor-pointer"
             >
-              <option value="ALL">📅 Todas las Fechas</option>
+              <option value="ALL">📅 Rango de Fechas</option>
               <option value="TODAY">📅 Registrados Hoy</option>
               <option value="THIS_WEEK">📅 Esta Semana</option>
               <option value="THIS_MONTH">📅 Este Mes</option>
               <option value="LAST_30_DAYS">📅 Últimos 30 Días</option>
             </select>
 
+            {/* Selector de Día Específico */}
+            <div className="flex items-center space-x-1 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl px-2.5 py-1.5">
+              <span className="text-[11px] font-bold text-slate-400">Día:</span>
+              <input
+                type="date"
+                value={filterSpecificDate}
+                onChange={(e) => setFilterSpecificDate(e.target.value)}
+                className="bg-transparent text-slate-700 dark:text-slate-200 text-xs font-semibold focus:outline-none cursor-pointer"
+              />
+            </div>
+
             {/* Botón Reset Filtros */}
-            {(searchQuery || filterAdvisor !== 'ALL' || filterProduct !== 'ALL' || filterLotStatus !== 'ALL' || filterDateRange !== 'ALL') && (
+            {(searchQuery || filterAdvisor !== 'ALL' || filterProduct !== 'ALL' || filterLotStatus !== 'ALL' || filterDateRange !== 'ALL' || filterSpecificDate) && (
               <button
                 onClick={() => {
                   setSearchQuery('');
@@ -528,6 +546,7 @@ export const KanbanBoard = () => {
                   setFilterProduct('ALL');
                   setFilterLotStatus('ALL');
                   setFilterDateRange('ALL');
+                  setFilterSpecificDate('');
                 }}
                 className="bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20 text-xs font-bold px-3 py-2 rounded-xl hover:bg-rose-500/20 transition-all flex items-center space-x-1 cursor-pointer"
               >
