@@ -301,14 +301,17 @@ export const KanbanBoard = () => {
     };
   }, [filteredLeads, appointments, stages]);
 
-  // Función Formateadora de Moneda COP
+  // Función Formateadora de Moneda COP (Formato Colombiano)
   const formatCOP = (amount) => {
     if (!amount || isNaN(amount)) return '$ 0 COP';
     if (amount >= 1000000000) {
-      return `$ ${(amount / 1000000000).toFixed(2)}B COP`;
+      // Formato Colombiano: 113.760 Millones ($ 113.760M COP)
+      const millones = Math.round(amount / 1000000);
+      return `$ ${millones.toLocaleString('es-CO')}M COP`;
     }
     if (amount >= 1000000) {
-      return `$ ${(amount / 1000000).toFixed(0)}M COP`;
+      const millones = (amount / 1000000).toFixed(0);
+      return `$ ${millones}M COP`;
     }
     return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(amount);
   };
