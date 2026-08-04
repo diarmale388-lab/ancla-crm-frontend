@@ -616,7 +616,8 @@ export const KanbanBoard = () => {
                         draggable
                         onDragStart={(e) => handleDragStart(e, lead.id)}
                         onDragEnd={handleDragEnd}
-                        className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5 hover:border-emerald-500/40 dark:hover:border-emerald-500/30 p-4 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-200 cursor-grab active:cursor-grabbing group space-y-3 relative overflow-hidden"
+                        onClick={() => setSelectedLeadForModal(lead)}
+                        className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5 hover:border-emerald-500/40 dark:hover:border-emerald-500/30 p-4 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-200 cursor-pointer group space-y-3 relative overflow-hidden"
                       >
                         {/* Indicador Lateral de Salud del Lead (Semáforo) */}
                         <div className={`absolute top-0 left-0 bottom-0 w-1.5 ${health.color}`} title={`Estado: ${health.label}`} />
