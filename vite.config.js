@@ -2,7 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
 export default defineConfig({
-  base: './', // Ruta relativa universal para funcionar en raíz o en subcarpeta /dist/
+  base: '/', // Absolute root path for LiteSpeed / Hostinger asset resolution
   plugins: [react()],
   build: {
     rollupOptions: {
