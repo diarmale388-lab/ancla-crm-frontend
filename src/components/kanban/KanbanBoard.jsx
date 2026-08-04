@@ -202,6 +202,8 @@ export const KanbanBoard = () => {
     return Array.from(advisors.entries());
   }, [leads]);
 
+  const [filterDateRange, setFilterDateRange] = useState('ALL');
+
   // Filtrado de Leads en Tiempo Real
   const filteredLeads = useMemo(() => {
     return leads.filter(l => {
@@ -235,9 +237,32 @@ export const KanbanBoard = () => {
         return false;
       }
 
+      // Filtro Rango de Fechas
+      if (filterDateRange !== 'ALL' && l.created_at) {
+        const leadDate = new Date(l.created_at);
+        const now = new Date();
+        const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+        if (filterDateRange === 'TODAY') {
+          if (leadDate < startOfToday) return false;
+        } else if (filterDateRange === 'THIS_WEEK') {
+          const startOfWeek = new Date(now);
+          startOfWeek.setDate(now.getDate() - now.getDay());
+          startOfWeek.setHours(0, 0, 0, 0);
+          if (leadDate < startOfWeek) return false;
+        } else if (filterDateRange === 'THIS_MONTH') {
+          const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+          if (leadDate < startOfMonth) return false;
+        } else if (filterDateRange === 'LAST_30_DAYS') {
+          const last30Days = new Date(now);
+          last30Days.setDate(now.getDate() - 30);
+          if (leadDate < last30Days) return false;
+        }
+      }
+
       return true;
     });
-  }, [leads, searchQuery, filterAdvisor, filterProduct, filterLotStatus]);
+  }, [leads, searchQuery, filterAdvisor, filterProduct, filterLotStatus, filterDateRange]);
 
   // Cálculo de KPIs Globales en Tiempo Real
   const kpis = useMemo(() => {
@@ -481,16 +506,30 @@ export const KanbanBoard = () => {
               <option value="Buscando Lote">Buscando Lote</option>
             </select>
 
+            {/* Filtro Rango de Fechas */}
+            <select
+              value={filterDateRange}
+              onChange={(e) => setFilterDateRange(e.target.value)}
+              className="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-white/5 text-slate-700 dark:text-slate-200 text-xs font-semibold rounded-xl px-3 py-2 focus:outline-none cursor-pointer"
+            >
+              <option value="ALL">📅 Todas las Fechas</option>
+              <option value="TODAY">📅 Registrados Hoy</option>
+              <option value="THIS_WEEK">📅 Esta Semana</option>
+              <option value="THIS_MONTH">📅 Este Mes</option>
+              <option value="LAST_30_DAYS">📅 Últimos 30 Días</option>
+            </select>
+
             {/* Botón Reset Filtros */}
-            {(searchQuery || filterAdvisor !== 'ALL' || filterProduct !== 'ALL' || filterLotStatus !== 'ALL') && (
+            {(searchQuery || filterAdvisor !== 'ALL' || filterProduct !== 'ALL' || filterLotStatus !== 'ALL' || filterDateRange !== 'ALL') && (
               <button
                 onClick={() => {
                   setSearchQuery('');
                   setFilterAdvisor('ALL');
                   setFilterProduct('ALL');
                   setFilterLotStatus('ALL');
+                  setFilterDateRange('ALL');
                 }}
-                className="px-3 py-2 bg-rose-500/10 text-rose-600 dark:text-rose-400 font-bold text-xs rounded-xl hover:bg-rose-500/20 transition-all cursor-pointer flex items-center space-x-1"
+                className="bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20 text-xs font-bold px-3 py-2 rounded-xl hover:bg-rose-500/20 transition-all flex items-center space-x-1 cursor-pointer"
               >
                 <X className="w-3.5 h-3.5" />
                 <span>Limpiar Filtros</span>
