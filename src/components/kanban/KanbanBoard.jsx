@@ -658,9 +658,27 @@ export const KanbanBoard = () => {
                           </div>
                         </div>
 
-                        {/* REQUERIMIENTO 3: BADGES VISUALES DE COLORES (Ciudad, Proyecto, Presupuesto) */}
+                        {/* REQUERIMIENTO 3: BADGES VISUALES DE COLORES (Ciudad, Proyecto, Presupuesto, Campaña y VIP) */}
                         <div className="flex flex-wrap gap-1.5 pl-1">
                           
+                          {/* Badge Lead VIP <5 min (Atender urgente en < 5 minutos) */}
+                          {lead.qualification_notes && lead.qualification_notes.includes('[LEAD_VIP_5MIN]') && (
+                            <span className="text-[9.5px] font-black px-2 py-0.5 rounded-md bg-rose-600 text-white border border-rose-400 flex items-center space-x-1 animate-pulse shadow-md" title="Atender en menos de 5 minutos (Quiere ir esta semana y ya tiene lote)">
+                              <span>🔥 VIP &lt;5m</span>
+                            </span>
+                          )}
+
+                          {/* Badge Campaña Local vs Nacional */}
+                          {lead.source && (lead.source.includes('Nacional') || lead.source.includes('Virtual')) ? (
+                            <span className="text-[9.5px] font-bold px-2 py-0.5 rounded-md bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 border border-indigo-500/20">
+                              💻 Cita Virtual
+                            </span>
+                          ) : (
+                            <span className="text-[9.5px] font-bold px-2 py-0.5 rounded-md bg-teal-500/10 text-teal-700 dark:text-teal-300 border border-teal-500/20">
+                              🏡 Showroom Armenia
+                            </span>
+                          )}
+
                           {/* Badge Ciudad */}
                           <span className="text-[9.5px] font-extrabold px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-700 dark:text-blue-300 border border-blue-500/20 flex items-center space-x-0.5">
                             <MapPin className="w-2.5 h-2.5" />
