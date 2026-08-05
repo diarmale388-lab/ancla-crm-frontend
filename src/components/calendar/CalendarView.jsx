@@ -988,7 +988,7 @@ export const CalendarView = () => {
 
                   <div className="flex items-center space-x-2 text-xs text-slate-600 dark:text-slate-300">
                     <MapPin className="w-4 h-4 text-slate-400 flex-shrink-0" />
-                    <span>Ubicación Lote: <strong>{selectedLeadForFicha.lot_city || 'Armenia'}</strong></span>
+                    <span>Ubicación Lote: <strong>{selectedLeadForFicha.lot_city || 'Por definir'}</strong></span>
                   </div>
                 </div>
 
@@ -997,27 +997,30 @@ export const CalendarView = () => {
                   
                   <div className="flex items-center space-x-2 text-xs text-slate-700 dark:text-slate-200">
                     <Building className="w-4 h-4 text-emerald-500 flex-shrink-0" />
-                    <span>Modelo de Interés: <strong>{selectedLeadForFicha.interest_product || 'Flex Home'}</strong></span>
+                    <span>Propósito / Modelo: <strong>{selectedLeadForFicha.interest_product || 'Vivienda / Campestre'}</strong></span>
                   </div>
 
                   <div className="flex items-center space-x-2 text-xs text-slate-600 dark:text-slate-300">
                     <DollarSign className="w-4 h-4 text-emerald-500 flex-shrink-0" />
-                    <span>Presupuesto Estimado: <strong>{selectedLeadForFicha.estimated_budget ? `$${Number(selectedLeadForFicha.estimated_budget).toLocaleString()} COP` : 'Por definir'}</strong></span>
+                    <span>Presupuesto Estimado: <strong>{selectedLeadForFicha.estimated_budget ? `$${Number(selectedLeadForFicha.estimated_budget).toLocaleString()} COP` : 'Por definir en llamada'}</strong></span>
                   </div>
 
                   <div className="flex items-center space-x-2 text-xs text-slate-600 dark:text-slate-300">
                     <ShieldCheck className="w-4 h-4 text-blue-500 flex-shrink-0" />
-                    <span>Estado Lote: <strong>{selectedLeadForFicha.lot_status || 'Sí, ya tengo'}</strong></span>
+                    <span>Estado Lote: <strong>{selectedLeadForFicha.lot_status || 'Sí, ya tengo lote'}</strong></span>
                   </div>
                 </div>
 
               </div>
 
-              {/* Notas de Calificación & Campaña */}
+              {/* Formulario Meta Ads & Respuestas Reales del Cliente */}
               {selectedLeadForFicha.qualification_notes && (
-                <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/40 border border-slate-200/60 dark:border-white/5 space-y-2">
-                  <span className="text-[10px] uppercase font-black tracking-wider text-slate-400 dark:text-slate-500 block">Notas de Calificación / Metadatos de Campaña</span>
-                  <p className="text-xs text-slate-600 dark:text-slate-300 whitespace-pre-line leading-relaxed">
+                <div className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-500/20 space-y-2">
+                  <span className="text-[10px] uppercase font-black tracking-wider text-emerald-700 dark:text-emerald-400 flex items-center space-x-1.5">
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>Información Recogida en Formulario Meta Ads & Chat</span>
+                  </span>
+                  <p className="text-xs font-medium text-slate-700 dark:text-slate-200 whitespace-pre-line leading-relaxed">
                     {selectedLeadForFicha.qualification_notes}
                   </p>
                 </div>
