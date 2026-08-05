@@ -53,7 +53,7 @@ export const useCalendarStore = create((set, get) => ({
     }
   },
 
-  bookAppointment: async (contactId, datetime, notes = "") => {
+  bookAppointment: async (contactId, datetime, notes = "", appointment_type = "PRESENCIAL") => {
     const token = useAuthStore.getState().token;
     if (!token) return;
 
@@ -68,7 +68,8 @@ export const useCalendarStore = create((set, get) => ({
         body: JSON.stringify({
           contact_id: contactId,
           datetime,
-          notes
+          notes,
+          appointment_type
         }),
       });
 

@@ -33,6 +33,7 @@ export const CalendarView = () => {
   // Estados para agendar
   const [selectedLeadId, setSelectedLeadId] = useState('');
   const [selectedSlot, setSelectedSlot] = useState('');
+  const [appointmentType, setAppointmentType] = useState('PRESENCIAL');
   const [notes, setNotes] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   const [showAllDays, setShowAllDays] = useState(false);
@@ -87,7 +88,8 @@ export const CalendarView = () => {
     const success = await bookAppointment(
       parseInt(selectedLeadId, 10),
       selectedSlot,
-      notes
+      notes,
+      appointmentType
     );
 
     if (success) {
@@ -97,6 +99,7 @@ export const CalendarView = () => {
         setShowAddModal(false);
         setSelectedLeadId('');
         setSelectedSlot('');
+        setAppointmentType('PRESENCIAL');
         setNotes('');
         fetchAppointments(); // Recargar citas
       }, 1500);
@@ -479,9 +482,18 @@ export const CalendarView = () => {
                             Ver Ficha ➔
                           </span>
                         </div>
-                        <div className="flex items-center space-x-1 text-[10px] text-slate-450 dark:text-slate-400 mt-1">
-                          <Clock className="w-3 h-3" />
-                          <span>A las {formatTime(app.datetime)}</span>
+                        <div className="flex items-center space-x-2 text-[10px] mt-1.5 flex-wrap gap-y-1">
+                          <div className="flex items-center space-x-1 text-slate-500 dark:text-slate-400">
+                            <Clock className="w-3 h-3" />
+                            <span>A las {formatTime(app.datetime)}</span>
+                          </div>
+                          <span className={`px-2 py-0.5 rounded-full font-black text-[9px] ${
+                            app.appointment_type === 'PRESENCIAL' ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-350 border border-emerald-500/30' :
+                            app.appointment_type === 'LLAMADA' ? 'bg-indigo-500/15 text-indigo-700 dark:text-indigo-350 border border-indigo-500/30' :
+                            'bg-blue-500/15 text-blue-700 dark:text-blue-350 border border-blue-500/30'
+                          }`}>
+                            {app.appointment_type === 'PRESENCIAL' ? '🏢 PRESENCIAL' : app.appointment_type === 'LLAMADA' ? '📞 LLAMADA' : '💻 VIRTUAL'}
+                          </span>
                         </div>
                         {app.notes && (
                           <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-2 bg-slate-50 dark:bg-slate-950/40 p-2 rounded-xl italic">
@@ -568,6 +580,21 @@ export const CalendarView = () => {
                         {lead.first_name ? `${lead.first_name} ${lead.last_name || ''}`.trim() || lead.phone : lead.phone} ({lead.source || 'WhatsApp'})
                       </option>
                     ))}
+                  </select>
+                </div>
+
+                {/* Seleccionar Tipo de Atención */}
+                <div>
+                  <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Modalidad de Atención</label>
+                  <select
+                    value={appointmentType}
+                    onChange={(e) => setAppointmentType(e.target.value)}
+                    className="w-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl px-4 py-3 text-sm font-bold text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500/50"
+                    required
+                  >
+                    <option value="PRESENCIAL">🏢 Visita Presencial en Showroom Armenia</option>
+                    <option value="VIRTUAL">💻 Asesoría Virtual (Google Meet / Zoom)</option>
+                    <option value="LLAMADA">📞 Llamada Telefónica Comercial</option>
                   </select>
                 </div>
 
@@ -964,8 +991,15 @@ export const CalendarView = () => {
                       </span>
                     </div>
                   </div>
-                  <span className="text-xs font-black px-3 py-1 rounded-xl bg-emerald-600 text-white shadow-sm">
-                    {selectedApptForFicha.appointment_type || 'VIRTUAL'}
+                  <span className={`text-xs font-black px-3.5 py-1.5 rounded-xl text-white shadow-sm flex items-center space-x-1.5 ${
+                    selectedApptForFicha.appointment_type === 'PRESENCIAL' ? 'bg-emerald-600' :
+                    selectedApptForFicha.appointment_type === 'LLAMADA' ? 'bg-indigo-600' : 'bg-blue-600'
+                  }`}>
+                    <span>{
+                      selectedApptForFicha.appointment_type === 'PRESENCIAL' ? '🏢 VISITA PRESENCIAL (SHOWROOM)' :
+                      selectedApptForFicha.appointment_type === 'LLAMADA' ? '📞 LLAMADA TELEFÓNICA' :
+                      '💻 ASESORÍA VIRTUAL (MEET/ZOOM)'
+                    }</span>
                   </span>
                 </div>
               )}
