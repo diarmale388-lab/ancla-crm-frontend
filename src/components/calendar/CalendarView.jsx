@@ -37,6 +37,7 @@ export const CalendarView = () => {
   const [appointmentType, setAppointmentType] = useState('PRESENCIAL');
   const [notes, setNotes] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
+  const [modalitySaved, setModalitySaved] = useState(false);
   const [showAllDays, setShowAllDays] = useState(false);
 
   useEffect(() => {
@@ -996,25 +997,35 @@ export const CalendarView = () => {
                       </span>
                     </div>
                   </div>
-                  <select
-                    value={selectedApptForFicha.appointment_type || 'PRESENCIAL'}
-                    onChange={async (e) => {
-                      const newType = e.target.value;
-                      const ok = await updateAppointment(selectedApptForFicha.id, { appointment_type: newType });
-                      if (ok) {
+                  <div className="flex items-center space-x-2">
+                    {modalitySaved && (
+                      <span className="text-[10px] font-black px-2 py-1 rounded-lg bg-emerald-500 text-white animate-fade-in flex items-center space-x-1">
+                        <Check className="w-3 h-3" />
+                        <span>¡Guardado!</span>
+                      </span>
+                    )}
+                    <select
+                      value={selectedApptForFicha.appointment_type || 'PRESENCIAL'}
+                      onChange={async (e) => {
+                        const newType = e.target.value;
+                        // 1. Actualización local inmediata de la Ficha
                         setSelectedApptForFicha(prev => ({ ...prev, appointment_type: newType }));
-                        fetchAppointments();
-                      }
-                    }}
-                    className={`text-xs font-black px-3.5 py-1.5 rounded-xl text-white shadow-sm focus:outline-none cursor-pointer border border-white/20 transition-all ${
-                      (selectedApptForFicha.appointment_type || 'PRESENCIAL') === 'PRESENCIAL' ? 'bg-emerald-600 hover:bg-emerald-500' :
-                      (selectedApptForFicha.appointment_type || 'PRESENCIAL') === 'LLAMADA' ? 'bg-indigo-600 hover:bg-indigo-500' : 'bg-blue-600 hover:bg-blue-500'
-                    }`}
-                  >
-                    <option value="PRESENCIAL" className="bg-slate-900 text-white">🏢 VISITA PRESENCIAL (SHOWROOM)</option>
-                    <option value="VIRTUAL" className="bg-slate-900 text-white">💻 ASESORÍA VIRTUAL (MEET/ZOOM)</option>
-                    <option value="LLAMADA" className="bg-slate-900 text-white">📞 LLAMADA TELEFÓNICA COMERCIAL</option>
-                  </select>
+                        setModalitySaved(true);
+                        setTimeout(() => setModalitySaved(false), 2500);
+
+                        // 2. Actualización optimista en el Store global de Zustand + Backend PostgreSQL DB
+                        await updateAppointment(selectedApptForFicha.id, { appointment_type: newType });
+                      }}
+                      className={`text-xs font-black px-3.5 py-1.5 rounded-xl text-white shadow-sm focus:outline-none cursor-pointer border border-white/20 transition-all ${
+                        (selectedApptForFicha.appointment_type || 'PRESENCIAL') === 'PRESENCIAL' ? 'bg-emerald-600 hover:bg-emerald-500' :
+                        (selectedApptForFicha.appointment_type || 'PRESENCIAL') === 'LLAMADA' ? 'bg-indigo-600 hover:bg-indigo-500' : 'bg-blue-600 hover:bg-blue-500'
+                      }`}
+                    >
+                      <option value="PRESENCIAL" className="bg-slate-900 text-white">🏢 VISITA PRESENCIAL (SHOWROOM)</option>
+                      <option value="VIRTUAL" className="bg-slate-900 text-white">💻 ASESORÍA VIRTUAL (MEET/ZOOM)</option>
+                      <option value="LLAMADA" className="bg-slate-900 text-white">📞 LLAMADA TELEFÓNICA COMERCIAL</option>
+                    </select>
+                  </div>
                 </div>
               )}
 

@@ -94,8 +94,15 @@ export const useCalendarStore = create((set, get) => ({
   },
 
   updateAppointment: async (appointmentId, updateData) => {
+    // 1. Actualización optimista inmediata en memoria de Zustand
+    set((state) => ({
+      appointments: state.appointments.map(a => 
+        String(a.id) === String(appointmentId) ? { ...a, ...updateData } : a
+      )
+    }));
+
     const token = useAuthStore.getState().token;
-    if (!token) return false;
+    if (!token) return true;
 
     try {
       const response = await fetch(`${API_URL}/appointments/${appointmentId}`, {
@@ -111,7 +118,9 @@ export const useCalendarStore = create((set, get) => ({
       const updated = await response.json();
 
       set((state) => ({
-        appointments: state.appointments.map(a => a.id === appointmentId ? { ...a, ...updated } : a)
+        appointments: state.appointments.map(a => 
+          String(a.id) === String(appointmentId) ? { ...a, ...updated } : a
+        )
       }));
 
       return true;
