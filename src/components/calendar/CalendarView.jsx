@@ -415,9 +415,13 @@ export const CalendarView = () => {
                           {dayApps.slice(0, 2).map((app) => (
                             <div 
                               key={app.id} 
-                              className="text-[8px] sm:text-[9.5px] truncate bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-350 px-1.5 py-0.5 rounded border border-emerald-500/10 font-bold block"
+                              className={`text-[8px] sm:text-[9.5px] truncate px-1.5 py-0.5 rounded border font-bold block ${
+                                app.appointment_type === 'PRESENCIAL' ? 'bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border-emerald-500/30' :
+                                app.appointment_type === 'LLAMADA' ? 'bg-indigo-500/20 text-indigo-800 dark:text-indigo-300 border-indigo-500/30' :
+                                'bg-blue-500/20 text-blue-800 dark:text-blue-300 border-blue-500/30'
+                              }`}
                             >
-                              {getLeadName(app.contact_id).split(' ')[0]} - {formatTime(app.datetime)}
+                              {app.appointment_type === 'PRESENCIAL' ? '🏢 ' : app.appointment_type === 'LLAMADA' ? '📞 ' : '💻 '}{getLeadName(app.contact_id).split(' ')[0]} - {formatTime(app.datetime)}
                             </div>
                           ))}
                           {dayApps.length > 2 && (
@@ -487,12 +491,12 @@ export const CalendarView = () => {
                             <Clock className="w-3 h-3" />
                             <span>A las {formatTime(app.datetime)}</span>
                           </div>
-                          <span className={`px-2 py-0.5 rounded-full font-black text-[9px] ${
-                            app.appointment_type === 'PRESENCIAL' ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-350 border border-emerald-500/30' :
-                            app.appointment_type === 'LLAMADA' ? 'bg-indigo-500/15 text-indigo-700 dark:text-indigo-350 border border-indigo-500/30' :
-                            'bg-blue-500/15 text-blue-700 dark:text-blue-350 border border-blue-500/30'
+                          <span className={`px-2.5 py-0.5 rounded-full font-black text-[9.5px] ${
+                            app.appointment_type === 'PRESENCIAL' ? 'bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border border-emerald-500/30' :
+                            app.appointment_type === 'LLAMADA' ? 'bg-indigo-500/20 text-indigo-800 dark:text-indigo-300 border border-indigo-500/30' :
+                            'bg-blue-500/20 text-blue-800 dark:text-blue-300 border border-blue-500/30'
                           }`}>
-                            {app.appointment_type === 'PRESENCIAL' ? '🏢 PRESENCIAL' : app.appointment_type === 'LLAMADA' ? '📞 LLAMADA' : '💻 VIRTUAL'}
+                            {app.appointment_type === 'PRESENCIAL' ? '🏢 PRESENCIAL (SHOWROOM)' : app.appointment_type === 'LLAMADA' ? '📞 LLAMADA TELEFÓNICA' : '💻 VIRTUAL (MEET)'}
                           </span>
                         </div>
                         {app.notes && (
