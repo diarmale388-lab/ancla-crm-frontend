@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useCalendarStore } from '../../store/useCalendarStore';
 import { useKanbanStore } from '../../store/useKanbanStore';
-import { Calendar as CalendarIcon, Clock, User, Plus, Check, AlertCircle, X, Settings, Trash2, ChevronLeft, ChevronRight, Download } from 'lucide-react';
+import { useChatStore } from '../../store/useChatStore';
+import { Calendar as CalendarIcon, Clock, User, Plus, Check, AlertCircle, X, Settings, Trash2, ChevronLeft, ChevronRight, Download, MessageCircle, MapPin, DollarSign, Building, Phone, Mail, ExternalLink, ShieldCheck } from 'lucide-react';
 
 export const CalendarView = () => {
   const { 
@@ -18,9 +19,12 @@ export const CalendarView = () => {
     error 
   } = useCalendarStore();
   const { leads, fetchLeads } = useKanbanStore();
+  const { setActiveTab, setActiveContactId } = useChatStore();
 
   const [showAddModal, setShowAddModal] = useState(false);
   const [showConfigModal, setShowConfigModal] = useState(false);
+  const [selectedLeadForFicha, setSelectedLeadForFicha] = useState(null);
+  const [selectedApptForFicha, setSelectedApptForFicha] = useState(null);
   
   // Estados de Calendario Mensual Grande
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -450,43 +454,58 @@ export const CalendarView = () => {
                     </div>
                   );
                 }
-                return dayApps.map((app) => (
-                  <div
-                    key={app.id}
-                    className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5 p-4 rounded-2xl shadow-sm flex items-start space-x-3.5 group relative"
-                  >
-                    <div className="w-9 h-9 rounded-xl bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center flex-shrink-0">
-                      <CalendarIcon className="w-4.5 h-4.5" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h4 className="text-xs font-black text-slate-800 dark:text-white truncate">
-                        {getLeadName(app.contact_id)}
-                      </h4>
-                      <div className="flex items-center space-x-1 text-[10px] text-slate-450 dark:text-slate-400 mt-1">
-                        <Clock className="w-3 h-3" />
-                        <span>A las {formatTime(app.datetime)}</span>
-                      </div>
-                      {app.notes && (
-                        <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-2 bg-slate-50 dark:bg-slate-950/40 p-2 rounded-xl italic">
-                          "{app.notes}"
-                        </p>
-                      )}
-                    </div>
-                    <button
-                      type="button"
-                      onClick={async () => {
-                        if (confirm("¿Estás seguro de cancelar esta cita?")) {
-                          await deleteAppointment(app.id);
-                          fetchAppointments(); // Recargar
+                return dayApps.map((app) => {
+                  const lead = (leads || []).find(l => l.id === app.contact_id);
+                  return (
+                    <div
+                      key={app.id}
+                      onClick={() => {
+                        if (lead) {
+                          setSelectedLeadForFicha(lead);
+                          setSelectedApptForFicha(app);
                         }
                       }}
-                      className="absolute top-3 right-3 p-1.5 rounded-lg text-slate-400 hover:text-red-500 hover:bg-slate-100 dark:hover:bg-white/5 opacity-0 group-hover:opacity-100 transition-all cursor-pointer"
-                      title="Cancelar Cita"
+                      className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5 p-4 rounded-2xl shadow-sm flex items-start space-x-3.5 group relative cursor-pointer hover:border-emerald-500/50 hover:shadow-md hover:scale-[1.01] transition-all"
                     >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-                ));
+                      <div className="w-9 h-9 rounded-xl bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center flex-shrink-0">
+                        <CalendarIcon className="w-4.5 h-4.5" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between">
+                          <h4 className="text-xs font-black text-slate-800 dark:text-white truncate group-hover:text-emerald-600 transition-colors">
+                            {getLeadName(app.contact_id)}
+                          </h4>
+                          <span className="text-[9px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                            Ver Ficha ➔
+                          </span>
+                        </div>
+                        <div className="flex items-center space-x-1 text-[10px] text-slate-450 dark:text-slate-400 mt-1">
+                          <Clock className="w-3 h-3" />
+                          <span>A las {formatTime(app.datetime)}</span>
+                        </div>
+                        {app.notes && (
+                          <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-2 bg-slate-50 dark:bg-slate-950/40 p-2 rounded-xl italic">
+                            "{app.notes}"
+                          </p>
+                        )}
+                      </div>
+                      <button
+                        type="button"
+                        onClick={async (e) => {
+                          e.stopPropagation();
+                          if (confirm("¿Estás seguro de cancelar esta cita?")) {
+                            await deleteAppointment(app.id);
+                            fetchAppointments();
+                          }
+                        }}
+                        className="absolute top-3 right-3 p-1.5 rounded-lg text-slate-400 hover:text-red-500 hover:bg-slate-100 dark:hover:bg-white/5 opacity-0 group-hover:opacity-100 transition-all cursor-pointer z-10"
+                        title="Cancelar Cita"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  );
+                });
               })()}
             </div>
           </div>
@@ -887,6 +906,154 @@ export const CalendarView = () => {
                 </button>
               </form>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Modal Ficha Técnica 360° del Cliente al hacer clic en cualquier Cita */}
+      {selectedLeadForFicha && (
+        <div className="fixed inset-0 bg-slate-950/70 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-fade-in">
+          <div className="w-full max-w-2xl bg-white dark:bg-dark-900 border border-slate-200 dark:border-white/10 rounded-3xl p-6 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            
+            {/* Cabecera Ficha */}
+            <div className="flex items-center justify-between border-b border-slate-100 dark:border-white/5 pb-4">
+              <div className="flex items-center space-x-3">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-500 text-white flex items-center justify-center font-black text-lg shadow-lg shadow-emerald-500/20">
+                  {(selectedLeadForFicha.first_name || 'C')[0].toUpperCase()}
+                </div>
+                <div>
+                  <h3 className="text-lg font-black text-slate-800 dark:text-white flex items-center space-x-2">
+                    <span>{selectedLeadForFicha.first_name} {selectedLeadForFicha.last_name || ''}</span>
+                    <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                      ID #{selectedLeadForFicha.id}
+                    </span>
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 flex items-center space-x-2">
+                    <span>{selectedLeadForFicha.source || 'Meta Ads'}</span>
+                    <span>•</span>
+                    <span className="text-emerald-600 dark:text-emerald-400 font-semibold">{selectedLeadForFicha.lot_city || 'Armenia'}</span>
+                  </p>
+                </div>
+              </div>
+
+              <button
+                onClick={() => {
+                  setSelectedLeadForFicha(null);
+                  setSelectedApptForFicha(null);
+                }}
+                className="p-2 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 transition-all"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Contenido Ficha Técnica */}
+            <div className="flex-1 overflow-y-auto py-5 space-y-5">
+              
+              {/* Resumen de la Cita */}
+              {selectedApptForFicha && (
+                <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <CalendarIcon className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
+                    <div>
+                      <span className="text-[10px] uppercase font-black tracking-wider text-emerald-600 dark:text-emerald-400 block">Cita Confirmada</span>
+                      <span className="text-xs font-bold text-slate-800 dark:text-white block mt-0.5">
+                        {new Date(selectedApptForFicha.datetime).toLocaleString('es-CO', {
+                          weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit', hour12: true
+                        })}
+                      </span>
+                    </div>
+                  </div>
+                  <span className="text-xs font-black px-3 py-1 rounded-xl bg-emerald-600 text-white shadow-sm">
+                    {selectedApptForFicha.appointment_type || 'VIRTUAL'}
+                  </span>
+                </div>
+              )}
+
+              {/* Grid 2 Columnas Datos Técnicos */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                
+                <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/40 border border-slate-200/60 dark:border-white/5 space-y-3">
+                  <span className="text-[10px] uppercase font-black tracking-wider text-slate-400 dark:text-slate-500 block">Datos de Contacto</span>
+                  
+                  <div className="flex items-center space-x-2 text-xs font-bold text-slate-700 dark:text-slate-200">
+                    <Phone className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+                    <span>{selectedLeadForFicha.phone}</span>
+                  </div>
+
+                  <div className="flex items-center space-x-2 text-xs text-slate-600 dark:text-slate-300">
+                    <Mail className="w-4 h-4 text-slate-400 flex-shrink-0" />
+                    <span>{selectedLeadForFicha.email || 'No provisto'}</span>
+                  </div>
+
+                  <div className="flex items-center space-x-2 text-xs text-slate-600 dark:text-slate-300">
+                    <MapPin className="w-4 h-4 text-slate-400 flex-shrink-0" />
+                    <span>Ubicación Lote: <strong>{selectedLeadForFicha.lot_city || 'Armenia'}</strong></span>
+                  </div>
+                </div>
+
+                <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/40 border border-slate-200/60 dark:border-white/5 space-y-3">
+                  <span className="text-[10px] uppercase font-black tracking-wider text-slate-400 dark:text-slate-500 block">Detalles del Proyecto</span>
+                  
+                  <div className="flex items-center space-x-2 text-xs text-slate-700 dark:text-slate-200">
+                    <Building className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+                    <span>Modelo de Interés: <strong>{selectedLeadForFicha.interest_product || 'Flex Home'}</strong></span>
+                  </div>
+
+                  <div className="flex items-center space-x-2 text-xs text-slate-600 dark:text-slate-300">
+                    <DollarSign className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+                    <span>Presupuesto Estimado: <strong>{selectedLeadForFicha.estimated_budget ? `$${Number(selectedLeadForFicha.estimated_budget).toLocaleString()} COP` : 'Por definir'}</strong></span>
+                  </div>
+
+                  <div className="flex items-center space-x-2 text-xs text-slate-600 dark:text-slate-300">
+                    <ShieldCheck className="w-4 h-4 text-blue-500 flex-shrink-0" />
+                    <span>Estado Lote: <strong>{selectedLeadForFicha.lot_status || 'Sí, ya tengo'}</strong></span>
+                  </div>
+                </div>
+
+              </div>
+
+              {/* Notas de Calificación & Campaña */}
+              {selectedLeadForFicha.qualification_notes && (
+                <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/40 border border-slate-200/60 dark:border-white/5 space-y-2">
+                  <span className="text-[10px] uppercase font-black tracking-wider text-slate-400 dark:text-slate-500 block">Notas de Calificación / Metadatos de Campaña</span>
+                  <p className="text-xs text-slate-600 dark:text-slate-300 whitespace-pre-line leading-relaxed">
+                    {selectedLeadForFicha.qualification_notes}
+                  </p>
+                </div>
+              )}
+
+            </div>
+
+            {/* Acciones Modal */}
+            <div className="pt-4 border-t border-slate-100 dark:border-white/5 flex items-center justify-between gap-3">
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedLeadForFicha(null);
+                  setSelectedApptForFicha(null);
+                }}
+                className="px-5 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 transition-all"
+              >
+                Cerrar Ficha
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  const leadId = selectedLeadForFicha.id;
+                  setSelectedLeadForFicha(null);
+                  setSelectedApptForFicha(null);
+                  setActiveTab('chat');
+                  setActiveContactId(leadId);
+                }}
+                className="flex items-center space-x-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold text-xs shadow-lg shadow-emerald-500/20 active:scale-95 transition-all cursor-pointer"
+              >
+                <MessageCircle className="w-4 h-4" />
+                <span>Abrir Chat de WhatsApp</span>
+              </button>
+            </div>
+
           </div>
         </div>
       )}
