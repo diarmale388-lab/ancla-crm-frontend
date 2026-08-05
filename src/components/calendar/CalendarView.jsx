@@ -14,6 +14,7 @@ export const CalendarView = () => {
     fetchAvailability,
     saveAvailability,
     bookAppointment, 
+    updateAppointment,
     deleteAppointment,
     loading, 
     error 
@@ -995,16 +996,25 @@ export const CalendarView = () => {
                       </span>
                     </div>
                   </div>
-                  <span className={`text-xs font-black px-3.5 py-1.5 rounded-xl text-white shadow-sm flex items-center space-x-1.5 ${
-                    selectedApptForFicha.appointment_type === 'PRESENCIAL' ? 'bg-emerald-600' :
-                    selectedApptForFicha.appointment_type === 'LLAMADA' ? 'bg-indigo-600' : 'bg-blue-600'
-                  }`}>
-                    <span>{
-                      selectedApptForFicha.appointment_type === 'PRESENCIAL' ? '🏢 VISITA PRESENCIAL (SHOWROOM)' :
-                      selectedApptForFicha.appointment_type === 'LLAMADA' ? '📞 LLAMADA TELEFÓNICA' :
-                      '💻 ASESORÍA VIRTUAL (MEET/ZOOM)'
-                    }</span>
-                  </span>
+                  <select
+                    value={selectedApptForFicha.appointment_type || 'PRESENCIAL'}
+                    onChange={async (e) => {
+                      const newType = e.target.value;
+                      const ok = await updateAppointment(selectedApptForFicha.id, { appointment_type: newType });
+                      if (ok) {
+                        setSelectedApptForFicha(prev => ({ ...prev, appointment_type: newType }));
+                        fetchAppointments();
+                      }
+                    }}
+                    className={`text-xs font-black px-3.5 py-1.5 rounded-xl text-white shadow-sm focus:outline-none cursor-pointer border border-white/20 transition-all ${
+                      (selectedApptForFicha.appointment_type || 'PRESENCIAL') === 'PRESENCIAL' ? 'bg-emerald-600 hover:bg-emerald-500' :
+                      (selectedApptForFicha.appointment_type || 'PRESENCIAL') === 'LLAMADA' ? 'bg-indigo-600 hover:bg-indigo-500' : 'bg-blue-600 hover:bg-blue-500'
+                    }`}
+                  >
+                    <option value="PRESENCIAL" className="bg-slate-900 text-white">🏢 VISITA PRESENCIAL (SHOWROOM)</option>
+                    <option value="VIRTUAL" className="bg-slate-900 text-white">💻 ASESORÍA VIRTUAL (MEET/ZOOM)</option>
+                    <option value="LLAMADA" className="bg-slate-900 text-white">📞 LLAMADA TELEFÓNICA COMERCIAL</option>
+                  </select>
                 </div>
               )}
 

@@ -93,6 +93,34 @@ export const useCalendarStore = create((set, get) => ({
     }
   },
 
+  updateAppointment: async (appointmentId, updateData) => {
+    const token = useAuthStore.getState().token;
+    if (!token) return false;
+
+    try {
+      const response = await fetch(`${API_URL}/appointments/${appointmentId}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updateData),
+      });
+
+      if (!response.ok) throw new Error('Error al actualizar cita');
+      const updated = await response.json();
+
+      set((state) => ({
+        appointments: state.appointments.map(a => a.id === appointmentId ? { ...a, ...updated } : a)
+      }));
+
+      return true;
+    } catch (err) {
+      console.error("Error al actualizar cita:", err);
+      return false;
+    }
+  },
+
   availability: [],
   fetchAvailability: async () => {
     const token = useAuthStore.getState().token;
