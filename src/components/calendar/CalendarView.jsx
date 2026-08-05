@@ -20,7 +20,7 @@ export const CalendarView = () => {
     error 
   } = useCalendarStore();
   const { leads, fetchLeads } = useKanbanStore();
-  const { setActiveTab, setActiveContactId } = useChatStore();
+  const { setActiveTab, fetchMessages } = useChatStore();
 
   const [showAddModal, setShowAddModal] = useState(false);
   const [showConfigModal, setShowConfigModal] = useState(false);
@@ -1106,8 +1106,8 @@ export const CalendarView = () => {
                   const leadId = selectedLeadForFicha.id;
                   setSelectedLeadForFicha(null);
                   setSelectedApptForFicha(null);
-                  setActiveTab('chat');
-                  setActiveContactId(leadId);
+                  fetchMessages(leadId);
+                  setActiveTab('chats');
                 }}
                 className="flex items-center space-x-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold text-xs shadow-lg shadow-emerald-500/20 active:scale-95 transition-all cursor-pointer"
               >
