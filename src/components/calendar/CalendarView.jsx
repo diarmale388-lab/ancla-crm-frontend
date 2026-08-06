@@ -999,24 +999,18 @@ export const CalendarView = () => {
                   </div>
                   <div className="flex items-center space-x-2">
                     {modalitySaved && (
-                      <span className="text-[10px] font-black px-2 py-1 rounded-lg bg-emerald-500 text-white animate-fade-in flex items-center space-x-1">
-                        <Check className="w-3 h-3" />
+                      <span className="text-[10px] font-black px-2.5 py-1 rounded-lg bg-emerald-500 text-white animate-fade-in flex items-center space-x-1 shadow-sm">
+                        <Check className="w-3.5 h-3.5" />
                         <span>¡Guardado!</span>
                       </span>
                     )}
                     <select
                       value={selectedApptForFicha.appointment_type || 'PRESENCIAL'}
-                      onChange={async (e) => {
+                      onChange={(e) => {
                         const newType = e.target.value;
-                        // 1. Actualización local inmediata de la Ficha
                         setSelectedApptForFicha(prev => ({ ...prev, appointment_type: newType }));
-                        setModalitySaved(true);
-                        setTimeout(() => setModalitySaved(false), 2500);
-
-                        // 2. Actualización optimista en el Store global de Zustand + Backend PostgreSQL DB
-                        await updateAppointment(selectedApptForFicha.id, { appointment_type: newType });
                       }}
-                      className={`text-xs font-black px-3.5 py-1.5 rounded-xl text-white shadow-sm focus:outline-none cursor-pointer border border-white/20 transition-all ${
+                      className={`text-xs font-black px-3.5 py-2 rounded-xl text-white shadow-sm focus:outline-none cursor-pointer border border-white/20 transition-all ${
                         (selectedApptForFicha.appointment_type || 'PRESENCIAL') === 'PRESENCIAL' ? 'bg-emerald-600 hover:bg-emerald-500' :
                         (selectedApptForFicha.appointment_type || 'PRESENCIAL') === 'LLAMADA' ? 'bg-indigo-600 hover:bg-indigo-500' : 'bg-blue-600 hover:bg-blue-500'
                       }`}
@@ -1025,6 +1019,22 @@ export const CalendarView = () => {
                       <option value="VIRTUAL" className="bg-slate-900 text-white">💻 ASESORÍA VIRTUAL (MEET/ZOOM)</option>
                       <option value="LLAMADA" className="bg-slate-900 text-white">📞 LLAMADA TELEFÓNICA COMERCIAL</option>
                     </select>
+
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        const currentType = selectedApptForFicha.appointment_type || 'PRESENCIAL';
+                        const ok = await updateAppointment(selectedApptForFicha.id, { appointment_type: currentType });
+                        if (ok) {
+                          setModalitySaved(true);
+                          setTimeout(() => setModalitySaved(false), 2500);
+                        }
+                      }}
+                      className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 text-white text-xs font-bold shadow-md active:scale-95 transition-all flex items-center space-x-1.5 cursor-pointer border border-white/10"
+                      title="Guardar modalidad elegida"
+                    >
+                      <span>💾 Guardar</span>
+                    </button>
                   </div>
                 </div>
               )}
