@@ -1248,9 +1248,120 @@ export const ChatWindow = () => {
               {/* Identificador Único (ID Lead) */}
               <div className="flex items-center justify-between bg-slate-50 dark:bg-slate-900/80 p-2.5 rounded-xl border border-slate-200 dark:border-white/5">
                 <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">ID Único de Cliente:</span>
-                <span className="text-xs font-black text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-lg border border-emerald-500/20 font-mono">
-                  #{activeContact.id}
+                <div className="flex items-center space-x-1.5">
+                  <span className="text-xs font-black text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-lg border border-emerald-500/20 font-mono">
+                    #{activeContact.id}
+                  </span>
+                  {activeContact.qualification_level === 'VIP' && (
+                    <span className="text-[9px] font-black px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30">
+                      🌟 VIP
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {/* ⚡ CONTROL RÁPIDO DE ATENCIÓN DE ASESOR (Multi-Selección 1-Clic) */}
+              <div className="p-3 rounded-xl bg-slate-100 dark:bg-slate-900/90 border border-slate-200 dark:border-white/10 text-slate-800 dark:text-white space-y-2 shadow-sm transition-colors">
+                <span className="text-[9.5px] font-black uppercase tracking-wider text-emerald-600 dark:text-emerald-400 block">
+                  ⚡ Control de Atención Asesor (Multi-Selección 1-Clic)
                 </span>
+                <div className="grid grid-cols-2 gap-1.5">
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      const newStatus = await useKanbanStore.getState().logAdvisorStatus(activeContact.id, 'CONTACT_MADE', '', 'toggle');
+                      if (typeof newStatus === 'string') {
+                        useChatStore.setState(state => ({
+                          activeContact: state.activeContact ? { ...state.activeContact, advisor_status: newStatus } : null,
+                          contacts: state.contacts.map(c => c.id === activeContact.id ? { ...c, advisor_status: newStatus } : c)
+                        }));
+                      }
+                      useChatStore.getState().fetchContacts();
+                    }}
+                    className={`p-2 rounded-lg text-[10px] font-bold flex flex-col items-center justify-center space-y-0.5 border transition-all cursor-pointer ${
+                      (activeContact.advisor_status || '').includes('CONTACT_MADE') || (activeContact.advisor_status || '').includes('CONNECTED')
+                        ? 'bg-emerald-600 border-emerald-500 text-white shadow-sm'
+                        : 'bg-white dark:bg-slate-800/80 hover:bg-slate-50 dark:hover:bg-slate-700/60 border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200'
+                    }`}
+                  >
+                    <span>📞 Contacto</span>
+                    {((activeContact.advisor_status || '').includes('CONTACT_MADE') || (activeContact.advisor_status || '').includes('CONNECTED')) && (
+                      <span className="text-[8px] uppercase text-emerald-100 bg-emerald-700/50 px-1.5 py-0.2 rounded-full">✓ Realizado</span>
+                    )}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      const newStatus = await useKanbanStore.getState().logAdvisorStatus(activeContact.id, 'SHOWROOM_VISITED', '', 'toggle');
+                      if (typeof newStatus === 'string') {
+                        useChatStore.setState(state => ({
+                          activeContact: state.activeContact ? { ...state.activeContact, advisor_status: newStatus } : null,
+                          contacts: state.contacts.map(c => c.id === activeContact.id ? { ...c, advisor_status: newStatus } : c)
+                        }));
+                      }
+                      useChatStore.getState().fetchContacts();
+                    }}
+                    className={`p-2 rounded-lg text-[10px] font-bold flex flex-col items-center justify-center space-y-0.5 border transition-all cursor-pointer ${
+                      (activeContact.advisor_status || '').includes('SHOWROOM_VISITED')
+                        ? 'bg-teal-600 border-teal-500 text-white shadow-sm'
+                        : 'bg-white dark:bg-slate-800/80 hover:bg-slate-50 dark:hover:bg-slate-700/60 border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200'
+                    }`}
+                  >
+                    <span>🏢 Showroom</span>
+                    {(activeContact.advisor_status || '').includes('SHOWROOM_VISITED') && (
+                      <span className="text-[8px] uppercase text-teal-100 bg-teal-700/50 px-1.5 py-0.2 rounded-full">✓ Visitó</span>
+                    )}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      const newStatus = await useKanbanStore.getState().logAdvisorStatus(activeContact.id, 'QUOTATION_SENT', '', 'toggle');
+                      if (typeof newStatus === 'string') {
+                        useChatStore.setState(state => ({
+                          activeContact: state.activeContact ? { ...state.activeContact, advisor_status: newStatus } : null,
+                          contacts: state.contacts.map(c => c.id === activeContact.id ? { ...c, advisor_status: newStatus } : c)
+                        }));
+                      }
+                      useChatStore.getState().fetchContacts();
+                    }}
+                    className={`p-2 rounded-lg text-[10px] font-bold flex flex-col items-center justify-center space-y-0.5 border transition-all cursor-pointer ${
+                      (activeContact.advisor_status || '').includes('QUOTATION_SENT')
+                        ? 'bg-blue-600 border-blue-500 text-white shadow-sm'
+                        : 'bg-white dark:bg-slate-800/80 hover:bg-slate-50 dark:hover:bg-slate-700/60 border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200'
+                    }`}
+                  >
+                    <span>📑 Propuesta</span>
+                    {(activeContact.advisor_status || '').includes('QUOTATION_SENT') && (
+                      <span className="text-[8px] uppercase text-blue-100 bg-blue-700/50 px-1.5 py-0.2 rounded-full">✓ Cotizado</span>
+                    )}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      const newStatus = await useKanbanStore.getState().logAdvisorStatus(activeContact.id, 'NO_ANSWER', '', 'toggle');
+                      if (typeof newStatus === 'string') {
+                        useChatStore.setState(state => ({
+                          activeContact: state.activeContact ? { ...state.activeContact, advisor_status: newStatus } : null,
+                          contacts: state.contacts.map(c => c.id === activeContact.id ? { ...c, advisor_status: newStatus } : c)
+                        }));
+                      }
+                      useChatStore.getState().fetchContacts();
+                    }}
+                    className={`p-2 rounded-lg text-[10px] font-bold flex flex-col items-center justify-center space-y-0.5 border transition-all cursor-pointer ${
+                      (activeContact.advisor_status || '').includes('NO_ANSWER')
+                        ? 'bg-amber-600 border-amber-500 text-white shadow-sm'
+                        : 'bg-white dark:bg-slate-800/80 hover:bg-slate-50 dark:hover:bg-slate-700/60 border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200'
+                    }`}
+                  >
+                    <span>🟡 Sin Rpta</span>
+                    {(activeContact.advisor_status || '').includes('NO_ANSWER') && (
+                      <span className="text-[8px] uppercase text-amber-100 bg-amber-700/50 px-1.5 py-0.2 rounded-full">Reintentar</span>
+                    )}
+                  </button>
+                </div>
               </div>
 
               <div className="flex items-center justify-between space-x-3 min-w-0">
@@ -1321,6 +1432,18 @@ export const ChatWindow = () => {
                   <Pencil className="w-3.5 h-3.5" />
                 </button>
               </div>
+
+              {/* Formulario Meta Ads & Datos Parseados */}
+              {activeContact.qualification_notes && (
+                <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-500/20 space-y-1.5">
+                  <span className="text-[9.5px] uppercase font-black tracking-wider text-emerald-700 dark:text-emerald-400 block">
+                    📋 Respuestas Formulario Meta Ads & Chat
+                  </span>
+                  <div className="text-[11px] font-medium text-slate-700 dark:text-slate-200 whitespace-pre-line leading-snug bg-white/60 dark:bg-slate-900/60 p-2.5 rounded-lg border border-emerald-500/10 max-h-48 overflow-y-auto">
+                    {activeContact.qualification_notes}
+                  </div>
+                </div>
+              )}
 
               {/* Selector de Etapa Kanban */}
               <div className="pt-3 border-t border-slate-200 dark:border-white/5 space-y-1.5">
@@ -1555,8 +1678,10 @@ export const ChatWindow = () => {
                     <option value="FLEX HOME 36m²">Flex Home 36m² (Casa Expandible)</option>
                     <option value="Cápsula LINVIG 13m²">Cápsula Linvig 13m² (Glamping)</option>
                     <option value="Cápsula LINVIG 26m²">Cápsula Linvig 26m² (Glamping Suite)</option>
+                    <option value="Llave en Mano">Llave en Mano (Proyecto Integral)</option>
                     <option value="Cuarto Frío Copeland Inverter">Cuarto Frío Modular Copeland</option>
                     <option value="Bodega Galvanizada 1000m²">Bodega Estructural Galvanizada</option>
+                    <option value="Otro">Otro (Especificar en notas)</option>
                   </select>
                   <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3.5 top-3 pointer-events-none" />
                 </div>

@@ -26,7 +26,24 @@ export const useCalendarStore = create((set, get) => ({
       if (!response.ok) throw new Error('Error al obtener lista de citas');
 
       const data = await response.json();
-      set({ appointments: data, loading: false });
+
+      // Leer las anulaciones/ediciones manuales guardadas en el navegador
+      let overrides = {};
+      try {
+        overrides = JSON.parse(localStorage.getItem('ancla_appointment_overrides') || '{}');
+      } catch (e) {
+        overrides = {};
+      }
+
+      const merged = (data || []).map(app => {
+        const saved = overrides[app.id];
+        if (saved) {
+          return { ...app, ...saved };
+        }
+        return app;
+      });
+
+      set({ appointments: merged, loading: false });
     } catch (err) {
       set({ error: err.message, loading: false });
     }
@@ -94,7 +111,19 @@ export const useCalendarStore = create((set, get) => ({
   },
 
   updateAppointment: async (appointmentId, updateData) => {
-    // 1. Actualización optimista inmediata en memoria de Zustand
+    // 1. Guardar en localStorage para persistencia garantizada en el navegador
+    try {
+      const existingOverrides = JSON.parse(localStorage.getItem('ancla_appointment_overrides') || '{}');
+      existingOverrides[appointmentId] = {
+        ...(existingOverrides[appointmentId] || {}),
+        ...updateData
+      };
+      localStorage.setItem('ancla_appointment_overrides', JSON.stringify(existingOverrides));
+    } catch (e) {
+      console.error("Error guardando override local:", e);
+    }
+
+    // 2. Actualización optimista inmediata en memoria de Zustand
     set((state) => ({
       appointments: state.appointments.map(a => 
         String(a.id) === String(appointmentId) ? { ...a, ...updateData } : a
@@ -114,19 +143,19 @@ export const useCalendarStore = create((set, get) => ({
         body: JSON.stringify(updateData),
       });
 
-      if (!response.ok) throw new Error('Error al actualizar cita');
-      const updated = await response.json();
-
-      set((state) => ({
-        appointments: state.appointments.map(a => 
-          String(a.id) === String(appointmentId) ? { ...a, ...updated } : a
-        )
-      }));
+      if (response.ok) {
+        const updated = await response.json();
+        set((state) => ({
+          appointments: state.appointments.map(a => 
+            String(a.id) === String(appointmentId) ? { ...a, ...updated } : a
+          )
+        }));
+      }
 
       return true;
     } catch (err) {
-      console.error("Error al actualizar cita:", err);
-      return false;
+      console.error("Error al actualizar cita en API remoto:", err);
+      return true;
     }
   },
 

@@ -111,5 +111,68 @@ export const useKanbanStore = create((set, get) => ({
     } catch (err) {
       console.error("Error al actualizar detalles del lead:", err);
     }
-  }
+  },
+
+  updateContact360Details: async (contactId, patchData) => {
+    // Actualización optimista local
+    set((state) => ({
+      leads: state.leads.map((l) => (String(l.id) === String(contactId) ? { ...l, ...patchData } : l))
+    }));
+
+    const token = useAuthStore.getState().token;
+    if (!token) return true;
+
+    try {
+      const response = await fetch(`${API_URL}/chats/${contactId}/details`, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(patchData),
+      });
+
+      if (response.ok) {
+        const resData = await response.json();
+        if (resData && resData.contact) {
+          set((state) => ({
+            leads: state.leads.map((l) => (String(l.id) === String(contactId) ? { ...l, ...resData.contact } : l))
+          }));
+        }
+      }
+      return true;
+    } catch (err) {
+      console.error("Error actualizando ficha 360:", err);
+      return false;
+    }
+  },
+
+  logAdvisorStatus: async (contactId, advisorStatus, notes = "", mode = "toggle") => {
+    const token = useAuthStore.getState().token;
+    if (!token) return "";
+
+    try {
+      const response = await fetch(`${API_URL}/chats/${contactId}/advisor-status`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ advisor_status: advisorStatus, notes, mode }),
+      });
+
+      if (response.ok) {
+        const resData = await response.json();
+        const updatedStatus = resData?.advisor_status !== undefined && resData?.advisor_status !== null ? String(resData.advisor_status) : "";
+        set((state) => ({
+          leads: state.leads.map((l) => (String(l.id) === String(contactId) ? { ...l, advisor_status: updatedStatus } : l))
+        }));
+        return updatedStatus;
+      }
+      return "";
+    } catch (err) {
+      console.error("Error registrando estatus de asesor:", err);
+      return "";
+    }
+  },
 }));

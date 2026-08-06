@@ -502,9 +502,14 @@ export const CalendarView = () => {
                   return (
                     <div
                       key={app.id}
-                      onClick={() => {
+                      onClick={async () => {
                         if (lead) {
-                          setSelectedLeadForFicha(lead);
+                          try {
+                            const res = await api.get(`/contacts/${lead.id}`);
+                            setSelectedLeadForFicha(res.data);
+                          } catch {
+                            setSelectedLeadForFicha(lead);
+                          }
                           setSelectedApptForFicha(app);
                         }
                       }}
@@ -947,6 +952,117 @@ export const CalendarView = () => {
                                 type="time"
                                 value={interval.end_time}
                                 onChange={(e) => updateIntervalTimeLocal(d.day_of_week, idx, 'end_time', e.target.value)}
+                               className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl px-3 py-2 text-xs text-slate-800 dark:text-white focus:outline-none"
+                              />
+                              
+                              {(d.intervals || []).length > 1 && (
+                                <button
+                                  type="button"
+                                  onClick={() => removeIntervalLocal(d.day_of_week, idx)}
+                                  className="p-2 rounded-lg text-slate-400 hover:text-red-500 hover:bg-slate-100 dark:hover:bg-white/5 transition-all"
+                                  title="Eliminar bloque"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </button>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="pl-7 text-xs text-slate-400 italic">No disponible</div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-semibold py-3.5 px-4 rounded-xl shadow-md active:scale-[0.98] transition-all mt-4"
+                >
+                  Guardar Horarios
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Configuración de Horarios / Disponibilidad (Múltiples Intervalos) */}
+      {showConfigModal && (
+        <div className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
+          <div className="w-full max-w-2xl bg-white dark:bg-dark-900 border border-slate-200 dark:border-white/5 rounded-3xl p-6 shadow-2xl transition-all duration-300">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-lg font-bold text-slate-800 dark:text-white flex items-center space-x-2">
+                <Settings className="w-5 h-5 text-emerald-500" />
+                <span>Configurar Horarios de Disponibilidad</span>
+              </h3>
+              <button
+                onClick={() => setShowConfigModal(false)}
+                className="p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-white/5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-all"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {successMsg ? (
+              <div className="flex flex-col items-center justify-center py-12 text-center">
+                <div className="w-12 h-12 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center mb-3 animate-bounce">
+                  <Check className="w-6 h-6" />
+                </div>
+                <p className="text-sm font-semibold text-slate-800 dark:text-white">{successMsg}</p>
+              </div>
+            ) : (
+              <form onSubmit={handleConfigSubmit} className="space-y-4">
+                <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
+                  Activa los días laborables. Puedes agregar múltiples intervalos de horas por día para excluir tus horas de almuerzo y descansos.
+                </p>
+
+                <div className="space-y-4 max-h-[380px] overflow-y-auto pr-1">
+                  {localAvailability.map((d) => (
+                    <div 
+                      key={d.day_of_week} 
+                      className="p-4 rounded-2xl border border-slate-150 dark:border-white/5 bg-slate-50 dark:bg-dark-950/40 space-y-3"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-3">
+                          <input
+                            type="checkbox"
+                            checked={d.enabled}
+                            onChange={() => toggleDayLocal(d.day_of_week)}
+                            className="w-4.5 h-4.5 rounded border-slate-350 text-emerald-600 focus:ring-emerald-500"
+                          />
+                          <span className="text-sm font-bold text-slate-700 dark:text-slate-200">
+                            {d.name}
+                          </span>
+                        </div>
+                        
+                        {d.enabled && (
+                          <button
+                            type="button"
+                            onClick={() => addIntervalLocal(d.day_of_week)}
+                            className="text-xs text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 font-semibold flex items-center space-x-1"
+                          >
+                            <Plus className="w-3.5 h-3.5" />
+                            <span>Añadir bloque</span>
+                          </button>
+                        )}
+                      </div>
+
+                      {d.enabled ? (
+                        <div className="space-y-2 pl-7">
+                          {(d.intervals || []).map((interval, idx) => (
+                            <div key={idx} className="flex items-center space-x-2 animate-fade-in">
+                              <input
+                                type="time"
+                                value={interval.start_time}
+                                onChange={(e) => updateIntervalTimeLocal(d.day_of_week, idx, 'start_time', e.target.value)}
+                                className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl px-3 py-2 text-xs text-slate-800 dark:text-white focus:outline-none"
+                              />
+                              <span className="text-xs text-slate-400">a</span>
+                              <input
+                                type="time"
+                                value={interval.end_time}
+                                onChange={(e) => updateIntervalTimeLocal(d.day_of_week, idx, 'end_time', e.target.value)}
                                 className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl px-3 py-2 text-xs text-slate-800 dark:text-white focus:outline-none"
                               />
                               
@@ -1012,7 +1128,7 @@ export const CalendarView = () => {
                     {selectedLeadForFicha.advisor_status && (
                       <>
                         <span>•</span>
-                        <span className="px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:blue-400 font-extrabold text-[10px]">
+                        <span className="px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 font-extrabold text-[10px]">
                           Estatus: {selectedLeadForFicha.advisor_status}
                         </span>
                       </>
@@ -1035,109 +1151,143 @@ export const CalendarView = () => {
             {/* Contenido Ficha Técnica 360° */}
             <div className="flex-1 overflow-y-auto py-5 space-y-5 pr-1">
               
-              {/* ⚡ BARRA DE ACCIONES RÁPIDAS DEL ASESOR (1-Clic) */}
-              <div className="p-4 rounded-2xl bg-gradient-to-r from-slate-900 to-slate-800 text-white shadow-lg space-y-2.5">
+              {/* ⚡ BARRA DE ACCIONES RÁPIDAS DEL ASESOR (Multi-Selección 1-Clic) */}
+              <div className="p-4 rounded-2xl bg-slate-100/90 dark:bg-slate-900/90 border border-slate-200/80 dark:border-white/10 text-slate-800 dark:text-white shadow-sm space-y-3 transition-colors">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-black uppercase tracking-wider text-emerald-400 flex items-center space-x-1.5">
+                  <span className="text-[10px] font-black uppercase tracking-wider text-emerald-600 dark:text-emerald-400 flex items-center space-x-1.5">
                     <Sparkles className="w-3.5 h-3.5" />
-                    <span>Control de Atención del Asesor (1-Clic)</span>
+                    <span>Control de Atención del Asesor (Multi-Selección 1-Clic)</span>
                   </span>
                   {advisorStatusMsg && (
-                    <span className="text-[10px] font-bold text-emerald-300 animate-fade-in">
+                    <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-300 animate-fade-in bg-emerald-500/10 px-2 py-0.5 rounded-full">
                       {advisorStatusMsg}
                     </span>
                   )}
                 </div>
 
-                <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                   <button
                     type="button"
                     onClick={async () => {
-                      await logAdvisorStatus(selectedLeadForFicha.id, 'CONNECTED');
-                      setSelectedLeadForFicha(prev => ({ ...prev, advisor_status: 'CONNECTED' }));
-                      setAdvisorStatusMsg('¡Notificado: Conectado a Cita Virtual!');
-                      setTimeout(() => setAdvisorStatusMsg(''), 3000);
+                      if (!selectedLeadForFicha) return;
+                      const current = (selectedLeadForFicha.advisor_status || '').split(',').map(s => s.trim()).filter(Boolean);
+                      const isSel = current.includes('CONTACT_MADE') || current.includes('CONNECTED');
+                      const next = isSel ? current.filter(t => t !== 'CONTACT_MADE' && t !== 'CONNECTED') : [...current, 'CONTACT_MADE'];
+                      const nextStr = next.join(',');
+                      
+                      setSelectedLeadForFicha(prev => ({ ...prev, advisor_status: nextStr }));
+                      setAdvisorStatusMsg('¡Contacto registrado!');
+                      setTimeout(() => setAdvisorStatusMsg(''), 2500);
+
+                      const res = await logAdvisorStatus(selectedLeadForFicha.id, 'CONTACT_MADE', '', 'toggle');
+                      if (typeof res === 'string') {
+                        setSelectedLeadForFicha(prev => ({ ...prev, advisor_status: res }));
+                      }
                     }}
-                    className={`p-2.5 rounded-xl border text-[11px] font-extrabold flex flex-col items-center justify-center space-y-1 transition-all cursor-pointer ${
-                      selectedLeadForFicha.advisor_status === 'CONNECTED'
-                        ? 'bg-emerald-500 border-emerald-400 text-white shadow-md'
-                        : 'bg-white/5 hover:bg-white/10 border-white/10 text-slate-200'
+                    className={`p-3 rounded-xl border text-[11px] font-extrabold flex flex-col items-center justify-center space-y-1 transition-all cursor-pointer shadow-sm ${
+                      (selectedLeadForFicha.advisor_status || '').includes('CONTACT_MADE') || (selectedLeadForFicha.advisor_status || '').includes('CONNECTED')
+                        ? 'bg-emerald-600 border-emerald-500 text-white shadow-md ring-2 ring-emerald-500/30'
+                        : 'bg-white dark:bg-slate-800/80 hover:bg-slate-50 dark:hover:bg-slate-700/60 border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200'
                     }`}
                   >
-                    <Video className="w-4 h-4 text-emerald-300" />
-                    <span>🟢 Conectado</span>
+                    <PhoneCall className={`w-4 h-4 ${(selectedLeadForFicha.advisor_status || '').includes('CONTACT_MADE') || (selectedLeadForFicha.advisor_status || '').includes('CONNECTED') ? 'text-white' : 'text-emerald-500 dark:text-emerald-400'}`} />
+                    <span>📞 / 💻 Contacto Realizado</span>
+                    {((selectedLeadForFicha.advisor_status || '').includes('CONTACT_MADE') || (selectedLeadForFicha.advisor_status || '').includes('CONNECTED')) && (
+                      <span className="text-[9px] font-black uppercase text-emerald-100 bg-emerald-700/50 px-2 py-0.5 rounded-full">✓ Realizado</span>
+                    )}
                   </button>
 
                   <button
                     type="button"
                     onClick={async () => {
-                      await logAdvisorStatus(selectedLeadForFicha.id, 'CALL_MADE');
-                      setSelectedLeadForFicha(prev => ({ ...prev, advisor_status: 'CALL_MADE' }));
-                      setAdvisorStatusMsg('¡Notificado: Llamada realizada!');
-                      setTimeout(() => setAdvisorStatusMsg(''), 3000);
-                    }}
-                    className={`p-2.5 rounded-xl border text-[11px] font-extrabold flex flex-col items-center justify-center space-y-1 transition-all cursor-pointer ${
-                      selectedLeadForFicha.advisor_status === 'CALL_MADE'
-                        ? 'bg-indigo-600 border-indigo-400 text-white shadow-md'
-                        : 'bg-white/5 hover:bg-white/10 border-white/10 text-slate-200'
-                    }`}
-                  >
-                    <PhoneCall className="w-4 h-4 text-indigo-300" />
-                    <span>📞 Llamada Realizada</span>
-                  </button>
+                      if (!selectedLeadForFicha) return;
+                      const current = (selectedLeadForFicha.advisor_status || '').split(',').map(s => s.trim()).filter(Boolean);
+                      const isSel = current.includes('SHOWROOM_VISITED');
+                      const next = isSel ? current.filter(t => t !== 'SHOWROOM_VISITED') : [...current, 'SHOWROOM_VISITED'];
+                      const nextStr = next.join(',');
+                      
+                      setSelectedLeadForFicha(prev => ({ ...prev, advisor_status: nextStr }));
+                      setAdvisorStatusMsg('¡Visita Showroom registrada!');
+                      setTimeout(() => setAdvisorStatusMsg(''), 2500);
 
-                  <button
-                    type="button"
-                    onClick={async () => {
-                      await logAdvisorStatus(selectedLeadForFicha.id, 'SHOWROOM_VISITED');
-                      setSelectedLeadForFicha(prev => ({ ...prev, advisor_status: 'SHOWROOM_VISITED' }));
-                      setAdvisorStatusMsg('¡Notificado: Visitó Showroom!');
-                      setTimeout(() => setAdvisorStatusMsg(''), 3000);
+                      const res = await logAdvisorStatus(selectedLeadForFicha.id, 'SHOWROOM_VISITED', '', 'toggle');
+                      if (typeof res === 'string') {
+                        setSelectedLeadForFicha(prev => ({ ...prev, advisor_status: res }));
+                      }
                     }}
-                    className={`p-2.5 rounded-xl border text-[11px] font-extrabold flex flex-col items-center justify-center space-y-1 transition-all cursor-pointer ${
-                      selectedLeadForFicha.advisor_status === 'SHOWROOM_VISITED'
-                        ? 'bg-teal-600 border-teal-400 text-white shadow-md'
-                        : 'bg-white/5 hover:bg-white/10 border-white/10 text-slate-200'
+                    className={`p-3 rounded-xl border text-[11px] font-extrabold flex flex-col items-center justify-center space-y-1 transition-all cursor-pointer shadow-sm ${
+                      (selectedLeadForFicha.advisor_status || '').includes('SHOWROOM_VISITED')
+                        ? 'bg-teal-600 border-teal-500 text-white shadow-md ring-2 ring-teal-500/30'
+                        : 'bg-white dark:bg-slate-800/80 hover:bg-slate-50 dark:hover:bg-slate-700/60 border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200'
                     }`}
                   >
-                    <Building2 className="w-4 h-4 text-teal-300" />
+                    <Building2 className={`w-4 h-4 ${(selectedLeadForFicha.advisor_status || '').includes('SHOWROOM_VISITED') ? 'text-white' : 'text-teal-500 dark:text-teal-400'}`} />
                     <span>🏢 Visitó Showroom</span>
+                    {(selectedLeadForFicha.advisor_status || '').includes('SHOWROOM_VISITED') && (
+                      <span className="text-[9px] font-black uppercase text-teal-100 bg-teal-700/50 px-2 py-0.5 rounded-full">✓ Visitó Armenia</span>
+                    )}
                   </button>
 
                   <button
                     type="button"
                     onClick={async () => {
-                      await logAdvisorStatus(selectedLeadForFicha.id, 'NO_ANSWER');
-                      setSelectedLeadForFicha(prev => ({ ...prev, advisor_status: 'NO_ANSWER' }));
-                      setAdvisorStatusMsg('¡Notificado: No contestó!');
-                      setTimeout(() => setAdvisorStatusMsg(''), 3000);
+                      if (!selectedLeadForFicha) return;
+                      const current = (selectedLeadForFicha.advisor_status || '').split(',').map(s => s.trim()).filter(Boolean);
+                      const isSel = current.includes('QUOTATION_SENT');
+                      const next = isSel ? current.filter(t => t !== 'QUOTATION_SENT') : [...current, 'QUOTATION_SENT'];
+                      const nextStr = next.join(',');
+                      
+                      setSelectedLeadForFicha(prev => ({ ...prev, advisor_status: nextStr }));
+                      setAdvisorStatusMsg('¡Propuesta / Cotización enviada!');
+                      setTimeout(() => setAdvisorStatusMsg(''), 2500);
+
+                      const res = await logAdvisorStatus(selectedLeadForFicha.id, 'QUOTATION_SENT', '', 'toggle');
+                      if (typeof res === 'string') {
+                        setSelectedLeadForFicha(prev => ({ ...prev, advisor_status: res }));
+                      }
                     }}
-                    className={`p-2.5 rounded-xl border text-[11px] font-extrabold flex flex-col items-center justify-center space-y-1 transition-all cursor-pointer ${
-                      selectedLeadForFicha.advisor_status === 'NO_ANSWER'
-                        ? 'bg-amber-600 border-amber-400 text-white shadow-md'
-                        : 'bg-white/5 hover:bg-white/10 border-white/10 text-slate-200'
+                    className={`p-3 rounded-xl border text-[11px] font-extrabold flex flex-col items-center justify-center space-y-1 transition-all cursor-pointer shadow-sm ${
+                      (selectedLeadForFicha.advisor_status || '').includes('QUOTATION_SENT')
+                        ? 'bg-blue-600 border-blue-500 text-white shadow-md ring-2 ring-blue-500/30'
+                        : 'bg-white dark:bg-slate-800/80 hover:bg-slate-50 dark:hover:bg-slate-700/60 border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200'
                     }`}
                   >
-                    <Clock className="w-4 h-4 text-amber-300" />
-                    <span>🟡 No Contestó</span>
+                    <FileText className={`w-4 h-4 ${(selectedLeadForFicha.advisor_status || '').includes('QUOTATION_SENT') ? 'text-white' : 'text-blue-500 dark:text-blue-400'}`} />
+                    <span>📑 Propuesta Enviada</span>
+                    {(selectedLeadForFicha.advisor_status || '').includes('QUOTATION_SENT') && (
+                      <span className="text-[9px] font-black uppercase text-blue-100 bg-blue-700/50 px-2 py-0.5 rounded-full">✓ Cotizado</span>
+                    )}
                   </button>
 
                   <button
                     type="button"
                     onClick={async () => {
-                      await logAdvisorStatus(selectedLeadForFicha.id, 'QUOTATION_SENT');
-                      setSelectedLeadForFicha(prev => ({ ...prev, advisor_status: 'QUOTATION_SENT' }));
-                      setAdvisorStatusMsg('¡Notificado: Cotización enviada!');
-                      setTimeout(() => setAdvisorStatusMsg(''), 3000);
+                      if (!selectedLeadForFicha) return;
+                      const current = (selectedLeadForFicha.advisor_status || '').split(',').map(s => s.trim()).filter(Boolean);
+                      const isSel = current.includes('NO_ANSWER');
+                      const next = isSel ? current.filter(t => t !== 'NO_ANSWER') : [...current, 'NO_ANSWER'];
+                      const nextStr = next.join(',');
+                      
+                      setSelectedLeadForFicha(prev => ({ ...prev, advisor_status: nextStr }));
+                      setAdvisorStatusMsg('¡Registrado: Sin respuesta!');
+                      setTimeout(() => setAdvisorStatusMsg(''), 2500);
+
+                      const res = await logAdvisorStatus(selectedLeadForFicha.id, 'NO_ANSWER', '', 'toggle');
+                      if (typeof res === 'string') {
+                        setSelectedLeadForFicha(prev => ({ ...prev, advisor_status: res }));
+                      }
                     }}
-                    className={`p-2.5 rounded-xl border text-[11px] font-extrabold flex flex-col items-center justify-center space-y-1 transition-all cursor-pointer ${
-                      selectedLeadForFicha.advisor_status === 'QUOTATION_SENT'
-                        ? 'bg-blue-600 border-blue-400 text-white shadow-md'
-                        : 'bg-white/5 hover:bg-white/10 border-white/10 text-slate-200'
+                    className={`p-3 rounded-xl border text-[11px] font-extrabold flex flex-col items-center justify-center space-y-1 transition-all cursor-pointer shadow-sm ${
+                      (selectedLeadForFicha.advisor_status || '').includes('NO_ANSWER')
+                        ? 'bg-amber-600 border-amber-500 text-white shadow-md ring-2 ring-amber-500/30'
+                        : 'bg-white dark:bg-slate-800/80 hover:bg-slate-50 dark:hover:bg-slate-700/60 border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200'
                     }`}
                   >
-                    <FileText className="w-4 h-4 text-blue-300" />
-                    <span>📑 Cotización</span>
+                    <Clock className={`w-4 h-4 ${(selectedLeadForFicha.advisor_status || '').includes('NO_ANSWER') ? 'text-white' : 'text-amber-500 dark:text-amber-400'}`} />
+                    <span>🟡 Sin Respuesta</span>
+                    {(selectedLeadForFicha.advisor_status || '').includes('NO_ANSWER') && (
+                      <span className="text-[9px] font-black uppercase text-amber-100 bg-amber-700/50 px-2 py-0.5 rounded-full">Reintentar</span>
+                    )}
                   </button>
                 </div>
               </div>
@@ -1193,8 +1343,8 @@ export const CalendarView = () => {
                           setTimeout(() => setModalitySaved(false), 2500);
                         }
                       }}
-                      className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 text-white text-xs font-bold shadow-md active:scale-95 transition-all flex items-center space-x-1.5 cursor-pointer border border-white/10"
                       title="Guardar modalidad elegida"
+                      className="px-3 py-1.5 bg-slate-800 text-white rounded-lg text-xs font-bold shadow hover:bg-slate-700"
                     >
                       <span>💾 Guardar</span>
                     </button>
@@ -1270,6 +1420,93 @@ export const CalendarView = () => {
                     <select
                       value={editInterestProduct}
                       onChange={(e) => setEditInterestProduct(e.target.value)}
+                      className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500 cursor-pointer"
+                    >
+                      <option value="Vivienda Propia o Campestre">Vivienda Propia o Campestre</option>
+                      <option value="Glamping, Hotelería o Turismo">Glamping, Hotelería o Turismo</option>
+                      <option value="Flex Home">Flex Home (Modular)</option>
+                      <option value="Cápsula Living">Cápsula Living</option>
+                      <option value="Llave en Mano">Llave en Mano (Proyecto Integral)</option>
+                      <option value="Oficina / Local Comercial">Oficina / Local Comercial</option>
+                      <option value="Casa de Campo Personalizada">Casa de Campo Personalizada</option>
+                      <option value="Otro">Otro (Especificar en notas)</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">Perfil / Tipo de Cliente</label>
+                    <select
+                      value={editClientType}
+                      onChange={(e) => setEditClientType(e.target.value)}
+                      className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500 cursor-pointer"
+                    >
+                      <option value="Persona Natural">👤 Persona Natural (Vivienda Propia)</option>
+                      <option value="Empresario">💼 Empresario / Negocio</option>
+                      <option value="Inversionista">📈 Inversionista / Proyecto Turístico</option>
+                      <option value="Por definir">❓ Por Definir</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">Método de Asesoría Preferido</label>
+                    <input
+                      type="text"
+                      value={editPreferredMethod}
+                      onChange={(e) => setEditPreferredMethod(e.target.value)}
+                      placeholder="Llamada telefónica / Asesoría Virtual Zoom"
+                      className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">Presupuesto Estimado ($ COP)</label>
+                    <input
+                      type="number"
+                      value={editBudget}
+                      onChange={(e) => setEditBudget(e.target.value)}
+                      placeholder="120000000"
+                      className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">Notas Internas Privadas del Asesor</label>
+                  <textarea
+                    value={editNotes}
+                    onChange={(e) => setEditNotes(e.target.value)}
+                    rows={3}
+                    placeholder="Escribe notas privadas del asesor sobre preferencias de diseño, fechas de construcción, terreno, etc."
+                    className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs font-medium text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500"
+                  />
+                </div>
+
+                <button
+                  type="button"
+                  onClick={async () => {
+                    const ok = await updateContact360Details(selectedLeadForFicha.id, {
+                      email: editEmail,
+                      lot_city: editLotCity,
+                      lot_status: editLotStatus,
+                      interest_product: editInterestProduct,
+                      preferred_contact_method: editPreferredMethod,
+                      client_type: editClientType,
+                      estimated_budget: editBudget ? parseFloat(editBudget) : 0,
+                      qualification_notes: editNotes
+                    });
+                    if (ok) {
+                      setProfileSaved(true);
+                      setTimeout(() => setProfileSaved(false), 3000);
+                      fetchLeads();
+                    }
+                  }}
+                  className="w-full bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold py-3 px-4 rounded-xl shadow-md text-xs active:scale-[0.98] transition-all cursor-pointer flex items-center justify-center space-x-1.5"
+                >
+                  <Save className="w-4 h-4" />
+                  <span>Guardar Perfil Completo 360°</span>
+                </button>
+              </div>
+
             </div>
 
             {/* Acciones Modal */}
