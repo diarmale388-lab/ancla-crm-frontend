@@ -48,9 +48,10 @@ export const CalendarView = () => {
       setEditPreferredMethod(selectedLeadForFicha.preferred_contact_method || 'Llamada telefónica tradicional');
       setEditClientType(selectedLeadForFicha.client_type || 'Persona Natural');
       setEditBudget(selectedLeadForFicha.estimated_budget || '');
-      setEditNotes(selectedLeadForFicha.qualification_notes || '');
+      const activeNotes = selectedLeadForFicha.qualification_notes || selectedLeadForFicha.notes || (selectedApptForFicha && selectedApptForFicha.notes) || '';
+      setEditNotes(activeNotes);
     }
-  }, [selectedLeadForFicha]);
+  }, [selectedLeadForFicha, selectedApptForFicha]);
 
   // Estados de Calendario Mensual Grande
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -1151,6 +1152,32 @@ export const CalendarView = () => {
             {/* Contenido Ficha Técnica 360° */}
             <div className="flex-1 overflow-y-auto py-5 space-y-5 pr-1">
               
+              {/* 📋 REQUERIMIENTOS TÉCNICOS & DOSSIER COMERCIAL DEL CLIENTE (VISIBLE AL INICIO) */}
+              {(() => {
+                const dossierNotes = selectedLeadForFicha.qualification_notes || selectedLeadForFicha.notes || (selectedApptForFicha && selectedApptForFicha.notes) || '';
+                return dossierNotes ? (
+                  <div className="p-4.5 rounded-2xl bg-emerald-500/10 border-2 border-emerald-500/30 text-emerald-950 dark:text-emerald-100 shadow-md space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-black uppercase tracking-wider text-emerald-700 dark:text-emerald-400 flex items-center space-x-2">
+                        <Sparkles className="w-4 h-4 text-emerald-500" />
+                        <span>📋 Requerimientos Técnicos y Dossier del Cliente (Formulario, Audios & Chat 360°)</span>
+                      </span>
+                      <span className="text-[9px] font-black px-2.5 py-0.5 rounded-full bg-emerald-600 text-white shadow-sm">
+                        INFORMACIÓN TÉCNICA VERIFICADA
+                      </span>
+                    </div>
+                    <div className="text-xs font-semibold text-slate-800 dark:text-slate-100 whitespace-pre-line leading-relaxed bg-white/80 dark:bg-slate-900/90 p-4 rounded-xl border border-emerald-500/20 shadow-inner">
+                      {dossierNotes}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-700 dark:text-amber-300 text-xs font-semibold flex items-center space-x-2">
+                    <AlertCircle className="w-4 h-4 flex-shrink-0 text-amber-500" />
+                    <span>Aún no hay notas técnicas registradas para este prospecto. Puedes redactarlas en la casilla inferior.</span>
+                  </div>
+                );
+              })()}
+
               {/* ⚡ BARRA DE ACCIONES RÁPIDAS DEL ASESOR (Multi-Selección 1-Clic) */}
               <div className="p-4 rounded-2xl bg-slate-100/90 dark:bg-slate-900/90 border border-slate-200/80 dark:border-white/10 text-slate-800 dark:text-white shadow-sm space-y-3 transition-colors">
                 <div className="flex items-center justify-between">
