@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useCalendarStore } from '../../store/useCalendarStore';
 import { useKanbanStore } from '../../store/useKanbanStore';
 import { useChatStore } from '../../store/useChatStore';
-import { Calendar as CalendarIcon, Clock, User, Plus, Check, AlertCircle, X, Settings, Trash2, ChevronLeft, ChevronRight, Download, MessageCircle, MapPin, DollarSign, Building, Phone, Mail, ExternalLink, ShieldCheck } from 'lucide-react';
+import { Calendar as CalendarIcon, Clock, User, Plus, Check, AlertCircle, X, Settings, Trash2, ChevronLeft, ChevronRight, Download, MessageCircle, MapPin, DollarSign, Building, Phone, Mail, ExternalLink, ShieldCheck, Sparkles, PhoneCall, Video, Building2, CheckCircle2, Save, FileText } from 'lucide-react';
 
 export const CalendarView = () => {
   const { 
@@ -19,7 +19,7 @@ export const CalendarView = () => {
     loading, 
     error 
   } = useCalendarStore();
-  const { leads, fetchLeads } = useKanbanStore();
+  const { leads, fetchLeads, updateContact360Details, logAdvisorStatus } = useKanbanStore();
   const { setActiveTab, fetchMessages } = useChatStore();
 
   const [showAddModal, setShowAddModal] = useState(false);
@@ -27,6 +27,31 @@ export const CalendarView = () => {
   const [selectedLeadForFicha, setSelectedLeadForFicha] = useState(null);
   const [selectedApptForFicha, setSelectedApptForFicha] = useState(null);
   
+  // Estados para Ficha 360° editable
+  const [editEmail, setEditEmail] = useState('');
+  const [editLotCity, setEditLotCity] = useState('');
+  const [editLotStatus, setEditLotStatus] = useState('');
+  const [editInterestProduct, setEditInterestProduct] = useState('');
+  const [editPreferredMethod, setEditPreferredMethod] = useState('');
+  const [editClientType, setEditClientType] = useState('');
+  const [editBudget, setEditBudget] = useState('');
+  const [editNotes, setEditNotes] = useState('');
+  const [profileSaved, setProfileSaved] = useState(false);
+  const [advisorStatusMsg, setAdvisorStatusMsg] = useState('');
+
+  useEffect(() => {
+    if (selectedLeadForFicha) {
+      setEditEmail(selectedLeadForFicha.email || '');
+      setEditLotCity(selectedLeadForFicha.lot_city || '');
+      setEditLotStatus(selectedLeadForFicha.lot_status || 'Sí, ya tengo');
+      setEditInterestProduct(selectedLeadForFicha.interest_product || 'Vivienda Propia o Campestre');
+      setEditPreferredMethod(selectedLeadForFicha.preferred_contact_method || 'Llamada telefónica tradicional');
+      setEditClientType(selectedLeadForFicha.client_type || 'Persona Natural');
+      setEditBudget(selectedLeadForFicha.estimated_budget || '');
+      setEditNotes(selectedLeadForFicha.qualification_notes || '');
+    }
+  }, [selectedLeadForFicha]);
+
   // Estados de Calendario Mensual Grande
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -960,12 +985,12 @@ export const CalendarView = () => {
       {/* Modal Ficha Técnica 360° del Cliente al hacer clic en cualquier Cita */}
       {selectedLeadForFicha && (
         <div className="fixed inset-0 bg-slate-950/70 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-fade-in">
-          <div className="w-full max-w-2xl bg-white dark:bg-dark-900 border border-slate-200 dark:border-white/10 rounded-3xl p-6 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+          <div className="w-full max-w-3xl bg-white dark:bg-dark-900 border border-slate-200 dark:border-white/10 rounded-3xl p-6 shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
             
-            {/* Cabecera Ficha */}
+            {/* Cabecera Ficha 360° */}
             <div className="flex items-center justify-between border-b border-slate-100 dark:border-white/5 pb-4">
-              <div className="flex items-center space-x-3">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-500 text-white flex items-center justify-center font-black text-lg shadow-lg shadow-emerald-500/20">
+              <div className="flex items-center space-x-3.5">
+                <div className="w-13 h-13 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-500 text-white flex items-center justify-center font-black text-xl shadow-lg shadow-emerald-500/20 flex-shrink-0">
                   {(selectedLeadForFicha.first_name || 'C')[0].toUpperCase()}
                 </div>
                 <div>
@@ -974,11 +999,24 @@ export const CalendarView = () => {
                     <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
                       ID #{selectedLeadForFicha.id}
                     </span>
+                    {selectedLeadForFicha.qualification_level === 'VIP' && (
+                      <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30 flex items-center space-x-1">
+                        <span>🌟 CLIENTE VIP</span>
+                      </span>
+                    )}
                   </h3>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 flex items-center space-x-2">
-                    <span>{selectedLeadForFicha.source || 'Meta Ads'}</span>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 flex items-center space-x-2 flex-wrap gap-y-1">
+                    <span className="font-semibold text-slate-700 dark:text-slate-300">{selectedLeadForFicha.source || 'Meta Ads'}</span>
                     <span>•</span>
-                    <span className="text-emerald-600 dark:text-emerald-400 font-semibold">{selectedLeadForFicha.lot_city || 'Armenia'}</span>
+                    <span className="text-emerald-600 dark:text-emerald-400 font-bold">{selectedLeadForFicha.lot_city || 'Armenia'}</span>
+                    {selectedLeadForFicha.advisor_status && (
+                      <>
+                        <span>•</span>
+                        <span className="px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:blue-400 font-extrabold text-[10px]">
+                          Estatus: {selectedLeadForFicha.advisor_status}
+                        </span>
+                      </>
+                    )}
                   </p>
                 </div>
               </div>
@@ -994,12 +1032,119 @@ export const CalendarView = () => {
               </button>
             </div>
 
-            {/* Contenido Ficha Técnica */}
-            <div className="flex-1 overflow-y-auto py-5 space-y-5">
+            {/* Contenido Ficha Técnica 360° */}
+            <div className="flex-1 overflow-y-auto py-5 space-y-5 pr-1">
               
+              {/* ⚡ BARRA DE ACCIONES RÁPIDAS DEL ASESOR (1-Clic) */}
+              <div className="p-4 rounded-2xl bg-gradient-to-r from-slate-900 to-slate-800 text-white shadow-lg space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-black uppercase tracking-wider text-emerald-400 flex items-center space-x-1.5">
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>Control de Atención del Asesor (1-Clic)</span>
+                  </span>
+                  {advisorStatusMsg && (
+                    <span className="text-[10px] font-bold text-emerald-300 animate-fade-in">
+                      {advisorStatusMsg}
+                    </span>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      await logAdvisorStatus(selectedLeadForFicha.id, 'CONNECTED');
+                      setSelectedLeadForFicha(prev => ({ ...prev, advisor_status: 'CONNECTED' }));
+                      setAdvisorStatusMsg('¡Notificado: Conectado a Cita Virtual!');
+                      setTimeout(() => setAdvisorStatusMsg(''), 3000);
+                    }}
+                    className={`p-2.5 rounded-xl border text-[11px] font-extrabold flex flex-col items-center justify-center space-y-1 transition-all cursor-pointer ${
+                      selectedLeadForFicha.advisor_status === 'CONNECTED'
+                        ? 'bg-emerald-500 border-emerald-400 text-white shadow-md'
+                        : 'bg-white/5 hover:bg-white/10 border-white/10 text-slate-200'
+                    }`}
+                  >
+                    <Video className="w-4 h-4 text-emerald-300" />
+                    <span>🟢 Conectado</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      await logAdvisorStatus(selectedLeadForFicha.id, 'CALL_MADE');
+                      setSelectedLeadForFicha(prev => ({ ...prev, advisor_status: 'CALL_MADE' }));
+                      setAdvisorStatusMsg('¡Notificado: Llamada realizada!');
+                      setTimeout(() => setAdvisorStatusMsg(''), 3000);
+                    }}
+                    className={`p-2.5 rounded-xl border text-[11px] font-extrabold flex flex-col items-center justify-center space-y-1 transition-all cursor-pointer ${
+                      selectedLeadForFicha.advisor_status === 'CALL_MADE'
+                        ? 'bg-indigo-600 border-indigo-400 text-white shadow-md'
+                        : 'bg-white/5 hover:bg-white/10 border-white/10 text-slate-200'
+                    }`}
+                  >
+                    <PhoneCall className="w-4 h-4 text-indigo-300" />
+                    <span>📞 Llamada Realizada</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      await logAdvisorStatus(selectedLeadForFicha.id, 'SHOWROOM_VISITED');
+                      setSelectedLeadForFicha(prev => ({ ...prev, advisor_status: 'SHOWROOM_VISITED' }));
+                      setAdvisorStatusMsg('¡Notificado: Visitó Showroom!');
+                      setTimeout(() => setAdvisorStatusMsg(''), 3000);
+                    }}
+                    className={`p-2.5 rounded-xl border text-[11px] font-extrabold flex flex-col items-center justify-center space-y-1 transition-all cursor-pointer ${
+                      selectedLeadForFicha.advisor_status === 'SHOWROOM_VISITED'
+                        ? 'bg-teal-600 border-teal-400 text-white shadow-md'
+                        : 'bg-white/5 hover:bg-white/10 border-white/10 text-slate-200'
+                    }`}
+                  >
+                    <Building2 className="w-4 h-4 text-teal-300" />
+                    <span>🏢 Visitó Showroom</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      await logAdvisorStatus(selectedLeadForFicha.id, 'NO_ANSWER');
+                      setSelectedLeadForFicha(prev => ({ ...prev, advisor_status: 'NO_ANSWER' }));
+                      setAdvisorStatusMsg('¡Notificado: No contestó!');
+                      setTimeout(() => setAdvisorStatusMsg(''), 3000);
+                    }}
+                    className={`p-2.5 rounded-xl border text-[11px] font-extrabold flex flex-col items-center justify-center space-y-1 transition-all cursor-pointer ${
+                      selectedLeadForFicha.advisor_status === 'NO_ANSWER'
+                        ? 'bg-amber-600 border-amber-400 text-white shadow-md'
+                        : 'bg-white/5 hover:bg-white/10 border-white/10 text-slate-200'
+                    }`}
+                  >
+                    <Clock className="w-4 h-4 text-amber-300" />
+                    <span>🟡 No Contestó</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      await logAdvisorStatus(selectedLeadForFicha.id, 'QUOTATION_SENT');
+                      setSelectedLeadForFicha(prev => ({ ...prev, advisor_status: 'QUOTATION_SENT' }));
+                      setAdvisorStatusMsg('¡Notificado: Cotización enviada!');
+                      setTimeout(() => setAdvisorStatusMsg(''), 3000);
+                    }}
+                    className={`p-2.5 rounded-xl border text-[11px] font-extrabold flex flex-col items-center justify-center space-y-1 transition-all cursor-pointer ${
+                      selectedLeadForFicha.advisor_status === 'QUOTATION_SENT'
+                        ? 'bg-blue-600 border-blue-400 text-white shadow-md'
+                        : 'bg-white/5 hover:bg-white/10 border-white/10 text-slate-200'
+                    }`}
+                  >
+                    <FileText className="w-4 h-4 text-blue-300" />
+                    <span>📑 Cotización</span>
+                  </button>
+                </div>
+              </div>
+
               {/* Resumen de la Cita */}
               {selectedApptForFicha && (
-                <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-between">
+                <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-between flex-wrap gap-3">
                   <div className="flex items-center space-x-3">
                     <CalendarIcon className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
                     <div>
@@ -1019,14 +1164,14 @@ export const CalendarView = () => {
                       </span>
                     )}
                     <select
-                      value={getApptType(selectedApptForFicha.appointment_type, selectedApptForFicha.notes)}
+                      value={getApptType(selectedApptForFicha.appointment_type, selectedApptForFicha.notes, selectedLeadForFicha)}
                       onChange={(e) => {
                         const newType = e.target.value;
                         setSelectedApptForFicha(prev => ({ ...prev, appointment_type: newType }));
                       }}
                       className={`text-xs font-black px-3.5 py-2 rounded-xl text-white shadow-sm focus:outline-none cursor-pointer border border-white/20 transition-all ${
-                        getApptType(selectedApptForFicha.appointment_type, selectedApptForFicha.notes) === 'PRESENCIAL' ? 'bg-emerald-600 hover:bg-emerald-500' :
-                        getApptType(selectedApptForFicha.appointment_type, selectedApptForFicha.notes) === 'LLAMADA' ? 'bg-indigo-600 hover:bg-indigo-500' : 'bg-blue-600 hover:bg-blue-500'
+                        getApptType(selectedApptForFicha.appointment_type, selectedApptForFicha.notes, selectedLeadForFicha) === 'PRESENCIAL' ? 'bg-emerald-600 hover:bg-emerald-500' :
+                        getApptType(selectedApptForFicha.appointment_type, selectedApptForFicha.notes, selectedLeadForFicha) === 'LLAMADA' ? 'bg-indigo-600 hover:bg-indigo-500' : 'bg-blue-600 hover:bg-blue-500'
                       }`}
                     >
                       <option value="PRESENCIAL" className="bg-slate-900 text-white">🏢 VISITA PRESENCIAL (SHOWROOM)</option>
@@ -1037,7 +1182,7 @@ export const CalendarView = () => {
                     <button
                       type="button"
                       onClick={async () => {
-                        const currentType = getApptType(selectedApptForFicha.appointment_type, selectedApptForFicha.notes);
+                        const currentType = getApptType(selectedApptForFicha.appointment_type, selectedApptForFicha.notes, selectedLeadForFicha);
                         const ok = await updateAppointment(selectedApptForFicha.id, { 
                           appointment_type: currentType,
                           modality: currentType 
@@ -1057,62 +1202,74 @@ export const CalendarView = () => {
                 </div>
               )}
 
-              {/* Grid 2 Columnas Datos Técnicos */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                
-                <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/40 border border-slate-200/60 dark:border-white/5 space-y-3">
-                  <span className="text-[10px] uppercase font-black tracking-wider text-slate-400 dark:text-slate-500 block">Datos de Contacto</span>
-                  
-                  <div className="flex items-center space-x-2 text-xs font-bold text-slate-700 dark:text-slate-200">
-                    <Phone className="w-4 h-4 text-emerald-500 flex-shrink-0" />
-                    <span>{selectedLeadForFicha.phone}</span>
-                  </div>
-
-                  <div className="flex items-center space-x-2 text-xs text-slate-600 dark:text-slate-300">
-                    <Mail className="w-4 h-4 text-slate-400 flex-shrink-0" />
-                    <span>{selectedLeadForFicha.email || 'No provisto'}</span>
-                  </div>
-
-                  <div className="flex items-center space-x-2 text-xs text-slate-600 dark:text-slate-300">
-                    <MapPin className="w-4 h-4 text-slate-400 flex-shrink-0" />
-                    <span>Ubicación Lote: <strong>{selectedLeadForFicha.lot_city || 'Por definir'}</strong></span>
-                  </div>
-                </div>
-
-                <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/40 border border-slate-200/60 dark:border-white/5 space-y-3">
-                  <span className="text-[10px] uppercase font-black tracking-wider text-slate-400 dark:text-slate-500 block">Detalles del Proyecto</span>
-                  
-                  <div className="flex items-center space-x-2 text-xs text-slate-700 dark:text-slate-200">
-                    <Building className="w-4 h-4 text-emerald-500 flex-shrink-0" />
-                    <span>Propósito / Modelo: <strong>{selectedLeadForFicha.interest_product || 'Vivienda / Campestre'}</strong></span>
-                  </div>
-
-                  <div className="flex items-center space-x-2 text-xs text-slate-600 dark:text-slate-300">
-                    <DollarSign className="w-4 h-4 text-emerald-500 flex-shrink-0" />
-                    <span>Presupuesto Estimado: <strong>{selectedLeadForFicha.estimated_budget ? `$${Number(selectedLeadForFicha.estimated_budget).toLocaleString()} COP` : 'Por definir en llamada'}</strong></span>
-                  </div>
-
-                  <div className="flex items-center space-x-2 text-xs text-slate-600 dark:text-slate-300">
-                    <ShieldCheck className="w-4 h-4 text-blue-500 flex-shrink-0" />
-                    <span>Estado Lote: <strong>{selectedLeadForFicha.lot_status || 'Sí, ya tengo lote'}</strong></span>
-                  </div>
-                </div>
-
-              </div>
-
               {/* Formulario Meta Ads & Respuestas Reales del Cliente */}
               {selectedLeadForFicha.qualification_notes && (
                 <div className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-500/20 space-y-2">
                   <span className="text-[10px] uppercase font-black tracking-wider text-emerald-700 dark:text-emerald-400 flex items-center space-x-1.5">
                     <Sparkles className="w-3.5 h-3.5" />
-                    <span>Información Recogida en Formulario Meta Ads & Chat</span>
+                    <span>Respuestas Extraídas de Formulario Meta Ads & Chat</span>
                   </span>
-                  <p className="text-xs font-medium text-slate-700 dark:text-slate-200 whitespace-pre-line leading-relaxed">
+                  <div className="text-xs font-medium text-slate-700 dark:text-slate-200 whitespace-pre-line leading-relaxed bg-white/60 dark:bg-slate-900/60 p-3 rounded-xl border border-emerald-500/10">
                     {selectedLeadForFicha.qualification_notes}
-                  </p>
+                  </div>
                 </div>
               )}
 
+              {/* Formulario de Edición de Perfil Técnico 360° */}
+              <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950/40 border border-slate-200/60 dark:border-white/5 space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs uppercase font-black tracking-wider text-slate-700 dark:text-slate-200 flex items-center space-x-1.5">
+                    <FileText className="w-4 h-4 text-emerald-500" />
+                    <span>Edición e Información Técnica del Perfil</span>
+                  </span>
+                  {profileSaved && (
+                    <span className="text-[10px] font-black px-2.5 py-1 rounded-lg bg-emerald-500 text-white animate-fade-in flex items-center space-x-1 shadow-sm">
+                      <Check className="w-3.5 h-3.5" />
+                      <span>¡Perfil Guardado!</span>
+                    </span>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                  <div>
+                    <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">Correo Electrónico</label>
+                    <input
+                      type="email"
+                      value={editEmail}
+                      onChange={(e) => setEditEmail(e.target.value)}
+                      placeholder="ejemplo@correo.com"
+                      className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">Ubicación del Lote (Ciudad/Depto)</label>
+                    <input
+                      type="text"
+                      value={editLotCity}
+                      onChange={(e) => setEditLotCity(e.target.value)}
+                      placeholder="Armenia, Quindío / Sahagún, Córdoba"
+                      className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">Estado del Lote / Terreno</label>
+                    <select
+                      value={editLotStatus}
+                      onChange={(e) => setEditLotStatus(e.target.value)}
+                      className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500 cursor-pointer"
+                    >
+                      <option value="Sí, ya tengo">Sí, ya tengo lote propio</option>
+                      <option value="Buscando Lote">Buscando Lote / Terreno</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">Modelo / Propósito de Interés</label>
+                    <select
+                      value={editInterestProduct}
+                      onChange={(e) => setEditInterestProduct(e.target.value)}
             </div>
 
             {/* Acciones Modal */}
