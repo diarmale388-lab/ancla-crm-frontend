@@ -277,9 +277,15 @@ export const CalendarView = () => {
   const handlePrevMonth = () => {
     setCurrentMonth(prev => new Date(prev.getFullYear(), prev.getMonth() - 1, 1));
   };
-
   const handleNextMonth = () => {
     setCurrentMonth(prev => new Date(prev.getFullYear(), prev.getMonth() + 1, 1));
+  };
+
+  const getApptType = (typeStr) => {
+    const s = (typeStr || '').toString().toUpperCase();
+    if (s.includes('PRESENCIAL') || s.includes('SHOWROOM')) return 'PRESENCIAL';
+    if (s.includes('LLAMADA') || s.includes('TELEFON')) return 'LLAMADA';
+    return 'VIRTUAL';
   };
 
   const getAppointmentsForDate = (date) => {
@@ -414,18 +420,21 @@ export const CalendarView = () => {
                         </span>
                         
                         <div className="hidden xs:flex flex-col gap-0.5 w-full">
-                          {dayApps.slice(0, 2).map((app) => (
-                            <div 
-                              key={app.id} 
-                              className={`text-[8px] sm:text-[9.5px] truncate px-1.5 py-0.5 rounded border font-bold block ${
-                                app.appointment_type === 'PRESENCIAL' ? 'bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border-emerald-500/30' :
-                                app.appointment_type === 'LLAMADA' ? 'bg-indigo-500/20 text-indigo-800 dark:text-indigo-300 border-indigo-500/30' :
-                                'bg-blue-500/20 text-blue-800 dark:text-blue-300 border-blue-500/30'
-                              }`}
-                            >
-                              {app.appointment_type === 'PRESENCIAL' ? '🏢 ' : app.appointment_type === 'LLAMADA' ? '📞 ' : '💻 '}{getLeadName(app.contact_id).split(' ')[0]} - {formatTime(app.datetime)}
-                            </div>
-                          ))}
+                          {dayApps.slice(0, 2).map((app) => {
+                            const apptType = getApptType(app.appointment_type);
+                            return (
+                              <div 
+                                key={app.id} 
+                                className={`text-[8px] sm:text-[9.5px] truncate px-1.5 py-0.5 rounded border font-bold block ${
+                                  apptType === 'PRESENCIAL' ? 'bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border-emerald-500/30' :
+                                  apptType === 'LLAMADA' ? 'bg-indigo-500/20 text-indigo-800 dark:text-indigo-300 border-indigo-500/30' :
+                                  'bg-blue-500/20 text-blue-800 dark:text-blue-300 border-blue-500/30'
+                                }`}
+                              >
+                                {apptType === 'PRESENCIAL' ? '🏢 ' : apptType === 'LLAMADA' ? '📞 ' : '💻 '}{getLeadName(app.contact_id).split(' ')[0]} - {formatTime(app.datetime)}
+                              </div>
+                            );
+                          })}
                           {dayApps.length > 2 && (
                             <span className="text-[7.5px] sm:text-[8px] text-slate-400 dark:text-slate-500 font-extrabold pl-1">
                               + {dayApps.length - 2} más
@@ -493,13 +502,18 @@ export const CalendarView = () => {
                             <Clock className="w-3 h-3" />
                             <span>A las {formatTime(app.datetime)}</span>
                           </div>
-                          <span className={`px-2.5 py-0.5 rounded-full font-black text-[9.5px] ${
-                            app.appointment_type === 'PRESENCIAL' ? 'bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border border-emerald-500/30' :
-                            app.appointment_type === 'LLAMADA' ? 'bg-indigo-500/20 text-indigo-800 dark:text-indigo-300 border border-indigo-500/30' :
-                            'bg-blue-500/20 text-blue-800 dark:text-blue-300 border border-blue-500/30'
-                          }`}>
-                            {app.appointment_type === 'PRESENCIAL' ? '🏢 PRESENCIAL (SHOWROOM)' : app.appointment_type === 'LLAMADA' ? '📞 LLAMADA TELEFÓNICA' : '💻 VIRTUAL (MEET)'}
-                          </span>
+                          {(() => {
+                            const sideType = getApptType(app.appointment_type);
+                            return (
+                              <span className={`px-2.5 py-0.5 rounded-full font-black text-[9.5px] ${
+                                sideType === 'PRESENCIAL' ? 'bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border border-emerald-500/30' :
+                                sideType === 'LLAMADA' ? 'bg-indigo-500/20 text-indigo-800 dark:text-indigo-300 border border-indigo-500/30' :
+                                'bg-blue-500/20 text-blue-800 dark:text-blue-300 border border-blue-500/30'
+                              }`}>
+                                {sideType === 'PRESENCIAL' ? '🏢 PRESENCIAL (SHOWROOM)' : sideType === 'LLAMADA' ? '📞 LLAMADA TELEFÓNICA' : '💻 VIRTUAL (MEET)'}
+                              </span>
+                            );
+                          })()}
                         </div>
                         {app.notes && (
                           <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-2 bg-slate-50 dark:bg-slate-950/40 p-2 rounded-xl italic">
@@ -1005,14 +1019,14 @@ export const CalendarView = () => {
                       </span>
                     )}
                     <select
-                      value={selectedApptForFicha.appointment_type || 'PRESENCIAL'}
+                      value={getApptType(selectedApptForFicha.appointment_type)}
                       onChange={(e) => {
                         const newType = e.target.value;
                         setSelectedApptForFicha(prev => ({ ...prev, appointment_type: newType }));
                       }}
                       className={`text-xs font-black px-3.5 py-2 rounded-xl text-white shadow-sm focus:outline-none cursor-pointer border border-white/20 transition-all ${
-                        (selectedApptForFicha.appointment_type || 'PRESENCIAL') === 'PRESENCIAL' ? 'bg-emerald-600 hover:bg-emerald-500' :
-                        (selectedApptForFicha.appointment_type || 'PRESENCIAL') === 'LLAMADA' ? 'bg-indigo-600 hover:bg-indigo-500' : 'bg-blue-600 hover:bg-blue-500'
+                        getApptType(selectedApptForFicha.appointment_type) === 'PRESENCIAL' ? 'bg-emerald-600 hover:bg-emerald-500' :
+                        getApptType(selectedApptForFicha.appointment_type) === 'LLAMADA' ? 'bg-indigo-600 hover:bg-indigo-500' : 'bg-blue-600 hover:bg-blue-500'
                       }`}
                     >
                       <option value="PRESENCIAL" className="bg-slate-900 text-white">🏢 VISITA PRESENCIAL (SHOWROOM)</option>
@@ -1023,9 +1037,13 @@ export const CalendarView = () => {
                     <button
                       type="button"
                       onClick={async () => {
-                        const currentType = selectedApptForFicha.appointment_type || 'PRESENCIAL';
-                        const ok = await updateAppointment(selectedApptForFicha.id, { appointment_type: currentType });
+                        const currentType = getApptType(selectedApptForFicha.appointment_type);
+                        const ok = await updateAppointment(selectedApptForFicha.id, { 
+                          appointment_type: currentType,
+                          modality: currentType 
+                        });
                         if (ok) {
+                          await fetchAppointments();
                           setModalitySaved(true);
                           setTimeout(() => setModalitySaved(false), 2500);
                         }
