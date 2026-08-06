@@ -281,10 +281,10 @@ export const CalendarView = () => {
     setCurrentMonth(prev => new Date(prev.getFullYear(), prev.getMonth() + 1, 1));
   };
 
-  const getApptType = (typeStr) => {
-    const s = (typeStr || '').toString().toUpperCase();
-    if (s.includes('PRESENCIAL') || s.includes('SHOWROOM')) return 'PRESENCIAL';
-    if (s.includes('LLAMADA') || s.includes('TELEFON')) return 'LLAMADA';
+  const getApptType = (typeStr, notesStr = '') => {
+    const combined = `${typeStr || ''} ${notesStr || ''}`.toUpperCase();
+    if (combined.includes('PRESENCIAL') || combined.includes('SHOWROOM') || combined.includes('VISITA')) return 'PRESENCIAL';
+    if (combined.includes('LLAMADA') || combined.includes('TELEFON')) return 'LLAMADA';
     return 'VIRTUAL';
   };
 
@@ -421,7 +421,7 @@ export const CalendarView = () => {
                         
                         <div className="hidden xs:flex flex-col gap-0.5 w-full">
                           {dayApps.slice(0, 2).map((app) => {
-                            const apptType = getApptType(app.appointment_type);
+                            const apptType = getApptType(app.appointment_type, app.notes);
                             return (
                               <div 
                                 key={app.id} 
@@ -503,7 +503,7 @@ export const CalendarView = () => {
                             <span>A las {formatTime(app.datetime)}</span>
                           </div>
                           {(() => {
-                            const sideType = getApptType(app.appointment_type);
+                            const sideType = getApptType(app.appointment_type, app.notes);
                             return (
                               <span className={`px-2.5 py-0.5 rounded-full font-black text-[9.5px] ${
                                 sideType === 'PRESENCIAL' ? 'bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border border-emerald-500/30' :
@@ -1019,14 +1019,14 @@ export const CalendarView = () => {
                       </span>
                     )}
                     <select
-                      value={getApptType(selectedApptForFicha.appointment_type)}
+                      value={getApptType(selectedApptForFicha.appointment_type, selectedApptForFicha.notes)}
                       onChange={(e) => {
                         const newType = e.target.value;
                         setSelectedApptForFicha(prev => ({ ...prev, appointment_type: newType }));
                       }}
                       className={`text-xs font-black px-3.5 py-2 rounded-xl text-white shadow-sm focus:outline-none cursor-pointer border border-white/20 transition-all ${
-                        getApptType(selectedApptForFicha.appointment_type) === 'PRESENCIAL' ? 'bg-emerald-600 hover:bg-emerald-500' :
-                        getApptType(selectedApptForFicha.appointment_type) === 'LLAMADA' ? 'bg-indigo-600 hover:bg-indigo-500' : 'bg-blue-600 hover:bg-blue-500'
+                        getApptType(selectedApptForFicha.appointment_type, selectedApptForFicha.notes) === 'PRESENCIAL' ? 'bg-emerald-600 hover:bg-emerald-500' :
+                        getApptType(selectedApptForFicha.appointment_type, selectedApptForFicha.notes) === 'LLAMADA' ? 'bg-indigo-600 hover:bg-indigo-500' : 'bg-blue-600 hover:bg-blue-500'
                       }`}
                     >
                       <option value="PRESENCIAL" className="bg-slate-900 text-white">🏢 VISITA PRESENCIAL (SHOWROOM)</option>
@@ -1037,7 +1037,7 @@ export const CalendarView = () => {
                     <button
                       type="button"
                       onClick={async () => {
-                        const currentType = getApptType(selectedApptForFicha.appointment_type);
+                        const currentType = getApptType(selectedApptForFicha.appointment_type, selectedApptForFicha.notes);
                         const ok = await updateAppointment(selectedApptForFicha.id, { 
                           appointment_type: currentType,
                           modality: currentType 
