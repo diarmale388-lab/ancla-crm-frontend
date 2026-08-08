@@ -15,7 +15,7 @@ export const AuditLogsView = () => {
 
   const fetchLogs = async () => {
     try {
-      const res = await fetch(`${API_URL}/webhooks/audit-logs`);
+      const res = await fetch(`${API_URL}/public/audit-logs`);
       if (res.ok) {
         const data = await res.json();
         if (Array.isArray(data) && data.length > 0) {
