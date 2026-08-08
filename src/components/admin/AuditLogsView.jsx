@@ -11,7 +11,8 @@ export const AuditLogsView = () => {
   const [testing, setTesting] = useState(false);
   const logsEndRef = useRef(null);
 
-  const API_URL = import.meta.env.VITE_API_URL || 'https://ancla-crm-backend-production.up.railway.app/api/v1';
+  const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  const API_URL = import.meta.env.VITE_API_URL || (isLocal ? 'http://localhost:8001/api/v1' : 'https://ancla-crm-backend.onrender.com/api/v1');
 
   const fetchLogs = async () => {
     try {
