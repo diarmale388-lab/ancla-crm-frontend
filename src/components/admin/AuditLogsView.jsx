@@ -15,10 +15,7 @@ export const AuditLogsView = () => {
 
   const fetchLogs = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const res = await fetch(`${API_URL}/chats/logs/audit`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
+      const res = await fetch(`${API_URL}/webhooks/audit-logs`);
       if (res.ok) {
         const data = await res.json();
         if (Array.isArray(data) && data.length > 0) {
@@ -26,7 +23,7 @@ export const AuditLogsView = () => {
         }
       }
     } catch (err) {
-      console.warn("Could not fetch backend logs directly:", err);
+      console.warn("Could not fetch backend audit logs:", err);
     }
   };
 
