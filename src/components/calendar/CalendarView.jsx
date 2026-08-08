@@ -2,7 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useCalendarStore } from '../../store/useCalendarStore';
 import { useKanbanStore } from '../../store/useKanbanStore';
 import { useChatStore } from '../../store/useChatStore';
+import { useAuthStore } from '../../store/useAuthStore';
 import { Calendar as CalendarIcon, Clock, User, Plus, Check, AlertCircle, X, Settings, Trash2, ChevronLeft, ChevronRight, Download, MessageCircle, MapPin, DollarSign, Building, Phone, Mail, ExternalLink, ShieldCheck, Sparkles, PhoneCall, Video, Building2, CheckCircle2, Save, FileText } from 'lucide-react';
+
+const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+const API_URL = import.meta.env.VITE_API_URL || (isLocal ? 'http://localhost:8001/api/v1' : 'https://ancla-crm-backend-production.up.railway.app/api/v1');
 
 export const CalendarView = () => {
   const { 
@@ -24,6 +28,9 @@ export const CalendarView = () => {
 
   const [showAddModal, setShowAddModal] = useState(false);
   const [showConfigModal, setShowConfigModal] = useState(false);
+  const [showHolidayModal, setShowHolidayModal] = useState(false);
+  const [holidaySlots, setHolidaySlots] = useState('');
+  const [holidayMsg, setHolidayMsg] = useState('');
   const [selectedLeadForFicha, setSelectedLeadForFicha] = useState(null);
   const [selectedApptForFicha, setSelectedApptForFicha] = useState(null);
   
@@ -108,6 +115,52 @@ export const CalendarView = () => {
       setSelectedSlot('');
     }
   }, [selectedLeadId]);
+
+  // Cargar disponibilidad de horario excepcional/festivo para la fecha seleccionada
+  useEffect(() => {
+    if (selectedDate) {
+      const year = selectedDate.getFullYear();
+      const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
+      const day = String(selectedDate.getDate()).padStart(2, '0');
+      const dateStr = `${year}-${month}-${day}`;
+      const token = useAuthStore.getState().token;
+      
+      fetch(`${API_URL}/appointments/holiday-override/${dateStr}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+        .then(res => res.json())
+        .then(data => setHolidaySlots(data.slots || ''))
+        .catch(() => setHolidaySlots(''));
+    }
+  }, [selectedDate, showHolidayModal]);
+
+  const handleSaveHolidayOverride = async (slotsToSave) => {
+    const year = selectedDate.getFullYear();
+    const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
+    const day = String(selectedDate.getDate()).padStart(2, '0');
+    const dateStr = `${year}-${month}-${day}`;
+    const token = useAuthStore.getState().token;
+
+    try {
+      const res = await fetch(`${API_URL}/appointments/holiday-override/${dateStr}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ slots: slotsToSave })
+      });
+      if (res.ok) {
+        setHolidayMsg('¡Horario excepcional guardado con éxito!');
+        setTimeout(() => {
+          setHolidayMsg('');
+          setShowHolidayModal(false);
+        }, 1200);
+      }
+    } catch (err) {
+      console.error('Error guardando horario excepcional:', err);
+    }
+  };
 
   const handleBookSubmit = async (e) => {
     e.preventDefault();
@@ -573,8 +626,16 @@ export const CalendarView = () => {
             </div>
           </div>
 
-          {/* Botón para Agendar Cita en la Fecha Seleccionada */}
-          <div className="pt-4 border-t border-slate-200 dark:border-white/5 mt-5 flex-shrink-0">
+          {/* Botones para Configurar Horario Excepcional y Agendar Cita */}
+          <div className="pt-4 border-t border-slate-200 dark:border-white/5 mt-5 flex-shrink-0 space-y-2">
+            <button
+              onClick={() => setShowHolidayModal(true)}
+              className="w-full bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 font-bold py-2.5 px-4 rounded-xl border border-amber-500/30 text-xs active:scale-[0.98] transition-all cursor-pointer flex items-center justify-center space-x-1.5"
+            >
+              <Settings className="w-4 h-4 text-amber-500" />
+              <span>⚙️ Configurar Horario Excepcional / Festivo</span>
+            </button>
+
             <button
               onClick={() => {
                 setSelectedSlot('');
@@ -589,6 +650,111 @@ export const CalendarView = () => {
           </div>
         </div>
       </div>
+
+      {/* Modal de Horario Excepcional / Festivo */}
+      {showHolidayModal && (
+        <div className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
+          <div className="w-full max-w-lg bg-white dark:bg-dark-900 border border-slate-200 dark:border-white/5 rounded-3xl p-6 shadow-2xl transition-all duration-300 space-y-5">
+            <div className="flex items-center justify-between border-b border-slate-100 dark:border-white/5 pb-4">
+              <div>
+                <h3 className="text-base font-bold text-slate-800 dark:text-white flex items-center space-x-2">
+                  <Sparkles className="w-5 h-5 text-amber-500" />
+                  <span>Horario Excepcional para Fecha Específica</span>
+                </h3>
+                <p className="text-xs text-emerald-600 dark:text-emerald-400 font-extrabold mt-0.5 capitalize">
+                  {selectedDate.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowHolidayModal(false)}
+                className="p-2 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/5"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="bg-amber-500/10 border border-amber-500/20 p-3.5 rounded-2xl text-xs text-amber-700 dark:text-amber-300">
+              💡 Si esta fecha es un <strong>día festivo en Colombia</strong> (como el 17 de Agosto) o un día especial y deseas atender a clientes, define los horarios permitidos. Sofi AI y el CRM ofrecerán exclusivamente las horas ingresadas aquí.
+            </div>
+
+            {holidayMsg && (
+              <div className="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold flex items-center space-x-2">
+                <CheckCircle2 className="w-4 h-4" />
+                <span>{holidayMsg}</span>
+              </div>
+            )}
+
+            <div className="space-y-3">
+              <label className="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
+                Opciones Rápidas de Habilitación
+              </label>
+
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={() => setHolidaySlots('10:00 AM, 10:30 AM, 11:00 AM, 11:30 AM, 12:00 PM')}
+                  className="p-2.5 rounded-xl border text-xs font-semibold text-left bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200 text-emerald-700 hover:bg-emerald-100 transition-all cursor-pointer"
+                >
+                  🟢 Jornada Mañana (10:00 AM - 12:00 PM)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setHolidaySlots('02:00 PM, 02:30 PM, 03:00 PM, 04:00 PM, 05:00 PM')}
+                  className="p-2.5 rounded-xl border text-xs font-semibold text-left bg-blue-50 dark:bg-blue-500/10 border-blue-200 text-blue-700 hover:bg-blue-100 transition-all cursor-pointer"
+                >
+                  🟢 Jornada Tarde (02:00 PM - 05:00 PM)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setHolidaySlots('10:00 AM, 11:00 AM, 12:00 PM, 02:00 PM, 03:00 PM, 04:00 PM')}
+                  className="p-2.5 rounded-xl border text-xs font-semibold text-left bg-purple-50 dark:bg-purple-500/10 border-purple-200 text-purple-700 hover:bg-purple-100 transition-all cursor-pointer"
+                >
+                  🟢 Día Completo Estándar
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setHolidaySlots('')}
+                  className="p-2.5 rounded-xl border text-xs font-semibold text-left bg-red-50 dark:bg-red-500/10 border-red-200 text-red-700 hover:bg-red-100 transition-all cursor-pointer"
+                >
+                  🔴 Mantener Cerrado (Día Festivo)
+                </button>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5 mt-3">
+                  Franjas Permitidas (Separadas por Coma)
+                </label>
+                <input
+                  type="text"
+                  placeholder="Ej: 10:00 AM, 11:30 AM, 02:00 PM"
+                  value={holidaySlots}
+                  onChange={(e) => setHolidaySlots(e.target.value)}
+                  className="w-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl px-4 py-3 text-xs font-mono text-slate-800 dark:text-white focus:outline-none focus:border-amber-500"
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end space-x-3 pt-4 border-t border-slate-100 dark:border-white/5">
+              <button
+                type="button"
+                onClick={() => setShowHolidayModal(false)}
+                className="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5"
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                onClick={() => handleSaveHolidayOverride(holidaySlots)}
+                className="px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 shadow-md flex items-center space-x-1.5 cursor-pointer"
+              >
+                <Save className="w-4 h-4" />
+                <span>Guardar Horario Excepcional</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Modal de Agendamiento Manual */}
       {showAddModal && (
