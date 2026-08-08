@@ -275,53 +275,7 @@ export const CalendarView = () => {
   };
 
   const handleDownloadReport = () => {
-    const appsList = Array.isArray(appointments) ? appointments : [];
-    if (appsList.length === 0) {
-      alert("No hay citas programadas para exportar.");
-      return;
-    }
-
-    // Cabeceras del CSV
-    const headers = ["Fecha y Hora", "Cliente", "Teléfono", "Email", "Estado de Cita", "Notas / Detalles"];
-    
-    // Mapear filas
-    const rows = appsList.map(appt => {
-      const lead = leads.find(l => l.id === appt.contact_id);
-      const clientName = lead ? `${lead.first_name || ''} ${lead.last_name || ''}`.trim() || lead.phone : "Desconocido";
-      const clientPhone = lead ? lead.phone : "";
-      const clientEmail = lead ? lead.email || "No provisto" : "";
-      
-      const formattedDate = new Date(appt.datetime).toLocaleString('es-CO', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true
-      });
-
-      return [
-        `"${formattedDate}"`,
-        `"${clientName.replace(/"/g, '""')}"`,
-        `"${clientPhone}"`,
-        `"${clientEmail.replace(/"/g, '""')}"`,
-        `"${appt.status || 'scheduled'}"`,
-        `"${(appt.notes || '').replace(/"/g, '""')}"`
-      ];
-    });
-
-    // Construir contenido CSV con BOM UTF-8 para Excel
-    const csvContent = "\uFEFF" + [headers.join(";"), ...rows.map(e => e.join(";"))].join("\n");
-    
-    // Crear enlace de descarga
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.setAttribute("href", url);
-    link.setAttribute("download", `reporte_citas_showroom_${new Date().toISOString().slice(0,10)}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    window.open(`${API_URL}/appointments/report/pdf`, '_blank');
   };
 
   const MONTH_NAMES = [
