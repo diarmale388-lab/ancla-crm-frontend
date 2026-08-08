@@ -1433,17 +1433,64 @@ export const ChatWindow = () => {
                 </button>
               </div>
 
-              {/* Formulario Meta Ads & Datos Parseados */}
-              {activeContact.qualification_notes && (
-                <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-500/20 space-y-1.5">
-                  <span className="text-[9.5px] uppercase font-black tracking-wider text-emerald-700 dark:text-emerald-400 block">
-                    📋 Respuestas Formulario Meta Ads & Chat
+              {/* 📌 OPTION 2: TARJETA DE RESUMEN VIP DE ATRIBUCIÓN META ADS & FICHA TÉCNICA */}
+              <div className="p-3.5 rounded-2xl bg-gradient-to-br from-purple-900/10 via-indigo-900/5 to-slate-900/10 dark:from-purple-950/40 dark:via-indigo-950/30 dark:to-slate-950/40 border-2 border-purple-500/30 dark:border-purple-500/40 shadow-lg shadow-purple-500/5 space-y-2.5">
+                {/* Header con Badge de Origen */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-1.5">
+                    <span className="flex h-2 w-2 rounded-full bg-purple-500 animate-pulse"></span>
+                    <span className="text-[10px] uppercase font-black tracking-wider text-purple-700 dark:text-purple-300">
+                      📌 RESUMEN DE ATRIBUCIÓN & FICHA
+                    </span>
+                  </div>
+                  <span className={`px-2.5 py-0.5 rounded-full text-[9.5px] font-black tracking-wide ${
+                    (activeContact.source || '').toLowerCase().includes('meta') 
+                      ? 'bg-purple-600 text-white shadow-sm shadow-purple-500/30'
+                      : 'bg-emerald-600 text-white shadow-sm shadow-emerald-500/30'
+                  }`}>
+                    {(activeContact.source || '').toLowerCase().includes('meta') ? '🎯 META ADS' : '💬 ORGÁNICO'}
                   </span>
-                  <div className="text-[11px] font-medium text-slate-700 dark:text-slate-200 whitespace-pre-line leading-snug bg-white/60 dark:bg-slate-900/60 p-2.5 rounded-lg border border-emerald-500/10 max-h-48 overflow-y-auto">
-                    {activeContact.qualification_notes}
+                </div>
+
+                {/* Grid de Datos Clave en Cajas Neón */}
+                <div className="grid grid-cols-2 gap-2 text-xs">
+                  {/* Origen de Campaña */}
+                  <div className="col-span-2 bg-white/80 dark:bg-slate-900/80 p-2.5 rounded-xl border border-purple-200 dark:border-purple-900/40 shadow-sm">
+                    <span className="text-[9px] uppercase font-bold text-slate-400 block mb-0.5">📢 Anuncio / Fuente</span>
+                    <span className="font-bold text-purple-900 dark:text-purple-200 text-[11px] truncate block">
+                      {activeContact.source || 'WhatsApp Directo'}
+                    </span>
+                  </div>
+
+                  {/* Terreno / Lote */}
+                  <div className="bg-white/80 dark:bg-slate-900/80 p-2.5 rounded-xl border border-purple-200 dark:border-purple-900/40 shadow-sm">
+                    <span className="text-[9px] uppercase font-bold text-slate-400 block mb-0.5">🏡 Terreno</span>
+                    <span className="font-bold text-slate-800 dark:text-slate-100 text-[11px] block truncate">
+                      {activeContact.lot_status || 'Por definir'}
+                    </span>
+                  </div>
+
+                  {/* Ubicación / Ciudad */}
+                  <div className="bg-white/80 dark:bg-slate-900/80 p-2.5 rounded-xl border border-purple-200 dark:border-purple-900/40 shadow-sm">
+                    <span className="text-[9px] uppercase font-bold text-slate-400 block mb-0.5">📍 Ubicación</span>
+                    <span className="font-bold text-slate-800 dark:text-slate-100 text-[11px] block truncate">
+                      {activeContact.lot_city || 'Por definir'}
+                    </span>
                   </div>
                 </div>
-              )}
+
+                {/* Detalles Expandibles de Respuestas del Formulario */}
+                {activeContact.qualification_notes && (
+                  <div className="bg-white/60 dark:bg-slate-900/60 p-2.5 rounded-xl border border-purple-100 dark:border-purple-900/20">
+                    <span className="text-[9px] uppercase font-bold text-purple-600 dark:text-purple-400 block mb-1">
+                      📋 Respuestas del Formulario & Atribución
+                    </span>
+                    <div className="text-[10.5px] font-medium text-slate-700 dark:text-slate-300 whitespace-pre-line leading-relaxed max-h-36 overflow-y-auto">
+                      {activeContact.qualification_notes}
+                    </div>
+                  </div>
+                )}
+              </div>
 
               {/* Selector de Etapa Kanban */}
               <div className="pt-3 border-t border-slate-200 dark:border-white/5 space-y-1.5">

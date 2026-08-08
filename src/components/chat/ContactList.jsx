@@ -248,6 +248,17 @@ export const ContactList = () => {
                         <span className="truncate">{contact.first_name ? `${contact.first_name} ${contact.last_name || ''}` : contact.phone}</span>
                         <span className="text-[9px] font-mono text-slate-400 font-semibold px-1 py-0.5 bg-slate-100 dark:bg-slate-800 rounded-md border border-slate-200 dark:border-white/5 flex-shrink-0">#{contact.id}</span>
                       </h3>
+                      {contact.source && (
+                        <div className="mt-0.5">
+                          <span className={`inline-flex items-center gap-0.5 text-[8.5px] font-black tracking-wider px-1.5 py-0.2 rounded ${
+                            contact.source.toLowerCase().includes('meta')
+                              ? 'bg-purple-600 text-white'
+                              : 'bg-emerald-600 text-white'
+                          }`}>
+                            {contact.source.toLowerCase().includes('meta') ? '🎯 META ADS' : '💬 ORGÁNICO'}
+                          </span>
+                        </div>
+                      )}
                       <div className="flex flex-col items-end justify-center">
                         <span className={`text-[9px] ${
                           contact.last_message_sender === 'contact' && !isSelected 
