@@ -4,6 +4,7 @@ import { useCalendarStore } from '../../store/useCalendarStore';
 import { useSettingsStore } from '../../store/useSettingsStore';
 import { useKanbanStore } from '../../store/useKanbanStore';
 import { useAuthStore } from '../../store/useAuthStore';
+import LeadFichaModal360 from '../common/LeadFichaModal360';
 import { MessageBubble } from './MessageBubble';
 import { Send, Bot, WifiOff, MessageCircle, Sparkles, User, Phone, Mail, Calendar, Check, ChevronDown, BookOpen, Clock, Lock, Trash2, ShieldAlert, ArrowLeft, CornerUpLeft, Forward, Pencil, X, Download, Smile, Paperclip, Upload, Search } from 'lucide-react';
 
@@ -59,6 +60,9 @@ export const ChatWindow = () => {
   // Notas Internas vs WhatsApp
   const [isInternalNote, setIsInternalNote] = useState(false);
   const [noteCategory, setNoteCategory] = useState('general');
+
+  // Ficha 360° Modal
+  const [showFichaModal360, setShowFichaModal360] = useState(false);
 
   // Buscador de mensajes tipo WhatsApp (dentro del chat)
   const [showMsgSearch, setShowMsgSearch] = useState(false);
@@ -1452,6 +1456,15 @@ export const ChatWindow = () => {
                   </span>
                 </div>
 
+                <button
+                  type="button"
+                  onClick={() => setShowFichaModal360(true)}
+                  className="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-black text-xs shadow-md transition-all active:scale-95 flex items-center justify-center space-x-1.5 cursor-pointer"
+                >
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>🌟 Abrir Ficha Técnica Comercial 360°</span>
+                </button>
+
                 {/* Grid de Datos Clave en Cajas Neón */}
                 <div className="grid grid-cols-2 gap-2 text-xs">
                   {/* Origen de Campaña */}
@@ -2229,6 +2242,15 @@ export const ChatWindow = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Modal Ficha Técnica Comercial 360° */}
+      {showFichaModal360 && activeContact && (
+        <LeadFichaModal360
+          contact={activeContact}
+          onClose={() => setShowFichaModal360(false)}
+          onRefresh={() => useChatStore.getState().fetchContacts()}
+        />
       )}
     </div>
   );
