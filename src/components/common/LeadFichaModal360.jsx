@@ -17,6 +17,39 @@ const QUALIFICATION_LEVELS = [
   { id: 'DISCARDED', label: 'Descartado / Sin Presupuesto', icon: '⏸️', color: 'bg-slate-500/20 text-slate-700 dark:text-slate-400 border-slate-500/40' }
 ];
 
+const CALL_RESULTS = [
+  { id: 'INTERESTED', label: 'Contestó / Interesado', icon: '🟢', color: 'bg-emerald-500/10 text-emerald-800 dark:text-emerald-300 border-emerald-500/30' },
+  { id: 'RESCHEDULE', label: 'Solicitó Reagendar', icon: '📅', color: 'bg-amber-500/10 text-amber-800 dark:text-amber-300 border-amber-500/30' },
+  { id: 'NO_ANSWER', label: 'Sin Respuesta / Buzón', icon: '🔴', color: 'bg-rose-500/10 text-rose-800 dark:text-rose-300 border-rose-500/30' },
+  { id: 'SHOWROOM_CONFIRMED', label: 'Confirmó Showroom', icon: '🏢', color: 'bg-teal-500/10 text-teal-800 dark:text-teal-300 border-teal-500/30' },
+  { id: 'QUOTATION_REQUESTED', label: 'Solicitó Cotización PDF', icon: '📄', color: 'bg-blue-500/10 text-blue-800 dark:text-blue-300 border-blue-500/30' },
+  { id: 'REJECTED', label: 'Descartado / Sin Presupuesto', icon: '❌', color: 'bg-slate-500/10 text-slate-700 dark:text-slate-400 border-slate-500/30' }
+];
+
+const TIMELINES = [
+  { id: 'IMMEDIATE', label: 'Inmediato (< 1 Mes)', icon: '⚡' },
+  { id: '1_TO_3_MONTHS', label: '1 a 3 Meses', icon: '🗓️' },
+  { id: '3_TO_6_MONTHS', label: '3 a 6 Meses', icon: '🏗️' },
+  { id: '6_PLUS_MONTHS', label: 'Más de 6 Meses', icon: '⏳' }
+];
+
+const OBJECTIONS = [
+  { id: 'NONE', label: 'Sin Objeciones / Todo Claro', icon: '✅' },
+  { id: 'BUDGET', label: 'Presupuesto / Precio', icon: '💰' },
+  { id: 'NO_LOT', label: 'Buscando Terreno / Lote', icon: '🏞️' },
+  { id: 'FREIGHT_DISTANCE', label: 'Flete / Distancia', icon: '🚚' },
+  { id: 'PERMITS', label: 'Licencias / Permisos', icon: '📑' },
+  { id: 'TIMELINE', label: 'Tiempos de Entrega', icon: '⏳' }
+];
+
+const NEXT_ACTIONS = [
+  { id: 'RECALL', label: 'Volver a Llamar', icon: '📞' },
+  { id: 'SEND_QUOTATION', label: 'Enviar Cotización PDF', icon: '📄' },
+  { id: 'MEET_VIRTUAL', label: 'Cita Virtual (Meet)', icon: '💻' },
+  { id: 'SHOWROOM_VISIT', label: 'Visita Showroom Armenia', icon: '🏢' },
+  { id: 'WAIT_CLIENT', label: 'Esperar Respuesta Cliente', icon: '⏳' }
+];
+
 export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
   if (!contact) return null;
 
@@ -77,9 +110,16 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
     }
   };
 
+  // Estados Bitácora Comercial Pro 360°
+  const [callResult, setCallResult] = useState('INTERESTED');
+  const [constructionTimeline, setConstructionTimeline] = useState('1_TO_3_MONTHS');
+  const [detectedObjection, setDetectedObjection] = useState('NONE');
+  const [nextAction, setNextAction] = useState('RECALL');
+  const [nextActionDate, setNextActionDate] = useState('');
+
   const handleAddBitacoraNote = async (e) => {
     e.preventDefault();
-    if (!newNoteContent.trim()) return;
+    if (!newNoteContent.trim() && !callResult) return;
     try {
       const res = await fetch(`${API_URL}/chats/${contact.id}/bitacora`, {
         method: 'POST',
@@ -89,12 +129,18 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
         },
         body: JSON.stringify({
           note_type: newNoteType,
+          call_result: callResult,
+          construction_timeline: constructionTimeline,
+          detected_objection: detectedObjection,
+          next_action: nextAction,
+          next_action_date: nextActionDate,
           content: newNoteContent,
           author_name: "Liliana / Asesor"
         })
       });
       if (res.ok) {
         setNewNoteContent('');
+        setNextActionDate('');
         fetchBitacora();
       }
     } catch (err) {
@@ -490,67 +536,225 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
             )}
           </div>
 
-          {/* Bloque 4: Bitácora de Atención Comercial (Historial de Notas del Asesor) */}
+          {/* Bloque 4: Bitácora Comercial Pro 360° (Entrada Interactiva 1-Clic & Timeline) */}
           <div className="p-5 rounded-2xl bg-slate-50 dark:bg-dark-950/40 border border-slate-200/80 dark:border-white/10 space-y-4">
-            <span className="text-xs font-black uppercase tracking-wider text-slate-800 dark:text-white flex items-center space-x-1.5">
-              <Clock className="w-4 h-4 text-emerald-500" />
-              <span>Bitácora de Atención Comercial & Seguimiento del Asesor</span>
-            </span>
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-black uppercase tracking-wider text-slate-800 dark:text-white flex items-center space-x-1.5">
+                <Clock className="w-4 h-4 text-emerald-500" />
+                <span>Bitácora Comercial Pro 360° & Registro de Atención (1-Clic)</span>
+              </span>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
+                Interactive Advisor Log
+              </span>
+            </div>
 
-            {/* Formulario de entrada rápida de nota */}
-            <form onSubmit={handleAddBitacoraNote} className="space-y-2.5">
-              <div className="flex items-center space-x-2">
-                <select
-                  value={newNoteType}
-                  onChange={(e) => setNewNoteType(e.target.value)}
-                  className="bg-white dark:bg-dark-900 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white"
-                >
-                  <option value="LLAMADA">📞 Llamada Telefónica</option>
-                  <option value="VIRTUAL">💻 Asesoría Virtual (Meet)</option>
-                  <option value="SHOWROOM">🏢 Visita Showroom Armenia</option>
-                  <option value="SEGUIMIENTO">📝 Nota Interna de Seguimiento</option>
-                </select>
+            {/* Formulario Interactivo con Micro-Chips */}
+            <form onSubmit={handleAddBitacoraNote} className="space-y-4 p-4 rounded-2xl bg-white dark:bg-dark-900 border border-slate-200/60 dark:border-white/5 shadow-sm">
+              
+              {/* Selector Modo de Atención */}
+              <div>
+                <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1.5">1. Tipo / Canal de Atención</label>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  {[
+                    { id: 'LLAMADA', label: '📞 Llamada Telefónica' },
+                    { id: 'VIRTUAL', label: '💻 Asesoría Virtual (Meet)' },
+                    { id: 'SHOWROOM', label: '🏢 Visita Showroom Armenia' },
+                    { id: 'SEGUIMIENTO', label: '📝 Nota de Seguimiento' }
+                  ].map(t => (
+                    <button
+                      key={t.id}
+                      type="button"
+                      onClick={() => setNewNoteType(t.id)}
+                      className={`p-2.5 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
+                        newNoteType === t.id
+                          ? 'bg-slate-900 text-white dark:bg-white dark:text-dark-950 border-slate-900 font-black shadow'
+                          : 'bg-slate-50 dark:bg-dark-950/60 border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 hover:bg-slate-100'
+                      }`}
+                    >
+                      {t.label}
+                    </button>
+                  ))}
+                </div>
               </div>
 
-              <div className="flex gap-2">
+              {/* Selector Resultado de la Atención (1-Clic) */}
+              <div>
+                <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1.5">2. Resultado de la Atención (1-Clic)</label>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                  {CALL_RESULTS.map(res => (
+                    <button
+                      key={res.id}
+                      type="button"
+                      onClick={() => setCallResult(res.id)}
+                      className={`p-2 rounded-xl border text-xs font-black flex items-center space-x-1.5 transition-all cursor-pointer ${
+                        callResult === res.id
+                          ? `${res.color} shadow-sm ring-2 ring-emerald-500/40 scale-[1.01]`
+                          : 'bg-slate-50 dark:bg-dark-950/60 border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 hover:bg-slate-100'
+                      }`}
+                    >
+                      <span>{res.icon}</span>
+                      <span className="truncate">{res.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Grid 2 Columnas: Tiempo de Construcción & Objeción Detectada */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 pt-1">
+                {/* Tiempo de Construcción */}
+                <div>
+                  <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1.5">3. Tiempo Estimado para Construir</label>
+                  <select
+                    value={constructionTimeline}
+                    onChange={(e) => setConstructionTimeline(e.target.value)}
+                    className="w-full bg-slate-50 dark:bg-dark-950/60 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white cursor-pointer"
+                  >
+                    {TIMELINES.map(tl => (
+                      <option key={tl.id} value={tl.id}>{tl.icon} {tl.label}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Objeción Detectada */}
+                <div>
+                  <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1.5">4. Objeción / Freno Detectado</label>
+                  <select
+                    value={detectedObjection}
+                    onChange={(e) => setDetectedObjection(e.target.value)}
+                    className="w-full bg-slate-50 dark:bg-dark-950/60 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white cursor-pointer"
+                  >
+                    {OBJECTIONS.map(obj => (
+                      <option key={obj.id} value={obj.id}>{obj.icon} {obj.label}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Grid 2 Columnas: Próxima Acción & Fecha de Recordatorio */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 pt-1">
+                <div>
+                  <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1.5">5. Próximo Paso / Compromiso</label>
+                  <select
+                    value={nextAction}
+                    onChange={(e) => setNextAction(e.target.value)}
+                    className="w-full bg-slate-50 dark:bg-dark-950/60 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white cursor-pointer"
+                  >
+                    {NEXT_ACTIONS.map(act => (
+                      <option key={act.id} value={act.id}>{act.icon} {act.label}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1.5">📅 Fecha/Hora Recordatorio (Opcional)</label>
+                  <input
+                    type="datetime-local"
+                    value={nextActionDate}
+                    onChange={(e) => setNextActionDate(e.target.value)}
+                    className="w-full bg-slate-50 dark:bg-dark-950/60 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500"
+                  />
+                </div>
+              </div>
+
+              {/* Anotaciones Específicas Libres */}
+              <div>
+                <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1">6. Anotaciones Clave de la Atención (Libre)</label>
                 <textarea
                   value={newNoteContent}
                   onChange={(e) => setNewNoteContent(e.target.value)}
                   rows={2}
-                  placeholder="Escribe notas de la atención (ej: cliente confirma lote plano en Nemocón, le interesa casa de 120m2, enviar propuesta el lunes)..."
-                  className="flex-1 bg-white dark:bg-dark-900 border border-slate-200 dark:border-white/10 rounded-xl p-3 text-xs font-medium text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500"
+                  placeholder="Escribe detalles importantes (ej: cliente confirma terreno plano en Nemocón, le interesa casa de 120m2 con 3 alcobas y deck sintético)..."
+                  className="w-full bg-slate-50 dark:bg-dark-950/60 border border-slate-200 dark:border-white/10 rounded-xl p-3 text-xs font-medium text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500 resize-none"
                 />
+              </div>
+
+              <div className="flex justify-end pt-1">
                 <button
                   type="submit"
-                  disabled={!newNoteContent.trim()}
-                  className="px-4 bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 text-white font-bold rounded-xl text-xs flex items-center justify-center shadow-sm cursor-pointer"
+                  className="px-5 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-black rounded-xl text-xs flex items-center space-x-2 shadow-md transition-all active:scale-95 cursor-pointer"
                 >
                   <Send className="w-4 h-4" />
+                  <span>💾 Registrar Atención en Bitácora Pro 360°</span>
                 </button>
               </div>
+
             </form>
 
-            {/* Lista cronológica de notas guardadas */}
-            <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
+            {/* Timeline Ejecutivo de Notas Guardadas */}
+            <div className="space-y-3 max-h-72 overflow-y-auto pr-1">
+              <span className="text-[10px] font-black uppercase tracking-wider text-slate-500 block">Historial Cronológico de Atenciones</span>
+              
               {bitacoraNotes.length === 0 ? (
-                <p className="text-xs text-slate-400 italic text-center py-3">No hay notas registradas aún en la bitácora.</p>
+                <p className="text-xs text-slate-400 italic text-center py-4 bg-white dark:bg-dark-900 rounded-xl border border-slate-200/60 dark:border-white/5">
+                  No hay atenciones ni notas registradas aún en la bitácora.
+                </p>
               ) : (
-                bitacoraNotes.map((n) => (
-                  <div key={n.id} className="p-3 rounded-xl bg-white dark:bg-dark-900 border border-slate-200/60 dark:border-white/5 space-y-1">
-                    <div className="flex items-center justify-between text-[10px] font-bold text-slate-500">
-                      <span className="flex items-center gap-1.5">
-                        <span className="px-2 py-0.5 rounded bg-slate-100 dark:bg-white/10 text-slate-700 dark:text-slate-300">
-                          {n.note_type}
+                bitacoraNotes.map((n) => {
+                  const resObj = CALL_RESULTS.find(r => r.id === n.call_result);
+                  const timeObj = TIMELINES.find(t => t.id === n.construction_timeline);
+                  const objObj = OBJECTIONS.find(o => o.id === n.detected_objection);
+                  const nextObj = NEXT_ACTIONS.find(a => a.id === n.next_action);
+
+                  return (
+                    <div key={n.id} className="p-4 rounded-2xl bg-white dark:bg-dark-900 border border-slate-200/80 dark:border-white/10 space-y-2.5 shadow-sm">
+                      {/* Cabecera Tarjeta Timeline */}
+                      <div className="flex items-center justify-between border-b border-slate-100 dark:border-white/5 pb-2">
+                        <div className="flex items-center space-x-2">
+                          <span className="text-xs font-black px-2.5 py-0.5 rounded-lg bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-slate-200">
+                            {n.note_type === 'LLAMADA' ? '📞 Llamada' : n.note_type === 'VIRTUAL' ? '💻 Virtual Meet' : n.note_type === 'SHOWROOM' ? '🏢 Showroom' : '📝 Nota'}
+                          </span>
+                          <span className="text-xs font-bold text-slate-600 dark:text-slate-400">
+                            {n.author_name}
+                          </span>
+                        </div>
+                        <span className="text-[10px] font-semibold text-slate-400">
+                          {new Date(n.created_at).toLocaleString('es-ES', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
                         </span>
-                        <span>{n.author_name}</span>
-                      </span>
-                      <span>{new Date(n.created_at).toLocaleString('es-ES', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}</span>
+                      </div>
+
+                      {/* Badges Estructurados (1-Clic Data) */}
+                      <div className="flex flex-wrap gap-1.5 text-[10px] font-extrabold">
+                        {resObj && (
+                          <span className={`px-2 py-0.5 rounded-md border ${resObj.color}`}>
+                            {resObj.icon} {resObj.label}
+                          </span>
+                        )}
+                        {timeObj && (
+                          <span className="px-2 py-0.5 rounded-md bg-purple-500/10 text-purple-700 dark:text-purple-300 border border-purple-500/20">
+                            {timeObj.icon} {timeObj.label}
+                          </span>
+                        )}
+                        {objObj && (
+                          <span className="px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/20">
+                            {objObj.icon} {objObj.label}
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Próxima Acción & Recordatorio */}
+                      {(nextObj || n.next_action_date) && (
+                        <div className="p-2.5 rounded-xl bg-blue-500/10 border border-blue-500/20 text-xs font-bold text-blue-800 dark:text-blue-300 flex items-center justify-between">
+                          <span className="flex items-center gap-1.5">
+                            <span>🔔 Próximo Paso:</span>
+                            <span>{nextObj ? `${nextObj.icon} ${nextObj.label}` : 'Seguimiento'}</span>
+                          </span>
+                          {n.next_action_date && (
+                            <span className="text-[10px] font-black px-2 py-0.5 rounded bg-blue-600 text-white">
+                              📅 {new Date(n.next_action_date).toLocaleString('es-ES', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                            </span>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Contenido Texto Libre */}
+                      {n.content && (
+                        <p className="text-xs text-slate-700 dark:text-slate-200 font-medium whitespace-pre-line leading-relaxed pt-1">
+                          {n.content}
+                        </p>
+                      )}
                     </div>
-                    <p className="text-xs text-slate-700 dark:text-slate-200 font-medium whitespace-pre-line">
-                      {n.content}
-                    </p>
-                  </div>
-                ))
+                  );
+                })
               )}
             </div>
           </div>
