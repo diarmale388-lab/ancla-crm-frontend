@@ -510,7 +510,7 @@ export const CalendarView = () => {
                           : 'bg-white dark:bg-dark-900/90 border-slate-200/80 dark:border-white/10 text-slate-700 dark:text-slate-300 hover:border-emerald-500/50 hover:shadow-lg'
                     }`}
                   >
-                    {/* Encabezado del día: Número */}
+                    {/* Encabezado del día: Número y Insignia Pequeña de # Citas */}
                     <div className="flex items-center justify-between w-full">
                       <span className={`text-xs sm:text-sm font-black tracking-tight flex items-center justify-center ${
                         isTdy 
@@ -522,9 +522,15 @@ export const CalendarView = () => {
                         {day.getDate()}
                       </span>
 
-                      {isTdy && (
-                        <span className="text-[9px] font-black uppercase tracking-wider text-blue-600 dark:text-blue-400 bg-blue-500/10 px-1.5 py-0.5 rounded-md border border-blue-500/20">
-                          Hoy
+                      {/* Insignia Pequeña Elegante de # Citas Totales */}
+                      {dayApps.length > 0 && (
+                        <span className={`text-[8.5px] sm:text-[9.5px] font-black px-1.5 py-0.5 rounded-full flex items-center gap-1 shadow-2xs ${
+                          isSelected 
+                            ? 'bg-emerald-600 text-white' 
+                            : 'bg-slate-100 dark:bg-white/10 text-slate-700 dark:text-slate-200 border border-slate-200/80 dark:border-white/10'
+                        }`}>
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                          <span>{dayApps.length} {dayApps.length === 1 ? 'cita' : 'citas'}</span>
                         </span>
                       )}
                     </div>
