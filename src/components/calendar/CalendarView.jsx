@@ -424,12 +424,28 @@ export const CalendarView = () => {
         <div className="flex-1 p-6 overflow-y-auto flex flex-col bg-white dark:bg-dark-900">
           <div className="w-full max-w-4xl mx-auto flex flex-col h-full">
             
-            {/* Navegación del Calendario */}
-            <div className="flex items-center justify-between mb-6">
+            {/* Navegación del Calendario y Leyenda */}
+            <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
               <h3 className="text-lg font-bold text-slate-800 dark:text-white flex items-center space-x-2">
                 <CalendarIcon className="w-5 h-5 text-emerald-500" />
                 <span>{MONTH_NAMES[currentMonth.getMonth()]} {currentMonth.getFullYear()}</span>
               </h3>
+
+              {/* Leyenda Explicativa de Colores para Liliana y el Equipo Comercial */}
+              <div className="flex items-center gap-2 text-[10.5px] font-bold text-slate-600 dark:text-slate-300 flex-wrap">
+                <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-800 dark:text-emerald-300 border border-emerald-500/30 shadow-2xs">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                  <span>🏢 Presencial (Showroom)</span>
+                </span>
+                <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-500/10 text-blue-800 dark:text-blue-300 border border-blue-500/30 shadow-2xs">
+                  <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+                  <span>💻 Virtual (Meet)</span>
+                </span>
+                <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-indigo-500/10 text-indigo-800 dark:text-indigo-300 border border-indigo-500/30 shadow-2xs">
+                  <span className="w-2 h-2 rounded-full bg-indigo-500"></span>
+                  <span>📞 Llamada</span>
+                </span>
+              </div>
               
               <div className="flex space-x-1.5">
                 <button 
@@ -467,16 +483,16 @@ export const CalendarView = () => {
             </div>
 
             {/* Cuadrícula de días */}
-            <div className="grid grid-cols-7 gap-2 sm:gap-2.5 flex-1 min-h-[380px]">
+            <div className="grid grid-cols-7 gap-2 sm:gap-2.5 flex-1 min-h-[410px]">
               {getDaysInMonth(currentMonth).map((day, idx) => {
-                if (!day) return <div key={`empty-${idx}`} className="bg-slate-50/20 dark:bg-white/[0.01] rounded-2xl border border-transparent w-full min-h-[95px] sm:min-h-[110px]"></div>;
+                if (!day) return <div key={`empty-${idx}`} className="bg-slate-50/20 dark:bg-white/[0.01] rounded-2xl border border-transparent w-full min-h-[105px] sm:min-h-[125px]"></div>;
                 
                 const dateStr = `${day.getFullYear()}-${String(day.getMonth() + 1).padStart(2, '0')}-${String(day.getDate()).padStart(2, '0')}`;
                 const dayApps = getAppointmentsForDate(day);
                 const isSelected = selectedDate.toDateString() === day.toDateString();
                 const isTdy = day.toDateString() === new Date().toDateString();
 
-                // Conteo de modalidades para el indicador ejecutivo
+                // Conteo exacto por modalidad
                 const presencialCount = dayApps.filter(a => getApptType(a.appointment_type, a.notes) === 'PRESENCIAL').length;
                 const virtualCount = dayApps.filter(a => getApptType(a.appointment_type, a.notes) === 'VIRTUAL').length;
                 const llamadaCount = dayApps.filter(a => getApptType(a.appointment_type, a.notes) === 'LLAMADA').length;
@@ -486,7 +502,7 @@ export const CalendarView = () => {
                     key={`day-${dateStr}`}
                     type="button"
                     onClick={() => setSelectedDate(day)}
-                    className={`w-full p-3 rounded-2xl border text-left flex flex-col justify-between transition-all duration-200 cursor-pointer min-h-[95px] sm:min-h-[110px] relative overflow-hidden group ${
+                    className={`w-full p-2.5 sm:p-3 rounded-2xl border text-left flex flex-col justify-between transition-all duration-200 cursor-pointer min-h-[105px] sm:min-h-[125px] relative overflow-hidden group ${
                       isSelected
                         ? 'bg-gradient-to-br from-emerald-500/15 via-teal-500/10 to-transparent border-2 border-emerald-500 text-emerald-950 dark:text-emerald-200 shadow-xl shadow-emerald-500/10 scale-[1.01] z-10'
                         : isTdy
@@ -513,25 +529,37 @@ export const CalendarView = () => {
                       )}
                     </div>
                     
-                    {/* Indicador Ejecutivo de # Citas ÚNICO y Limpio */}
+                    {/* Indicador Ejecutivo de # Citas con Etiquetas Explícitas */}
                     {dayApps.length > 0 && (
-                      <div className="mt-2 flex flex-col gap-1 w-full flex-1 justify-center items-center">
-                        <div className={`w-full py-2 px-2.5 rounded-xl border flex items-center justify-center gap-1.5 shadow-xs transition-all group-hover:scale-[1.03] ${
+                      <div className="mt-1.5 flex flex-col gap-1 w-full flex-1 justify-center items-center">
+                        <div className={`w-full py-1.5 px-2 rounded-xl border flex items-center justify-center gap-1.5 shadow-2xs transition-all group-hover:scale-[1.02] ${
                           isSelected
                             ? 'bg-emerald-600 text-white border-emerald-500 shadow-emerald-600/20 font-black'
-                            : 'bg-slate-100/90 dark:bg-white/10 border-slate-200 dark:border-white/10 text-slate-800 dark:text-slate-100 font-extrabold'
+                            : 'bg-slate-100/90 dark:bg-white/10 border-slate-200/80 dark:border-white/10 text-slate-800 dark:text-slate-100 font-black'
                         }`}>
-                          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse flex-shrink-0"></span>
-                          <span className="text-xs font-black tracking-tight">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse flex-shrink-0"></span>
+                          <span className="text-[11px] font-black tracking-tight">
                             {dayApps.length} {dayApps.length === 1 ? 'Cita' : 'Citas'}
                           </span>
                         </div>
 
-                        {/* Desglose sutil por iconos de modalidad */}
-                        <div className="flex items-center justify-center gap-2 text-[9.5px] text-slate-500 dark:text-slate-400 font-bold">
-                          {presencialCount > 0 && <span>🏢 {presencialCount}</span>}
-                          {virtualCount > 0 && <span>💻 {virtualCount}</span>}
-                          {llamadaCount > 0 && <span>📞 {llamadaCount}</span>}
+                        {/* Desglose de Modalidad con Texto Explícito para Liliana y el Equipo */}
+                        <div className="flex flex-col gap-0.5 w-full items-center mt-0.5">
+                          {presencialCount > 0 && (
+                            <span className="w-full text-center px-1.5 py-0.5 rounded-md text-[8.5px] font-black bg-emerald-500/15 text-emerald-900 dark:text-emerald-200 border border-emerald-500/30 truncate">
+                              🏢 {presencialCount} Presencial{presencialCount > 1 ? 'es' : ''}
+                            </span>
+                          )}
+                          {virtualCount > 0 && (
+                            <span className="w-full text-center px-1.5 py-0.5 rounded-md text-[8.5px] font-black bg-blue-500/15 text-blue-900 dark:text-blue-200 border border-blue-500/30 truncate">
+                              💻 {virtualCount} Virtual{virtualCount > 1 ? 'es' : ''}
+                            </span>
+                          )}
+                          {llamadaCount > 0 && (
+                            <span className="w-full text-center px-1.5 py-0.5 rounded-md text-[8.5px] font-black bg-indigo-500/15 text-indigo-900 dark:text-indigo-200 border border-indigo-500/30 truncate">
+                              📞 {llamadaCount} Llamada{llamadaCount > 1 ? 's' : ''}
+                            </span>
+                          )}
                         </div>
                       </div>
                     )}
