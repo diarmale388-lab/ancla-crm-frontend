@@ -467,9 +467,9 @@ export const CalendarView = () => {
             </div>
 
             {/* Cuadrícula de días */}
-            <div className="grid grid-cols-7 gap-2 flex-1 min-h-[360px]">
+            <div className="grid grid-cols-7 gap-2 sm:gap-2.5 flex-1 min-h-[400px]">
               {getDaysInMonth(currentMonth).map((day, idx) => {
-                if (!day) return <div key={`empty-${idx}`} className="bg-slate-50/20 dark:bg-white/[0.01] rounded-2xl border border-transparent w-full min-h-[90px] sm:min-h-[110px]"></div>;
+                if (!day) return <div key={`empty-${idx}`} className="bg-slate-50/20 dark:bg-white/[0.01] rounded-2xl border border-transparent w-full min-h-[105px] sm:min-h-[125px]"></div>;
                 
                 const dateStr = `${day.getFullYear()}-${String(day.getMonth() + 1).padStart(2, '0')}-${String(day.getDate()).padStart(2, '0')}`;
                 const dayApps = getAppointmentsForDate(day);
@@ -481,32 +481,32 @@ export const CalendarView = () => {
                     key={`day-${dateStr}`}
                     type="button"
                     onClick={() => setSelectedDate(day)}
-                    className={`w-full p-2 sm:p-2.5 rounded-2xl border text-left flex flex-col justify-between transition-all cursor-pointer min-h-[90px] sm:min-h-[110px] relative overflow-hidden group ${
+                    className={`w-full p-2.5 sm:p-3 rounded-2xl border text-left flex flex-col justify-between transition-all duration-200 cursor-pointer min-h-[105px] sm:min-h-[125px] relative overflow-hidden group ${
                       isSelected
-                        ? 'bg-emerald-500/10 dark:bg-emerald-500/15 border-2 border-emerald-500 text-emerald-950 dark:text-emerald-200 shadow-lg shadow-emerald-500/10 scale-[1.01] z-10'
+                        ? 'bg-gradient-to-br from-emerald-500/15 via-teal-500/10 to-transparent border-2 border-emerald-500 text-emerald-950 dark:text-emerald-200 shadow-xl shadow-emerald-500/10 scale-[1.01] z-10'
                         : isTdy
-                          ? 'bg-blue-500/10 dark:bg-blue-500/15 border-2 border-blue-500 text-blue-950 dark:text-blue-200 shadow-sm'
-                          : 'bg-white dark:bg-dark-900/80 border-slate-200/80 dark:border-white/10 text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-white/20 hover:shadow-md'
+                          ? 'bg-gradient-to-br from-blue-500/15 via-indigo-500/10 to-transparent border-2 border-blue-500 text-blue-950 dark:text-blue-200 shadow-md'
+                          : 'bg-white dark:bg-dark-900/90 border-slate-200/80 dark:border-white/10 text-slate-700 dark:text-slate-300 hover:border-emerald-500/50 hover:shadow-lg hover:scale-[1.005]'
                     }`}
                   >
-                    {/* Encabezado del día: Número y Badge de Hoy */}
+                    {/* Encabezado del día: Número y Badge de Hoy / Total Citas */}
                     <div className="flex items-center justify-between w-full">
-                      <span className={`text-xs sm:text-sm font-black tracking-tight ${
+                      <span className={`text-xs sm:text-sm font-black tracking-tight flex items-center justify-center ${
                         isTdy 
-                          ? 'bg-blue-600 text-white px-2 py-0.5 rounded-lg shadow-xs text-[11px]' 
+                          ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-2 py-0.5 rounded-lg shadow-sm text-[11px]' 
                           : isSelected
-                            ? 'text-emerald-700 dark:text-emerald-400'
+                            ? 'text-emerald-700 dark:text-emerald-400 text-sm font-black'
                             : 'text-slate-800 dark:text-slate-200'
                       }`}>
                         {day.getDate()}
                       </span>
 
-                      {/* Contador total flotante destacado en la esquina superior derecha */}
+                      {/* Badge Contador de Citas Totales */}
                       {dayApps.length > 0 && (
-                        <span className={`text-[10px] font-black px-1.5 py-0.5 rounded-md flex items-center gap-1 shadow-xs ${
+                        <span className={`text-[9.5px] font-black px-2 py-0.5 rounded-full flex items-center gap-1 shadow-2xs backdrop-blur-xs ${
                           isSelected 
-                            ? 'bg-emerald-600 text-white' 
-                            : 'bg-slate-100 dark:bg-white/10 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-white/10'
+                            ? 'bg-emerald-600 text-white shadow-emerald-600/30' 
+                            : 'bg-slate-100 dark:bg-white/10 text-slate-700 dark:text-slate-200 border border-slate-200/80 dark:border-white/10'
                         }`}>
                           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                           {dayApps.length} {dayApps.length === 1 ? 'cita' : 'citas'}
@@ -514,37 +514,40 @@ export const CalendarView = () => {
                       )}
                     </div>
                     
-                    {/* Tarjetas / Pastillas de Citas del Día */}
+                    {/* Tarjetas Ejecutivas Micro-Cards para las Citas */}
                     {dayApps.length > 0 && (
-                      <div className="mt-2 flex flex-col gap-1 w-full flex-1 justify-end">
-                        <div className="flex flex-col gap-1 w-full">
+                      <div className="mt-2 flex flex-col gap-1.5 w-full flex-1 justify-end">
+                        <div className="flex flex-col gap-1.5 w-full">
                           {dayApps.slice(0, 2).map((app) => {
                             const apptType = getApptType(app.appointment_type, app.notes);
-                            const leadFirstName = getLeadName(app.contact_id).split(' ')[0];
+                            const leadFullName = getLeadName(app.contact_id);
                             return (
                               <div 
                                 key={app.id} 
-                                className={`text-[9px] sm:text-[10px] font-bold px-2 py-1 rounded-lg border flex items-center justify-between gap-1 shadow-2xs transition-all ${
+                                className={`text-[9px] sm:text-[10px] font-bold px-2 py-1 rounded-r-lg rounded-l-xs border-y border-r border-l-3 flex items-center justify-between gap-1 shadow-2xs transition-all ${
                                   apptType === 'PRESENCIAL' 
-                                    ? 'bg-emerald-500/15 text-emerald-900 dark:text-emerald-200 border-emerald-500/30' 
+                                    ? 'border-l-emerald-500 bg-emerald-500/10 text-emerald-950 dark:text-emerald-100 border-slate-200/60 dark:border-white/5 dark:bg-emerald-500/15' 
                                     : apptType === 'LLAMADA' 
-                                      ? 'bg-indigo-500/15 text-indigo-900 dark:text-indigo-200 border-indigo-500/30' 
-                                      : 'bg-blue-500/15 text-blue-900 dark:text-blue-200 border-blue-500/30'
+                                      ? 'border-l-indigo-500 bg-indigo-500/10 text-indigo-950 dark:text-indigo-100 border-slate-200/60 dark:border-white/5 dark:bg-indigo-500/15' 
+                                      : 'border-l-blue-500 bg-blue-500/10 text-blue-950 dark:text-blue-100 border-slate-200/60 dark:border-white/5 dark:bg-blue-500/15'
                                 }`}
                               >
-                                <span className="truncate flex items-center gap-1">
-                                  <span>{apptType === 'PRESENCIAL' ? '🏢' : apptType === 'LLAMADA' ? '📞' : '💻'}</span>
-                                  <span className="truncate">{leadFirstName}</span>
+                                <span className="truncate flex items-center gap-1.5 min-w-0">
+                                  <span className="text-[11px]">{apptType === 'PRESENCIAL' ? '🏢' : apptType === 'LLAMADA' ? '📞' : '💻'}</span>
+                                  <span className="truncate font-extrabold tracking-tight">{leadFullName}</span>
                                 </span>
-                                <span className="text-[8.5px] opacity-80 whitespace-nowrap font-mono">{formatTime(app.datetime)}</span>
+                                <span className="text-[8.5px] opacity-90 whitespace-nowrap font-mono font-black px-1 py-0.5 rounded bg-white/60 dark:bg-black/20 border border-black/5 dark:border-white/10">
+                                  {formatTime(app.datetime)}
+                                </span>
                               </div>
                             );
                           })}
                           
-                          {/* Indicador numérico adicional si hay más de 2 citas */}
+                          {/* Indicador de Desborde para Días con Muchas Citas */}
                           {dayApps.length > 2 && (
-                            <div className="text-[9px] font-extrabold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-white/5 border border-slate-200/60 dark:border-white/5 rounded-md px-1.5 py-0.5 text-center mt-0.5">
-                              + {dayApps.length - 2} citas más
+                            <div className="text-[9px] font-black text-emerald-700 dark:text-emerald-300 bg-emerald-500/10 dark:bg-emerald-500/20 border border-emerald-500/20 rounded-lg py-0.5 px-2 text-center flex items-center justify-center gap-1 shadow-2xs">
+                              <span>+ {dayApps.length - 2} citas más</span>
+                              <span className="text-[10px]">➔</span>
                             </div>
                           )}
                         </div>
