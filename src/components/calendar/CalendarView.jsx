@@ -529,35 +529,42 @@ export const CalendarView = () => {
                       )}
                     </div>
                     
-                    {/* Indicador Ejecutivo de # Citas con Etiquetas Explícitas */}
+                    {/* Indicador Ejecutivo 100% Responsivo para Celular, Tablet y Escritorio */}
                     {dayApps.length > 0 && (
-                      <div className="mt-1.5 flex flex-col gap-1 w-full flex-1 justify-center items-center">
-                        <div className={`w-full py-1.5 px-2 rounded-xl border flex items-center justify-center gap-1.5 shadow-2xs transition-all group-hover:scale-[1.02] ${
+                      <div className="mt-1 flex flex-col gap-1 w-full flex-1 justify-center items-center">
+                        {/* Insignia Principal de Total Citas */}
+                        <div className={`w-full py-1 px-1.5 sm:py-1.5 sm:px-2 rounded-xl border flex items-center justify-center gap-1 shadow-2xs transition-all group-hover:scale-[1.02] ${
                           isSelected
                             ? 'bg-emerald-600 text-white border-emerald-500 shadow-emerald-600/20 font-black'
                             : 'bg-slate-100/90 dark:bg-white/10 border-slate-200/80 dark:border-white/10 text-slate-800 dark:text-slate-100 font-black'
                         }`}>
                           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse flex-shrink-0"></span>
-                          <span className="text-[11px] font-black tracking-tight">
+                          <span className="text-[10px] sm:text-[11px] font-black tracking-tight whitespace-nowrap">
                             {dayApps.length} {dayApps.length === 1 ? 'Cita' : 'Citas'}
                           </span>
                         </div>
 
-                        {/* Desglose de Modalidad con Texto Explícito para Liliana y el Equipo */}
-                        <div className="flex flex-col gap-0.5 w-full items-center mt-0.5">
+                        {/* Desglose de Modalidad Adaptativo 100% Responsivo */}
+                        <div className="flex flex-wrap items-center justify-center gap-1 w-full mt-0.5">
                           {presencialCount > 0 && (
-                            <span className="w-full text-center px-1.5 py-0.5 rounded-md text-[8.5px] font-black bg-emerald-500/15 text-emerald-900 dark:text-emerald-200 border border-emerald-500/30 truncate">
-                              🏢 {presencialCount} Presencial{presencialCount > 1 ? 'es' : ''}
+                            <span className="px-1.5 py-0.5 rounded-md text-[8px] sm:text-[8.5px] font-black bg-emerald-500/15 text-emerald-900 dark:text-emerald-200 border border-emerald-500/30 flex items-center gap-0.5 whitespace-nowrap">
+                              <span>🏢</span>
+                              <span>{presencialCount}</span>
+                              <span className="hidden xl:inline">{presencialCount > 1 ? 'Presenciales' : 'Presencial'}</span>
                             </span>
                           )}
                           {virtualCount > 0 && (
-                            <span className="w-full text-center px-1.5 py-0.5 rounded-md text-[8.5px] font-black bg-blue-500/15 text-blue-900 dark:text-blue-200 border border-blue-500/30 truncate">
-                              💻 {virtualCount} Virtual{virtualCount > 1 ? 'es' : ''}
+                            <span className="px-1.5 py-0.5 rounded-md text-[8px] sm:text-[8.5px] font-black bg-blue-500/15 text-blue-900 dark:text-blue-200 border border-blue-500/30 flex items-center gap-0.5 whitespace-nowrap">
+                              <span>💻</span>
+                              <span>{virtualCount}</span>
+                              <span className="hidden xl:inline">{virtualCount > 1 ? 'Virtuales' : 'Virtual'}</span>
                             </span>
                           )}
                           {llamadaCount > 0 && (
-                            <span className="w-full text-center px-1.5 py-0.5 rounded-md text-[8.5px] font-black bg-indigo-500/15 text-indigo-900 dark:text-indigo-200 border border-indigo-500/30 truncate">
-                              📞 {llamadaCount} Llamada{llamadaCount > 1 ? 's' : ''}
+                            <span className="px-1.5 py-0.5 rounded-md text-[8px] sm:text-[8.5px] font-black bg-indigo-500/15 text-indigo-900 dark:text-indigo-200 border border-indigo-500/30 flex items-center gap-0.5 whitespace-nowrap">
+                              <span>📞</span>
+                              <span>{llamadaCount}</span>
+                              <span className="hidden xl:inline">{llamadaCount > 1 ? 'Llamadas' : 'Llamada'}</span>
                             </span>
                           )}
                         </div>
