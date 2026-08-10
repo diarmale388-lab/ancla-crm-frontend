@@ -1382,9 +1382,18 @@ export const ChatWindow = () => {
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Terreno Propio</span>
                   <select
-                    value={activeContact.lot_status || 'Por definir'}
+                    value={
+                      (activeContact.lot_status || '').toLowerCase().includes('sí') || 
+                      (activeContact.lot_status || '').toLowerCase().includes('si') || 
+                      (activeContact.lot_status || '').toLowerCase().includes('tengo') || 
+                      (activeContact.lot_status || '').toLowerCase().includes('propio')
+                        ? 'Sí, ya tengo'
+                        : (activeContact.lot_status || '').toLowerCase().includes('buscando')
+                        ? 'Buscando terreno'
+                        : 'Por definir'
+                    }
                     onChange={(e) => updateContactDetails(activeContact.id, { lot_status: e.target.value })}
-                    className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/5 text-xs text-slate-700 dark:text-slate-200 font-bold px-2 py-1 rounded-lg"
+                    className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/5 text-xs text-slate-700 dark:text-slate-200 font-bold px-2 py-1 rounded-lg cursor-pointer"
                   >
                     <option value="Por definir">Por definir</option>
                     <option value="Sí, ya tengo">Sí, ya tengo</option>
