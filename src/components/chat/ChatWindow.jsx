@@ -61,8 +61,9 @@ export const ChatWindow = () => {
   const [isInternalNote, setIsInternalNote] = useState(false);
   const [noteCategory, setNoteCategory] = useState('general');
 
-  // Ficha 360° Modal
+  // Ficha 360° Modal & Pestañas del Panel Derecho (Lead, Cotizador, Agenda)
   const [showFichaModal360, setShowFichaModal360] = useState(false);
+  const [rightSidebarTab, setRightSidebarTab] = useState('lead'); // 'lead', 'cotizador', 'agenda'
 
   // Buscador de mensajes tipo WhatsApp (dentro del chat)
   const [showMsgSearch, setShowMsgSearch] = useState(false);
@@ -1173,553 +1174,267 @@ export const ChatWindow = () => {
         </div>
       </div>
 
-      {/* 1/3: Panel Lateral Derecho (Responsivo: overlay en móviles/tablets y columna en desktop) */}
+      {/* 3/3: Panel Lateral Derecho - Ficha de Contacto & Herramientas (320px) */}
       <div 
-        className={`bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-white/5 flex flex-col h-full overflow-hidden flex-shrink-0 transition-all duration-300 ${
+        className={`flex flex-col border-l border-slate-200 dark:border-white/5 bg-white dark:bg-slate-900 transition-all ${
           showRightSidebar ? 'flex animate-fade-in' : 'hidden'
         } lg:relative absolute right-0 top-0 w-80 sm:w-88 h-full z-20 shadow-2xl lg:shadow-none`}
       >
-        
-        {/* Contenido principal con scroll vertical único (Cero scrolls anizados para tablet) */}
-        <div className="flex-1 overflow-y-auto p-5 space-y-6">
-          
-          {/* Ficha de Lead */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Ficha de Contacto</h4>
-              {/* Botón de Cerrar Sidebar (solo visible en pantallas móviles/tablets) */}
-              <button
-                type="button"
-                onClick={() => setShowRightSidebar(false)}
-                className="xl:hidden p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-white/5 text-slate-400 hover:text-slate-600 cursor-pointer transition-all"
-                title="Cerrar Detalles"
-              >
-                <ArrowLeft className="w-3.5 h-3.5 rotate-180" />
-              </button>
-            </div>
-            
-            <div className="space-y-3.5 p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/40 border border-slate-150 dark:border-white/5">
-              {/* Imagen de Perfil editable */}
-              <div className="flex flex-col items-center justify-center pb-3 border-b border-slate-200 dark:border-white/5 space-y-2">
-                <div className="relative group">
-                  {activeContact.avatar_url ? (
-                    <img 
-                      src={activeContact.avatar_url} 
-                      className="w-16 h-16 rounded-full object-cover border border-slate-200 dark:border-white/10 shadow-md"
-                      alt="Avatar"
-                    />
-                  ) : (
-                    <div className="w-16 h-16 rounded-full bg-[#dfe5e7] dark:bg-slate-700 flex items-end justify-center overflow-hidden border border-slate-200 dark:border-white/10 flex-shrink-0 select-none">
-                      <svg className="w-12 h-12 text-[#a9b7be] dark:text-slate-500" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                      </svg>
-                    </div>
-                  )}
-                </div>
-                
-                <button 
-                  type="button" 
-                  onClick={async () => {
-                    const newUrl = prompt("Ingresa la URL de la imagen de perfil para este contacto:", activeContact.avatar_url || '');
-                    if (newUrl !== null) {
-                      try {
-                        const token = localStorage.getItem('token');
-                        const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8001/api/v1'}/chats/${activeContact.id}/avatar`, {
-                          method: 'POST',
-                          headers: {
-                            'Authorization': `Bearer ${token}`,
-                            'Content-Type': 'application/json'
-                          },
-                          body: JSON.stringify({ avatar_url: newUrl })
-                        });
-                        if (res.ok) {
-                          alert("¡Imagen de perfil actualizada!");
-                          useChatStore.getState().fetchContacts();
-                        } else {
-                          alert("Error al actualizar la imagen.");
-                        }
-                      } catch (err) {
-                        console.error(err);
-                      }
-                    }
-                  }}
-                  className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 hover:underline cursor-pointer"
-                >
-                  ⚙️ Cambiar Foto de Perfil
-                </button>
-              </div>
-
-              {/* Identificador Único (ID Lead) */}
-              <div className="flex items-center justify-between bg-slate-50 dark:bg-slate-900/80 p-2.5 rounded-xl border border-slate-200 dark:border-white/5">
-                <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">ID Único de Cliente:</span>
-                <div className="flex items-center space-x-1.5">
-                  <span className="text-xs font-black text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-lg border border-emerald-500/20 font-mono">
-                    #{activeContact.id}
-                  </span>
-                  {activeContact.qualification_level === 'VIP' && (
-                    <span className="text-[9px] font-black px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30">
-                      🌟 VIP
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              {/* ⚡ CONTROL RÁPIDO DE ATENCIÓN DE ASESOR (Multi-Selección 1-Clic) */}
-              <div className="p-3 rounded-xl bg-slate-100 dark:bg-slate-900/90 border border-slate-200 dark:border-white/10 text-slate-800 dark:text-white space-y-2 shadow-sm transition-colors">
-                <span className="text-[9.5px] font-black uppercase tracking-wider text-emerald-600 dark:text-emerald-400 block">
-                  ⚡ Control de Atención Asesor (Multi-Selección 1-Clic)
-                </span>
-                <div className="grid grid-cols-2 gap-1.5">
-                  <button
-                    type="button"
-                    onClick={async () => {
-                      const newStatus = await useKanbanStore.getState().logAdvisorStatus(activeContact.id, 'CONTACT_MADE', '', 'toggle');
-                      if (typeof newStatus === 'string') {
-                        useChatStore.setState(state => ({
-                          activeContact: state.activeContact ? { ...state.activeContact, advisor_status: newStatus } : null,
-                          contacts: state.contacts.map(c => c.id === activeContact.id ? { ...c, advisor_status: newStatus } : c)
-                        }));
-                      }
-                      useChatStore.getState().fetchContacts();
-                    }}
-                    className={`p-2 rounded-lg text-[10px] font-bold flex flex-col items-center justify-center space-y-0.5 border transition-all cursor-pointer ${
-                      (activeContact.advisor_status || '').includes('CONTACT_MADE') || (activeContact.advisor_status || '').includes('CONNECTED')
-                        ? 'bg-emerald-600 border-emerald-500 text-white shadow-sm'
-                        : 'bg-white dark:bg-slate-800/80 hover:bg-slate-50 dark:hover:bg-slate-700/60 border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200'
-                    }`}
-                  >
-                    <span>📞 Contacto</span>
-                    {((activeContact.advisor_status || '').includes('CONTACT_MADE') || (activeContact.advisor_status || '').includes('CONNECTED')) && (
-                      <span className="text-[8px] uppercase text-emerald-100 bg-emerald-700/50 px-1.5 py-0.2 rounded-full">✓ Realizado</span>
-                    )}
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={async () => {
-                      const newStatus = await useKanbanStore.getState().logAdvisorStatus(activeContact.id, 'SHOWROOM_VISITED', '', 'toggle');
-                      if (typeof newStatus === 'string') {
-                        useChatStore.setState(state => ({
-                          activeContact: state.activeContact ? { ...state.activeContact, advisor_status: newStatus } : null,
-                          contacts: state.contacts.map(c => c.id === activeContact.id ? { ...c, advisor_status: newStatus } : c)
-                        }));
-                      }
-                      useChatStore.getState().fetchContacts();
-                    }}
-                    className={`p-2 rounded-lg text-[10px] font-bold flex flex-col items-center justify-center space-y-0.5 border transition-all cursor-pointer ${
-                      (activeContact.advisor_status || '').includes('SHOWROOM_VISITED')
-                        ? 'bg-teal-600 border-teal-500 text-white shadow-sm'
-                        : 'bg-white dark:bg-slate-800/80 hover:bg-slate-50 dark:hover:bg-slate-700/60 border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200'
-                    }`}
-                  >
-                    <span>🏢 Showroom</span>
-                    {(activeContact.advisor_status || '').includes('SHOWROOM_VISITED') && (
-                      <span className="text-[8px] uppercase text-teal-100 bg-teal-700/50 px-1.5 py-0.2 rounded-full">✓ Visitó</span>
-                    )}
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={async () => {
-                      const newStatus = await useKanbanStore.getState().logAdvisorStatus(activeContact.id, 'QUOTATION_SENT', '', 'toggle');
-                      if (typeof newStatus === 'string') {
-                        useChatStore.setState(state => ({
-                          activeContact: state.activeContact ? { ...state.activeContact, advisor_status: newStatus } : null,
-                          contacts: state.contacts.map(c => c.id === activeContact.id ? { ...c, advisor_status: newStatus } : c)
-                        }));
-                      }
-                      useChatStore.getState().fetchContacts();
-                    }}
-                    className={`p-2 rounded-lg text-[10px] font-bold flex flex-col items-center justify-center space-y-0.5 border transition-all cursor-pointer ${
-                      (activeContact.advisor_status || '').includes('QUOTATION_SENT')
-                        ? 'bg-blue-600 border-blue-500 text-white shadow-sm'
-                        : 'bg-white dark:bg-slate-800/80 hover:bg-slate-50 dark:hover:bg-slate-700/60 border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200'
-                    }`}
-                  >
-                    <span>📑 Propuesta</span>
-                    {(activeContact.advisor_status || '').includes('QUOTATION_SENT') && (
-                      <span className="text-[8px] uppercase text-blue-100 bg-blue-700/50 px-1.5 py-0.2 rounded-full">✓ Cotizado</span>
-                    )}
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={async () => {
-                      const newStatus = await useKanbanStore.getState().logAdvisorStatus(activeContact.id, 'NO_ANSWER', '', 'toggle');
-                      if (typeof newStatus === 'string') {
-                        useChatStore.setState(state => ({
-                          activeContact: state.activeContact ? { ...state.activeContact, advisor_status: newStatus } : null,
-                          contacts: state.contacts.map(c => c.id === activeContact.id ? { ...c, advisor_status: newStatus } : c)
-                        }));
-                      }
-                      useChatStore.getState().fetchContacts();
-                    }}
-                    className={`p-2 rounded-lg text-[10px] font-bold flex flex-col items-center justify-center space-y-0.5 border transition-all cursor-pointer ${
-                      (activeContact.advisor_status || '').includes('NO_ANSWER')
-                        ? 'bg-amber-600 border-amber-500 text-white shadow-sm'
-                        : 'bg-white dark:bg-slate-800/80 hover:bg-slate-50 dark:hover:bg-slate-700/60 border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200'
-                    }`}
-                  >
-                    <span>🟡 Sin Rpta</span>
-                    {(activeContact.advisor_status || '').includes('NO_ANSWER') && (
-                      <span className="text-[8px] uppercase text-amber-100 bg-amber-700/50 px-1.5 py-0.2 rounded-full">Reintentar</span>
-                    )}
-                  </button>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between space-x-3 min-w-0">
-                <div className="flex items-center space-x-3 min-w-0">
-                  <div className="w-9 h-9 rounded-xl bg-blue-500/10 text-blue-500 flex items-center justify-center flex-shrink-0">
-                    <User className="w-4.5 h-4.5" />
-                  </div>
-                  <div className="min-w-0">
-                    <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">Nombre</span>
-                    <span className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate block font-semibold">
-                      {activeContact.first_name ? `${activeContact.first_name} ${activeContact.last_name || ''}`.trim() : 'Sin Nombre'}
-                    </span>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={async () => {
-                    const newName = prompt("Editar Nombre del Contacto:", activeContact.first_name || '');
-                    if (newName !== null) {
-                      const parts = newName.trim().split(" ");
-                      const firstName = parts[0] || '';
-                      const lastName = parts.slice(1).join(" ") || '';
-                      await updateContactDetails(activeContact.id, { first_name: firstName, last_name: lastName });
-                    }
-                  }}
-                  className="p-1.5 rounded-lg text-slate-400 hover:text-blue-500 hover:bg-slate-100 dark:hover:bg-white/5 transition-all cursor-pointer"
-                  title="Editar Nombre"
-                >
-                  <Pencil className="w-3.5 h-3.5" />
-                </button>
-              </div>
-
-              <div className="flex items-center space-x-3 min-w-0">
-                <div className="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center flex-shrink-0">
-                  <Phone className="w-4.5 h-4.5" />
-                </div>
-                <div className="min-w-0">
-                  <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">Teléfono</span>
-                  <span className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate block font-mono">
-                    {activeContact.phone}
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between space-x-3 min-w-0">
-                <div className="flex items-center space-x-3 min-w-0">
-                  <div className="w-9 h-9 rounded-xl bg-purple-500/10 text-purple-500 flex items-center justify-center flex-shrink-0">
-                    <Mail className="w-4.5 h-4.5" />
-                  </div>
-                  <div className="min-w-0">
-                    <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">Email</span>
-                    <span className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate block">
-                      {activeContact.email || 'No provisto'}
-                    </span>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={async () => {
-                    const newEmail = prompt("Editar Correo Electrónico del Contacto:", activeContact.email || '');
-                    if (newEmail !== null) {
-                      await updateContactDetails(activeContact.id, { email: newEmail.trim() });
-                    }
-                  }}
-                  className="p-1.5 rounded-lg text-slate-400 hover:text-purple-500 hover:bg-slate-100 dark:hover:bg-white/5 transition-all cursor-pointer"
-                  title="Editar Correo Electrónico"
-                >
-                  <Pencil className="w-3.5 h-3.5" />
-                </button>
-              </div>
-
-              {/* 📌 OPTION 2: TARJETA DE RESUMEN VIP DE ATRIBUCIÓN META ADS & FICHA TÉCNICA */}
-              <div className="p-3.5 rounded-2xl bg-gradient-to-br from-purple-900/10 via-indigo-900/5 to-slate-900/10 dark:from-purple-950/40 dark:via-indigo-950/30 dark:to-slate-950/40 border-2 border-purple-500/30 dark:border-purple-500/40 shadow-lg shadow-purple-500/5 space-y-2.5">
-                {/* Header con Badge de Origen */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-1.5">
-                    <span className="flex h-2 w-2 rounded-full bg-purple-500 animate-pulse"></span>
-                    <span className="text-[10px] uppercase font-black tracking-wider text-purple-700 dark:text-purple-300">
-                      📌 RESUMEN DE ATRIBUCIÓN & FICHA
-                    </span>
-                  </div>
-                  <span className={`px-2.5 py-0.5 rounded-full text-[9.5px] font-black tracking-wide ${
-                    (activeContact.source || '').toLowerCase().includes('meta') 
-                      ? 'bg-purple-600 text-white shadow-sm shadow-purple-500/30'
-                      : 'bg-emerald-600 text-white shadow-sm shadow-emerald-500/30'
-                  }`}>
-                    {(activeContact.source || '').toLowerCase().includes('meta') ? '🎯 META ADS' : '💬 ORGÁNICO'}
-                  </span>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => setShowFichaModal360(true)}
-                  className="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-black text-xs shadow-md transition-all active:scale-95 flex items-center justify-center space-x-1.5 cursor-pointer"
-                >
-                  <Sparkles className="w-3.5 h-3.5" />
-                  <span>🌟 Abrir Ficha Técnica Comercial 360°</span>
-                </button>
-
-                {/* Grid de Datos Clave en Cajas Neón */}
-                <div className="grid grid-cols-2 gap-2 text-xs">
-                  {/* Origen de Campaña */}
-                  <div className="col-span-2 bg-white/80 dark:bg-slate-900/80 p-2.5 rounded-xl border border-purple-200 dark:border-purple-900/40 shadow-sm">
-                    <span className="text-[9px] uppercase font-bold text-slate-400 block mb-0.5">📢 Anuncio / Fuente</span>
-                    <span className="font-bold text-purple-900 dark:text-purple-200 text-[11px] truncate block">
-                      {activeContact.source || 'WhatsApp Directo'}
-                    </span>
-                  </div>
-
-                  {/* Terreno / Lote */}
-                  <div className="bg-white/80 dark:bg-slate-900/80 p-2.5 rounded-xl border border-purple-200 dark:border-purple-900/40 shadow-sm">
-                    <span className="text-[9px] uppercase font-bold text-slate-400 block mb-0.5">🏡 Terreno</span>
-                    <span className="font-bold text-slate-800 dark:text-slate-100 text-[11px] block truncate">
-                      {activeContact.lot_status || 'Por definir'}
-                    </span>
-                  </div>
-
-                  {/* Ubicación / Ciudad */}
-                  <div className="bg-white/80 dark:bg-slate-900/80 p-2.5 rounded-xl border border-purple-200 dark:border-purple-900/40 shadow-sm">
-                    <span className="text-[9px] uppercase font-bold text-slate-400 block mb-0.5">📍 Ubicación</span>
-                    <span className="font-bold text-slate-800 dark:text-slate-100 text-[11px] block truncate">
-                      {activeContact.lot_city || 'Por definir'}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Detalles Expandibles de Respuestas del Formulario */}
-                {activeContact.qualification_notes && (
-                  <div className="bg-white/60 dark:bg-slate-900/60 p-2.5 rounded-xl border border-purple-100 dark:border-purple-900/20">
-                    <span className="text-[9px] uppercase font-bold text-purple-600 dark:text-purple-400 block mb-1">
-                      📋 Respuestas del Formulario & Atribución
-                    </span>
-                    <div className="text-[10.5px] font-medium text-slate-700 dark:text-slate-300 whitespace-pre-line leading-relaxed max-h-36 overflow-y-auto">
-                      {activeContact.qualification_notes}
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Selector de Etapa Kanban */}
-              <div className="pt-3 border-t border-slate-200 dark:border-white/5 space-y-1.5">
-                <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">Etapa Comercial</span>
-                <div className="relative">
-                  <select
-                    value={activeContact.pipeline_stage_id || ''}
-                    onChange={(e) => updateContactStage(activeContact.id, e.target.value)}
-                    className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl px-3.5 py-2.5 text-xs text-slate-755 dark:text-slate-200 focus:outline-none focus:border-blue-500/50 appearance-none pr-9 font-semibold"
-                  >
-                    <option value="">Sin Asignar</option>
-                    {stages.map(s => (
-                      <option key={s.id} value={s.id}>{s.name}</option>
-                    ))}
-                  </select>
-                  <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3 top-3 pointer-events-none" />
-                </div>
-              </div>
-
-            </div>
-          </div>
-
-          {/* Historial de Citas Agendadas del lead */}
-          <div className="space-y-3 pt-2 border-t border-slate-150 dark:border-white/5">
+        {/* Header Fijo Sticky (Avatar, Nombre, Matriz 1-Clic y 3 Pestañas Superiores) */}
+        <div className="p-4 border-b border-slate-200 dark:border-white/5 bg-slate-50/80 dark:bg-slate-900/90 backdrop-blur-md sticky top-0 z-10 space-y-3">
+          <div className="flex items-center justify-between">
             <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center space-x-1.5">
-              <Clock className="w-4 h-4 text-blue-500" />
-              <span>Citas Agendadas ({contactAppointments.length})</span>
+              <User className="w-4 h-4 text-emerald-500" />
+              <span>Ficha & Herramientas</span>
             </h4>
-
-            <div className="space-y-2">
-              {contactAppointments.length === 0 ? (
-                <p className="text-[10.5px] text-slate-400 dark:text-slate-500 italic p-3 bg-slate-50 dark:bg-slate-950/20 border border-slate-100 dark:border-white/5 rounded-xl">
-                  No hay reuniones programadas activas.
-                </p>
-              ) : (
-                contactAppointments.map((app) => {
-                  const date = new Date(app.datetime);
-                  const formatOpts = { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' };
-                  return (
-                    <div 
-                      key={app.id} 
-                      className="flex items-center justify-between p-3 bg-gradient-to-tr from-blue-50/50 to-indigo-50/30 dark:from-blue-950/20 dark:to-indigo-950/10 border border-blue-150 dark:border-blue-900/10 rounded-xl"
-                    >
-                      <div className="min-w-0 pr-2">
-                        <span className="text-xs font-bold text-blue-700 dark:text-sky-400 block truncate">
-                          Llamada Comercial
-                        </span>
-                        <span className="text-[10px] text-slate-500 dark:text-slate-400 block mt-0.5">
-                          {date.toLocaleDateString('es-ES', formatOpts)}
-                        </span>
-                      </div>
-                      
-                      <button
-                        type="button"
-                        onClick={() => handleCancelAppointment(app.id)}
-                        className="p-2 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-500/10 transition-all flex-shrink-0 cursor-pointer active:scale-95"
-                        title="Cancelar Cita"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  );
-                })
-              )}
-            </div>
-          </div>
-
-          {/* Agenda Rápida con Selector de Calendario */}
-          <div className="space-y-3.5 pt-2 border-t border-slate-155 dark:border-white/5">
-            <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center space-x-1.5">
-              <Calendar className="w-4 h-4 text-emerald-500" />
-              <span>Agenda Rápida</span>
-            </h4>
-
-            {successBooking && (
-              <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold flex items-center space-x-1.5">
-                <Check className="w-4 h-4" />
-                <span>{successBooking}</span>
-              </div>
-            )}
-
-            {calLoading ? (
-              <div className="flex items-center space-x-1.5 py-2 text-xs text-slate-400">
-                <div className="w-3.5 h-3.5 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
-                <span>Cargando slots libres...</span>
-              </div>
-            ) : slots.length === 0 ? (
-              <p className="text-xs text-slate-400 italic p-3 bg-slate-50 dark:bg-slate-950/20 border border-slate-100 dark:border-white/5 rounded-xl">
-                No hay slots libres en la disponibilidad del asesor.
-              </p>
-            ) : (() => {
-              const uniqueDates = Array.from(new Set(slots.map(s => s.datetime.split('T')[0]))).sort();
-              const activeDate = selectedBookingDate || (uniqueDates.length > 0 ? uniqueDates[0] : '');
-              const slotsForSelectedDate = slots.filter(s => s.datetime.startsWith(activeDate));
-
-              return (
-                <div className="space-y-3">
-                  {/* Selector de Fecha Estilo Mini-Calendario Horizontal */}
-                  <span className="text-[9.5px] text-slate-400 dark:text-slate-505 uppercase font-bold block tracking-wider">1. Selecciona un día</span>
-                  <div className="flex space-x-2 overflow-x-auto pb-2 scrollbar-none snap-x snap-mandatory">
-                    {uniqueDates.map((dateStr) => {
-                      const dateObj = new Date(dateStr + 'T00:00:00');
-                      const dayName = dateObj.toLocaleDateString('es-ES', { weekday: 'short' }); // lun, mar, mié
-                      const dayNum = dateObj.getDate();
-                      const isSelected = activeDate === dateStr;
-                      
-                      return (
-                        <button
-                          key={dateStr}
-                          type="button"
-                          onClick={() => setSelectedBookingDate(dateStr)}
-                          className={`flex flex-col items-center justify-center p-2.5 rounded-xl min-w-[52px] border transition-all cursor-pointer active:scale-95 snap-center ${
-                            isSelected
-                              ? 'bg-emerald-600 border-emerald-600 text-white shadow-md shadow-emerald-600/10'
-                              : 'bg-slate-50 dark:bg-slate-950/30 border-slate-200 dark:border-white/5 text-slate-650 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5'
-                          }`}
-                        >
-                          <span className="text-[8.5px] uppercase font-bold opacity-75">{dayName}</span>
-                          <span className="text-xs font-black mt-0.5">{dayNum}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-
-                  {/* Grid de Horas Disponibles */}
-                  <span className="text-[9.5px] text-slate-400 dark:text-slate-505 uppercase font-bold block tracking-wider pt-1">2. Selecciona una hora</span>
-                  <div className="grid grid-cols-2 gap-2 max-h-36 overflow-y-auto pr-0.5">
-                    {slotsForSelectedDate.length === 0 ? (
-                      <p className="col-span-2 text-xs text-slate-400 italic p-3 bg-slate-50 dark:bg-slate-950/20 border border-slate-100 dark:border-white/5 rounded-xl text-center">
-                        No hay horas para este día.
-                      </p>
-                    ) : (
-                      slotsForSelectedDate.map((slot) => {
-                        const date = new Date(slot.datetime);
-                        const timeStr = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                        return (
-                          <button
-                            key={slot.datetime}
-                            type="button"
-                            onClick={() => handleBookFast(slot.datetime)}
-                            className="py-2.5 text-center rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/5 hover:border-emerald-500/40 hover:bg-slate-50 dark:hover:bg-white/5 transition-all text-xs font-bold text-slate-700 dark:text-slate-200 cursor-pointer active:scale-95 shadow-sm"
-                          >
-                            {timeStr}
-                          </button>
-                        );
-                      })
-                    )}
-                  </div>
-                </div>
-              );
-            })()}
-
-            {/* Botón para Programar otra Fecha en Calendario Flotante */}
             <button
               type="button"
-              onClick={() => {
-                const tomorrow = new Date();
-                tomorrow.setDate(tomorrow.getDate() + 1);
-                const yyyy = tomorrow.getFullYear();
-                const mm = String(tomorrow.getMonth() + 1).padStart(2, '0');
-                const dd = String(tomorrow.getDate()).padStart(2, '0');
-                setSelectedCalDateStr(`${yyyy}-${mm}-${dd}`);
-                setSelectedCalTime("10:00");
-                setCalendarMonth(new Date());
-                setShowCalendarModal(true);
-              }}
-              className="w-full mt-2.5 py-2 px-3 border border-dashed border-slate-300 dark:border-white/10 hover:border-emerald-500/50 hover:text-emerald-600 dark:hover:text-emerald-400 rounded-xl text-[10.5px] font-bold text-slate-555 dark:text-slate-400 flex items-center justify-center space-x-1.5 cursor-pointer transition-all active:scale-[0.98]"
+              onClick={() => setShowRightSidebar(false)}
+              className="xl:hidden p-1.5 rounded-lg hover:bg-slate-200 dark:hover:bg-white/5 text-slate-400 hover:text-slate-600 cursor-pointer transition-all"
+              title="Cerrar Detalles"
             >
-              <Calendar className="w-3.5 h-3.5 text-emerald-500" />
-              <span>Programar otra fecha/hora...</span>
+              <ArrowLeft className="w-3.5 h-3.5 rotate-180" />
             </button>
           </div>
 
-          {/* Cotizador & Propuesta Personalizada (ANCLA Special Projects) */}
-          <div className="space-y-4 pt-2 border-t border-slate-150 dark:border-white/5">
-            <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center justify-between">
-              <span className="flex items-center space-x-1.5">
-                <Sparkles className="w-4 h-4 text-blue-500 animate-pulse" />
-                <span>Cotizador & Propuesta PDF</span>
-              </span>
-              <span className="text-[9px] bg-blue-500/10 text-blue-600 dark:text-sky-400 px-1.5 py-0.5 rounded-full font-bold">Multicanal</span>
-            </h4>
-
-            {proposalSuccess && (
-              <div className="space-y-2 animate-fade-in">
-                <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold flex items-center space-x-1.5">
-                  <Check className="w-4 h-4 shrink-0" />
-                  <span>{proposalSuccess}</span>
+          {/* Resumen Fijo de Contacto */}
+          <div className="flex items-center space-x-3 bg-white dark:bg-slate-900/90 p-2.5 rounded-xl border border-slate-200 dark:border-white/5">
+            <div className="relative flex-shrink-0">
+              {activeContact.avatar_url ? (
+                <img src={activeContact.avatar_url} className="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-white/10" alt="Avatar" />
+              ) : (
+                <div className="w-10 h-10 rounded-full bg-[#dfe5e7] dark:bg-slate-700 flex items-center justify-center font-bold text-slate-500 text-xs">
+                  {activeContact.first_name ? activeContact.first_name[0] : 'U'}
                 </div>
-                {pdfUrl && (
-                  <div className="flex space-x-2">
-                    <a
-                      href={pdfUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex-1 flex items-center justify-center space-x-1.5 py-2 px-3 bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold rounded-xl shadow-md transition-all active:scale-[0.98]"
-                    >
-                      <FileText className="w-3.5 h-3.5" />
-                      <span>Ver PDF</span>
-                    </a>
-                  </div>
-                )}
+              )}
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-slate-800 dark:text-white truncate block">
+                  {activeContact.first_name ? `${activeContact.first_name} ${activeContact.last_name || ''}`.trim() : activeContact.phone}
+                </span>
+                <span className="text-[10px] font-black text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded font-mono">
+                  #{activeContact.id}
+                </span>
               </div>
-            )}
+              <span className="text-[10.5px] text-slate-400 font-mono block truncate">{activeContact.phone}</span>
+            </div>
+          </div>
 
-            {proposalError && (
-              <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 text-xs font-bold flex items-center space-x-1.5">
-                <AlertCircle className="w-4 h-4 shrink-0" />
-                <span>{proposalError}</span>
+          {/* ⚡ Matriz de Control de Atención Asesor (1-Clic) */}
+          <div className="grid grid-cols-4 gap-1">
+            <button
+              type="button"
+              onClick={async () => {
+                const newStatus = await useKanbanStore.getState().logAdvisorStatus(activeContact.id, 'CONTACT_MADE', '', 'toggle');
+                if (typeof newStatus === 'string') {
+                  useChatStore.setState(state => ({
+                    activeContact: state.activeContact ? { ...state.activeContact, advisor_status: newStatus } : null,
+                    contacts: state.contacts.map(c => c.id === activeContact.id ? { ...c, advisor_status: newStatus } : c)
+                  }));
+                }
+                useChatStore.getState().fetchContacts();
+              }}
+              className={`p-1.5 rounded-lg text-[9.5px] font-bold flex flex-col items-center justify-center border transition-all cursor-pointer ${
+                (activeContact.advisor_status || '').includes('CONTACT_MADE') || (activeContact.advisor_status || '').includes('CONNECTED')
+                  ? 'bg-emerald-600 border-emerald-500 text-white shadow-sm'
+                  : 'bg-white dark:bg-slate-800 hover:bg-slate-100 border-slate-200 dark:border-white/5 text-slate-700 dark:text-slate-200'
+              }`}
+              title="Contacto Realizado"
+            >
+              <span>📞 Cont.</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={async () => {
+                const newStatus = await useKanbanStore.getState().logAdvisorStatus(activeContact.id, 'SHOWROOM_VISITED', '', 'toggle');
+                if (typeof newStatus === 'string') {
+                  useChatStore.setState(state => ({
+                    activeContact: state.activeContact ? { ...state.activeContact, advisor_status: newStatus } : null,
+                    contacts: state.contacts.map(c => c.id === activeContact.id ? { ...c, advisor_status: newStatus } : c)
+                  }));
+                }
+                useChatStore.getState().fetchContacts();
+              }}
+              className={`p-1.5 rounded-lg text-[9.5px] font-bold flex flex-col items-center justify-center border transition-all cursor-pointer ${
+                (activeContact.advisor_status || '').includes('SHOWROOM_VISITED')
+                  ? 'bg-teal-600 border-teal-500 text-white shadow-sm'
+                  : 'bg-white dark:bg-slate-800 hover:bg-slate-100 border-slate-200 dark:border-white/5 text-slate-700 dark:text-slate-200'
+              }`}
+              title="Visita Showroom"
+            >
+              <span>🏢 Showr.</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={async () => {
+                const newStatus = await useKanbanStore.getState().logAdvisorStatus(activeContact.id, 'QUOTATION_SENT', '', 'toggle');
+                if (typeof newStatus === 'string') {
+                  useChatStore.setState(state => ({
+                    activeContact: state.activeContact ? { ...state.activeContact, advisor_status: newStatus } : null,
+                    contacts: state.contacts.map(c => c.id === activeContact.id ? { ...c, advisor_status: newStatus } : c)
+                  }));
+                }
+                useChatStore.getState().fetchContacts();
+              }}
+              className={`p-1.5 rounded-lg text-[9.5px] font-bold flex flex-col items-center justify-center border transition-all cursor-pointer ${
+                (activeContact.advisor_status || '').includes('QUOTATION_SENT')
+                  ? 'bg-blue-600 border-blue-500 text-white shadow-sm'
+                  : 'bg-white dark:bg-slate-800 hover:bg-slate-100 border-slate-200 dark:border-white/5 text-slate-700 dark:text-slate-200'
+              }`}
+              title="Propuesta Enviada"
+            >
+              <span>📄 Prop.</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={async () => {
+                const newStatus = await useKanbanStore.getState().logAdvisorStatus(activeContact.id, 'NO_ANSWER', '', 'toggle');
+                if (typeof newStatus === 'string') {
+                  useChatStore.setState(state => ({
+                    activeContact: state.activeContact ? { ...state.activeContact, advisor_status: newStatus } : null,
+                    contacts: state.contacts.map(c => c.id === activeContact.id ? { ...c, advisor_status: newStatus } : c)
+                  }));
+                }
+                useChatStore.getState().fetchContacts();
+              }}
+              className={`p-1.5 rounded-lg text-[9.5px] font-bold flex flex-col items-center justify-center border transition-all cursor-pointer ${
+                (activeContact.advisor_status || '').includes('NO_ANSWER')
+                  ? 'bg-amber-600 border-amber-500 text-white shadow-sm'
+                  : 'bg-white dark:bg-slate-800 hover:bg-slate-100 border-slate-200 dark:border-white/5 text-slate-700 dark:text-slate-200'
+              }`}
+              title="Sin Respuesta"
+            >
+              <span>🔴 Sin Rpta</span>
+            </button>
+          </div>
+
+          {/* 3 Pestañas Superiores de Navegación */}
+          <div className="flex bg-slate-200/60 dark:bg-slate-800/80 p-1 rounded-xl">
+            <button
+              type="button"
+              onClick={() => setRightSidebarTab('lead')}
+              className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-all text-center cursor-pointer ${
+                rightSidebarTab === 'lead'
+                  ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm'
+                  : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white'
+              }`}
+            >
+              👤 Lead
+            </button>
+            <button
+              type="button"
+              onClick={() => setRightSidebarTab('cotizador')}
+              className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-all text-center cursor-pointer ${
+                rightSidebarTab === 'cotizador'
+                  ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm'
+                  : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white'
+              }`}
+            >
+              📄 Cotizador
+            </button>
+            <button
+              type="button"
+              onClick={() => setRightSidebarTab('agenda')}
+              className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-all text-center cursor-pointer ${
+                rightSidebarTab === 'agenda'
+                  ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm'
+                  : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white'
+              }`}
+            >
+              📅 Agenda
+            </button>
+          </div>
+        </div>
+
+        {/* Contenido de la Pestaña Activa con Scroll Limpio */}
+        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+
+          {/* PESTAÑA 1: 👤 LEAD (Atribución, Formulario y Sofi AI Score) */}
+          {rightSidebarTab === 'lead' && (
+            <div className="space-y-4 animate-fade-in">
+              {/* Botón Maestro Verde a Ficha 360° */}
+              <button
+                type="button"
+                onClick={() => setShowFichaModal360(true)}
+                className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold py-2.5 px-3 rounded-xl shadow-md text-xs active:scale-[0.98] transition-all flex items-center justify-center space-x-2 cursor-pointer border border-emerald-500/30"
+              >
+                <Sparkles className="w-4 h-4 text-amber-300 animate-pulse" />
+                <span>Abrir Ficha Técnica Comercial 360°</span>
+              </button>
+
+              {/* Atribución Meta Ads & Origen */}
+              <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/40 border border-slate-200 dark:border-white/5 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] uppercase font-bold text-slate-400">Atribución & Origen</span>
+                  <span className="text-[9px] bg-purple-500/10 text-purple-600 px-2 py-0.5 rounded-full font-bold">Meta Ads</span>
+                </div>
+                <p className="text-xs font-semibold text-slate-700 dark:text-slate-200">
+                  {activeContact.source || 'Meta Ads (Campañas Digitales)'}
+                </p>
               </div>
-            )}
 
-            <form onSubmit={handleGenerateCustomProposal} className="space-y-3">
-              <div className="space-y-1">
-                <label className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">Modelo de Portafolio</label>
-                <div className="relative">
+              {/* Datos de Terreno & Ubicación */}
+              <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/40 border border-slate-200 dark:border-white/5 space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Terreno Propio</span>
+                  <select
+                    value={activeContact.lot_status || 'Por definir'}
+                    onChange={(e) => updateContactDetails(activeContact.id, { lot_status: e.target.value })}
+                    className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/5 text-xs text-slate-700 dark:text-slate-200 font-bold px-2 py-1 rounded-lg"
+                  >
+                    <option value="Por definir">Por definir</option>
+                    <option value="Sí, ya tengo">Sí, ya tengo</option>
+                    <option value="Buscando terreno">Buscando terreno</option>
+                  </select>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Ubicación / Ciudad</span>
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      const newCity = prompt("Ubicación / Municipio del Lote:", activeContact.lot_city || '');
+                      if (newCity !== null) {
+                        await updateContactDetails(activeContact.id, { lot_city: newCity.trim() });
+                      }
+                    }}
+                    className="text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline flex items-center space-x-1"
+                  >
+                    <span>{activeContact.lot_city || 'Por definir'}</span>
+                    <Pencil className="w-3 h-3" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Selector de Etapa Kanban */}
+              <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/40 border border-slate-200 dark:border-white/5 space-y-1.5">
+                <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">Etapa Comercial</span>
+                <select
+                  value={activeContact.pipeline_stage_id || ''}
+                  onChange={(e) => updateContactStage(activeContact.id, e.target.value)}
+                  className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-slate-200"
+                >
+                  <option value="">Sin Asignar</option>
+                  {stages.map(s => (
+                    <option key={s.id} value={s.id}>{s.name}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          )}
+
+          {/* PESTAÑA 2: 📄 COTIZADOR (Motor de PDF y Propuestas Comercial) */}
+          {rightSidebarTab === 'cotizador' && (
+            <div className="space-y-4 animate-fade-in">
+              <form onSubmit={handleGenerateCustomProposal} className="space-y-3 p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/40 border border-slate-200 dark:border-white/5">
+                <span className="text-xs font-bold text-slate-800 dark:text-white block">Cotizador Rápido de Casas Modulares</span>
+                
+                <div className="space-y-1">
+                  <label className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">Modelo de Portafolio</label>
                   <select
                     value={proposalModel}
                     onChange={(e) => {
@@ -1732,7 +1447,7 @@ export const ChatWindow = () => {
                       else if (val.includes('Frío')) setProposalBasePrice(14000);
                       else if (val.includes('Bodega')) setProposalBasePrice(45000);
                     }}
-                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl px-3 py-2 text-xs text-slate-750 dark:text-slate-200 focus:outline-none focus:border-blue-500/50 appearance-none pr-9 font-bold"
+                    className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-slate-200"
                   >
                     <option value="FLEX HOME 56m²">Flex Home 56m² (Casa Expandible)</option>
                     <option value="FLEX HOME 36m²">Flex Home 36m² (Casa Expandible)</option>
@@ -1741,222 +1456,165 @@ export const ChatWindow = () => {
                     <option value="Llave en Mano">Llave en Mano (Proyecto Integral)</option>
                     <option value="Cuarto Frío Copeland Inverter">Cuarto Frío Modular Copeland</option>
                     <option value="Bodega Galvanizada 1000m²">Bodega Estructural Galvanizada</option>
-                    <option value="Otro">Otro (Especificar en notas)</option>
                   </select>
-                  <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3.5 top-3 pointer-events-none" />
                 </div>
-              </div>
 
-              <div className="grid grid-cols-2 gap-2">
-                <div className="space-y-1">
-                  <label className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">Precio Base ($USD)</label>
-                  <input
-                    type="number"
-                    value={proposalBasePrice}
-                    onChange={(e) => setProposalBasePrice(e.target.value)}
-                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl px-3 py-1.5 text-xs font-semibold text-slate-750 dark:text-slate-200"
-                  />
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="space-y-1">
+                    <label className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">Precio Base ($USD)</label>
+                    <input
+                      type="number"
+                      value={proposalBasePrice}
+                      onChange={(e) => setProposalBasePrice(e.target.value)}
+                      className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-800 dark:text-slate-200"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">Descuento (%)</label>
+                    <input
+                      type="number"
+                      value={proposalDiscount}
+                      onChange={(e) => setProposalDiscount(e.target.value)}
+                      className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-800 dark:text-slate-200"
+                    />
+                  </div>
                 </div>
-                <div className="space-y-1">
-                  <label className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">Descuento (%)</label>
-                  <input
-                    type="number"
-                    value={proposalDiscount}
-                    onChange={(e) => setProposalDiscount(e.target.value)}
-                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl px-3 py-1.5 text-xs font-semibold text-slate-750 dark:text-slate-200"
-                  />
-                </div>
-              </div>
 
-              {/* Toggles de Adicionales */}
-              <div className="space-y-1.5">
-                <label className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">Equipamiento Adicional</label>
-                <div className="space-y-1 bg-slate-50 dark:bg-slate-800/60 p-2 rounded-xl border border-slate-200 dark:border-white/5">
-                  <label className="flex items-center space-x-2 text-[11px] font-medium text-slate-700 dark:text-slate-300 cursor-pointer">
-                    <input type="checkbox" checked={proposalExtraDeck} onChange={(e) => setProposalExtraDeck(e.target.checked)} className="rounded text-blue-600" />
-                    <span>Deck Sintético/Madera (+$3,500)</span>
+                {/* Switches de Adicionales */}
+                <div className="space-y-2 pt-2 border-t border-slate-200 dark:border-white/5">
+                  <label className="flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-300 cursor-pointer">
+                    <span>Deck Sintético Exterior</span>
+                    <input type="checkbox" checked={proposalExtraDeck} onChange={(e) => setProposalExtraDeck(e.target.checked)} className="rounded text-emerald-600" />
                   </label>
-                  <label className="flex items-center space-x-2 text-[11px] font-medium text-slate-700 dark:text-slate-300 cursor-pointer">
-                    <input type="checkbox" checked={proposalExtraSolar} onChange={(e) => setProposalExtraSolar(e.target.checked)} className="rounded text-blue-600" />
-                    <span>Kit Solar Off-Grid (+$2,800)</span>
+
+                  <label className="flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-300 cursor-pointer">
+                    <span>Kit Solar Off-Grid</span>
+                    <input type="checkbox" checked={proposalExtraSolar} onChange={(e) => setProposalExtraSolar(e.target.checked)} className="rounded text-emerald-600" />
                   </label>
-                  <label className="flex items-center space-x-2 text-[11px] font-medium text-slate-700 dark:text-slate-300 cursor-pointer">
-                    <input type="checkbox" checked={proposalExtraClima} onChange={(e) => setProposalExtraClima(e.target.checked)} className="rounded text-blue-600" />
-                    <span>Climatización A.A. (+$1,200)</span>
+
+                  <label className="flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-300 cursor-pointer">
+                    <span>Climatización A.A.</span>
+                    <input type="checkbox" checked={proposalExtraClima} onChange={(e) => setProposalExtraClima(e.target.checked)} className="rounded text-emerald-600" />
                   </label>
                 </div>
-              </div>
 
-              <div className="grid grid-cols-2 gap-2">
-                <div className="space-y-1">
-                  <label className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">Ciudad Flete</label>
-                  <input
-                    type="text"
-                    placeholder="Ej. Guatapé"
-                    value={proposalFreightCity}
-                    onChange={(e) => setProposalFreightCity(e.target.value)}
-                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl px-3 py-1.5 text-xs text-slate-750 dark:text-slate-200"
-                  />
+                <div className="grid grid-cols-2 gap-2 pt-2">
+                  <div className="space-y-1">
+                    <label className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">Ciudad Flete</label>
+                    <input
+                      type="text"
+                      placeholder="ej. Cajicá, Armenia"
+                      value={proposalFreightCity}
+                      onChange={(e) => setProposalFreightCity(e.target.value)}
+                      className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-800 dark:text-slate-200"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">Flete ($USD)</label>
+                    <input
+                      type="number"
+                      value={proposalFreightCost}
+                      onChange={(e) => setProposalFreightCost(e.target.value)}
+                      className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-800 dark:text-slate-200"
+                    />
+                  </div>
                 </div>
-                <div className="space-y-1">
-                  <label className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">Costo Flete ($USD)</label>
-                  <input
-                    type="number"
-                    value={proposalFreightCost}
-                    onChange={(e) => setProposalFreightCost(e.target.value)}
-                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl px-3 py-1.5 text-xs text-slate-750 dark:text-slate-200"
-                  />
-                </div>
-              </div>
 
-              <button
-                type="submit"
-                disabled={proposalLoading}
-                className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold py-2 px-3 rounded-xl shadow-md text-xs active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center space-x-1.5 cursor-pointer"
-              >
-                {proposalLoading ? (
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                ) : (
-                  <>
+                <button
+                  type="submit"
+                  disabled={proposalLoading}
+                  className="w-full bg-brand-emerald hover:bg-brand-emeraldHover text-white font-bold py-2.5 px-3 rounded-xl shadow-md text-xs active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center space-x-1.5 cursor-pointer mt-2"
+                >
+                  {proposalLoading ? (
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  ) : (
+                    <>
+                      <Sparkles className="w-4 h-4" />
+                      <span>Generar & Enviar Propuesta/PDF</span>
+                    </>
+                  )}
+                </button>
+              </form>
+
+              {/* Formulario de Despacho de Correo redactado por IA */}
+              {pdfPath && (
+                <div className="space-y-2.5 p-3.5 rounded-xl bg-purple-500/10 border border-purple-500/20">
+                  <span className="text-xs font-bold text-purple-600 dark:text-purple-400 flex items-center space-x-1">
                     <Sparkles className="w-3.5 h-3.5" />
-                    <span>Generar PDF Personalizado</span>
-                  </>
-                )}
-              </button>
-            </form>
-
-            {/* Sección de Despacho de Correo redactado por IA (Solo visible si hay PDF generado) */}
-            {pdfPath && (
-              <div className="space-y-3 pt-3 border-t border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-slate-900/40 p-3 rounded-2xl animate-fade-in">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10.5px] font-bold text-slate-700 dark:text-slate-200 flex items-center space-x-1">
-                    <Send className="w-3.5 h-3.5 text-blue-500" />
-                    <span>Despachar por Correo (IA)</span>
+                    <span>Enviar Email (Redacción Sofi AI)</span>
                   </span>
-                  <span className="text-[9px] bg-emerald-500/10 text-emerald-600 px-1.5 py-0.5 rounded-full font-bold">Redacción IA</span>
-                </div>
 
-                {emailSuccess && (
-                  <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-[11px] font-semibold flex items-center space-x-1">
-                    <Check className="w-3.5 h-3.5 shrink-0" />
-                    <span>{emailSuccess}</span>
-                  </div>
-                )}
-                {emailError && (
-                  <div className="p-2.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 text-[11px] font-semibold flex items-center space-x-1">
-                    <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                    <span>{emailError}</span>
-                  </div>
-                )}
+                  <form onSubmit={handleSendEmailProposal} className="space-y-2">
+                    <input
+                      type="email"
+                      required
+                      placeholder="Correo del cliente (ej. cliente@empresa.com)"
+                      value={recipientEmail}
+                      onChange={(e) => setRecipientEmail(e.target.value)}
+                      className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl px-3 py-1.5 text-xs text-slate-800 dark:text-slate-200 font-bold"
+                    />
+                    <textarea
+                      rows="2"
+                      placeholder="Notas clave tomadas en la llamada..."
+                      value={meetingNotes}
+                      onChange={(e) => setMeetingNotes(e.target.value)}
+                      className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl px-3 py-1.5 text-xs text-slate-800 dark:text-slate-200 resize-none"
+                    ></textarea>
 
-                <form onSubmit={handleSendEmailProposal} className="space-y-2">
-                  <input
-                    type="email"
-                    required
-                    placeholder="Correo del cliente (ej. cliente@empresa.com)"
-                    value={recipientEmail}
-                    onChange={(e) => setRecipientEmail(e.target.value)}
-                    className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl px-3 py-1.5 text-xs text-slate-800 dark:text-slate-200"
-                  />
-                  <textarea
-                    rows="2"
-                    placeholder="Notas clave tomadas en la reunión (la IA las usará para personalizar la carta)..."
-                    value={meetingNotes}
-                    onChange={(e) => setMeetingNotes(e.target.value)}
-                    className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl px-3 py-1.5 text-xs text-slate-800 dark:text-slate-200 resize-none"
-                  ></textarea>
-
-                  <button
-                    type="submit"
-                    disabled={emailSending}
-                    className="w-full bg-slate-900 hover:bg-slate-800 dark:bg-blue-600 dark:hover:bg-blue-500 text-white font-bold py-2 px-3 rounded-xl shadow text-xs active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center space-x-1.5 cursor-pointer"
-                  >
-                    {emailSending ? (
-                      <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    ) : (
-                      <>
-                        <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                        <span>Enviar Email (Redacción por IA + PDF)</span>
-                      </>
-                    )}
-                  </button>
-                </form>
-              </div>
-            )}
-          </div>
-
-          {/* Línea de Tiempo de Actividades & Notas Internas */}
-          <div className="space-y-4 pt-2 border-t border-slate-150 dark:border-white/5">
-            <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center space-x-1.5">
-              <Clock className="w-4 h-4 text-emerald-500" />
-              <span>Historial & Notas Internas</span>
-            </h4>
-
-            {/* Formulario de Notas */}
-            <form onSubmit={handleAddNoteSubmit} className="space-y-2">
-              <textarea
-                placeholder="Escribe una nota interna para este prospecto..."
-                value={newNote}
-                onChange={(e) => setNewNote(e.target.value)}
-                className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl px-3 py-2 text-xs text-slate-850 dark:text-white placeholder-slate-400 focus:outline-none focus:border-emerald-500/50 min-h-[60px]"
-                required
-              />
-              <button
-                type="submit"
-                className="w-full bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-700 dark:text-slate-200 font-bold py-1.5 px-3 rounded-lg text-[10.5px] cursor-pointer transition-all active:scale-[0.98]"
-              >
-                Guardar Nota
-              </button>
-            </form>
-
-            {/* Listado de Actividades */}
-            <div className="space-y-3 max-h-72 overflow-y-auto pr-1">
-              {loadingActivities ? (
-                <div className="flex items-center space-x-1.5 py-2 text-xs text-slate-400">
-                  <div className="w-3.5 h-3.5 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
-                  <span>Cargando actividades...</span>
-                </div>
-              ) : activities.length === 0 ? (
-                <p className="text-[10.5px] text-slate-400 dark:text-slate-500 italic p-3 bg-slate-50 dark:bg-slate-950/20 border border-slate-100 dark:border-white/5 rounded-xl">
-                  No hay registro de actividades aún.
-                </p>
-              ) : (
-                <div className="relative border-l border-slate-200 dark:border-white/10 pl-3 ml-2 space-y-3 py-1 text-left">
-                  {activities.map((act) => {
-                    const actDate = new Date(act.created_at);
-                    const formatOpts = { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' };
-                    const isNote = act.activity_type === 'internal_note';
-                    const isStage = act.activity_type === 'stage_change';
-                    const isAppointment = act.activity_type.startsWith('appointment');
-                    
-                    return (
-                      <div key={act.id} className="relative group">
-                        {/* Punto de color según tipo */}
-                        <div className={`absolute -left-[17px] top-1.5 w-2.5 h-2.5 rounded-full border ${
-                          isNote ? 'bg-amber-500 border-amber-200 dark:border-amber-900/40' :
-                          isStage ? 'bg-blue-500 border-blue-200 dark:border-blue-900/40' :
-                          isAppointment ? 'bg-emerald-500 border-emerald-200 dark:border-emerald-900/40' :
-                          'bg-slate-400 border-slate-300 dark:border-slate-800'
-                        }`} />
-                        
-                        <div className="space-y-0.5">
-                          <div className="flex items-center justify-between">
-                            <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 capitalize">{act.user_name}</span>
-                            <span className="text-[8.5px] text-slate-400 dark:text-slate-500">
-                              {actDate.toLocaleDateString('es-ES', formatOpts)}
-                            </span>
-                          </div>
-                          <p className="text-[10.5px] text-slate-700 dark:text-slate-350 leading-relaxed font-semibold bg-slate-50/50 dark:bg-slate-950/20 p-2 rounded-lg border border-slate-100 dark:border-white/5">
-                            {act.description}
-                          </p>
-                        </div>
-                      </div>
-                    );
-                  })}
+                    <button
+                      type="submit"
+                      disabled={emailSending}
+                      className="w-full bg-brand-purple hover:bg-purple-700 text-white font-bold py-2 px-3 rounded-xl text-xs flex items-center justify-center space-x-1.5 cursor-pointer"
+                    >
+                      {emailSending ? <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></div> : <span>Despachar Correo con PDF</span>}
+                    </button>
+                  </form>
                 </div>
               )}
             </div>
-          </div>
+          )}
+
+          {/* PESTAÑA 3: 📅 AGENDA (Citas, Historial y Agendador Rápido) */}
+          {rightSidebarTab === 'agenda' && (
+            <div className="space-y-4 animate-fade-in">
+              <button
+                type="button"
+                onClick={() => setShowCalendarModal(true)}
+                className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 px-3 rounded-xl shadow-md text-xs active:scale-[0.98] transition-all flex items-center justify-center space-x-2 cursor-pointer"
+              >
+                <Calendar className="w-4 h-4" />
+                <span>Agendar Cita en Calendario</span>
+              </button>
+
+              <div className="space-y-2.5">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Citas Programadas ({contactAppointments.length})</span>
+                {contactAppointments.length === 0 ? (
+                  <p className="text-xs text-slate-400 italic p-3 bg-slate-50 dark:bg-slate-950/20 border border-slate-200 dark:border-white/5 rounded-xl">
+                    No hay citas activas para este prospecto.
+                  </p>
+                ) : (
+                  contactAppointments.map((app) => (
+                    <div key={app.id} className="flex items-center justify-between p-3 bg-blue-500/10 border border-blue-500/20 rounded-xl">
+                      <div>
+                        <span className="text-xs font-bold text-blue-600 dark:text-blue-400 block">{app.type || 'Asesoría Comercial'}</span>
+                        <span className="text-[10.5px] text-slate-500 dark:text-slate-400 font-mono block">
+                          {new Date(app.datetime).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleCancelAppointment(app.id)}
+                        className="p-1.5 text-slate-400 hover:text-red-500 transition-colors"
+                        title="Cancelar"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          )}
 
         </div>
       </div>
@@ -2254,4 +1912,4 @@ export const ChatWindow = () => {
       )}
     </div>
   );
-};
+}

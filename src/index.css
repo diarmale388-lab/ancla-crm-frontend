@@ -58,3 +58,34 @@
   background: rgba(30, 41, 59, 0.4);
   border: 1px solid rgba(255, 255, 255, 0.03);
 }
+
+/* Badges Desaturados de Alta Gama (10% opacidad fondo, 30% borde) */
+.badge-success {
+  background-color: rgba(16, 185, 129, 0.10);
+  border: 1px solid rgba(16, 185, 129, 0.30);
+  color: #6ee7b7;
+}
+
+.badge-alert {
+  background-color: rgba(239, 68, 68, 0.10);
+  border: 1px solid rgba(239, 68, 68, 0.30);
+  color: #fca5a5;
+}
+
+.badge-pending {
+  background-color: rgba(245, 158, 11, 0.10);
+  border: 1px solid rgba(245, 158, 11, 0.30);
+  color: #fde047;
+}
+
+.badge-meta {
+  background-color: rgba(59, 130, 246, 0.10);
+  border: 1px solid rgba(59, 130, 246, 0.30);
+  color: #93c5fd;
+}
+
+.badge-ai {
+  background-color: rgba(124, 58, 237, 0.10);
+  border: 1px solid rgba(124, 58, 237, 0.30);
+  color: #c084fc;
+}
