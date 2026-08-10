@@ -5,6 +5,7 @@ import { useSettingsStore } from '../../store/useSettingsStore';
 import { useKanbanStore } from '../../store/useKanbanStore';
 import { useAuthStore } from '../../store/useAuthStore';
 import LeadFichaModal360 from '../common/LeadFichaModal360';
+import EmailPreviewModal from '../common/EmailPreviewModal';
 import { MessageBubble } from './MessageBubble';
 import { Send, Bot, WifiOff, MessageCircle, Sparkles, User, Phone, Mail, Calendar, Check, ChevronDown, BookOpen, Clock, Lock, Trash2, ShieldAlert, ArrowLeft, CornerUpLeft, Forward, Pencil, X, Download, Smile, Paperclip, Upload, Search } from 'lucide-react';
 

@@ -40,6 +40,11 @@ export const ContactList = () => {
   };
 
   const filteredContacts = contacts.filter((c) => {
+    // 0. Aislamiento RBAC por Rol: Asesores comerciales sólo ven sus contactos asignados
+    if (currentUser && currentUser.role !== 'admin' && c.assigned_user_id && c.assigned_user_id !== currentUser.id) {
+      return false;
+    }
+
     // 1. Filtrar por estado del chatbot
     if (activeFilter === 'ia' && !c.chatbot_enabled) return false;
     if (activeFilter === 'human' && c.chatbot_enabled) return false;
