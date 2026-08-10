@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useChatStore } from '../../store/useChatStore';
+import TimelineView from './TimelineView';
 
 const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
 const API_URL = import.meta.env.VITE_API_URL || (isLocal ? 'http://localhost:8001/api/v1' : 'https://ancla-crm-backend-production.up.railway.app/api/v1');
@@ -751,6 +752,85 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                   );
                 })
               )}
+            </div>
+          </div>
+
+          {/* Bloque 4: Bóveda de Documentos del Expediente (Cédula/RUT, Escrituras, Pagos, Contratos) */}
+          <div className="p-5 rounded-2xl bg-slate-50 dark:bg-dark-950/40 border border-slate-200/80 dark:border-white/10 space-y-3">
+            <span className="text-xs font-black uppercase tracking-wider text-slate-800 dark:text-white flex items-center space-x-1.5">
+              <ShieldCheck className="w-4 h-4 text-emerald-500" />
+              <span>Bóveda de Documentos & Archivos del Expediente</span>
+            </span>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
+              <div className="flex items-center justify-between p-3 rounded-xl bg-white dark:bg-dark-900 border border-slate-200/80 dark:border-white/10">
+                <span className="font-semibold text-slate-700 dark:text-slate-300 flex items-center space-x-2">
+                  <FileText className="w-4 h-4 text-blue-500" />
+                  <span>Documento Identidad (Cédula/RUT)</span>
+                </span>
+                <span className="text-[10px] font-bold text-slate-400 bg-slate-100 dark:bg-white/5 px-2 py-1 rounded-md">Sin Adjuntar</span>
+              </div>
+
+              <div className="flex items-center justify-between p-3 rounded-xl bg-white dark:bg-dark-900 border border-slate-200/80 dark:border-white/10">
+                <span className="font-semibold text-slate-700 dark:text-slate-300 flex items-center space-x-2">
+                  <FileText className="w-4 h-4 text-purple-500" />
+                  <span>Escrituras / Certificado Lote</span>
+                </span>
+                <span className="text-[10px] font-bold text-slate-400 bg-slate-100 dark:bg-white/5 px-2 py-1 rounded-md">Sin Adjuntar</span>
+              </div>
+
+              <div className="flex items-center justify-between p-3 rounded-xl bg-white dark:bg-dark-900 border border-slate-200/80 dark:border-white/10">
+                <span className="font-semibold text-slate-700 dark:text-slate-300 flex items-center space-x-2">
+                  <FileText className="w-4 h-4 text-emerald-500" />
+                  <span>Comprobante de Pago / Anticipo</span>
+                </span>
+                <span className="text-[10px] font-bold text-slate-400 bg-slate-100 dark:bg-white/5 px-2 py-1 rounded-md">Sin Adjuntar</span>
+              </div>
+
+              <div className="flex items-center justify-between p-3 rounded-xl bg-white dark:bg-dark-900 border border-slate-200/80 dark:border-white/10">
+                <span className="font-semibold text-slate-700 dark:text-slate-300 flex items-center space-x-2">
+                  <FileText className="w-4 h-4 text-amber-500" />
+                  <span>Contrato de Compraventa ANCLA</span>
+                </span>
+                <span className="text-[10px] font-bold text-slate-400 bg-slate-100 dark:bg-white/5 px-2 py-1 rounded-md">Sin Adjuntar</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Bloque 5: Personalizaciones del Cliente (Especificaciones de Diseño) */}
+          <div className="p-5 rounded-2xl bg-slate-50 dark:bg-dark-950/40 border border-slate-200/80 dark:border-white/10 space-y-3">
+            <span className="text-xs font-black uppercase tracking-wider text-slate-800 dark:text-white flex items-center space-x-1.5">
+              <Sparkles className="w-4 h-4 text-indigo-500" />
+              <span>Personalizaciones & Acabados del Cliente</span>
+            </span>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+              <div>
+                <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1">Color Fachada Exterior</label>
+                <input
+                  type="text"
+                  placeholder="ej. Negro Industrial / Madera Teka"
+                  className="w-full bg-white dark:bg-dark-900 border border-slate-200/80 dark:border-white/10 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1">Acabado Muros Interiores</label>
+                <input
+                  type="text"
+                  placeholder="ej. Paneles Blancos Termoacústicos"
+                  className="w-full bg-white dark:bg-dark-900 border border-slate-200/80 dark:border-white/10 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1">Tipo de Piso</label>
+                <input
+                  type="text"
+                  placeholder="ej. PVC SPC Vetas Madera"
+                  className="w-full bg-white dark:bg-dark-900 border border-slate-200/80 dark:border-white/10 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-white"
+                />
+              </div>
             </div>
           </div>
 
