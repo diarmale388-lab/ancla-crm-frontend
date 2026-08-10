@@ -6,6 +6,7 @@ import { useKanbanStore } from '../../store/useKanbanStore';
 import { useAuthStore } from '../../store/useAuthStore';
 import LeadFichaModal360 from '../common/LeadFichaModal360';
 import EmailPreviewModal from '../common/EmailPreviewModal';
+import AnclaTechnicalDossier from '../common/AnclaTechnicalDossier';
 import { MessageBubble } from './MessageBubble';
 import { Send, Bot, WifiOff, MessageCircle, Sparkles, User, Phone, Mail, Calendar, Check, ChevronDown, BookOpen, Clock, Lock, Trash2, ShieldAlert, ArrowLeft, CornerUpLeft, Forward, Pencil, X, Download, Smile, Paperclip, Upload, Search } from 'lucide-react';
 
@@ -64,6 +65,7 @@ export const ChatWindow = () => {
 
   // Ficha 360° Modal & Pestañas del Panel Derecho (Lead, Cotizador, Agenda)
   const [showFichaModal360, setShowFichaModal360] = useState(false);
+  const [showDossierModal, setShowDossierModal] = useState(false);
   const [rightSidebarTab, setRightSidebarTab] = useState('lead'); // 'lead', 'cotizador', 'agenda'
 
   // Buscador de mensajes tipo WhatsApp (dentro del chat)
@@ -1441,7 +1443,25 @@ export const ChatWindow = () => {
           {rightSidebarTab === 'cotizador' && (
             <div className="space-y-4 animate-fade-in">
               <form onSubmit={handleGenerateCustomProposal} className="space-y-3 p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/40 border border-slate-200 dark:border-white/5">
-                <span className="text-xs font-bold text-slate-800 dark:text-white block">Cotizador Rápido de Casas Modulares</span>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-slate-800 dark:text-white block">Cotizador de Casas Modulares</span>
+                  <button
+                    type="button"
+                    onClick={() => setShowDossierModal(true)}
+                    className="text-[10px] font-black text-emerald-500 hover:underline flex items-center space-x-1"
+                  >
+                    <span>📑 Dossier USD</span>
+                  </button>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setShowDossierModal(true)}
+                  className="w-full py-2 px-3 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-extrabold text-xs flex items-center justify-center space-x-2 transition-all cursor-pointer shadow-sm"
+                >
+                  <DollarSign className="w-4 h-4 text-emerald-400" />
+                  <span>📑 Abrir Dossier & Cotizador USD (3 Pestañas)</span>
+                </button>
                 
                 <div className="space-y-1">
                   <label className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">Modelo de Portafolio</label>
@@ -1918,6 +1938,24 @@ export const ChatWindow = () => {
           contact={activeContact}
           onClose={() => setShowFichaModal360(false)}
           onRefresh={() => useChatStore.getState().fetchContacts()}
+        />
+      )}
+
+      {/* Modal Dossier Técnico & Comercial Unificado */}
+      {showDossierModal && activeContact && (
+        <AnclaTechnicalDossier
+          isOpen={showDossierModal}
+          contact={activeContact}
+          onClose={() => setShowDossierModal(false)}
+          onSaveDossier={(dossierData) => {
+            if (dossierData.modelName) setProposalModel(dossierData.modelName);
+            if (dossierData.totalUSD) setProposalBasePrice(dossierData.totalUSD);
+            useChatStore.getState().updateContactDetails(activeContact.id, {
+              interest_product: dossierData.modelName,
+              quoted_value: dossierData.totalUSD,
+              proposal_notes: `Dossier: ${dossierData.modelName} ($${Math.round(dossierData.totalUSD).toLocaleString()} USD | 60% Anticipo: $${Math.round(dossierData.deposit60).toLocaleString()} USD / 40% Balanza: $${Math.round(dossierData.balance40).toLocaleString()} USD)`
+            });
+          }}
         />
       )}
     </div>

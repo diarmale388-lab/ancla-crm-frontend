@@ -8,6 +8,7 @@ import { useAuthStore } from '../../store/useAuthStore';
 import { useChatStore } from '../../store/useChatStore';
 import TimelineView from './TimelineView';
 import ChinaSpecSheetModal from '../showroom/ChinaSpecSheetModal';
+import AnclaTechnicalDossier from './AnclaTechnicalDossier';
 
 const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
 const API_URL = import.meta.env.VITE_API_URL || (isLocal ? 'http://localhost:8001/api/v1' : 'https://ancla-crm-backend-production.up.railway.app/api/v1');
@@ -94,6 +95,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
   const [savedSuccess, setSavedSuccess] = useState(false);
   const [saving, setSaving] = useState(false);
   const [showChinaSpecs, setShowChinaSpecs] = useState(false);
+  const [showDossierModal, setShowDossierModal] = useState(false);
 
   // Cargar notas de la bitácora al abrir
   useEffect(() => {
@@ -265,17 +267,28 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
             <button
               type="button"
               onClick={handleOpenCrmChat}
-              className="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-black text-xs flex items-center space-x-1.5 shadow-md transition-all active:scale-95 cursor-pointer"
+              className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-black text-xs flex items-center space-x-1.5 shadow-md transition-all active:scale-95 cursor-pointer"
             >
               <MessageCircle className="w-4 h-4" />
-              <span>💬 Ir al Chat en CRM</span>
+              <span>💬 Chat CRM</span>
             </button>
 
-            {/* BOTÓN 2: FICHA CHINA FACTORY SPEC SHEET */}
+            {/* BOTÓN 2: DOSSIER TÉCNICO & FINANCIERO */}
+            <button
+              type="button"
+              onClick={() => setShowDossierModal(true)}
+              className="px-3.5 py-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-black text-xs flex items-center space-x-1.5 transition-all active:scale-95 cursor-pointer"
+              title="Abrir Dossier Técnico & Financiero Unificado"
+            >
+              <DollarSign className="w-3.5 h-3.5" />
+              <span>📑 Dossier & Cotizador USD</span>
+            </button>
+
+            {/* BOTÓN 3: FICHA CHINA FACTORY SPEC SHEET */}
             <button
               type="button"
               onClick={() => setShowChinaSpecs(true)}
-              className="px-3.5 py-2 rounded-xl bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20 font-black text-xs flex items-center space-x-1.5 transition-all active:scale-95 cursor-pointer"
+              className="px-3 py-2 rounded-xl bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 border border-indigo-500/20 font-black text-xs flex items-center space-x-1.5 transition-all active:scale-95 cursor-pointer"
               title="Abrir Ficha Técnica de Exportación China"
             >
               <Factory className="w-3.5 h-3.5" />
@@ -892,6 +905,22 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
             isOpen={showChinaSpecs}
             contact={contact}
             onClose={() => setShowChinaSpecs(false)}
+          />
+        )}
+
+        {/* MODAL DOSSIER TÉCNICO & COMERCIAL UNIFICADO */}
+        {showDossierModal && (
+          <AnclaTechnicalDossier
+            isOpen={showDossierModal}
+            contact={contact}
+            onClose={() => setShowDossierModal(false)}
+            onSaveDossier={(dossierData) => {
+              if (dossierData.modelName) setInterestProduct(dossierData.modelName);
+              if (dossierData.totalUSD) setQuotedValue(dossierData.totalUSD);
+              if (dossierData.exteriorColor) {
+                setProposalNotes(`Modelo: ${dossierData.modelName} | Total: $${Math.round(dossierData.totalUSD).toLocaleString()} USD (60% Anticipo: $${Math.round(dossierData.deposit60).toLocaleString()} USD / 40% Balanza: $${Math.round(dossierData.balance40).toLocaleString()} USD) | Acabados: ${dossierData.exteriorColor}`);
+              }
+            }}
           />
         )}
 
