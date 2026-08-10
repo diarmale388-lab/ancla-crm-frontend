@@ -9,7 +9,7 @@ import {
   MessageCircle, User, Phone, ArrowRight, Calendar, Bot, 
   Search, Filter, DollarSign, Building, MapPin, TrendingUp, 
   Clock, Sparkles, X, Plus, Edit3, Check, ExternalLink, 
-  AlertCircle, RefreshCw, CheckCircle2, ChevronRight, ShieldAlert, Award
+  AlertCircle, RefreshCw, CheckCircle2, ChevronRight, ShieldAlert, Award, Factory
 } from 'lucide-react';
 
 export const KanbanBoard = () => {
@@ -725,7 +725,7 @@ export const KanbanBoard = () => {
                         )}
 
                         {/* REQUERIMIENTO 3: BOTONES TÁCTILES DE ACCIÓN RÁPIDA */}
-                        <div className="pt-2 border-t border-slate-100 dark:border-white/5 flex items-center justify-between gap-1">
+                        <div className="pt-2 border-t border-slate-100 dark:border-white/5 flex items-center justify-between gap-1 flex-wrap">
                           
                           {/* Botón 1: Abrir Chat WhatsApp */}
                           <button
@@ -756,14 +756,28 @@ export const KanbanBoard = () => {
                             <span>Cita</span>
                           </button>
 
-                          {/* Botón 3: Ver Ficha 360° */}
+                          {/* Botón 3: Ficha China Spec Sheet */}
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedLeadForChinaSpecs(lead);
+                            }}
+                            className="py-1.5 px-2 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 font-extrabold text-[10px] rounded-xl transition-all flex items-center justify-center space-x-1 cursor-pointer"
+                            title="Ver Ficha Técnica de Exportación China"
+                          >
+                            <Factory className="w-3 h-3" />
+                            <span>China</span>
+                          </button>
+
+                          {/* Botón 4: Ver Ficha 360° */}
                           <button
                             type="button"
                             onClick={(e) => {
                               e.stopPropagation();
                               setSelectedLeadForModal(lead);
                             }}
-                            className="py-1.5 px-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-extrabold text-[10px] rounded-xl transition-all flex items-center justify-center cursor-pointer"
+                            className="py-1.5 px-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-extrabold text-[10px] rounded-xl transition-all flex items-center justify-center cursor-pointer"
                             title="Ver Ficha Comercial 360°"
                           >
                             <ExternalLink className="w-3 h-3" />

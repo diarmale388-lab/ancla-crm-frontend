@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { 
   X, Sparkles, Phone, Mail, MapPin, Building2, DollarSign, Calendar as CalendarIcon, 
   FileText, Check, MessageSquare, AlertCircle, Clock, Send, ShieldCheck, Flame, 
-  User, CheckCircle2, FileUp, ExternalLink, HelpCircle, RefreshCw, MessageCircle
+  User, CheckCircle2, FileUp, ExternalLink, HelpCircle, RefreshCw, MessageCircle, Factory
 } from 'lucide-react';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useChatStore } from '../../store/useChatStore';
 import TimelineView from './TimelineView';
+import ChinaSpecSheetModal from '../showroom/ChinaSpecSheetModal';
 
 const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
 const API_URL = import.meta.env.VITE_API_URL || (isLocal ? 'http://localhost:8001/api/v1' : 'https://ancla-crm-backend-production.up.railway.app/api/v1');
@@ -92,6 +93,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
   // Notificación de éxito
   const [savedSuccess, setSavedSuccess] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [showChinaSpecs, setShowChinaSpecs] = useState(false);
 
   // Cargar notas de la bitácora al abrir
   useEffect(() => {
@@ -269,7 +271,18 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
               <span>💬 Ir al Chat en CRM</span>
             </button>
 
-            {/* BOTÓN 2: ABRIR WHATSAPP WEB */}
+            {/* BOTÓN 2: FICHA CHINA FACTORY SPEC SHEET */}
+            <button
+              type="button"
+              onClick={() => setShowChinaSpecs(true)}
+              className="px-3.5 py-2 rounded-xl bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20 font-black text-xs flex items-center space-x-1.5 transition-all active:scale-95 cursor-pointer"
+              title="Abrir Ficha Técnica de Exportación China"
+            >
+              <Factory className="w-3.5 h-3.5" />
+              <span>🏭 Ficha China</span>
+            </button>
+
+            {/* BOTÓN 3: ABRIR WHATSAPP WEB */}
             <a
               href={`https://wa.me/${contact.phone.replace('+', '')}`}
               target="_blank"
@@ -872,6 +885,15 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
             </button>
           </div>
         </div>
+
+        {/* MODAL FICHA TÉCNICA EXPORTACIÓN CHINA BILINGÜE */}
+        {showChinaSpecs && (
+          <ChinaSpecSheetModal
+            isOpen={showChinaSpecs}
+            contact={contact}
+            onClose={() => setShowChinaSpecs(false)}
+          />
+        )}
 
       </div>
     </div>
