@@ -4,6 +4,7 @@ import { useCalendarStore } from '../../store/useCalendarStore';
 import { useChatStore } from '../../store/useChatStore';
 import { useAuthStore } from '../../store/useAuthStore';
 import LeadFichaModal360 from '../common/LeadFichaModal360';
+import ChinaSpecSheetModal from '../showroom/ChinaSpecSheetModal';
 import { 
   MessageCircle, User, Phone, ArrowRight, Calendar, Bot, 
   Search, Filter, DollarSign, Building, MapPin, TrendingUp, 
@@ -25,6 +26,7 @@ export const KanbanBoard = () => {
   // Modales
   const [selectedLeadForModal, setSelectedLeadForModal] = useState(null);
   const [selectedLeadForAppointment, setSelectedLeadForAppointment] = useState(null);
+  const [selectedLeadForChinaSpecs, setSelectedLeadForChinaSpecs] = useState(null);
 
   // Notas Internas en Modal 360°
   const [internalNotes, setInternalNotes] = useState([]);
@@ -785,6 +787,15 @@ export const KanbanBoard = () => {
           contact={selectedLeadForModal}
           onClose={() => setSelectedLeadForModal(null)}
           onRefresh={fetchLeads}
+        />
+      )}
+
+      {/* MODAL FICHA TÉCNICA EXPORTACIÓN CHINA BILINGÜE */}
+      {selectedLeadForChinaSpecs && (
+        <ChinaSpecSheetModal
+          isOpen={!!selectedLeadForChinaSpecs}
+          contact={selectedLeadForChinaSpecs}
+          onClose={() => setSelectedLeadForChinaSpecs(null)}
         />
       )}
 
