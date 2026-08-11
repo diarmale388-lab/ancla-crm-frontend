@@ -75,11 +75,12 @@ export const ShowroomDashboard = () => {
     const searchVal = search.toLowerCase().trim();
     
     const res = attendees.filter(item => {
+      if (!item) return false;
       const matchesSearch = !searchVal || 
-        item.name.toLowerCase().includes(searchVal) ||
-        item.phone.includes(searchVal) ||
-        item.city.toLowerCase().includes(searchVal) ||
-        item.notes.toLowerCase().includes(searchVal);
+        (item.name || '').toLowerCase().includes(searchVal) ||
+        String(item.phone || '').includes(searchVal) ||
+        (item.city || '').toLowerCase().includes(searchVal) ||
+        (item.notes || '').toLowerCase().includes(searchVal);
         
       const matchesDay = day === 'all' || (item.day || '').includes(day);
       const matchesModality = modality === 'all' || (item.modality || '').toLowerCase().includes(modality.toLowerCase());
@@ -88,9 +89,9 @@ export const ShowroomDashboard = () => {
       
       let matchesHour = true;
       if (hourRange === 'mañana') {
-        matchesHour = item.hour_num < 12;
+        matchesHour = (item.hour_num || 0) < 12;
       } else if (hourRange === 'tarde') {
-        matchesHour = item.hour_num >= 12;
+        matchesHour = (item.hour_num || 0) >= 12;
       }
       
       return matchesSearch && matchesDay && matchesModality && matchesOrigin && matchesType && matchesHour;
@@ -101,9 +102,9 @@ export const ShowroomDashboard = () => {
 
   // Estadísticas
   const statTotal = filtered.length;
-  const statPresencial = filtered.filter(x => x.modality.includes('Presencial')).length;
-  const statVirtual = filtered.filter(x => x.modality.includes('Virtual')).length;
-  const statLote = filtered.filter(x => x.has_lote.includes('Sí')).length;
+  const statPresencial = filtered.filter(x => (x?.modality || '').includes('Presencial')).length;
+  const statVirtual = filtered.filter(x => (x?.modality || '').includes('Virtual')).length;
+  const statLote = filtered.filter(x => (x?.has_lote || '').includes('Sí')).length;
 
   const handlePrint = () => {
     window.print();

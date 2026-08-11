@@ -212,9 +212,10 @@ export const ContactList = () => {
           </div>
         ) : (
           filteredContacts.map((contact) => {
+            if (!contact) return null;
             const isSelected = selectedContactId === contact.id;
             const initials = getInitials(contact.first_name, contact.last_name);
-            const isInstagram = contact.source === 'Instagram' || contact.phone.startsWith('IG-');
+            const isInstagram = contact.source === 'Instagram' || (contact.phone && String(contact.phone).startsWith('IG-'));
 
               return (
                 <div

@@ -338,7 +338,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
             </button>
 
             <a
-              href={`https://wa.me/${contact.phone.replace('+', '')}`}
+              href={`https://wa.me/${String(contact?.phone || '').replace(/\D/g, '')}`}
               target="_blank"
               rel="noreferrer"
               className="px-2.5 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs hover:bg-slate-200 dark:hover:bg-slate-800 flex items-center space-x-1 transition-all"
