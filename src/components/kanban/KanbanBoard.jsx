@@ -191,30 +191,43 @@ export const KanbanBoard = () => {
     }
   };
 
-  // MÓDULO 1: SEMÁFORO DE SLA & RADAR DE INACTIVIDAD
+  // MÓDULO 1: SEMÁFORO DE SLA & RADAR DE INACTIVIDAD (Con Fallback Seguro a created_at)
   const getLeadSlaStatus = (lead) => {
-    const dateStr = lead.last_message_at || lead.updated_at || lead.created_at;
-    if (!dateStr) return { status: 'GREEN', hours: 0, label: '< 24h', isUrgent: false, color: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20' };
+    // 1. Manejo de Fechas Robusto: last_interaction_at -> last_message_at -> updated_at -> created_at
+    const dateStr = lead.last_interaction_at || lead.last_message_at || lead.updated_at || lead.created_at;
+    if (!dateStr) {
+      return { 
+        status: 'GREEN', 
+        hours: 0, 
+        label: '< 24h', 
+        isUrgent: false, 
+        color: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20' 
+      };
+    }
 
-    const lastDate = new Date(dateStr);
+    const parsedDate = new Date(dateStr);
+    const validDate = isNaN(parsedDate.getTime()) 
+      ? (lead.created_at && !isNaN(new Date(lead.created_at).getTime()) ? new Date(lead.created_at) : new Date())
+      : parsedDate;
+
     const now = new Date();
-    const diffHours = Math.max(0, Math.floor((now - lastDate) / (1000 * 60 * 60)));
+    const diffHours = Math.max(0, Math.floor((now - validDate) / (1000 * 60 * 60)));
 
     if (diffHours < 24) {
       return { 
         status: 'GREEN', 
         hours: diffHours, 
         label: diffHours <= 1 ? 'Hace poco' : `${diffHours}h`, 
-        isUrgent: false,
-        color: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20'
+        isUrgent: false, 
+        color: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20' 
       };
     } else if (diffHours <= 48) {
       return { 
         status: 'YELLOW', 
         hours: diffHours, 
         label: `${diffHours}h`, 
-        isUrgent: false,
-        color: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20'
+        isUrgent: false, 
+        color: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20' 
       };
     } else {
       const days = Math.floor(diffHours / 24);
@@ -222,8 +235,8 @@ export const KanbanBoard = () => {
         status: 'RED', 
         hours: diffHours, 
         label: `${days}d (>48h)`, 
-        isUrgent: true,
-        color: 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/30'
+        isUrgent: true, 
+        color: 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/30' 
       };
     }
   };
