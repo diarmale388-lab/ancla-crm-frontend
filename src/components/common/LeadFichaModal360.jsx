@@ -90,6 +90,46 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
   const [interiorWalls, setInteriorWalls] = useState('Paneles Termoacústicos Blancos 75mm');
   const [flooringType, setFlooringType] = useState('PVC SPC Alto Tráfico Vetas Madera');
 
+  // Documentos en Bóveda Legal & Custodia
+  const [docCedulaUrl, setDocCedulaUrl] = useState(contact.doc_cedula_url || '');
+  const [docEscrituraUrl, setDocEscrituraUrl] = useState(contact.doc_escritura_url || '');
+  const [docComprobanteUrl, setDocComprobanteUrl] = useState(contact.doc_comprobante_url || '');
+  const [docContratoUrl, setDocContratoUrl] = useState(contact.doc_contrato_url || '');
+  const [uploadingDoc, setUploadingDoc] = useState(null);
+
+  const handleUploadDocument = async (e, docKey) => {
+    const file = e.target.files?.[0];
+    if (!file || !contact.id) return;
+
+    setUploadingDoc(docKey);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('media_type', 'document');
+
+      const res = await fetch(`${API_URL}/chats/${contact.id}/send-media`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: formData
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        const fileUrl = data.media_url || data.content || (data.file_path ? `${API_URL}/media/${data.file_path}` : file.name);
+        if (docKey === 'cedula') setDocCedulaUrl(fileUrl);
+        else if (docKey === 'escritura') setDocEscrituraUrl(fileUrl);
+        else if (docKey === 'comprobante') setDocComprobanteUrl(fileUrl);
+        else if (docKey === 'contrato') setDocContratoUrl(fileUrl);
+      }
+    } catch (err) {
+      console.error("Error al subir documento:", err);
+    } finally {
+      setUploadingDoc(null);
+    }
+  };
+
   // Bitácora de Atención Comercial (Pestaña 2)
   const [bitacoraNotes, setBitacoraNotes] = useState([]);
   const [newNoteContent, setNewNoteContent] = useState('');
@@ -809,21 +849,58 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
                   {[
-                    { label: 'Documento Identidad (Cédula/RUT)', icon: FileText, color: 'text-blue-500', status: 'Sin Adjuntar' },
-                    { label: 'Escrituras / Certificado Lote', icon: FileText, color: 'text-purple-500', status: 'Sin Adjuntar' },
-                    { label: 'Comprobante Anticipo 60%', icon: FileText, color: 'text-emerald-500', status: 'Sin Adjuntar' },
-                    { label: 'Contrato de Compraventa ANCLA', icon: FileText, color: 'text-amber-500', status: 'Sin Adjuntar' }
-                  ].map((doc, i) => {
+                    { key: 'cedula', label: 'Documento Identidad (Cédula/RUT)', icon: FileText, color: 'text-blue-500', url: docCedulaUrl },
+                    { key: 'escritura', label: 'Escrituras / Certificado Lote', icon: FileText, color: 'text-purple-500', url: docEscrituraUrl },
+                    { key: 'comprobante', label: 'Comprobante Anticipo 60%', icon: FileText, color: 'text-emerald-500', url: docComprobanteUrl },
+                    { key: 'contrato', label: 'Contrato de Compraventa ANCLA', icon: FileText, color: 'text-amber-500', url: docContratoUrl }
+                  ].map((doc) => {
                     const DocIcon = doc.icon;
+                    const isUploading = uploadingDoc === doc.key;
+                    const hasDoc = !!doc.url;
+
                     return (
-                      <div key={i} className="flex items-center justify-between p-3.5 rounded-xl bg-white dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52]">
-                        <span className="font-semibold text-slate-700 dark:text-slate-300 flex items-center space-x-2.5 truncate">
+                      <div key={doc.key} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3.5 rounded-2xl bg-white dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] gap-2 shadow-xs">
+                        <div className="flex items-center space-x-2.5 min-w-0">
                           <DocIcon className={`w-4 h-4 ${doc.color} shrink-0`} />
-                          <span className="truncate">{doc.label}</span>
-                        </span>
-                        <span className="text-[10px] font-bold text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md shrink-0">
-                          {doc.status}
-                        </span>
+                          <div className="min-w-0">
+                            <span className="font-bold text-slate-800 dark:text-slate-200 block truncate text-xs">{doc.label}</span>
+                            <span className="text-[10px] text-slate-400 block truncate">
+                              {hasDoc ? '✅ Documento cargado en servidor' : 'Pendiente de adjuntar'}
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center space-x-1.5 shrink-0 self-end sm:self-auto">
+                          {hasDoc && (
+                            <a
+                              href={doc.url.startsWith('http') ? doc.url : `${API_URL}/media/${doc.url}`}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="px-2.5 py-1 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-bold text-[10px] flex items-center space-x-1 transition-all"
+                              title="Ver / Descargar archivo"
+                            >
+                              <ExternalLink className="w-3 h-3" />
+                              <span>Ver</span>
+                            </a>
+                          )}
+
+                          <label className={`px-2.5 py-1 rounded-xl font-bold text-[10px] flex items-center space-x-1 cursor-pointer transition-all ${
+                            isUploading 
+                              ? 'bg-slate-200 dark:bg-slate-800 text-slate-400' 
+                              : hasDoc 
+                              ? 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300'
+                              : 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-xs'
+                          }`}>
+                            <Upload className="w-3 h-3" />
+                            <span>{isUploading ? 'Subiendo...' : hasDoc ? 'Reemplazar' : 'Subir'}</span>
+                            <input
+                              type="file"
+                              className="hidden"
+                              disabled={isUploading}
+                              onChange={(e) => handleUploadDocument(e, doc.key)}
+                            />
+                          </label>
+                        </div>
                       </div>
                     );
                   })}

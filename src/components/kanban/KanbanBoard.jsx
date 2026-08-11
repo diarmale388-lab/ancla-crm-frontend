@@ -673,9 +673,20 @@ export const KanbanBoard = () => {
             >
               <option value="ALL">🏗️ Proyecto</option>
               <option value="Flex Home">Flex Home</option>
-              <option value="Living">Living</option>
+              <option value="Living">Cápsulas Living</option>
               <option value="Llave en Mano">Llave en Mano</option>
               <option value="Glamping">Glamping</option>
+              <option value="Bodega">Bodegas</option>
+            </select>
+
+            <select
+              value={filterLotStatus}
+              onChange={(e) => setFilterLotStatus(e.target.value)}
+              className="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-white/5 text-slate-700 dark:text-slate-200 text-xs font-semibold rounded-xl px-2.5 py-1.5 focus:outline-none cursor-pointer"
+            >
+              <option value="ALL">🗺️ Estado de Lote</option>
+              <option value="Lote Propio">Lote Propio</option>
+              <option value="Buscando Lote">Buscando Lote</option>
             </select>
 
             <select

@@ -245,7 +245,7 @@ export const ChatWindow = () => {
     setPdfPath('');
 
     try {
-      const token = localStorage.getItem('token');
+      const token = useAuthStore.getState().token || localStorage.getItem('token');
       const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8001/api/v1'}/proposals/generate`, {
         method: 'POST',
         headers: {
@@ -255,24 +255,24 @@ export const ChatWindow = () => {
         body: JSON.stringify({
           contact_id: selectedContactId,
           model_name: proposalModel,
-          base_price: parseFloat(proposalBasePrice),
+          base_price: parseFloat(proposalBasePrice) || 18500,
           extra_deck: proposalExtraDeck,
           deck_cost: 3500,
           extra_solar: proposalExtraSolar,
-          solar_cost: 2800,
+          solar_cost: 4200,
           extra_clima: proposalExtraClima,
-          clima_cost: 1200,
-          freight_city: proposalFreightCity || 'Por definir',
-          freight_cost: parseFloat(proposalFreightCost),
-          discount_pct: parseFloat(proposalDiscount),
-          payment_terms: proposalPaymentTerms,
+          clima_cost: 750,
+          freight_city: proposalFreightCity || 'Armenia / Eje Cafetero',
+          freight_cost: parseFloat(proposalFreightCost) || 800,
+          discount_pct: parseFloat(proposalDiscount) || 0,
+          payment_terms: proposalPaymentTerms || '60% Anticipo / 40% Balanza',
           custom_notes: proposalNotes
         })
       });
 
       const data = await res.json();
       if (res.ok) {
-        setProposalSuccess(`¡Propuesta generada por $${data.total_final.toLocaleString()} USD!`);
+        setProposalSuccess(`¡Propuesta generada por $${(data.total_final || 0).toLocaleString()} USD!`);
         setPdfPath(data.file_path);
         setPdfUrl(`${import.meta.env.VITE_API_URL || 'http://localhost:8001/api/v1'}${data.download_url}`);
         const currentActive = contacts.find((c) => c.id === selectedContactId);
@@ -1506,28 +1506,25 @@ export const ChatWindow = () => {
 
           {/* PESTAÑA 2: 📄 COTIZADOR (Motor de PDF y Propuestas Comercial) */}
           {rightSidebarTab === 'cotizador' && (
-            <div className="space-y-4 animate-fade-in">
-              <form onSubmit={handleGenerateCustomProposal} className="space-y-3 p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/40 border border-slate-200 dark:border-white/5">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-slate-800 dark:text-white block">Cotizador de Casas Modulares</span>
-                  <button
-                    type="button"
-                    onClick={() => setShowDossierModal(true)}
-                    className="text-[10px] font-black text-emerald-500 hover:underline flex items-center space-x-1"
-                  >
-                    <span>📑 Dossier USD</span>
-                  </button>
-                </div>
+            <div className="space-y-3.5 animate-fade-in text-[#0f172a] dark:text-[#f8fafc]">
+              
+              {/* Botón Maestro a Dossier 360° */}
+              <button
+                type="button"
+                onClick={() => setShowDossierModal(true)}
+                className="w-full py-2.5 px-3 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-black text-xs flex items-center justify-center space-x-2 transition-all cursor-pointer shadow-md active:scale-95"
+              >
+                <DollarSign className="w-4 h-4" />
+                <span>📑 Abrir Dossier & Cotizador USD (3 Pestañas)</span>
+              </button>
 
-                <button
-                  type="button"
-                  onClick={() => setShowDossierModal(true)}
-                  className="w-full py-2 px-3 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-extrabold text-xs flex items-center justify-center space-x-2 transition-all cursor-pointer shadow-sm"
-                >
-                  <DollarSign className="w-4 h-4 text-emerald-400" />
-                  <span>📑 Abrir Dossier & Cotizador USD (3 Pestañas)</span>
-                </button>
+              <form onSubmit={handleGenerateCustomProposal} className="space-y-3 p-3.5 rounded-2xl bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-white/5 shadow-xs">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-200 block">Cotizador Rápido de Chat</span>
+                  <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 font-mono">USD</span>
+                </div>
                 
+                {/* Selector de Modelos */}
                 <div className="space-y-1">
                   <label className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">Modelo de Portafolio</label>
                   <select
@@ -1535,22 +1532,21 @@ export const ChatWindow = () => {
                     onChange={(e) => {
                       const val = e.target.value;
                       setProposalModel(val);
-                      if (val.includes('56m²')) setProposalBasePrice(25000);
-                      else if (val.includes('36m²')) setProposalBasePrice(18500);
-                      else if (val.includes('13m²')) setProposalBasePrice(9800);
-                      else if (val.includes('26m²')) setProposalBasePrice(15200);
-                      else if (val.includes('Frío')) setProposalBasePrice(14000);
-                      else if (val.includes('Bodega')) setProposalBasePrice(45000);
+                      if (val.includes('EXP-56') || val.includes('56m²')) setProposalBasePrice(29800);
+                      else if (val.includes('EXP-36') || val.includes('36m²')) setProposalBasePrice(18500);
+                      else if (val.includes('CL-13') || val.includes('13m²')) setProposalBasePrice(14200);
+                      else if (val.includes('CL-26') || val.includes('26m²')) setProposalBasePrice(24500);
+                      else if (val.includes('Llave en Mano')) setProposalBasePrice(35000);
+                      else if (val.includes('Glamping')) setProposalBasePrice(16500);
                     }}
-                    className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-slate-200"
+                    className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs font-bold text-[#0f172a] dark:text-[#f8fafc] cursor-pointer"
                   >
-                    <option value="FLEX HOME 56m²">Flex Home 56m² (Casa Expandible)</option>
-                    <option value="FLEX HOME 36m²">Flex Home 36m² (Casa Expandible)</option>
-                    <option value="Cápsula LINVIG 13m²">Cápsula Linvig 13m² (Glamping)</option>
-                    <option value="Cápsula LINVIG 26m²">Cápsula Linvig 26m² (Glamping Suite)</option>
+                    <option value="Flex Home EXP-36">Flex Home EXP-36 (36m² - $18,500 USD)</option>
+                    <option value="Flex Home EXP-56">Flex Home EXP-56 (56m² - $29,800 USD)</option>
+                    <option value="Cápsula Living CL-13">Cápsula Living CL-13 (13m² - $14,200 USD)</option>
+                    <option value="Cápsula Living CL-26">Cápsula Living CL-26 (26m² - $24,500 USD)</option>
                     <option value="Llave en Mano">Llave en Mano (Proyecto Integral)</option>
-                    <option value="Cuarto Frío Copeland Inverter">Cuarto Frío Modular Copeland</option>
-                    <option value="Bodega Galvanizada 1000m²">Bodega Estructural Galvanizada</option>
+                    <option value="Glamping & Turismo">Glamping & Turismo Modular</option>
                   </select>
                 </div>
 
@@ -1561,47 +1557,49 @@ export const ChatWindow = () => {
                       type="number"
                       value={proposalBasePrice}
                       onChange={(e) => setProposalBasePrice(e.target.value)}
-                      className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-800 dark:text-slate-200"
+                      className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-1.5 text-xs font-mono font-bold text-[#0f172a] dark:text-[#f8fafc]"
                     />
                   </div>
                   <div className="space-y-1">
                     <label className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">Descuento (%)</label>
                     <input
                       type="number"
+                      min="0"
+                      max="30"
                       value={proposalDiscount}
                       onChange={(e) => setProposalDiscount(e.target.value)}
-                      className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-800 dark:text-slate-200"
+                      className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-1.5 text-xs font-mono font-bold text-[#0f172a] dark:text-[#f8fafc]"
                     />
                   </div>
                 </div>
 
                 {/* Switches de Adicionales */}
-                <div className="space-y-2 pt-2 border-t border-slate-200 dark:border-white/5">
+                <div className="space-y-2 pt-2 border-t border-slate-100 dark:border-white/5">
                   <label className="flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-300 cursor-pointer">
-                    <span>Deck Sintético Exterior</span>
-                    <input type="checkbox" checked={proposalExtraDeck} onChange={(e) => setProposalExtraDeck(e.target.checked)} className="rounded text-emerald-600" />
+                    <span>Deck Sintético WPC (+ $3,500 USD)</span>
+                    <input type="checkbox" checked={proposalExtraDeck} onChange={(e) => setProposalExtraDeck(e.target.checked)} className="rounded text-emerald-600 w-4 h-4 accent-emerald-500" />
                   </label>
 
                   <label className="flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-300 cursor-pointer">
-                    <span>Kit Solar Off-Grid</span>
-                    <input type="checkbox" checked={proposalExtraSolar} onChange={(e) => setProposalExtraSolar(e.target.checked)} className="rounded text-emerald-600" />
+                    <span>Kit Solar Off-Grid (+ $4,200 USD)</span>
+                    <input type="checkbox" checked={proposalExtraSolar} onChange={(e) => setProposalExtraSolar(e.target.checked)} className="rounded text-emerald-600 w-4 h-4 accent-emerald-500" />
                   </label>
 
                   <label className="flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-300 cursor-pointer">
-                    <span>Climatización A.A.</span>
-                    <input type="checkbox" checked={proposalExtraClima} onChange={(e) => setProposalExtraClima(e.target.checked)} className="rounded text-emerald-600" />
+                    <span>Climatización A.A. (+ $750 USD)</span>
+                    <input type="checkbox" checked={proposalExtraClima} onChange={(e) => setProposalExtraClima(e.target.checked)} className="rounded text-emerald-600 w-4 h-4 accent-emerald-500" />
                   </label>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2 pt-2">
+                <div className="grid grid-cols-2 gap-2 pt-1">
                   <div className="space-y-1">
                     <label className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">Ciudad Flete</label>
                     <input
                       type="text"
-                      placeholder="ej. Cajicá, Armenia"
+                      placeholder="Armenia / Cajicá"
                       value={proposalFreightCity}
                       onChange={(e) => setProposalFreightCity(e.target.value)}
-                      className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-800 dark:text-slate-200"
+                      className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-1.5 text-xs font-bold text-[#0f172a] dark:text-[#f8fafc]"
                     />
                   </div>
                   <div className="space-y-1">
@@ -1610,22 +1608,63 @@ export const ChatWindow = () => {
                       type="number"
                       value={proposalFreightCost}
                       onChange={(e) => setProposalFreightCost(e.target.value)}
-                      className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-800 dark:text-slate-200"
+                      className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-1.5 text-xs font-mono font-bold text-[#0f172a] dark:text-[#f8fafc]"
                     />
                   </div>
                 </div>
 
+                {/* Recálculo Dinámico en Vivo */}
+                {(() => {
+                  const base = parseFloat(proposalBasePrice) || 0;
+                  const deck = proposalExtraDeck ? 3500 : 0;
+                  const solar = proposalExtraSolar ? 4200 : 0;
+                  const clima = proposalExtraClima ? 750 : 0;
+                  const freight = parseFloat(proposalFreightCost) || 0;
+                  const subtotal = base + deck + solar + clima + freight;
+                  const disc = parseFloat(proposalDiscount) || 0;
+                  const totalUSD = subtotal - (subtotal * (disc / 100));
+                  const totalCOP = totalUSD * 4150;
+
+                  return (
+                    <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 space-y-1 text-xs font-mono">
+                      <div className="flex justify-between text-slate-600 dark:text-slate-300 text-[11px]">
+                        <span>Subtotal Cotizado:</span>
+                        <span>${Math.round(subtotal).toLocaleString()} USD</span>
+                      </div>
+                      <div className="flex justify-between font-black text-emerald-700 dark:text-emerald-300 text-xs border-t border-emerald-500/20 pt-1">
+                        <span>Total Final USD:</span>
+                        <span>${Math.round(totalUSD).toLocaleString()} USD</span>
+                      </div>
+                      <div className="text-[10px] text-slate-400 text-right">
+                        ≈ ${Math.round(totalCOP).toLocaleString('es-CO')} COP (TRM Ref $4,150)
+                      </div>
+                    </div>
+                  );
+                })()}
+
+                {proposalError && (
+                  <div className="p-2 rounded-lg bg-rose-500/10 border border-rose-500/20 text-[11px] text-rose-600 font-bold">
+                    {proposalError}
+                  </div>
+                )}
+
+                {proposalSuccess && (
+                  <div className="p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-[11px] text-emerald-600 font-bold">
+                    {proposalSuccess}
+                  </div>
+                )}
+
                 <button
                   type="submit"
                   disabled={proposalLoading}
-                  className="w-full bg-brand-emerald hover:bg-brand-emeraldHover text-white font-bold py-2.5 px-3 rounded-xl shadow-md text-xs active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center space-x-1.5 cursor-pointer mt-2"
+                  className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 px-3 rounded-xl shadow-md text-xs active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center space-x-1.5 cursor-pointer mt-1"
                 >
                   {proposalLoading ? (
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                   ) : (
                     <>
                       <Sparkles className="w-4 h-4" />
-                      <span>Generar & Enviar Propuesta/PDF</span>
+                      <span>Generar Propuesta PDF</span>
                     </>
                   )}
                 </button>
@@ -1633,8 +1672,8 @@ export const ChatWindow = () => {
 
               {/* Formulario de Despacho de Correo redactado por IA */}
               {pdfPath && (
-                <div className="space-y-2.5 p-3.5 rounded-xl bg-purple-500/10 border border-purple-500/20">
-                  <span className="text-xs font-bold text-purple-600 dark:text-purple-400 flex items-center space-x-1">
+                <div className="space-y-2.5 p-3.5 rounded-2xl bg-purple-500/10 border border-purple-500/20">
+                  <span className="text-xs font-bold text-purple-700 dark:text-purple-300 flex items-center space-x-1">
                     <Sparkles className="w-3.5 h-3.5" />
                     <span>Enviar Email (Redacción Sofi AI)</span>
                   </span>
@@ -1646,20 +1685,20 @@ export const ChatWindow = () => {
                       placeholder="Correo del cliente (ej. cliente@empresa.com)"
                       value={recipientEmail}
                       onChange={(e) => setRecipientEmail(e.target.value)}
-                      className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl px-3 py-1.5 text-xs text-slate-800 dark:text-slate-200 font-bold"
+                      className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-1.5 text-xs text-[#0f172a] dark:text-[#f8fafc] font-bold"
                     />
                     <textarea
                       rows="2"
                       placeholder="Notas clave tomadas en la llamada..."
                       value={meetingNotes}
                       onChange={(e) => setMeetingNotes(e.target.value)}
-                      className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl px-3 py-1.5 text-xs text-slate-800 dark:text-slate-200 resize-none"
+                      className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-1.5 text-xs text-[#0f172a] dark:text-[#f8fafc] resize-none"
                     ></textarea>
 
                     <button
                       type="submit"
                       disabled={emailSending}
-                      className="w-full bg-brand-purple hover:bg-purple-700 text-white font-bold py-2 px-3 rounded-xl text-xs flex items-center justify-center space-x-1.5 cursor-pointer"
+                      className="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-2 px-3 rounded-xl text-xs flex items-center justify-center space-x-1.5 cursor-pointer shadow-sm"
                     >
                       {emailSending ? <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></div> : <span>Despachar Correo con PDF</span>}
                     </button>

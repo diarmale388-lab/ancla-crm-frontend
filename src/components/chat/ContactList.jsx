@@ -49,15 +49,28 @@ export const ContactList = () => {
     if (activeFilter === 'ia' && !c.chatbot_enabled) return false;
     if (activeFilter === 'human' && c.chatbot_enabled) return false;
 
-    // 2. Filtrar por término de búsqueda y contenido de mensajes (Tipo WhatsApp)
+    // 2. Filtrar por término de búsqueda (Nombre, Teléfono, Email, #ID, Mensaje o Ciudad)
     const query = searchTerm.toLowerCase().trim();
     if (!query) return true;
+    const cleanQuery = query.replace('#', '');
     const fullName = `${c.first_name || ''} ${c.last_name || ''}`.toLowerCase();
     const phone = (c.phone || '').toLowerCase();
+    const cleanPhone = phone.replace(/\D/g, '');
     const email = (c.email || '').toLowerCase();
     const lastMsg = (c.last_message_content || '').toLowerCase();
     const notes = (c.qualification_notes || '').toLowerCase();
-    return fullName.includes(query) || phone.includes(query) || email.includes(query) || lastMsg.includes(query) || notes.includes(query);
+    const idStr = String(c.id || '');
+    const city = (c.lot_city || '').toLowerCase();
+
+    return fullName.includes(query) || 
+           phone.includes(query) || 
+           cleanPhone.includes(cleanQuery) || 
+           idStr === cleanQuery || 
+           idStr.includes(cleanQuery) || 
+           email.includes(query) || 
+           city.includes(query) || 
+           lastMsg.includes(query) || 
+           notes.includes(query);
   });
 
   const formatMessageTime = (isoString) => {
