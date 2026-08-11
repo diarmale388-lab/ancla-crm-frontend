@@ -8,7 +8,7 @@ import LeadFichaModal360 from '../common/LeadFichaModal360';
 import EmailPreviewModal from '../common/EmailPreviewModal';
 import AnclaTechnicalDossier from '../common/AnclaTechnicalDossier';
 import { MessageBubble } from './MessageBubble';
-import { Send, Bot, WifiOff, MessageCircle, Sparkles, User, Phone, Mail, Calendar, Check, ChevronDown, BookOpen, Clock, Lock, Trash2, ShieldAlert, ArrowLeft, CornerUpLeft, Forward, Pencil, X, Download, Smile, Paperclip, Upload, Search } from 'lucide-react';
+import { Send, Bot, WifiOff, MessageCircle, Sparkles, User, Phone, Mail, Calendar, Check, ChevronDown, BookOpen, Clock, Lock, Trash2, ShieldAlert, ArrowLeft, CornerUpLeft, Forward, Pencil, X, Download, Smile, Paperclip, Upload, Search, DollarSign } from 'lucide-react';
 
 export const ChatWindow = () => {
   const { 
