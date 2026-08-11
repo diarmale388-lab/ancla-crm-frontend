@@ -620,114 +620,63 @@ export const KanbanBoard = () => {
                         onDragStart={(e) => handleDragStart(e, lead.id)}
                         onDragEnd={handleDragEnd}
                         onClick={() => setSelectedLeadForModal(lead)}
-                        className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5 hover:border-emerald-500/40 dark:hover:border-emerald-500/30 p-4 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-200 cursor-pointer group space-y-3 relative overflow-hidden"
+                        className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5 hover:border-emerald-500/40 dark:hover:border-emerald-500/30 p-3.5 rounded-2xl shadow-xs hover:shadow-md transition-all duration-200 cursor-pointer group space-y-2.5 relative overflow-hidden"
                       >
-                        {/* Indicador Lateral de Salud del Lead (Semáforo) */}
+                        {/* Indicador Lateral de Salud del Lead */}
                         <div className={`absolute top-0 left-0 bottom-0 w-1.5 ${health.color}`} title={`Estado: ${health.label}`} />
 
-                        {/* Fila Superior: Nombre, Salud y Canal */}
+                        {/* Nivel 1: Fila 1 - Nombre del cliente (font-semibold) + Canal / Semáforo */}
                         <div className="flex items-start justify-between pl-1">
                           <div className="min-w-0 pr-2">
                             <h4 
                               onClick={() => setSelectedLeadForModal(lead)}
-                              className="text-xs font-black text-slate-900 dark:text-white leading-snug truncate hover:text-emerald-500 cursor-pointer"
+                              className="text-xs font-semibold text-slate-900 dark:text-white leading-snug truncate hover:text-emerald-500 cursor-pointer"
                             >
                               {fullName}
                             </h4>
-                            <span className="text-[10px] text-slate-400 dark:text-slate-500 font-bold block truncate mt-0.5">
-                              📞 {lead.phone}
+                            <span className="text-[10px] text-slate-400 dark:text-slate-500 font-mono tabular-nums block truncate">
+                              {lead.phone}
                             </span>
                           </div>
 
-                          {/* Badge Canal + Semáforo Dot */}
                           <div className="flex items-center space-x-1.5 flex-shrink-0">
-                            {/* Semáforo Dot */}
-                            <span className={`w-2.5 h-2.5 rounded-full ${health.color}`} title={health.label} />
-
-                            {/* Canal Badge */}
-                            <span className={`p-1 rounded-lg text-white ${
-                              isInstagram ? 'bg-gradient-to-tr from-purple-600 to-pink-500' : 'bg-emerald-500'
-                            }`}>
-                              {isInstagram ? (
-                                <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-                                </svg>
-                              ) : (
-                                <MessageCircle className="w-3 h-3" />
-                              )}
+                            <span className={`w-2 h-2 rounded-full ${health.color}`} title={health.label} />
+                            <span className="text-[9px] font-mono tabular-nums px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500">
+                              #{lead.id}
                             </span>
                           </div>
                         </div>
 
-                        {/* REQUERIMIENTO 3: BADGES VISUALES DE COLORES (Ciudad, Proyecto, Presupuesto, Campaña y VIP) */}
-                        <div className="flex flex-wrap gap-1.5 pl-1">
-                          
-                          {/* Badge Lead VIP <5 min (Atender urgente en < 5 minutos) */}
-                          {lead.qualification_notes && lead.qualification_notes.includes('[LEAD_VIP_5MIN]') && (
-                            <span className="text-[9.5px] font-black px-2 py-0.5 rounded-md bg-rose-600 text-white border border-rose-400 flex items-center space-x-1 animate-pulse shadow-md" title="Atender en menos de 5 minutos (Quiere ir esta semana y ya tiene lote)">
-                              <span>🔥 VIP &lt;5m</span>
-                            </span>
-                          )}
-
-                          {/* Badge Campaña Local vs Nacional */}
-                          {lead.source && (lead.source.includes('Nacional') || lead.source.includes('Virtual')) ? (
-                            <span className="text-[9.5px] font-bold px-2 py-0.5 rounded-md bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 border border-indigo-500/20">
-                              💻 Cita Virtual
-                            </span>
-                          ) : (
-                            <span className="text-[9.5px] font-bold px-2 py-0.5 rounded-md bg-teal-500/10 text-teal-700 dark:text-teal-300 border border-teal-500/20">
-                              🏡 Showroom Armenia
-                            </span>
-                          )}
-
-                          {/* Badge Ciudad */}
-                          <span className="text-[9.5px] font-extrabold px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-700 dark:text-blue-300 border border-blue-500/20 flex items-center space-x-0.5">
-                            <MapPin className="w-2.5 h-2.5" />
-                            <span>{lead.lot_city || 'Armenia'}</span>
+                        {/* Nivel 1: Fila 2 - Badges desaturados de Campaña/Origen + Etapa/Estado */}
+                        <div className="flex flex-wrap items-center gap-1.5 pl-1">
+                          {/* Badge de Campaña/Origen desaturado */}
+                          <span className="text-[9.5px] font-bold px-2 py-0.5 rounded-md bg-purple-500/10 text-purple-700 dark:text-purple-300 border border-purple-500/20 truncate max-w-[140px]">
+                            {lead.source && (lead.source.includes('Nacional') || lead.source.includes('Virtual')) ? '💻 Cita Virtual' : lead.source || 'Meta Ads'}
                           </span>
 
-                          {/* Badge Proyecto */}
-                          <span className="text-[9.5px] font-extrabold px-2 py-0.5 rounded-md bg-purple-500/10 text-purple-700 dark:text-purple-300 border border-purple-500/20 flex items-center space-x-0.5">
-                            <Building className="w-2.5 h-2.5" />
-                            <span>{lead.interest_product || 'Flex Home'}</span>
+                          {/* Badge de Nivel de Calificación / Intención */}
+                          <span className={`text-[9.5px] font-bold px-2 py-0.5 rounded-md border ${
+                            lead.qualification_level === 'VIP' ? 'bg-purple-500/10 text-purple-600 dark:text-purple-300 border-purple-500/30' :
+                            lead.qualification_level === 'HOT' ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-300 border-emerald-500/30' :
+                            lead.qualification_level === 'WARM' ? 'bg-amber-500/10 text-amber-600 dark:text-amber-300 border-amber-500/30' :
+                            'bg-slate-500/10 text-slate-600 dark:text-slate-400 border-slate-500/20'
+                          }`}>
+                            {lead.qualification_level || 'WARM'}
                           </span>
-
-                          {/* Badge Presupuesto */}
-                          <span className="text-[9.5px] font-extrabold px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20 flex items-center space-x-0.5">
-                            <DollarSign className="w-2.5 h-2.5" />
-                            <span>{formatCOP(lead.estimated_budget)}</span>
-                          </span>
-
-                          {/* Badge Estado Lote */}
-                          <span className="text-[9.5px] font-bold px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
-                            {lead.lot_status || 'Lote Propio'}
-                          </span>
-
                         </div>
 
-                        {/* Snippet de Último Mensaje */}
-                        {lead.last_message_content && (
-                          <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-950/50 border border-slate-150 dark:border-white/5 text-[10px] text-slate-600 dark:text-slate-400 italic line-clamp-2" title={lead.last_message_content}>
-                            "{lead.last_message_content}"
-                          </div>
-                        )}
+                        {/* Nivel 1: Fila 3 - Modelo de interés + Valor ($ COP/USD en font-mono tabular-nums) */}
+                        <div className="flex items-center justify-between pl-1 pt-1 border-t border-slate-100 dark:border-white/5 text-[11px]">
+                          <span className="font-medium text-slate-600 dark:text-slate-300 truncate max-w-[150px]">
+                            🏗️ {lead.interest_product || 'Flex Home EXP-36'}
+                          </span>
+                          <span className="font-mono tabular-nums font-bold text-emerald-600 dark:text-emerald-400 shrink-0">
+                            {lead.estimated_budget ? formatCOP(lead.estimated_budget) : '$18,500 USD'}
+                          </span>
+                        </div>
 
-                        {/* Badge Cita Confirmada */}
-                        {appointment && (
-                          <div className="flex items-center space-x-1.5 text-[9.5px] font-black text-amber-700 dark:text-amber-400 bg-amber-500/15 px-2.5 py-1.5 rounded-xl border border-amber-500/30">
-                            <Calendar className="w-3 h-3 text-amber-500 flex-shrink-0" />
-                            <span className="truncate">
-                              Cita: {new Date(appointment.datetime).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
-                            </span>
-                          </div>
-                        )}
-
-                        {/* REQUERIMIENTO 3: BOTONES TÁCTILES DE ACCIÓN RÁPIDA */}
-                        <div className="pt-2 border-t border-slate-100 dark:border-white/5 flex items-center justify-between gap-1 flex-wrap">
-                          
-                          {/* Botón 1: Abrir Chat WhatsApp */}
+                        {/* REVELACIÓN PROGRESIVA: Botones de Acción Rápidos en Hover (group-hover:flex) */}
+                        <div className="pt-2 border-t border-slate-100 dark:border-white/5 hidden group-hover:flex items-center justify-between gap-1 animate-fade-in transition-all duration-200">
                           <button
                             type="button"
                             onClick={(e) => {
@@ -735,54 +684,50 @@ export const KanbanBoard = () => {
                               fetchMessages(lead.id);
                               setActiveTab('chats');
                             }}
-                            className="flex-1 py-1.5 px-2 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-extrabold text-[10px] rounded-xl transition-all flex items-center justify-center space-x-1 cursor-pointer"
+                            className="flex-1 py-1 px-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-bold text-[10px] rounded-lg transition-all flex items-center justify-center space-x-1 cursor-pointer"
                             title="Abrir Chat WhatsApp"
                           >
                             <MessageCircle className="w-3 h-3" />
                             <span>WhatsApp</span>
                           </button>
 
-                          {/* Botón 2: Agendar Cita */}
                           <button
                             type="button"
                             onClick={(e) => {
                               e.stopPropagation();
                               setSelectedLeadForAppointment(lead);
                             }}
-                            className="flex-1 py-1.5 px-2 bg-amber-500/10 hover:bg-amber-500/20 text-amber-600 dark:text-amber-400 font-extrabold text-[10px] rounded-xl transition-all flex items-center justify-center space-x-1 cursor-pointer"
+                            className="flex-1 py-1 px-1.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-600 dark:text-amber-400 font-bold text-[10px] rounded-lg transition-all flex items-center justify-center space-x-1 cursor-pointer"
                             title="Agendar Cita"
                           >
                             <Calendar className="w-3 h-3" />
                             <span>Cita</span>
                           </button>
 
-                          {/* Botón 3: Ficha China Spec Sheet */}
                           <button
                             type="button"
                             onClick={(e) => {
                               e.stopPropagation();
                               setSelectedLeadForChinaSpecs(lead);
                             }}
-                            className="py-1.5 px-2 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 font-extrabold text-[10px] rounded-xl transition-all flex items-center justify-center space-x-1 cursor-pointer"
-                            title="Ver Ficha Técnica de Exportación China"
+                            className="py-1 px-1.5 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 font-bold text-[10px] rounded-lg transition-all flex items-center justify-center space-x-1 cursor-pointer"
+                            title="Ver Ficha China"
                           >
                             <Factory className="w-3 h-3" />
                             <span>China</span>
                           </button>
 
-                          {/* Botón 4: Ver Ficha 360° */}
                           <button
                             type="button"
                             onClick={(e) => {
                               e.stopPropagation();
                               setSelectedLeadForModal(lead);
                             }}
-                            className="py-1.5 px-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-extrabold text-[10px] rounded-xl transition-all flex items-center justify-center cursor-pointer"
-                            title="Ver Ficha Comercial 360°"
+                            className="py-1 px-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-[10px] rounded-lg transition-all flex items-center justify-center cursor-pointer"
+                            title="Ver Ficha 360°"
                           >
                             <ExternalLink className="w-3 h-3" />
                           </button>
-
                         </div>
 
                       </div>
