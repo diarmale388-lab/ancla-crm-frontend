@@ -44,6 +44,7 @@ export const KanbanBoard = () => {
 
   // Notificaciones de Error / Transición
   const [toastError, setToastError] = useState(null);
+  const [dragOverStageId, setDragOverStageId] = useState(null);
 
   // Edición rápida en Ficha 360°
   const [editingBudget, setEditingBudget] = useState(false);
@@ -173,15 +174,25 @@ export const KanbanBoard = () => {
   };
 
   const handleDragEnd = (e) => {
+    setDragOverStageId(null);
     e.currentTarget.classList.remove('opacity-40', 'scale-95', 'rotate-1');
   };
 
-  const handleDragOver = (e) => {
+  const handleDragOver = (e, stageId) => {
     e.preventDefault();
+    if (dragOverStageId !== stageId) {
+      setDragOverStageId(stageId);
+    }
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    setDragOverStageId(null);
   };
 
   const handleDrop = async (e, targetStageId) => {
     e.preventDefault();
+    setDragOverStageId(null);
     const leadIdStr = e.dataTransfer.getData('text/plain');
     if (leadIdStr) {
       const leadId = parseInt(leadIdStr, 10);
@@ -579,9 +590,14 @@ export const KanbanBoard = () => {
           return (
             <div
               key={stage.id}
-              onDragOver={handleDragOver}
+              onDragOver={(e) => handleDragOver(e, stage.id)}
+              onDragLeave={handleDragLeave}
               onDrop={(e) => handleDrop(e, stage.id)}
-              className="w-80 flex-shrink-0 bg-slate-200/60 dark:bg-slate-900/50 rounded-3xl p-3.5 flex flex-col max-h-[calc(100vh-230px)] border border-slate-300/50 dark:border-white/5 glass-card transition-colors"
+              className={`w-80 flex-shrink-0 bg-slate-200/60 dark:bg-slate-900/50 rounded-3xl p-3.5 flex flex-col max-h-[calc(100vh-230px)] border glass-card transition-all duration-200 ${
+                dragOverStageId === stage.id
+                  ? 'border-emerald-500 ring-2 ring-emerald-500 shadow-xl shadow-[#10b981]/20 bg-emerald-500/10 dark:bg-emerald-950/40 scale-[1.01]'
+                  : 'border-slate-300/50 dark:border-white/5'
+              }`}
             >
               {/* Header de Columna */}
               <div className="flex items-center justify-between pb-3 px-1.5 border-b border-slate-300/40 dark:border-white/5 mb-3">
@@ -654,14 +670,26 @@ export const KanbanBoard = () => {
                             {lead.source && (lead.source.includes('Nacional') || lead.source.includes('Virtual')) ? '💻 Cita Virtual' : lead.source || 'Meta Ads'}
                           </span>
 
-                          {/* Badge de Nivel de Calificación / Intención */}
-                          <span className={`text-[9.5px] font-bold px-2 py-0.5 rounded-md border ${
-                            lead.qualification_level === 'VIP' ? 'bg-purple-500/10 text-purple-600 dark:text-purple-300 border-purple-500/30' :
-                            lead.qualification_level === 'HOT' ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-300 border-emerald-500/30' :
+                          {/* Badge de Nivel de Calificación / Intención con Indicador Pulsante animate-ping */}
+                          <span className={`text-[9.5px] font-bold px-2 py-0.5 rounded-md border flex items-center ${
+                            lead.qualification_level === 'VIP' ? 'bg-purple-500/10 text-purple-600 dark:text-purple-300 border-purple-500/30 font-extrabold' :
+                            lead.qualification_level === 'HOT' ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-300 border-emerald-500/30 font-bold' :
                             lead.qualification_level === 'WARM' ? 'bg-amber-500/10 text-amber-600 dark:text-amber-300 border-amber-500/30' :
                             'bg-slate-500/10 text-slate-600 dark:text-slate-400 border-slate-500/20'
                           }`}>
-                            {lead.qualification_level || 'WARM'}
+                            {lead.qualification_level === 'VIP' && (
+                              <span className="relative flex h-2 w-2 mr-1.5 shrink-0">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-2 w-2 bg-purple-600"></span>
+                              </span>
+                            )}
+                            {lead.qualification_level === 'HOT' && (
+                              <span className="relative flex h-2 w-2 mr-1.5 shrink-0">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                              </span>
+                            )}
+                            <span>{lead.qualification_level || 'WARM'}</span>
                           </span>
                         </div>
 

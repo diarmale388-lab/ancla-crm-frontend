@@ -862,8 +862,13 @@ export const ChatWindow = () => {
           </div>
         )}
 
-        {/* Mensajes del Chat */}
-        <div ref={chatContainerRef} className="flex-1 overflow-y-auto p-4 space-y-4 bg-[#efeae2] dark:bg-[#0b141a] bg-opacity-95 bg-[radial-gradient(#e5ddd5_1px,transparent_1px)] dark:bg-[radial-gradient(#1f2c34_1px,transparent_1px)] [background-size:16px_16px]">
+        {/* Mensajes del Chat con Focus Dimming suave al interactuar con el panel lateral */}
+        <div 
+          ref={chatContainerRef} 
+          className={`flex-1 overflow-y-auto p-4 space-y-4 bg-[#efeae2] dark:bg-[#0b141a] bg-opacity-95 bg-[radial-gradient(#e5ddd5_1px,transparent_1px)] dark:bg-[radial-gradient(#1f2c34_1px,transparent_1px)] [background-size:16px_16px] transition-opacity duration-300 ${
+            showRightSidebar ? 'lg:opacity-100 opacity-60' : 'opacity-100'
+          }`}
+        >
           {(msgSearchTerm.trim() ? messages.filter(m => (m.content || '').toLowerCase().includes(msgSearchTerm.trim().toLowerCase())) : messages).map((msg) => (
             <MessageBubble 
               key={msg.id} 
@@ -909,7 +914,65 @@ export const ChatWindow = () => {
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Sugerencias de copiloto */}
+        {/* BARRA FLOTANTE 'SOFI COPILOTO' CON RESPUESTAS TÉCNICAS 1-CLIC */}
+        <div className="px-3.5 py-2 bg-gradient-to-r from-emerald-500/10 via-teal-500/5 to-purple-500/10 dark:from-emerald-950/40 dark:via-teal-950/25 dark:to-purple-950/30 border-t border-slate-200 dark:border-white/5 flex items-center space-x-2 overflow-x-auto no-scrollbar shadow-inner">
+          <div className="flex items-center space-x-1.5 text-[10px] font-black uppercase text-emerald-600 dark:text-emerald-400 shrink-0 pr-1 select-none">
+            <Sparkles className="w-3.5 h-3.5 text-emerald-500 animate-pulse" />
+            <span className="hidden sm:inline">Sofi Copiloto:</span>
+          </div>
+
+          {[
+            {
+              id: 'exp36',
+              label: '🏠 Flex Home 36m² ($18.5k)',
+              text: 'El modelo Flex Home EXP-36 (36m² | 5.90m x 6.30m) tiene un valor base de $18,500 USD. Cuenta con estructura de acero galvanizado Q350, 2 habitaciones, 1 baño completo, cocina y aislamiento termoacústico de 75mm.'
+            },
+            {
+              id: 'exp56',
+              label: '🏡 Flex Home 56m² ($29.8k)',
+              text: 'El modelo Flex Home EXP-56 (56m² | 11.80m x 6.30m) tiene un valor de $29,800 USD. Cuenta con 3 habitaciones, 2 baños, sala-comedor y sistema de doble expansión hidráulica.'
+            },
+            {
+              id: 'cl13',
+              label: '🏕️ Cápsula CL-13 ($14.2k)',
+              text: 'La Cápsula Living CL-13 (13m² | 5.80m x 2.23m) tiene un valor de $14,200 USD. Incluye baño tipo hotel de lujo, ventanería panorámica curva 270° y domótica integrada.'
+            },
+            {
+              id: 'cl26',
+              label: '🚀 Cápsula CL-26 ($24.5k)',
+              text: 'La Cápsula Living CL-26 (26m² | 8.95m x 2.23m) tiene un valor de $24,500 USD. Es una suite presidencial con cocineta, baño spa y terraza perimetral.'
+            },
+            {
+              id: 'flete',
+              label: '🚚 Flete & Ensamble 48h',
+              text: 'El transporte se realiza en camión grúa / cama baja directamente a tu lote y el ensamble completo se ejecuta en tan solo 24 a 48 horas en sitio.'
+            },
+            {
+              id: 'garantia',
+              label: '🛡️ Garantía & Aislamiento',
+              text: 'Todas nuestras casas modulares cuentan con 5 años de garantía estructural, resistencia sísmica grado 8 y paneles termoacústicos ignífugos de alto rendimiento.'
+            },
+            {
+              id: 'cita',
+              label: '📅 Agendar Cita Showroom',
+              text: '¿Te gustaría que agendemos una cita virtual por Google Meet o una visita a nuestro Showroom en Armenia para que conozcas los acabados en persona?'
+            }
+          ].map((pill) => (
+            <button
+              key={pill.id}
+              type="button"
+              onClick={() => {
+                setInputMessage(pill.text);
+              }}
+              className="px-2.5 py-1 rounded-xl bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-white/10 hover:border-emerald-500/50 hover:bg-emerald-50 dark:hover:bg-emerald-950/50 text-[#0f172a] dark:text-[#f8fafc] text-[11px] font-bold shrink-0 transition-all active:scale-95 shadow-xs cursor-pointer flex items-center space-x-1"
+              title="Insertar respuesta técnica pre-redactada"
+            >
+              <span>{pill.label}</span>
+            </button>
+          ))}
+        </div>
+
+        {/* Sugerencias contextuales generadas por Sofi AI */}
         {aiSuggestion && (
           <div className="p-3 bg-gradient-to-r from-emerald-500/5 to-teal-500/5 border-t border-emerald-500/20 animate-fade-in flex items-center justify-between">
             <div className="flex items-start space-x-2 min-w-0 pr-4">
@@ -921,7 +984,7 @@ export const ChatWindow = () => {
             </div>
             <button
               onClick={applyAiSuggestion}
-              className="bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg flex-shrink-0 transition-all"
+              className="bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg flex-shrink-0 transition-all cursor-pointer"
             >
               Aplicar
             </button>
