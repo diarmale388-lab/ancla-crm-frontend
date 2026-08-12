@@ -264,62 +264,9 @@ function App() {
                 <Bot className="w-8 h-8 text-dark-950 font-bold" />
               </div>
               <h1 className="text-2xl font-bold text-slate-800 dark:text-white dark:bg-gradient-to-r dark:from-white dark:to-slate-400 dark:bg-clip-text dark:text-transparent">
-                Antigravity CRM
+                ANCLA CRM
               </h1>
-              {/* ⚡ Autocompletar Credenciales y Copiado en 1-Clic */}
-              <div className="mt-4 w-full p-3.5 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl flex flex-col space-y-2.5 text-xs text-left">
-                <div className="flex items-center justify-between">
-                  <span className="font-bold text-emerald-800 dark:text-emerald-300 flex items-center gap-1.5">
-                    <span>🔑</span>
-                    <span>Acceso Rápido Administrador</span>
-                  </span>
-                  <span className="text-[10px] bg-emerald-600 text-white font-mono px-2 py-0.5 rounded-full font-bold">Oficial</span>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11.5px] font-mono">
-                  <div className="p-2 bg-white dark:bg-dark-800 rounded-xl border border-slate-200 dark:border-white/10 flex items-center justify-between">
-                    <span className="truncate select-all text-slate-800 dark:text-slate-100 font-semibold">admin@crm.com</span>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setEmail('admin@crm.com');
-                        navigator.clipboard?.writeText('admin@crm.com');
-                      }}
-                      className="text-slate-400 hover:text-emerald-500 ml-1.5 p-1 rounded hover:bg-slate-100 dark:hover:bg-white/5 cursor-pointer"
-                      title="Copiar y Llenar Email"
-                    >
-                      <Copy className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-
-                  <div className="p-2 bg-white dark:bg-dark-800 rounded-xl border border-slate-200 dark:border-white/10 flex items-center justify-between">
-                    <span className="truncate select-all text-slate-800 dark:text-slate-100 font-semibold">adminpassword</span>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setPassword('adminpassword');
-                        navigator.clipboard?.writeText('adminpassword');
-                      }}
-                      className="text-slate-400 hover:text-emerald-500 ml-1.5 p-1 rounded hover:bg-slate-100 dark:hover:bg-white/5 cursor-pointer"
-                      title="Copiar y Llenar Contraseña"
-                    >
-                      <Copy className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    setEmail('admin@crm.com');
-                    setPassword('adminpassword');
-                  }}
-                  className="w-full py-2 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-black rounded-xl text-xs flex items-center justify-center space-x-1.5 shadow-sm transition-all cursor-pointer"
-                >
-                  <Sparkles className="w-3.5 h-3.5" />
-                  <span>⚡ 1-Clic: Autocompletar Credenciales</span>
-                </button>
-              </div>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Ingresa tus credenciales de acceso</p>
             </div>
 
             {error && (
@@ -331,12 +278,12 @@ function App() {
 
             <form onSubmit={handleLoginSubmit} className="space-y-5">
               <div>
-                <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Correo electrónico</label>
+                <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Usuario o Correo</label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-3.5 w-4 h-4 text-slate-400" />
                   <input
-                    type="email"
-                    placeholder="ejemplo@crm.com"
+                    type="text"
+                    placeholder="Usuario o Correo"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl pl-10 pr-4 py-3 text-sm text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/30 transition-all duration-300"
@@ -375,15 +322,6 @@ function App() {
                 )}
               </button>
             </form>
-
-            {/* Seed Admin Helper Tip */}
-            <div className="mt-8 p-3 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/5 text-center">
-              <p className="text-[11px] text-slate-400 dark:text-slate-500">
-                Tip: Credenciales de administrador por defecto:
-                <br />
-                <code className="text-emerald-500 dark:text-emerald-400 font-semibold mt-1 block">admin@crm.com / adminpassword</code>
-              </p>
-            </div>
           </div>
         )}
       </div>
