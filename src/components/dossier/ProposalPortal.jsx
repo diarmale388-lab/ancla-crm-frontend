@@ -262,6 +262,16 @@ Me gustaría agendar una cita para revisar la viabilidad en mi terreno y procede
     window.open(url, '_blank');
   };
 
+  // Habilitar Scroll Global en la página pública de propuesta
+  useEffect(() => {
+    document.documentElement.classList.add('public-scroll-active');
+    document.body.classList.add('public-scroll-active');
+    return () => {
+      document.documentElement.classList.remove('public-scroll-active');
+      document.body.classList.remove('public-scroll-active');
+    };
+  }, []);
+
   const handleCopyShare = () => {
     if (navigator.clipboard) {
       navigator.clipboard.writeText(window.location.href);
@@ -271,7 +281,7 @@ Me gustaría agendar una cita para revisar la viabilidad en mi terreno y procede
   };
 
   return (
-    <div className={`min-h-screen font-sans transition-colors duration-300 ${themeMode === 'dark' ? 'bg-[#0b0f19] text-[#f8fafc]' : 'bg-[#f8fafc] text-[#0f172a]'}`}>
+    <div className={`h-screen w-full overflow-y-auto scroll-smooth font-sans transition-colors duration-300 proposal-portal-root ${themeMode === 'dark' ? 'bg-[#0b0f19] text-[#f8fafc]' : 'bg-[#f8fafc] text-[#0f172a]'}`}>
       
       {/* Barra de Navegación Superior Fija */}
       <header className={`sticky top-0 z-40 backdrop-blur-md border-b transition-colors duration-300 ${themeMode === 'dark' ? 'bg-[#0b0f19]/90 border-white/10' : 'bg-white/90 border-slate-200'}`}>
