@@ -244,19 +244,17 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
           </button>
         </div>
 
-        {/* Botón Instalar App PWA */}
-        {isInstallable && (
-          <button
-            onClick={handleInstallClick}
-            className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white flex items-center justify-center transition-all shadow-md active:scale-95 cursor-pointer relative group"
-            title="Instalar ANCLA CRM en tu dispositivo (App)"
-          >
-            <Download className="w-5 h-5 animate-pulse" />
-            <div className="absolute left-14 bottom-0 bg-[#111b27] border border-emerald-500/40 text-emerald-300 text-[10px] py-1.5 px-3 rounded-lg opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 shadow-xl font-bold">
-              Instalar App ANCLA CRM
-            </div>
-          </button>
-        )}
+        {/* Botón Instalar App PWA (Mac, iPad, iPhone, Android, Windows) */}
+        <button
+          onClick={handleInstallClick}
+          className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white flex items-center justify-center transition-all shadow-md active:scale-95 cursor-pointer relative group"
+          title="Instalar ANCLA CRM en Mac, iPad, iPhone, Windows o Android"
+        >
+          <Download className="w-5 h-5 animate-pulse" />
+          <div className="absolute left-14 bottom-0 bg-[#111b27] border border-emerald-500/40 text-emerald-300 text-[10px] py-1.5 px-3 rounded-lg opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 shadow-xl font-bold">
+            Instalar App (Mac / iPad / Móvil)
+          </div>
+        </button>
 
         {/* Botón Toggler Día/Noche */}
         <button
@@ -286,38 +284,54 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
         </div>
       </div>
 
-      {/* Modal Guía iOS para Instalar PWA */}
+      {/* Modal Guía Multi-Plataforma para Instalar App PWA (Mac, iPad, iPhone, Android) */}
       {showIosPrompt && (
         <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in font-sans">
-          <div className="bg-[#111b27] border border-white/10 rounded-3xl p-6 max-w-sm w-full shadow-2xl space-y-4 text-white text-center">
+          <div className="bg-[#111b27] border border-white/10 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4 text-white text-center">
             <div className="flex justify-between items-center border-b border-white/10 pb-3">
               <div className="flex items-center space-x-2">
                 <Smartphone className="w-5 h-5 text-emerald-400" />
-                <h3 className="text-xs font-black uppercase tracking-wider">Instalar en iPhone / iPad</h3>
+                <h3 className="text-xs font-black uppercase tracking-wider">Instalar ANCLA CRM como App</h3>
               </div>
-              <button onClick={() => setShowIosPrompt(false)} className="text-slate-400 hover:text-white">
+              <button onClick={() => setShowIosPrompt(false)} className="text-slate-400 hover:text-white cursor-pointer">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <p className="text-xs text-slate-300 leading-relaxed">
-              Para instalar la app oficial en iOS y ejecutar a pantalla completa:
+              Puedes instalar el CRM como una aplicación nativa independiente en Mac, iPad, iPhone o Android:
             </p>
 
-            <div className="p-3.5 bg-black/40 rounded-2xl border border-white/5 space-y-2 text-left text-xs">
-              <div className="flex items-center space-x-2">
-                <span className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold flex items-center justify-center text-[10px]">1</span>
-                <span>Toca el botón <Share className="w-4 h-4 inline text-blue-400 mx-1" /> <strong>Compartir</strong> en Safari.</span>
+            <div className="p-3.5 bg-black/40 rounded-2xl border border-white/5 space-y-3 text-left text-xs max-h-72 overflow-y-auto custom-scrollbar">
+              {/* Opción 1: Mac Chrome */}
+              <div className="space-y-1">
+                <span className="font-bold text-emerald-400 block">🖥️ En Mac (Google Chrome):</span>
+                <p className="text-slate-300 text-[11px] leading-relaxed">
+                  Haz clic en el ícono <strong>Instalar</strong> en la barra de direcciones de Chrome (al lado de la estrella de favoritos) o en el menú <strong>(⋮) ➔ Guardar y compartir ➔ Instalar ANCLA CRM</strong>. Se añadirá directamente a tu <strong>Dock de macOS</strong> y <strong>Launchpad</strong>.
+                </p>
               </div>
-              <div className="flex items-center space-x-2">
-                <span className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold flex items-center justify-center text-[10px]">2</span>
-                <span>Desplázate hacia abajo y pulsa <strong>"Agregar al inicio"</strong>.</span>
+
+              {/* Opción 2: iPad / iPhone (Safari) */}
+              <div className="border-t border-white/5 pt-2.5 space-y-1">
+                <span className="font-bold text-emerald-400 block">📱 En iPad / iPhone (Safari):</span>
+                <p className="text-slate-300 text-[11px] leading-relaxed">
+                  Toca el botón <Share className="w-3.5 h-3.5 inline text-blue-400 mx-1" /> <strong>Compartir</strong> en Safari y selecciona <strong>"Agregar al inicio"</strong>.
+                </p>
+              </div>
+
+              {/* Opción 3: iPad / iPhone (Chrome) */}
+              <div className="border-t border-white/5 pt-2.5 space-y-1">
+                <span className="font-bold text-emerald-400 block">🌐 En iPad / iPhone (Google Chrome):</span>
+                <p className="text-slate-300 text-[11px] leading-relaxed">
+                  Toca el botón <Share className="w-3.5 h-3.5 inline text-blue-400 mx-1" /> <strong>Compartir</strong> o los 3 puntos <strong>(...)</strong> y elige <strong>"Agregar a la pantalla principal"</strong>.
+                </p>
               </div>
             </div>
 
             <button
+              type="button"
               onClick={() => setShowIosPrompt(false)}
-              className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-black rounded-xl text-xs transition-all shadow-md"
+              className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-black rounded-xl text-xs transition-all shadow-md cursor-pointer"
             >
               Entendido
             </button>
