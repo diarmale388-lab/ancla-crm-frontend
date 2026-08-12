@@ -518,10 +518,10 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                       onChange={(e) => setInterestProduct(e.target.value)}
                       className="w-full bg-white dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-bold text-[#0f172a] dark:text-[#f8fafc] cursor-pointer"
                     >
-                      <option value="Flex Home EXP-36">Flex Home EXP-36 (36m² - $78.500.000 COP)</option>
-                      <option value="Flex Home EXP-56">Flex Home EXP-56 (56m² - $126.500.000 COP)</option>
-                      <option value="Cápsula Living CL-13">Cápsula Living CL-13 (13m² - $59.800.000 COP)</option>
-                      <option value="Cápsula Living CL-26">Cápsula Living CL-26 (26m² - $104.000.000 COP)</option>
+                      <option value="Cápsula Living CL-13">Cápsula Living CL-13 (13m² - $78.000.000 COP)</option>
+                      <option value="Cápsula Living CL-26">Cápsula Living CL-26 (26m² - $148.800.000 COP)</option>
+                      <option value="Flex Home EXP-36">Flex Home EXP-36 (36m² - $118.800.000 COP)</option>
+                      <option value="Flex Home EXP-56">Flex Home EXP-56 (56m² - A Medida / $188.000.000 COP)</option>
                       <option value="Glamping & Turismo">Glamping & Turismo Modular</option>
                       <option value="Llave en Mano">Llave en Mano (Proyecto Completo)</option>
                     </select>

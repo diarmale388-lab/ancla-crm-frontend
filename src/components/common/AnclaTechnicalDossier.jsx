@@ -50,54 +50,6 @@ export const FACADE_THEMES = {
 };
 
 export const PRODUCT_DATA = {
-  'EXP-36': {
-    id: 'EXP-36',
-    name: 'Flex Home EXP-36',
-    line: 'Flex Home',
-    area: 36,
-    dimensions: '5.90m x 6.30m x 2.48m',
-    folded_dimensions: '5.90m x 2.23m x 2.48m',
-    weight_tons: 3.2,
-    base_price_cop: 78500000,
-    bedrooms: 2,
-    bathrooms: 1,
-    description: 'Casa modular expandible de despliegue rápido (48 horas). Estructura de acero galvanizado reforzado Q350 con paneles sándwich de alto aislamiento.',
-    container_capacity: '2 unidades por Contenedor 40HC',
-    specs_zh: {
-      structure: 'Q350高强度热镀锌轻钢主体结构',
-      insulation: '75mm阻燃聚氨酯(PU)夹芯保温板 (导热系数 ≤ 0.022 W/m·K)',
-      exterior: '仿木纹氟碳金属烤漆板 / 工业黑磨砂面板',
-      windows: '5mm+9A+5mm双层钢化Low-E中空隔音玻璃断桥铝窗',
-      flooring: '6mm高级锁扣SPC石塑防水耐磨地板',
-      electrical: '110V/220V双电压隐藏式阻燃电线 (符合RETIE标准)',
-      plumbing: 'PEX食品级冷热水管及快装排水系统',
-      shipping: '40尺高柜海运集装箱 (单柜可装2套)'
-    }
-  },
-  'EXP-56': {
-    id: 'EXP-56',
-    name: 'Flex Home EXP-56',
-    line: 'Flex Home',
-    area: 56,
-    dimensions: '11.80m x 6.30m x 2.48m',
-    folded_dimensions: '11.80m x 2.23m x 2.48m',
-    weight_tons: 4.8,
-    base_price_cop: 126500000,
-    bedrooms: 3,
-    bathrooms: 2,
-    description: 'Vivienda modular de amplio formato para proyectos campestres o residenciales premium. Máxima habitabilidad y acabados de lujo.',
-    container_capacity: '1 unidad completa + Kit Deck por Contenedor 40HC',
-    specs_zh: {
-      structure: 'Q350特重型热镀锌轻钢框架 (抗震8级/抗风12级)',
-      insulation: '100mm高密度聚氨酯(PU) + 玻璃丝绵复合隔音层',
-      exterior: '德系木纹复合挂板 + 哑光深灰金属幕墙板',
-      windows: '6mm+12A+6mm三玻两腔Low-E断桥超静音系统窗',
-      flooring: '8mm高档SPC地暖专用石塑地板',
-      electrical: '全屋智能拓扑电路 (支持110V/220V双路控制)',
-      plumbing: 'PEX-b防冻高压给水管 + 静音消音PVC排水',
-      shipping: '40尺高柜集装箱 (单柜容纳1整套+露台套件)'
-    }
-  },
   'CL-13': {
     id: 'CL-13',
     name: 'Cápsula Living CL-13',
@@ -106,7 +58,7 @@ export const PRODUCT_DATA = {
     dimensions: '5.80m x 2.23m x 2.55m',
     folded_dimensions: 'Estructura Monolítica Fija',
     weight_tons: 2.1,
-    base_price_cop: 59800000,
+    base_price_cop: 78000000,
     bedrooms: 1,
     bathrooms: 1,
     description: 'Suite modular futurista para proyectos de glamping, ecoturismo y hotelería boutique. Llave en mano con baño de lujo y ventanería curva.',
@@ -130,7 +82,7 @@ export const PRODUCT_DATA = {
     dimensions: '8.95m x 2.23m x 2.55m',
     folded_dimensions: 'Estructura Monolítica Fija',
     weight_tons: 3.6,
-    base_price_cop: 104000000,
+    base_price_cop: 148800000,
     bedrooms: 1,
     bathrooms: 1,
     description: 'Cápsula suite presidencial con zona de estar, cocineta equipada, baño tipo spa y terraza perimetral para alta rentabilidad turística.',
@@ -144,6 +96,54 @@ export const PRODUCT_DATA = {
       electrical: '五星级酒店级智能房控主机 + 氛围RGB灯带',
       plumbing: '豪华整体集成卫浴 (智能马桶+恒温淋浴系统)',
       shipping: '40尺高柜特种装载 (单柜装运1台)'
+    }
+  },
+  'EXP-36': {
+    id: 'EXP-36',
+    name: 'Flex Home EXP-36',
+    line: 'Flex Home',
+    area: 36,
+    dimensions: '5.90m x 6.30m x 2.48m',
+    folded_dimensions: '5.90m x 2.23m x 2.48m',
+    weight_tons: 3.2,
+    base_price_cop: 118800000,
+    bedrooms: 2,
+    bathrooms: 1,
+    description: 'Casa modular expandible de despliegue rápido (48 horas). Estructura de acero galvanizado reforzado Q350 con paneles sándwich de alto aislamiento.',
+    container_capacity: '2 unidades por Contenedor 40HC',
+    specs_zh: {
+      structure: 'Q350高强度热镀锌轻钢主体结构',
+      insulation: '75mm阻燃聚氨酯(PU)夹芯保温板 (导热系数 ≤ 0.022 W/m·K)',
+      exterior: '仿木纹氟碳金属烤漆板 / 工业黑磨砂面板',
+      windows: '5mm+9A+5mm双层钢化Low-E中空隔音玻璃断桥铝窗',
+      flooring: '6mm高级锁扣SPC石塑防水耐磨地板',
+      electrical: '110V/220V双电压隐藏式阻燃电线 (符合RETIE标准)',
+      plumbing: 'PEX食品级冷热水管及快装排水系统',
+      shipping: '40尺高柜海运集装箱 (单柜可装2套)'
+    }
+  },
+  'EXP-56': {
+    id: 'EXP-56',
+    name: 'Flex Home EXP-56',
+    line: 'Flex Home',
+    area: 56,
+    dimensions: '11.80m x 6.30m x 2.48m',
+    folded_dimensions: '11.80m x 2.23m x 2.48m',
+    weight_tons: 4.8,
+    base_price_cop: 188000000,
+    bedrooms: 3,
+    bathrooms: 2,
+    description: 'Vivienda modular de amplio formato para proyectos campestres o residenciales premium. Máxima habitabilidad y acabados de lujo.',
+    container_capacity: '1 unidad completa + Kit Deck por Contenedor 40HC',
+    specs_zh: {
+      structure: 'Q350特重型热镀锌轻钢框架 (抗震8级/抗风12级)',
+      insulation: '100mm高密度聚氨酯(PU) + 玻璃丝绵复合隔音层',
+      exterior: '德系木纹复合挂板 + 哑光深灰金属幕墙板',
+      windows: '6mm+12A+6mm三玻两腔Low-E断桥超静音系统窗',
+      flooring: '8mm高档SPC地暖专用石塑地板',
+      electrical: '全屋智能拓扑电路 (支持110V/220V双路控制)',
+      plumbing: 'PEX-b防冻高压给水管 + 静音消音PVC排水',
+      shipping: '40尺高柜集装箱 (单柜容纳1整套+露台套件)'
     }
   }
 };

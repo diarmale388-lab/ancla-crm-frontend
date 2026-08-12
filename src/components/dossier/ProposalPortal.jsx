@@ -53,48 +53,6 @@ export const FACADE_THEMES = {
 };
 
 export const PRODUCT_DATA = {
-  'EXP-36': {
-    id: 'EXP-36',
-    name: 'Flex Home EXP-36',
-    line: 'Flex Home',
-    area: 36,
-    dimensions: '5.90m x 6.30m x 2.48m',
-    folded_dimensions: '5.90m x 2.23m x 2.48m',
-    weight_tons: 3.2,
-    base_price_cop: 78500000,
-    bedrooms: 2,
-    bathrooms: 1,
-    description: 'Casa modular expandible de despliegue rápido (48 horas). Estructura de acero galvanizado reforzado Q350 con paneles sándwich de alto aislamiento térmico y acústico.',
-    specs_highlights: [
-      'Estructura antisísmica en acero estructural Q350',
-      'Aislamiento termoacústico en poliuretano (PU) 75mm',
-      'Ventanería acústica doble vidrio templado Low-E',
-      'Piso SPC impermeable alto tráfico acabado madera',
-      'Instalaciones eléctricas ocultas 110V/220V bajo norma RETIE',
-      'Baño completo equipado con grifería de lujo y división'
-    ]
-  },
-  'EXP-56': {
-    id: 'EXP-56',
-    name: 'Flex Home EXP-56',
-    line: 'Flex Home',
-    area: 56,
-    dimensions: '11.80m x 6.30m x 2.48m',
-    folded_dimensions: '11.80m x 2.23m x 2.48m',
-    weight_tons: 4.8,
-    base_price_cop: 126500000,
-    bedrooms: 3,
-    bathrooms: 2,
-    description: 'Vivienda modular de amplio formato para proyectos campestres o residenciales premium. Máxima habitabilidad, 3 habitaciones y 2 baños completos.',
-    specs_highlights: [
-      'Gran formato 56m² con sala-comedor y cocina integral',
-      'Aislamiento superior 100mm PU + lana de roca',
-      'Triple alcoba con ventanas panorámicas',
-      '2 baños completos con acabados de hotel boutique',
-      'Sistema de ensamble express en 48-72 horas',
-      'Apta para climas cálidos, fríos y zonas de alta montaña'
-    ]
-  },
   'CL-13': {
     id: 'CL-13',
     name: 'Cápsula Living CL-13',
@@ -103,7 +61,7 @@ export const PRODUCT_DATA = {
     dimensions: '5.80m x 2.23m x 2.55m',
     folded_dimensions: 'Estructura Monolítica Fija',
     weight_tons: 2.1,
-    base_price_cop: 59800000,
+    base_price_cop: 78000000,
     bedrooms: 1,
     bathrooms: 1,
     description: 'Suite modular futurista para proyectos de glamping, ecoturismo y hotelería boutique. Llave en mano con baño de lujo y ventanería curva 270°.',
@@ -124,7 +82,7 @@ export const PRODUCT_DATA = {
     dimensions: '8.95m x 2.23m x 2.55m',
     folded_dimensions: 'Estructura Monolítica Fija',
     weight_tons: 3.6,
-    base_price_cop: 104000000,
+    base_price_cop: 148800000,
     bedrooms: 1,
     bathrooms: 1,
     description: 'Cápsula suite presidencial con zona de estar, cocineta equipada, baño tipo spa y terraza perimetral para alta rentabilidad turística.',
@@ -135,6 +93,48 @@ export const PRODUCT_DATA = {
       'Estructura de aluminio y acero inoxidable anticorrosión',
       'Ideal para suites VIP en fincas y resorts ecológicos',
       'Conexiones rápidas de agua, energía y desagüe'
+    ]
+  },
+  'EXP-36': {
+    id: 'EXP-36',
+    name: 'Flex Home EXP-36',
+    line: 'Flex Home',
+    area: 36,
+    dimensions: '5.90m x 6.30m x 2.48m',
+    folded_dimensions: '5.90m x 2.23m x 2.48m',
+    weight_tons: 3.2,
+    base_price_cop: 118800000,
+    bedrooms: 2,
+    bathrooms: 1,
+    description: 'Casa modular expandible de despliegue rápido (48 horas). Estructura de acero galvanizado reforzado Q350 con paneles sándwich de alto aislamiento térmico y acústico.',
+    specs_highlights: [
+      'Estructura antisísmica en acero estructural Q350',
+      'Aislamiento termoacústico en poliuretano (PU) 75mm',
+      'Ventanería acústica doble vidrio templado Low-E',
+      'Piso SPC impermeable alto tráfico acabado madera',
+      'Instalaciones eléctricas ocultas 110V/220V bajo norma RETIE',
+      'Baño completo equipado con grifería de lujo y división'
+    ]
+  },
+  'EXP-56': {
+    id: 'EXP-56',
+    name: 'Flex Home EXP-56',
+    line: 'Flex Home',
+    area: 56,
+    dimensions: '11.80m x 6.30m x 2.48m',
+    folded_dimensions: '11.80m x 2.23m x 2.48m',
+    weight_tons: 4.8,
+    base_price_cop: 188000000,
+    bedrooms: 3,
+    bathrooms: 2,
+    description: 'Vivienda modular de amplio formato para proyectos campestres o residenciales premium. 3 habitaciones y 2 baños completos (Precio base sujeto a confirmación final).',
+    specs_highlights: [
+      'Gran formato 56m² con sala-comedor y cocina integral',
+      'Aislamiento superior 100mm PU + lana de roca',
+      'Triple alcoba con ventanas panorámicas',
+      '2 baños completos con acabados de hotel boutique',
+      'Sistema de ensamble express en 48-72 horas',
+      'Apta para climas cálidos, fríos y zonas de alta montaña'
     ]
   }
 };

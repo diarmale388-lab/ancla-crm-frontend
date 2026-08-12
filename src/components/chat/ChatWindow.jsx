@@ -926,24 +926,24 @@ export const ChatWindow = () => {
 
           {[
             {
-              id: 'exp36',
-              label: '🏠 Flex Home 36m² ($78.5M)',
-              text: 'El modelo Flex Home EXP-36 (36m² | 5.90m x 6.30m) tiene un valor base de $78.500.000 COP. Cuenta con estructura de acero galvanizado Q350, 2 habitaciones, 1 baño completo, cocina y aislamiento termoacústico de 75mm.'
-            },
-            {
-              id: 'exp56',
-              label: '🏡 Flex Home 56m² ($126.5M)',
-              text: 'El modelo Flex Home EXP-56 (56m² | 11.80m x 6.30m) tiene un valor de $126.500.000 COP. Cuenta con 3 habitaciones, 2 baños, sala-comedor y sistema de doble expansión hidráulica.'
-            },
-            {
               id: 'cl13',
-              label: '🏕️ Cápsula CL-13 ($59.8M)',
-              text: 'La Cápsula Living CL-13 (13m² | 5.80m x 2.23m) tiene un valor de $59.800.000 COP. Incluye baño tipo hotel de lujo, ventanería panorámica curva 270° y domótica integrada.'
+              label: '🏕️ Cápsula CL-13 ($78M)',
+              text: 'La Cápsula Living CL-13 (13m² | 5.80m x 2.23m) tiene un valor oficial de $78.000.000 COP. Incluye baño tipo hotel de lujo, ventanería panorámica curva 270° y domótica integrada.'
             },
             {
               id: 'cl26',
-              label: '🚀 Cápsula CL-26 ($104M)',
-              text: 'La Cápsula Living CL-26 (26m² | 8.95m x 2.23m) tiene un valor de $104.000.000 COP. Es una suite presidencial con cocineta, baño spa y terraza perimetral.'
+              label: '🚀 Cápsula CL-26 ($148.8M)',
+              text: 'La Cápsula Living CL-26 (26m² | 8.95m x 2.23m) tiene un valor oficial de $148.800.000 COP. Es una suite presidencial con cocineta, baño spa y terraza perimetral.'
+            },
+            {
+              id: 'exp36',
+              label: '🏠 Flex Home 36m² ($118.8M)',
+              text: 'El modelo Flex Home EXP-36 (36m² | 5.90m x 6.30m) tiene un valor oficial de $118.800.000 COP. Cuenta con estructura de acero galvanizado Q350, 2 habitaciones, 1 baño completo, cocina y aislamiento termoacústico de 75mm.'
+            },
+            {
+              id: 'exp56',
+              label: '🏡 Flex Home 56m² (A Medida)',
+              text: 'El modelo Flex Home EXP-56 (56m² | 11.80m x 6.30m) cuenta con 3 habitaciones, 2 baños, sala-comedor y sistema de doble expansión hidráulica (Cotización personalizada en showroom).'
             },
             {
               id: 'flete',
@@ -1543,19 +1543,19 @@ export const ChatWindow = () => {
                     onChange={(e) => {
                       const val = e.target.value;
                       setProposalModel(val);
-                      if (val.includes('EXP-56') || val.includes('56m²')) setProposalBasePrice(126500000);
-                      else if (val.includes('EXP-36') || val.includes('36m²')) setProposalBasePrice(78500000);
-                      else if (val.includes('CL-13') || val.includes('13m²')) setProposalBasePrice(59800000);
-                      else if (val.includes('CL-26') || val.includes('26m²')) setProposalBasePrice(104000000);
-                      else if (val.includes('Llave en Mano')) setProposalBasePrice(145000000);
-                      else if (val.includes('Glamping')) setProposalBasePrice(68000000);
+                      if (val.includes('CL-13') || val.includes('13m²')) setProposalBasePrice(78000000);
+                      else if (val.includes('CL-26') || val.includes('26m²')) setProposalBasePrice(148800000);
+                      else if (val.includes('EXP-36') || val.includes('36m²')) setProposalBasePrice(118800000);
+                      else if (val.includes('EXP-56') || val.includes('56m²')) setProposalBasePrice(188000000);
+                      else if (val.includes('Llave en Mano')) setProposalBasePrice(165000000);
+                      else if (val.includes('Glamping')) setProposalBasePrice(85000000);
                     }}
                     className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs font-bold text-[#0f172a] dark:text-[#f8fafc] cursor-pointer"
                   >
-                    <option value="Flex Home EXP-36">Flex Home EXP-36 (36m² - $78.500.000 COP)</option>
-                    <option value="Flex Home EXP-56">Flex Home EXP-56 (56m² - $126.500.000 COP)</option>
-                    <option value="Cápsula Living CL-13">Cápsula Living CL-13 (13m² - $59.800.000 COP)</option>
-                    <option value="Cápsula Living CL-26">Cápsula Living CL-26 (26m² - $104.000.000 COP)</option>
+                    <option value="Cápsula Living CL-13">Cápsula Living CL-13 (13m² - $78.000.000 COP)</option>
+                    <option value="Cápsula Living CL-26">Cápsula Living CL-26 (26m² - $148.800.000 COP)</option>
+                    <option value="Flex Home EXP-36">Flex Home EXP-36 (36m² - $118.800.000 COP)</option>
+                    <option value="Flex Home EXP-56">Flex Home EXP-56 (56m² - A Medida / $188.000.000 COP)</option>
                     <option value="Llave en Mano">Llave en Mano (Proyecto Integral)</option>
                     <option value="Glamping & Turismo">Glamping & Turismo Modular</option>
                   </select>
