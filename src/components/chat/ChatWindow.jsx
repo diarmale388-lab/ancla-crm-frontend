@@ -666,14 +666,14 @@ export const ChatWindow = () => {
   }
 
   return (
-    <div className="flex-1 flex h-full overflow-hidden bg-slate-50 dark:bg-dark-950 relative">
+    <div className="flex-1 flex h-full overflow-hidden bg-slate-50 dark:bg-dark-950 relative w-full">
       
       {/* 2/3: Ventana de Chat Principal */}
       <div 
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
-        className="flex-1 flex flex-col h-full bg-white dark:bg-dark-900 border-r border-slate-200 dark:border-white/5 overflow-hidden relative"
+        className="flex-1 min-w-0 flex flex-col h-full bg-white dark:bg-dark-900 border-r border-slate-200 dark:border-white/5 overflow-hidden relative"
       >
         {isDragging && (
           <div className="absolute inset-0 bg-emerald-600/10 dark:bg-emerald-500/25 border-4 border-dashed border-emerald-500 backdrop-blur-xs flex flex-col items-center justify-center z-30 pointer-events-none animate-fade-in">
@@ -1262,9 +1262,9 @@ export const ChatWindow = () => {
         />
       )}
       <div 
-        className={`right-sidebar-panel flex-col border-l border-slate-200 dark:border-white/5 bg-white dark:bg-slate-900 transition-all h-full max-h-screen overflow-hidden ${
+        className={`right-sidebar-panel flex-col border-l border-slate-200 dark:border-white/5 bg-white dark:bg-slate-900 transition-all h-full max-h-screen overflow-hidden flex-shrink-0 ${
           showRightSidebar 
-            ? 'flex fixed xl:relative right-0 top-0 bottom-0 w-full sm:w-88 max-w-[92vw] xl:max-w-none h-full z-50 shadow-2xl xl:shadow-none animate-fade-in' 
+            ? 'flex fixed xl:relative right-0 top-0 bottom-0 w-80 sm:w-88 xl:w-[320px] 2xl:w-[340px] max-w-[90vw] xl:max-w-[340px] h-full z-50 shadow-2xl xl:shadow-none animate-fade-in' 
             : 'hidden'
         }`}
       >

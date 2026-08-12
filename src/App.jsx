@@ -392,7 +392,7 @@ function App() {
             </div>
             
             {/* Ventana de Conversación (Panel Derecho - Full screen en móvil cuando hay chat seleccionado) */}
-            <div className={`conversation-container ${selectedContactId ? 'block' : 'hidden md:block'} flex-1 h-full overflow-hidden`}>
+            <div className={`conversation-container ${selectedContactId ? 'block' : 'hidden md:block'} flex-1 min-w-0 h-full overflow-hidden`}>
               <ChatWindow />
             </div>
           </div>
