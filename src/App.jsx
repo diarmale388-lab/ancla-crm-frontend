@@ -326,15 +326,15 @@ function App() {
       <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
 
       {/* Panel de Contenido Principal */}
-      <div className="flex-1 flex h-full overflow-hidden">
+      <div className={`flex-1 flex h-full overflow-hidden ${activeTab === 'chats' && selectedContactId ? 'pb-0' : 'pb-16 md:pb-0'}`}>
         {activeTab === 'chats' && (
           <div className="flex-1 flex h-full overflow-hidden relative">
-            {/* Lista de Chats (Panel Izquierdo) */}
-            <div className={`${selectedContactId ? 'hidden md:block' : 'block'} w-full md:w-[26%] lg:w-[22%] min-w-[240px] max-w-[330px] flex-shrink-0 border-r border-slate-200 dark:border-white/5 h-full overflow-hidden`}>
+            {/* Lista de Chats (Panel Izquierdo - Full width en móvil cuando no hay chat seleccionado) */}
+            <div className={`${selectedContactId ? 'hidden md:block' : 'block'} w-full md:w-[28%] lg:w-[24%] min-w-0 md:min-w-[280px] md:max-w-[360px] flex-shrink-0 border-r border-slate-200 dark:border-white/5 h-full overflow-hidden`}>
               <ContactList />
             </div>
             
-            {/* Ventana de Conversación (Panel Derecho) */}
+            {/* Ventana de Conversación (Panel Derecho - Full screen en móvil cuando hay chat seleccionado) */}
             <div className={`${selectedContactId ? 'block' : 'hidden md:block'} flex-1 h-full overflow-hidden`}>
               <ChatWindow />
             </div>

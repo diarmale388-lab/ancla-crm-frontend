@@ -421,26 +421,26 @@ export const CalendarView = () => {
       {/* Grid del Calendario y Detalle Lateral */}
       <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
         
-        {/* Lado Izquierdo: El Calendario Mensual */}
-        <div className="flex-1 p-6 overflow-y-auto flex flex-col bg-white dark:bg-dark-900">
+        {/* Lado Izquierdo: El Calendario Mensual (Desktop) & Selector de Días (Mobile) */}
+        <div className="flex-1 p-3.5 md:p-6 overflow-y-auto flex flex-col bg-white dark:bg-dark-900 border-b md:border-b-0">
           <div className="w-full max-w-4xl mx-auto flex flex-col h-full">
             
             {/* Navegación del Calendario y Leyenda */}
-            <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
-              <h3 className="text-lg font-bold text-slate-800 dark:text-white flex items-center space-x-2">
-                <CalendarIcon className="w-5 h-5 text-emerald-500" />
-                <span>{MONTH_NAMES[currentMonth.getMonth()]} {currentMonth.getFullYear()}</span>
+            <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+              <h3 className="text-base sm:text-lg font-bold text-slate-800 dark:text-white flex items-center space-x-2">
+                <CalendarIcon className="w-4.5 h-4.5 text-emerald-500" />
+                <span className="capitalize">{MONTH_NAMES[currentMonth.getMonth()]} {currentMonth.getFullYear()}</span>
               </h3>
 
               {/* Leyenda Explicativa de Colores para Liliana y el Equipo Comercial */}
-              <div className="flex items-center gap-2 text-[10.5px] font-bold text-slate-600 dark:text-slate-300 flex-wrap">
+              <div className="hidden sm:flex items-center gap-2 text-[10.5px] font-bold text-slate-600 dark:text-slate-300 flex-wrap">
                 <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-800 dark:text-emerald-300 border border-emerald-500/30 shadow-2xs">
                   <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-                  <span>🏢 Presencial (Showroom)</span>
+                  <span>🏢 Presencial</span>
                 </span>
                 <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-500/10 text-blue-800 dark:text-blue-300 border border-blue-500/30 shadow-2xs">
                   <span className="w-2 h-2 rounded-full bg-blue-500"></span>
-                  <span>💻 Virtual (Meet)</span>
+                  <span>💻 Virtual</span>
                 </span>
                 <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-indigo-500/10 text-indigo-800 dark:text-indigo-300 border border-indigo-500/30 shadow-2xs">
                   <span className="w-2 h-2 rounded-full bg-indigo-500"></span>
@@ -452,7 +452,7 @@ export const CalendarView = () => {
                 <button 
                   type="button" 
                   onClick={handlePrevMonth}
-                  className="p-2 rounded-xl bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-700 dark:text-slate-200 cursor-pointer active:scale-95 transition-all"
+                  className="p-1.5 sm:p-2 rounded-xl bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-700 dark:text-slate-200 cursor-pointer active:scale-95 transition-all"
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
@@ -462,29 +462,68 @@ export const CalendarView = () => {
                     setCurrentMonth(new Date());
                     setSelectedDate(new Date());
                   }}
-                  className="px-3.5 py-2 text-xs font-semibold rounded-xl bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-750 dark:text-slate-250 cursor-pointer active:scale-95 transition-all"
+                  className="px-3 py-1.5 text-xs font-semibold rounded-xl bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-750 dark:text-slate-250 cursor-pointer active:scale-95 transition-all"
                 >
                   Hoy
                 </button>
                 <button 
                   type="button" 
                   onClick={handleNextMonth}
-                  className="p-2 rounded-xl bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-700 dark:text-slate-200 cursor-pointer active:scale-95 transition-all"
+                  className="p-1.5 sm:p-2 rounded-xl bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-700 dark:text-slate-200 cursor-pointer active:scale-95 transition-all"
                 >
                   <ChevronRight className="w-4 h-4" />
                 </button>
               </div>
             </div>
 
-            {/* Días de la semana */}
-            <div className="grid grid-cols-7 gap-2 text-center mb-2">
+            {/* Selector de Días Horizontal en Móvil (Mobile Day Carousel) */}
+            <div className="md:hidden flex overflow-x-auto space-x-2 pb-2 no-scrollbar mb-3">
+              {getDaysInMonth(currentMonth).filter(Boolean).map((day) => {
+                const dateStr = `${day.getFullYear()}-${String(day.getMonth() + 1).padStart(2, '0')}-${String(day.getDate()).padStart(2, '0')}`;
+                const dayApps = getAppointmentsForDate(day);
+                const isSelected = selectedDate.toDateString() === day.toDateString();
+                const isTdy = day.toDateString() === new Date().toDateString();
+
+                return (
+                  <button
+                    key={`mobile-day-${dateStr}`}
+                    type="button"
+                    onClick={() => setSelectedDate(day)}
+                    className={`flex-shrink-0 w-16 py-2.5 px-2 rounded-2xl flex flex-col items-center justify-center transition-all cursor-pointer border ${
+                      isSelected
+                        ? 'bg-emerald-600 border-emerald-500 text-white shadow-md scale-105'
+                        : isTdy
+                          ? 'bg-blue-500/15 border-blue-500 text-blue-700 dark:text-blue-300 font-bold'
+                          : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-white/5 text-slate-700 dark:text-slate-300'
+                    }`}
+                  >
+                    <span className="text-[10px] uppercase font-bold opacity-75">
+                      {day.toLocaleDateString('es-ES', { weekday: 'short' })}
+                    </span>
+                    <span className="text-sm font-black font-mono mt-0.5">
+                      {day.getDate()}
+                    </span>
+                    {dayApps.length > 0 && (
+                      <span className={`mt-1 text-[9px] font-bold px-1.5 py-0.2 rounded-full ${
+                        isSelected ? 'bg-white/20 text-white' : 'bg-emerald-500 text-white'
+                      }`}>
+                        {dayApps.length}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Días de la semana (Desktop) */}
+            <div className="hidden md:grid grid-cols-7 gap-2 text-center mb-2">
               {WEEK_DAYS.map((d) => (
                 <span key={d} className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase py-2">{d}</span>
               ))}
             </div>
 
-            {/* Cuadrícula de días */}
-            <div className="grid grid-cols-7 gap-2 sm:gap-2.5 flex-1 min-h-[410px]">
+            {/* Cuadrícula de días (Desktop) */}
+            <div className="hidden md:grid grid-cols-7 gap-2 sm:gap-2.5 flex-1 min-h-[410px]">
               {getDaysInMonth(currentMonth).map((day, idx) => {
                 if (!day) return <div key={`empty-${idx}`} className="bg-slate-50/20 dark:bg-white/[0.01] rounded-2xl border border-transparent w-full min-h-[105px] sm:min-h-[125px]"></div>;
                 

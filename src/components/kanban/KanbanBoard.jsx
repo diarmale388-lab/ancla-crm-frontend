@@ -62,6 +62,7 @@ export const KanbanBoard = () => {
   // Notificaciones de Error / Transición
   const [toastError, setToastError] = useState(null);
   const [dragOverStageId, setDragOverStageId] = useState(null);
+  const [activeMobileStageId, setActiveMobileStageId] = useState(null);
 
   // Edición rápida en Ficha 360°
   const [editingBudget, setEditingBudget] = useState(false);
@@ -72,6 +73,12 @@ export const KanbanBoard = () => {
     fetchLeads();
     fetchAppointments();
   }, []);
+
+  useEffect(() => {
+    if (stages && stages.length > 0 && !activeMobileStageId) {
+      setActiveMobileStageId(stages[0].id);
+    }
+  }, [stages, activeMobileStageId]);
 
   // Cargar notas al abrir modal 360°
   useEffect(() => {
@@ -727,15 +734,44 @@ export const KanbanBoard = () => {
       {viewMode === 'kanban' ? (
         
         /* ========================================================================= */
-        /* VISTA 1: TABLERO KANBAN CON MINI-DASHBOARDS EN CABECERAS                  */
+        /* VISTA 1: TABLERO KANBAN CON SELECTOR DE ETAPAS EN MÓVIL Y MINI-DASHBOARDS */
         /* ========================================================================= */
-        <div className="flex-1 flex overflow-x-auto p-5 space-x-4 items-start custom-scrollbar">
+        <div className="flex-1 flex flex-col md:flex-row overflow-y-auto md:overflow-x-auto p-3 md:p-5 md:space-x-4 space-y-3 md:space-y-0 items-stretch md:items-start custom-scrollbar">
+          
+          {/* Selector de Pestañas por Etapa (Solo en Móvil < md) */}
+          <div className="md:hidden flex overflow-x-auto space-x-2 pb-2 bg-transparent no-scrollbar flex-shrink-0">
+            {stages.map((stage) => {
+              const count = getLeadsByStage(stage.id).length;
+              const isCurrent = (activeMobileStageId || stages[0]?.id) === stage.id;
+              return (
+                <button
+                  key={stage.id}
+                  type="button"
+                  onClick={() => setActiveMobileStageId(stage.id)}
+                  className={`flex-shrink-0 px-3.5 py-2 rounded-xl text-xs font-bold flex items-center space-x-2 transition-all cursor-pointer ${
+                    isCurrent
+                      ? 'bg-emerald-600 text-white shadow-md'
+                      : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-white/5'
+                  }`}
+                >
+                  <span className="truncate max-w-[120px]">{stage.name}</span>
+                  <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-mono font-black ${
+                    isCurrent ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+                  }`}>
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
           {stages.map((stage) => {
             const stageLeads = getLeadsByStage(stage.id);
             const stageTotalValue = stageLeads.reduce((acc, l) => acc + (l.estimated_budget || 0), 0);
             const prob = getStageProbability(stage.name);
             const weightedValue = stageTotalValue * (prob / 100);
             const occupancyPct = ((stageLeads.length / Math.max(1, leads.length)) * 100).toFixed(0);
+            const isCurrentMobile = (activeMobileStageId || stages[0]?.id) === stage.id;
 
             return (
               <div
@@ -743,7 +779,9 @@ export const KanbanBoard = () => {
                 onDragOver={(e) => handleDragOver(e, stage.id)}
                 onDragLeave={handleDragLeave}
                 onDrop={(e) => handleDrop(e, stage.id)}
-                className={`w-80 flex-shrink-0 bg-slate-100 dark:bg-slate-900/60 rounded-3xl p-3.5 flex flex-col max-h-[calc(100vh-230px)] border transition-all duration-200 ${
+                className={`w-full md:w-80 flex-shrink-0 bg-slate-100 dark:bg-slate-900/60 rounded-3xl p-3.5 flex-col max-h-[calc(100vh-230px)] border transition-all duration-200 ${
+                  isCurrentMobile ? 'flex' : 'hidden md:flex'
+                } ${
                   dragOverStageId === stage.id
                     ? 'border-emerald-500 ring-2 ring-emerald-500 shadow-xl shadow-[#10b981]/20 bg-emerald-500/10 dark:bg-emerald-950/40 scale-[1.01]'
                     : 'border-slate-200 dark:border-white/5 shadow-2xs'
