@@ -141,25 +141,27 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
           </button>
         </div>
 
-        {/* Botón de Métricas / Analytics */}
-        <div className="relative w-full flex justify-center group">
-          {activeTab === 'analytics' && (
-            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-[32px] bg-[#008069] dark:bg-[#00a884] rounded-r-md"></div>
-          )}
-          <button
-            onClick={() => {
-              setActiveTab('analytics');
-            }}
-            className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all cursor-pointer relative ${
-              activeTab === 'analytics'
-                ? 'bg-[#e9edef] dark:bg-[#2a3942] text-[#008069] dark:text-[#00a884]'
-                : 'text-[#54656f] dark:text-[#8696a0] hover:bg-[#e9edef] hover:text-[#111b21] dark:hover:bg-[#202c33] dark:hover:text-white'
-            }`}
-            title="Métricas & Informes"
-          >
-            <BarChart3 className="w-5 h-5" />
-          </button>
-        </div>
+        {/* Botón de Métricas / Analytics (Solo Admin) */}
+        {(user?.role === 'admin' || user?.role === 'ADMIN') && (
+          <div className="relative w-full flex justify-center group">
+            {activeTab === 'analytics' && (
+              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-[32px] bg-[#008069] dark:bg-[#00a884] rounded-r-md"></div>
+            )}
+            <button
+              onClick={() => {
+                setActiveTab('analytics');
+              }}
+              className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all cursor-pointer relative ${
+                activeTab === 'analytics'
+                  ? 'bg-[#e9edef] dark:bg-[#2a3942] text-[#008069] dark:text-[#00a884]'
+                  : 'text-[#54656f] dark:text-[#8696a0] hover:bg-[#e9edef] hover:text-[#111b21] dark:hover:bg-[#202c33] dark:hover:text-white'
+              }`}
+              title="Métricas & Informes"
+            >
+              <BarChart3 className="w-5 h-5" />
+            </button>
+          </div>
+        )}
 
         {/* Botón de Envíos Masivos / Broadcasts (Solo Admin) */}
         {(user?.role === 'admin' || user?.role === 'ADMIN') && (
@@ -206,47 +208,27 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
 
       {/* Sección Inferior (Ajustes, Perfil y Cerrar Sesión) */}
       <div className="flex flex-col items-center space-y-4 w-full">
-        {/* Botón Consola CMD / Auditoría (Solo Admin) */}
+        {/* Botón de Ajustes (Solo Admin) */}
         {(user?.role === 'admin' || user?.role === 'ADMIN') && (
           <div className="relative w-full flex justify-center group">
-            {activeTab === 'console' && (
+            {activeTab === 'settings' && (
               <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-[32px] bg-[#008069] dark:bg-[#00a884] rounded-r-md"></div>
             )}
             <button
               onClick={() => {
-                setActiveTab('console');
+                setActiveTab('settings');
               }}
               className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all cursor-pointer relative ${
-                activeTab === 'console'
+                activeTab === 'settings'
                   ? 'bg-[#e9edef] dark:bg-[#2a3942] text-[#008069] dark:text-[#00a884]'
                   : 'text-[#54656f] dark:text-[#8696a0] hover:bg-[#e9edef] hover:text-[#111b21] dark:hover:bg-[#202c33] dark:hover:text-white'
               }`}
-              title="Consola de Diagnóstico (CMD / Logs)"
+              title="Ajustes"
             >
-              <Terminal className="w-5 h-5 text-emerald-500" />
+              <Settings className="w-5 h-5" />
             </button>
           </div>
         )}
-
-        {/* Botón de Ajustes */}
-        <div className="relative w-full flex justify-center group">
-          {activeTab === 'settings' && (
-            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-[32px] bg-[#008069] dark:bg-[#00a884] rounded-r-md"></div>
-          )}
-          <button
-            onClick={() => {
-              setActiveTab('settings');
-            }}
-            className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all cursor-pointer relative ${
-              activeTab === 'settings'
-                ? 'bg-[#e9edef] dark:bg-[#2a3942] text-[#008069] dark:text-[#00a884]'
-                : 'text-[#54656f] dark:text-[#8696a0] hover:bg-[#e9edef] hover:text-[#111b21] dark:hover:bg-[#202c33] dark:hover:text-white'
-            }`}
-            title="Ajustes"
-          >
-            <Settings className="w-5 h-5" />
-          </button>
-        </div>
 
         {/* Botón Instalar App PWA (Mac, iPad, iPhone, Android, Windows) */}
         <button
@@ -401,17 +383,19 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
           <span className="text-[10px] tracking-tight mt-1">Showroom</span>
         </button>
 
-        {/* Pestaña 5: 👤 Perfil / Ajustes */}
-        <button
-          type="button"
-          onClick={() => setActiveTab('settings')}
-          className={`flex flex-col items-center justify-center flex-1 py-1.5 transition-all cursor-pointer ${
-            activeTab === 'settings' ? 'text-[#008069] dark:text-[#00a884] font-black' : 'text-slate-500 dark:text-slate-400 font-medium'
-          }`}
-        >
-          <Settings className="w-5 h-5" />
-          <span className="text-[10px] tracking-tight mt-1">Ajustes</span>
-        </button>
+        {/* Pestaña 5: 👤 Perfil / Ajustes (Solo Admin) */}
+        {(user?.role === 'admin' || user?.role === 'ADMIN') && (
+          <button
+            type="button"
+            onClick={() => setActiveTab('settings')}
+            className={`flex flex-col items-center justify-center flex-1 py-1.5 transition-all cursor-pointer ${
+              activeTab === 'settings' ? 'text-[#008069] dark:text-[#00a884] font-black' : 'text-slate-500 dark:text-slate-400 font-medium'
+            }`}
+          >
+            <Settings className="w-5 h-5" />
+            <span className="text-[10px] tracking-tight mt-1">Ajustes</span>
+          </button>
+        )}
       </div>
     </>
   );
