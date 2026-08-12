@@ -258,15 +258,15 @@ export const ChatWindow = () => {
         body: JSON.stringify({
           contact_id: selectedContactId,
           model_name: proposalModel,
-          base_price: parseFloat(proposalBasePrice) || 18500,
+          base_price: parseFloat(proposalBasePrice) || 78500000,
           extra_deck: proposalExtraDeck,
-          deck_cost: 3500,
+          deck_cost: 5400000,
           extra_solar: proposalExtraSolar,
-          solar_cost: 4200,
+          solar_cost: 17800000,
           extra_clima: proposalExtraClima,
-          clima_cost: 750,
+          clima_cost: 3200000,
           freight_city: proposalFreightCity || 'Armenia / Eje Cafetero',
-          freight_cost: parseFloat(proposalFreightCost) || 800,
+          freight_cost: parseFloat(proposalFreightCost) || 3400000,
           discount_pct: parseFloat(proposalDiscount) || 0,
           payment_terms: proposalPaymentTerms || '50% Anticipo de Fabricación / 50% Balanza Final',
           custom_notes: proposalNotes
@@ -275,7 +275,7 @@ export const ChatWindow = () => {
 
       const data = await res.json();
       if (res.ok) {
-        setProposalSuccess(`¡Propuesta generada por $${(data.total_final || 0).toLocaleString()} USD!`);
+        setProposalSuccess(`¡Propuesta generada por $${(data.total_final || 0).toLocaleString('es-CO')} COP!`);
         setPdfPath(data.file_path);
         setPdfUrl(`${import.meta.env.VITE_API_URL || 'http://localhost:8001/api/v1'}${data.download_url}`);
         const currentActive = contacts.find((c) => c.id === selectedContactId);
@@ -927,23 +927,23 @@ export const ChatWindow = () => {
           {[
             {
               id: 'exp36',
-              label: '🏠 Flex Home 36m² ($18.5k)',
-              text: 'El modelo Flex Home EXP-36 (36m² | 5.90m x 6.30m) tiene un valor base de $18,500 USD. Cuenta con estructura de acero galvanizado Q350, 2 habitaciones, 1 baño completo, cocina y aislamiento termoacústico de 75mm.'
+              label: '🏠 Flex Home 36m² ($78.5M)',
+              text: 'El modelo Flex Home EXP-36 (36m² | 5.90m x 6.30m) tiene un valor base de $78.500.000 COP. Cuenta con estructura de acero galvanizado Q350, 2 habitaciones, 1 baño completo, cocina y aislamiento termoacústico de 75mm.'
             },
             {
               id: 'exp56',
-              label: '🏡 Flex Home 56m² ($29.8k)',
-              text: 'El modelo Flex Home EXP-56 (56m² | 11.80m x 6.30m) tiene un valor de $29,800 USD. Cuenta con 3 habitaciones, 2 baños, sala-comedor y sistema de doble expansión hidráulica.'
+              label: '🏡 Flex Home 56m² ($126.5M)',
+              text: 'El modelo Flex Home EXP-56 (56m² | 11.80m x 6.30m) tiene un valor de $126.500.000 COP. Cuenta con 3 habitaciones, 2 baños, sala-comedor y sistema de doble expansión hidráulica.'
             },
             {
               id: 'cl13',
-              label: '🏕️ Cápsula CL-13 ($14.2k)',
-              text: 'La Cápsula Living CL-13 (13m² | 5.80m x 2.23m) tiene un valor de $14,200 USD. Incluye baño tipo hotel de lujo, ventanería panorámica curva 270° y domótica integrada.'
+              label: '🏕️ Cápsula CL-13 ($59.8M)',
+              text: 'La Cápsula Living CL-13 (13m² | 5.80m x 2.23m) tiene un valor de $59.800.000 COP. Incluye baño tipo hotel de lujo, ventanería panorámica curva 270° y domótica integrada.'
             },
             {
               id: 'cl26',
-              label: '🚀 Cápsula CL-26 ($24.5k)',
-              text: 'La Cápsula Living CL-26 (26m² | 8.95m x 2.23m) tiene un valor de $24,500 USD. Es una suite presidencial con cocineta, baño spa y terraza perimetral.'
+              label: '🚀 Cápsula CL-26 ($104M)',
+              text: 'La Cápsula Living CL-26 (26m² | 8.95m x 2.23m) tiene un valor de $104.000.000 COP. Es una suite presidencial con cocineta, baño spa y terraza perimetral.'
             },
             {
               id: 'flete',
@@ -1515,7 +1515,7 @@ export const ChatWindow = () => {
             </div>
           )}
 
-          {/* PESTAÑA 2: 📄 COTIZADOR (Motor de PDF y Propuestas Comercial) */}
+          {/* PESTAÑA 2: 📄 COTIZADOR (Motor de Propuestas Comerciales en COP) */}
           {rightSidebarTab === 'cotizador' && (
             <div className="space-y-3.5 animate-fade-in text-[#0f172a] dark:text-[#f8fafc]">
               
@@ -1526,13 +1526,13 @@ export const ChatWindow = () => {
                 className="w-full py-2.5 px-3 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-black text-xs flex items-center justify-center space-x-2 transition-all cursor-pointer shadow-md active:scale-95"
               >
                 <DollarSign className="w-4 h-4" />
-                <span>📑 Abrir Dossier & Cotizador USD (3 Pestañas)</span>
+                <span>📑 Abrir Dossier & Cotizador COP (3 Pestañas)</span>
               </button>
 
               <form onSubmit={handleGenerateCustomProposal} className="space-y-3 p-3.5 rounded-2xl bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-white/5 shadow-xs">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-200 block">Cotizador Rápido de Chat</span>
-                  <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 font-mono">USD</span>
+                  <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 font-mono">COP</span>
                 </div>
                 
                 {/* Selector de Modelos */}
@@ -1543,19 +1543,19 @@ export const ChatWindow = () => {
                     onChange={(e) => {
                       const val = e.target.value;
                       setProposalModel(val);
-                      if (val.includes('EXP-56') || val.includes('56m²')) setProposalBasePrice(29800);
-                      else if (val.includes('EXP-36') || val.includes('36m²')) setProposalBasePrice(18500);
-                      else if (val.includes('CL-13') || val.includes('13m²')) setProposalBasePrice(14200);
-                      else if (val.includes('CL-26') || val.includes('26m²')) setProposalBasePrice(24500);
-                      else if (val.includes('Llave en Mano')) setProposalBasePrice(35000);
-                      else if (val.includes('Glamping')) setProposalBasePrice(16500);
+                      if (val.includes('EXP-56') || val.includes('56m²')) setProposalBasePrice(126500000);
+                      else if (val.includes('EXP-36') || val.includes('36m²')) setProposalBasePrice(78500000);
+                      else if (val.includes('CL-13') || val.includes('13m²')) setProposalBasePrice(59800000);
+                      else if (val.includes('CL-26') || val.includes('26m²')) setProposalBasePrice(104000000);
+                      else if (val.includes('Llave en Mano')) setProposalBasePrice(145000000);
+                      else if (val.includes('Glamping')) setProposalBasePrice(68000000);
                     }}
                     className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs font-bold text-[#0f172a] dark:text-[#f8fafc] cursor-pointer"
                   >
-                    <option value="Flex Home EXP-36">Flex Home EXP-36 (36m² - $18,500 USD)</option>
-                    <option value="Flex Home EXP-56">Flex Home EXP-56 (56m² - $29,800 USD)</option>
-                    <option value="Cápsula Living CL-13">Cápsula Living CL-13 (13m² - $14,200 USD)</option>
-                    <option value="Cápsula Living CL-26">Cápsula Living CL-26 (26m² - $24,500 USD)</option>
+                    <option value="Flex Home EXP-36">Flex Home EXP-36 (36m² - $78.500.000 COP)</option>
+                    <option value="Flex Home EXP-56">Flex Home EXP-56 (56m² - $126.500.000 COP)</option>
+                    <option value="Cápsula Living CL-13">Cápsula Living CL-13 (13m² - $59.800.000 COP)</option>
+                    <option value="Cápsula Living CL-26">Cápsula Living CL-26 (26m² - $104.000.000 COP)</option>
                     <option value="Llave en Mano">Llave en Mano (Proyecto Integral)</option>
                     <option value="Glamping & Turismo">Glamping & Turismo Modular</option>
                   </select>
@@ -1563,7 +1563,7 @@ export const ChatWindow = () => {
 
                 <div className="grid grid-cols-2 gap-2">
                   <div className="space-y-1">
-                    <label className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">Precio Base ($USD)</label>
+                    <label className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">Precio Base ($COP)</label>
                     <input
                       type="number"
                       value={proposalBasePrice}
@@ -1587,18 +1587,18 @@ export const ChatWindow = () => {
                 {/* Switches de Adicionales */}
                 <div className="space-y-2 pt-2 border-t border-slate-100 dark:border-white/5">
                   <label className="flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-300 cursor-pointer">
-                    <span>Deck Sintético WPC (+ $3,500 USD)</span>
-                    <input type="checkbox" checked={proposalExtraDeck} onChange={(e) => setProposalExtraDeck(e.target.checked)} className="rounded text-emerald-600 w-4 h-4 accent-emerald-500" />
+                    <span>Deck Sintético WPC (+ $5.400.000 COP)</span>
+                    <input type="checkbox" checked={proposalExtraDeck} onChange={(e) => setProposalExtraDeck(e.target.checked)} className="rounded text-emerald-600 w-4 h-4 accent-emerald-500 cursor-pointer" />
                   </label>
 
                   <label className="flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-300 cursor-pointer">
-                    <span>Kit Solar Off-Grid (+ $4,200 USD)</span>
-                    <input type="checkbox" checked={proposalExtraSolar} onChange={(e) => setProposalExtraSolar(e.target.checked)} className="rounded text-emerald-600 w-4 h-4 accent-emerald-500" />
+                    <span>Kit Solar Off-Grid (+ $17.800.000 COP)</span>
+                    <input type="checkbox" checked={proposalExtraSolar} onChange={(e) => setProposalExtraSolar(e.target.checked)} className="rounded text-emerald-600 w-4 h-4 accent-emerald-500 cursor-pointer" />
                   </label>
 
                   <label className="flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-300 cursor-pointer">
-                    <span>Climatización A.A. (+ $750 USD)</span>
-                    <input type="checkbox" checked={proposalExtraClima} onChange={(e) => setProposalExtraClima(e.target.checked)} className="rounded text-emerald-600 w-4 h-4 accent-emerald-500" />
+                    <span>Climatización A.A. (+ $3.200.000 COP)</span>
+                    <input type="checkbox" checked={proposalExtraClima} onChange={(e) => setProposalExtraClima(e.target.checked)} className="rounded text-emerald-600 w-4 h-4 accent-emerald-500 cursor-pointer" />
                   </label>
                 </div>
 
@@ -1614,7 +1614,7 @@ export const ChatWindow = () => {
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">Flete ($USD)</label>
+                    <label className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">Flete ($COP)</label>
                     <input
                       type="number"
                       value={proposalFreightCost}
@@ -1627,27 +1627,23 @@ export const ChatWindow = () => {
                 {/* Recálculo Dinámico en Vivo */}
                 {(() => {
                   const base = parseFloat(proposalBasePrice) || 0;
-                  const deck = proposalExtraDeck ? 3500 : 0;
-                  const solar = proposalExtraSolar ? 4200 : 0;
-                  const clima = proposalExtraClima ? 750 : 0;
+                  const deck = proposalExtraDeck ? 5400000 : 0;
+                  const solar = proposalExtraSolar ? 17800000 : 0;
+                  const clima = proposalExtraClima ? 3200000 : 0;
                   const freight = parseFloat(proposalFreightCost) || 0;
                   const subtotal = base + deck + solar + clima + freight;
                   const disc = parseFloat(proposalDiscount) || 0;
-                  const totalUSD = subtotal - (subtotal * (disc / 100));
-                  const totalCOP = totalUSD * 4150;
+                  const totalCOP = subtotal - (subtotal * (disc / 100));
 
                   return (
                     <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 space-y-1 text-xs font-mono">
                       <div className="flex justify-between text-slate-600 dark:text-slate-300 text-[11px]">
                         <span>Subtotal Cotizado:</span>
-                        <span>${Math.round(subtotal).toLocaleString()} USD</span>
+                        <span>${Math.round(subtotal).toLocaleString('es-CO')} COP</span>
                       </div>
                       <div className="flex justify-between font-black text-emerald-700 dark:text-emerald-300 text-xs border-t border-emerald-500/20 pt-1">
-                        <span>Total Final USD:</span>
-                        <span>${Math.round(totalUSD).toLocaleString()} USD</span>
-                      </div>
-                      <div className="text-[10px] text-slate-400 text-right">
-                        ≈ ${Math.round(totalCOP).toLocaleString('es-CO')} COP (TRM Ref $4,150)
+                        <span>Total Final COP:</span>
+                        <span>${Math.round(totalCOP).toLocaleString('es-CO')} COP</span>
                       </div>
                     </div>
                   );

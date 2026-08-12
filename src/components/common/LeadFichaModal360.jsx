@@ -325,7 +325,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
               className="px-3 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 font-bold text-xs flex items-center space-x-1.5 transition-all active:scale-95 cursor-pointer"
             >
               <DollarSign className="w-3.5 h-3.5" />
-              <span>Dossier USD</span>
+              <span>Dossier COP</span>
             </button>
 
             <button
@@ -518,10 +518,10 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                       onChange={(e) => setInterestProduct(e.target.value)}
                       className="w-full bg-white dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-bold text-[#0f172a] dark:text-[#f8fafc] cursor-pointer"
                     >
-                      <option value="Flex Home EXP-36">Flex Home EXP-36 (36m² - $18,500 USD)</option>
-                      <option value="Flex Home EXP-56">Flex Home EXP-56 (56m² - $29,800 USD)</option>
-                      <option value="Cápsula Living CL-13">Cápsula Living CL-13 (13m² - $14,200 USD)</option>
-                      <option value="Cápsula Living CL-26">Cápsula Living CL-26 (26m² - $24,500 USD)</option>
+                      <option value="Flex Home EXP-36">Flex Home EXP-36 (36m² - $78.500.000 COP)</option>
+                      <option value="Flex Home EXP-56">Flex Home EXP-56 (56m² - $126.500.000 COP)</option>
+                      <option value="Cápsula Living CL-13">Cápsula Living CL-13 (13m² - $59.800.000 COP)</option>
+                      <option value="Cápsula Living CL-26">Cápsula Living CL-26 (26m² - $104.000.000 COP)</option>
                       <option value="Glamping & Turismo">Glamping & Turismo Modular</option>
                       <option value="Llave en Mano">Llave en Mano (Proyecto Completo)</option>
                     </select>
@@ -539,13 +539,13 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                       />
                     </div>
                     <div>
-                      <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1">Valor Cotizado ($ USD/COP)</label>
+                      <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1">Valor Cotizado ($ COP)</label>
                       <input
                         type="number"
                         value={quotedValue}
                         onChange={(e) => setQuotedValue(e.target.value)}
                         className="w-full bg-white dark:bg-[#182235] border border-emerald-500/40 rounded-xl px-3 py-2 text-xs font-mono tabular-nums font-black text-emerald-600 dark:text-emerald-400 focus:outline-none focus:border-emerald-500"
-                        placeholder="Ej: 18500"
+                        placeholder="Ej: 78500000"
                       />
                     </div>
                   </div>
@@ -1006,10 +1006,13 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
             contact={contact}
             onClose={() => setShowDossierModal(false)}
             onSaveDossier={(dossierData) => {
+              const valCOP = dossierData.totalCOP || dossierData.totalUSD;
               if (dossierData.modelName) setInterestProduct(dossierData.modelName);
-              if (dossierData.totalUSD) setQuotedValue(dossierData.totalUSD);
+              if (valCOP) setQuotedValue(valCOP);
               if (dossierData.exteriorColor) {
-                setProposalNotes(`Modelo: ${dossierData.modelName} | Total: $${Math.round(dossierData.totalUSD).toLocaleString()} USD (50% Anticipo: $${Math.round(dossierData.deposit50 || dossierData.deposit60).toLocaleString()} USD / 50% Balanza: $${Math.round(dossierData.balance50 || dossierData.balance40).toLocaleString()} USD) | Acabados: ${dossierData.exteriorColor}`);
+                const formattedTotal = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(valCOP);
+                const dep50 = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(valCOP * 0.5);
+                setProposalNotes(`Modelo: ${dossierData.modelName} | Total: ${formattedTotal} COP (50% Anticipo: ${dep50} / 50% Balanza: ${dep50}) | Acabados: ${dossierData.exteriorColor}`);
               }
             }}
           />

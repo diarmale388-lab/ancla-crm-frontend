@@ -58,7 +58,7 @@ export const PRODUCT_DATA = {
     dimensions: '5.90m x 6.30m x 2.48m',
     folded_dimensions: '5.90m x 2.23m x 2.48m',
     weight_tons: 3.2,
-    base_price: 18500,
+    base_price_cop: 78500000,
     bedrooms: 2,
     bathrooms: 1,
     description: 'Casa modular expandible de despliegue rápido (48 horas). Estructura de acero galvanizado reforzado Q350 con paneles sándwich de alto aislamiento.',
@@ -82,7 +82,7 @@ export const PRODUCT_DATA = {
     dimensions: '11.80m x 6.30m x 2.48m',
     folded_dimensions: '11.80m x 2.23m x 2.48m',
     weight_tons: 4.8,
-    base_price: 29800,
+    base_price_cop: 126500000,
     bedrooms: 3,
     bathrooms: 2,
     description: 'Vivienda modular de amplio formato para proyectos campestres o residenciales premium. Máxima habitabilidad y acabados de lujo.',
@@ -106,7 +106,7 @@ export const PRODUCT_DATA = {
     dimensions: '5.80m x 2.23m x 2.55m',
     folded_dimensions: 'Estructura Monolítica Fija',
     weight_tons: 2.1,
-    base_price: 14200,
+    base_price_cop: 59800000,
     bedrooms: 1,
     bathrooms: 1,
     description: 'Suite modular futurista para proyectos de glamping, ecoturismo y hotelería boutique. Llave en mano con baño de lujo y ventanería curva.',
@@ -130,7 +130,7 @@ export const PRODUCT_DATA = {
     dimensions: '8.95m x 2.23m x 2.55m',
     folded_dimensions: 'Estructura Monolítica Fija',
     weight_tons: 3.6,
-    base_price: 24500,
+    base_price_cop: 104000000,
     bedrooms: 1,
     bathrooms: 1,
     description: 'Cápsula suite presidencial con zona de estar, cocineta equipada, baño tipo spa y terraza perimetral para alta rentabilidad turística.',
@@ -148,6 +148,14 @@ export const PRODUCT_DATA = {
   }
 };
 
+export const formatCOP = (val) => {
+  return new Intl.NumberFormat('es-CO', {
+    style: 'currency',
+    currency: 'COP',
+    maximumFractionDigits: 0
+  }).format(val || 0);
+};
+
 export default function AnclaTechnicalDossier({ isOpen, onClose, contact, onSaveDossier }) {
   if (!isOpen) return null;
 
@@ -161,7 +169,7 @@ export default function AnclaTechnicalDossier({ isOpen, onClose, contact, onSave
   const [includeSolar, setIncludeSolar] = useState(false);
   const [acUnits, setAcUnits] = useState(1);
   const [includeSpcFloor, setIncludeSpcFloor] = useState(true);
-  const [freightDistanceKm, setFreightDistanceKm] = useState(250); // km desde puerto/bodega a lote
+  const [freightDistanceKm, setFreightDistanceKm] = useState(150); // km desde puerto/bodega a lote
   const [discountPercent, setDiscountPercent] = useState(0);
 
   // Estados de Personalización Visual
@@ -176,24 +184,25 @@ export default function AnclaTechnicalDossier({ isOpen, onClose, contact, onSave
   const currentModel = PRODUCT_DATA[selectedModelId] || PRODUCT_DATA['EXP-36'];
   const currentFacade = FACADE_THEMES[facadeThemeKey] || FACADE_THEMES['NEGRO_INDUSTRIAL'];
 
-  // Cálculos Financieros en Tiempo Real (USD)
+  // Cálculos Financieros en Tiempo Real (COP)
   const calculations = useMemo(() => {
-    const base = Number(currentModel.base_price) || 0;
+    const base = Number(currentModel.base_price_cop) || 0;
     const safeDeckArea = Number(deckArea) || 0;
-    const deckTotal = includeDeck ? safeDeckArea * 85 : 0;
-    const solarTotal = includeSolar ? 4200 : 0;
+    const deckTotal = includeDeck ? safeDeckArea * 360000 : 0;
+    const solarTotal = includeSolar ? 17800000 : 0;
     const safeAcUnits = Number(acUnits) || 0;
-    const acTotal = safeAcUnits * 750;
-    const floorTotal = includeSpcFloor ? (Number(currentModel.area) || 0) * 18 : 0;
+    const acTotal = safeAcUnits * 3200000;
+    const floorTotal = includeSpcFloor ? (Number(currentModel.area) || 0) * 75000 : 0;
     const safeKm = Number(freightDistanceKm) || 0;
     const safeWeight = Number(currentModel.weight_tons) || 1;
-    const freightTotal = 800 + (safeKm * safeWeight * 0.18);
+    const freightTotal = 3400000 + (safeKm * safeWeight * 750);
     
     const subtotal = base + deckTotal + solarTotal + acTotal + floorTotal + freightTotal;
     const safeDiscount = Number(discountPercent) || 0;
     const discountAmount = subtotal * (safeDiscount / 100);
-    const deposit50 = totalUSD * 0.50;
-    const balance50 = totalUSD * 0.50;
+    const totalCOP = subtotal - discountAmount;
+    const deposit50 = totalCOP * 0.50;
+    const balance50 = totalCOP * 0.50;
 
     return {
       base,
@@ -204,10 +213,11 @@ export default function AnclaTechnicalDossier({ isOpen, onClose, contact, onSave
       freightTotal,
       subtotal,
       discountAmount,
-      totalUSD,
+      totalCOP,
+      totalUSD: totalCOP, // Aliased for compatibility
       deposit50,
       balance50,
-      deposit60: deposit50, // Backward compatibility
+      deposit60: deposit50,
       balance40: balance50
     };
   }, [currentModel, includeDeck, deckArea, includeSolar, acUnits, includeSpcFloor, freightDistanceKm, discountPercent]);
@@ -217,7 +227,7 @@ export default function AnclaTechnicalDossier({ isOpen, onClose, contact, onSave
     const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://anclaspecialprojects.com';
     const contactParam = contact?.id ? `&c=${contact.id}` : '';
     const nameParam = contact?.first_name ? `&n=${encodeURIComponent(contact.first_name)}` : '';
-    return `${baseUrl}/propuesta?ref=ANCLA-${currentModel.id}&theme=${facadeThemeKey}&total=${Math.round(calculations.totalUSD)}${contactParam}${nameParam}`;
+    return `${baseUrl}/propuesta?ref=ANCLA-${currentModel.id}&theme=${facadeThemeKey}&total=${Math.round(calculations.totalCOP)}${contactParam}${nameParam}`;
   };
 
   const handleCopyWebLink = () => {
@@ -244,10 +254,10 @@ export default function AnclaTechnicalDossier({ isOpen, onClose, contact, onSave
             <div className="min-w-0">
               <div className="flex items-center space-x-2 flex-wrap">
                 <h2 className="text-sm font-black text-[#0f172a] dark:text-[#f8fafc] tracking-wide truncate">
-                  DOSSIER TÉCNICO & COTIZADOR USD
+                  DOSSIER TÉCNICO & COTIZADOR COP
                 </h2>
                 <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 font-mono">
-                  USD TABULAR
+                  COP TABULAR
                 </span>
               </div>
               <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
@@ -287,7 +297,7 @@ export default function AnclaTechnicalDossier({ isOpen, onClose, contact, onSave
             }`}
           >
             <DollarSign className="w-4 h-4" />
-            <span>1. Dossier Comercial & Cotizador USD</span>
+            <span>1. Dossier Comercial & Cotizador COP</span>
           </button>
 
           <button
@@ -319,7 +329,7 @@ export default function AnclaTechnicalDossier({ isOpen, onClose, contact, onSave
         <div className="p-6 overflow-y-auto flex-1 space-y-6">
           
           {/* ========================================================================= */}
-          {/* PESTAÑA 1: DOSSIER COMERCIAL & COTIZADOR USD */}
+          {/* PESTAÑA 1: DOSSIER COMERCIAL & COTIZADOR COP */}
           {/* ========================================================================= */}
           {activeTab === 'comercial' && (
             <div className="space-y-6 animate-fade-in">
@@ -348,7 +358,7 @@ export default function AnclaTechnicalDossier({ isOpen, onClose, contact, onSave
                               {p.id}
                             </span>
                             <span className="text-xs font-black text-emerald-600 dark:text-emerald-400 tabular-nums font-mono">
-                              ${p.base_price.toLocaleString()} USD
+                              {formatCOP(p.base_price_cop)}
                             </span>
                           </div>
                           <h4 className="text-xs font-bold text-[#0f172a] dark:text-white mt-1">{p.name}</h4>
@@ -363,110 +373,111 @@ export default function AnclaTechnicalDossier({ isOpen, onClose, contact, onSave
                 </div>
               </div>
 
-              {/* Grid 2 Columnas: Configurador Opcionales & Resumen Financiero */}
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+              {/* Fila Dividida: Opciones Configurables (7 Cols) y Tarjeta Financiera (5 Cols) */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
                 
-                {/* Columna Izquierda: Opcionales Dinámicos (7 Cols) */}
+                {/* Columna Izquierda: Opciones de Adicionales e Ingeniería */}
                 <div className="lg:col-span-7 space-y-4">
-                  <div className="p-5 rounded-2xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-[#334155] shadow-sm space-y-4">
-                    <span className="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center space-x-1.5">
-                      <Layers className="w-4 h-4 text-emerald-500" />
-                      <span>Configurador de Opcionales & Transporte</span>
-                    </span>
+                  <div className="p-5 rounded-2xl bg-white dark:bg-[#1e293b]/40 border border-slate-200 dark:border-[#334155] space-y-4">
+                    <h3 className="text-xs font-black uppercase text-[#0f172a] dark:text-white flex items-center space-x-2">
+                      <Sliders className="w-4 h-4 text-emerald-500" />
+                      <span>Configurador de Adicionales & Obras de Implantación</span>
+                    </h3>
 
-                    {/* Opcional 1: Deck Sintético WPC */}
-                    <div className="flex items-center justify-between p-3.5 rounded-xl bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-[#334155]">
-                      <div className="space-y-0.5">
-                        <div className="flex items-center space-x-2">
+                    {/* Deck WPC Sintético */}
+                    <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-[#334155] space-y-2">
+                      <div className="flex items-center justify-between">
+                        <label className="flex items-center space-x-2.5 cursor-pointer">
                           <input
                             type="checkbox"
                             checked={includeDeck}
                             onChange={(e) => setIncludeDeck(e.target.checked)}
-                            className="w-4 h-4 accent-emerald-500 rounded cursor-pointer"
+                            className="rounded text-emerald-500 focus:ring-emerald-500 w-4 h-4 cursor-pointer"
                           />
-                          <span className="text-xs font-bold text-[#0f172a] dark:text-white">Deck Exterior Sintético WPC</span>
-                        </div>
-                        <p className="text-[10px] text-slate-400 pl-6">Madera tecnológica de alta resistencia ($85 USD/m²)</p>
+                          <span className="text-xs font-bold text-[#0f172a] dark:text-white">Terraza Exterior en Deck WPC de Exportación</span>
+                        </label>
+                        <span className="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400 tabular-nums">
+                          +{formatCOP(calculations.deckTotal)}
+                        </span>
                       </div>
+                      <p className="text-[10px] text-slate-400 pl-6">Madera tecnológica de alta resistencia ($360.000 COP/m²)</p>
+                      
                       {includeDeck && (
-                        <div className="flex items-center space-x-2">
+                        <div className="pl-6 pt-2 flex items-center space-x-3">
+                          <span className="text-xs text-slate-500 dark:text-slate-400">Área:</span>
                           <input
-                            type="number"
+                            type="range"
                             min="5"
-                            max="80"
+                            max="50"
+                            step="5"
                             value={deckArea}
-                            onChange={(e) => setDeckArea(Math.max(0, parseInt(e.target.value) || 0))}
-                            className="w-16 bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-[#334155] rounded-lg px-2 py-1 text-xs font-mono text-center text-[#0f172a] dark:text-white font-bold"
+                            onChange={(e) => setDeckArea(parseInt(e.target.value) || 10)}
+                            className="flex-1 accent-emerald-500 cursor-pointer"
                           />
-                          <span className="text-xs text-slate-400">m²</span>
-                          <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 font-mono tabular-nums min-w-[70px] text-right">
-                            +${calculations.deckTotal.toLocaleString()}
-                          </span>
+                          <span className="text-xs font-mono font-bold text-[#0f172a] dark:text-white min-w-[45px]">{deckArea} m²</span>
                         </div>
                       )}
                     </div>
 
-                    {/* Opcional 2: Kit Solar Off-Grid */}
-                    <div className="flex items-center justify-between p-3.5 rounded-xl bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-[#334155]">
-                      <div className="space-y-0.5">
-                        <div className="flex items-center space-x-2">
-                          <input
-                            type="checkbox"
-                            checked={includeSolar}
-                            onChange={(e) => setIncludeSolar(e.target.checked)}
-                            className="w-4 h-4 accent-emerald-500 rounded cursor-pointer"
-                          />
-                          <span className="text-xs font-bold text-[#0f172a] dark:text-white flex items-center gap-1.5">
+                    {/* Kit Solar Off-Grid */}
+                    <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-[#334155] flex items-center justify-between">
+                      <label className="flex items-center space-x-2.5 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={includeSolar}
+                          onChange={(e) => setIncludeSolar(e.target.checked)}
+                          className="rounded text-emerald-500 focus:ring-emerald-500 w-4 h-4 cursor-pointer"
+                        />
+                        <div>
+                          <span className="text-xs font-bold text-[#0f172a] dark:text-white flex items-center space-x-1.5">
                             <Sun className="w-3.5 h-3.5 text-amber-500" />
-                            <span>Kit Solar Off-Grid 3kWp Híbrido</span>
+                            <span>Kit Solar Fotovoltaico Autónomo (3.5 kWp + Litio)</span>
                           </span>
+                          <p className="text-[10px] text-slate-400">Inversor híbrido + Batería LiFePO4 de 5kWh</p>
                         </div>
-                        <p className="text-[10px] text-slate-400 pl-6">Paneles monocristalinos + Inversor + Batería LiFePO4</p>
-                      </div>
-                      <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 font-mono tabular-nums">
-                        {includeSolar ? '+$4,200 USD' : '$0'}
+                      </label>
+                      <span className="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400 tabular-nums">
+                        {includeSolar ? `+${formatCOP(17800000)}` : '$0'}
                       </span>
                     </div>
 
-                    {/* Opcional 3: Climatización Inverter */}
-                    <div className="flex items-center justify-between p-3.5 rounded-xl bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-[#334155]">
-                      <div className="space-y-0.5">
-                        <span className="text-xs font-bold text-[#0f172a] dark:text-white flex items-center gap-1.5">
+                    {/* Climatización Inverter */}
+                    <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-[#334155] flex items-center justify-between">
+                      <div>
+                        <span className="text-xs font-bold text-[#0f172a] dark:text-white flex items-center space-x-1.5">
                           <Wind className="w-3.5 h-3.5 text-blue-500" />
-                          <span>Aire Acondicionado Inverter 12,000 BTU</span>
+                          <span>Aire Acondicionado Inverter 12.000 BTU</span>
                         </span>
-                        <p className="text-[10px] text-slate-400">Alta eficiencia energética ($750 USD/unidad)</p>
+                        <p className="text-[10px] text-slate-400">Alta eficiencia energética ($3.200.000 COP/unidad)</p>
                       </div>
-                      <div className="flex items-center space-x-2">
-                        <select
-                          value={acUnits}
-                          onChange={(e) => setAcUnits(parseInt(e.target.value) || 0)}
-                          className="bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-[#334155] rounded-lg px-2.5 py-1 text-xs text-[#0f172a] dark:text-white font-mono font-bold"
-                        >
-                          <option value="0">0 Unidades</option>
-                          <option value="1">1 Unidad (+$750)</option>
-                          <option value="2">2 Unidades (+$1,500)</option>
-                          <option value="3">3 Unidades (+$2,250)</option>
-                        </select>
-                      </div>
+                      <select
+                        value={acUnits}
+                        onChange={(e) => setAcUnits(parseInt(e.target.value) || 0)}
+                        className="bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-[#334155] rounded-lg px-2 py-1 text-xs font-bold text-[#0f172a] dark:text-white cursor-pointer"
+                      >
+                        <option value="0">Sin Climatización</option>
+                        <option value="1">1 Unidad (+{formatCOP(3200000)})</option>
+                        <option value="2">2 Unidades (+{formatCOP(6400000)})</option>
+                        <option value="3">3 Unidades (+{formatCOP(9600000)})</option>
+                      </select>
                     </div>
 
-                    {/* Opcional 4: Flete Dinámico */}
+                    {/* Flete & Logística Terrestre */}
                     <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-[#334155] space-y-2">
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold text-[#0f172a] dark:text-white flex items-center gap-1.5">
-                          <Truck className="w-3.5 h-3.5 text-teal-500" />
-                          <span>Flete Terrestre & Maniobra a Sitio</span>
+                        <span className="text-xs font-bold text-[#0f172a] dark:text-white flex items-center space-x-1.5">
+                          <Truck className="w-3.5 h-3.5 text-emerald-500" />
+                          <span>Flete Terrestre e Instalación en Sitio</span>
                         </span>
-                        <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 font-mono tabular-nums">
-                          +${Math.round(calculations.freightTotal).toLocaleString()} USD
+                        <span className="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400 tabular-nums">
+                          +{formatCOP(calculations.freightTotal)}
                         </span>
                       </div>
-                      <div className="flex items-center space-x-3 text-xs">
-                        <span className="text-[11px] text-slate-400">Distancia Estimada:</span>
+                      <div className="flex items-center space-x-3">
+                        <span className="text-[11px] text-slate-400">Distancia a Lote:</span>
                         <input
                           type="range"
-                          min="50"
+                          min="20"
                           max="800"
                           step="25"
                           value={freightDistanceKm}
@@ -480,13 +491,13 @@ export default function AnclaTechnicalDossier({ isOpen, onClose, contact, onSave
                   </div>
                 </div>
 
-                {/* Columna Derecha: Tarjeta de Liquidación Financiera USD (5 Cols) */}
+                {/* Columna Derecha: Tarjeta de Liquidación Financiera COP (5 Cols) */}
                 <div className="lg:col-span-5 space-y-4">
                   <div className="p-5 rounded-2xl bg-gradient-to-b from-white to-slate-50 dark:from-[#1e293b] dark:to-[#0f172a] border border-emerald-500/30 shadow-lg space-y-4">
                     <div className="flex items-center justify-between border-b border-slate-100 dark:border-[#334155] pb-3">
                       <span className="text-xs font-black uppercase text-slate-500 dark:text-slate-400">Liquidación Comercial</span>
                       <span className="text-xs font-bold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-mono">
-                        Valores en USD
+                        Valores en COP
                       </span>
                     </div>
 
@@ -494,29 +505,29 @@ export default function AnclaTechnicalDossier({ isOpen, onClose, contact, onSave
                     <div className="space-y-2 text-xs font-medium">
                       <div className="flex justify-between text-slate-600 dark:text-slate-300">
                         <span>Modelo {currentModel.name}:</span>
-                        <span className="font-mono tabular-nums font-bold">${calculations.base.toLocaleString()} USD</span>
+                        <span className="font-mono tabular-nums font-bold">{formatCOP(calculations.base)}</span>
                       </div>
                       {includeDeck && (
                         <div className="flex justify-between text-slate-600 dark:text-slate-300">
                           <span>Deck Sintético ({deckArea}m²):</span>
-                          <span className="font-mono tabular-nums">+${calculations.deckTotal.toLocaleString()} USD</span>
+                          <span className="font-mono tabular-nums">+{formatCOP(calculations.deckTotal)}</span>
                         </div>
                       )}
                       {includeSolar && (
                         <div className="flex justify-between text-slate-600 dark:text-slate-300">
-                          <span>Kit Solar 3kWp:</span>
-                          <span className="font-mono tabular-nums">+${calculations.solarTotal.toLocaleString()} USD</span>
+                          <span>Kit Solar 3.5kWp:</span>
+                          <span className="font-mono tabular-nums">+{formatCOP(calculations.solarTotal)}</span>
                         </div>
                       )}
                       {acUnits > 0 && (
                         <div className="flex justify-between text-slate-600 dark:text-slate-300">
                           <span>A.A. Inverter ({acUnits}x):</span>
-                          <span className="font-mono tabular-nums">+${calculations.acTotal.toLocaleString()} USD</span>
+                          <span className="font-mono tabular-nums">+{formatCOP(calculations.acTotal)}</span>
                         </div>
                       )}
                       <div className="flex justify-between text-slate-600 dark:text-slate-300">
                         <span>Flete & Logística ({freightDistanceKm} km):</span>
-                        <span className="font-mono tabular-nums">+${Math.round(calculations.freightTotal).toLocaleString()} USD</span>
+                        <span className="font-mono tabular-nums">+{formatCOP(calculations.freightTotal)}</span>
                       </div>
 
                       {/* Descuento Comercial */}
@@ -531,9 +542,9 @@ export default function AnclaTechnicalDossier({ isOpen, onClose, contact, onSave
                           className="bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-[#334155] rounded-lg px-2 py-0.5 text-xs text-rose-600 dark:text-rose-300 font-mono font-bold"
                         >
                           <option value="0">0%</option>
-                          <option value="3">3% (-${Math.round(calculations.subtotal * 0.03).toLocaleString()})</option>
-                          <option value="5">5% (-${Math.round(calculations.subtotal * 0.05).toLocaleString()})</option>
-                          <option value="8">8% (-${Math.round(calculations.subtotal * 0.08).toLocaleString()})</option>
+                          <option value="3">3% (-{formatCOP(calculations.subtotal * 0.03)})</option>
+                          <option value="5">5% (-{formatCOP(calculations.subtotal * 0.05)})</option>
+                          <option value="8">8% (-{formatCOP(calculations.subtotal * 0.08)})</option>
                         </select>
                       </div>
                     </div>
@@ -542,11 +553,11 @@ export default function AnclaTechnicalDossier({ isOpen, onClose, contact, onSave
                     <div className="pt-3 border-t-2 border-emerald-500/40 flex items-center justify-between">
                       <span className="text-sm font-black text-[#0f172a] dark:text-white">TOTAL PROPUESTA:</span>
                       <span className="text-xl font-black text-emerald-600 dark:text-emerald-400 font-mono tabular-nums">
-                        ${Math.round(calculations.totalUSD).toLocaleString()} USD
+                        {formatCOP(calculations.totalCOP)}
                       </span>
                     </div>
 
-                    {/* Hitos de Pago 60 / 40 */}
+                    {/* Hitos de Pago 50 / 50 */}
                     <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-[#0b0f19] border border-slate-200 dark:border-[#334155] space-y-2 text-xs">
                       <span className="text-[10px] font-black uppercase text-slate-500 dark:text-slate-400 tracking-wider block">
                         Hitos de Pago de Fabricación (Regla 50/50):
@@ -554,13 +565,13 @@ export default function AnclaTechnicalDossier({ isOpen, onClose, contact, onSave
                       <div className="flex justify-between font-mono">
                         <span className="text-slate-600 dark:text-slate-300">50% Anticipo de Fabricación:</span>
                         <span className="font-bold text-amber-600 dark:text-amber-400 tabular-nums">
-                          ${Math.round(calculations.deposit50).toLocaleString()} USD
+                          {formatCOP(calculations.deposit50)}
                         </span>
                       </div>
                       <div className="flex justify-between font-mono">
                         <span className="text-slate-600 dark:text-slate-300">50% Balanza Final (Contra Entrega):</span>
                         <span className="font-bold text-teal-600 dark:text-teal-400 tabular-nums">
-                          ${Math.round(calculations.balance50).toLocaleString()} USD
+                          {formatCOP(calculations.balance50)}
                         </span>
                       </div>
                     </div>
@@ -569,246 +580,102 @@ export default function AnclaTechnicalDossier({ isOpen, onClose, contact, onSave
                 </div>
 
               </div>
-
             </div>
           )}
 
           {/* ========================================================================= */}
-          {/* PESTAÑA 2: VISUALIZADOR 3D DE ACABADOS & RENDER INTERACTIVO              */}
+          {/* PESTAÑA 2: VISUALIZADOR 3D & ACABADOS */}
           {/* ========================================================================= */}
           {activeTab === 'personalizacion' && (
             <div className="space-y-6 animate-fade-in">
-              
-              {/* RENDER / MAQUETA ARQUITECTÓNICA 3D INTERACTIVA */}
-              <div className="p-6 rounded-3xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-[#334155] shadow-sm space-y-5">
-                <div className="flex items-center justify-between flex-wrap gap-2">
-                  <span className="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center space-x-2">
-                    <Box className="w-4 h-4 text-emerald-500" />
-                    <span>Visualizador de Fachada & Render Arquitectónico Dinámico</span>
-                  </span>
-                  <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
-                    Renderizado en Tiempo Real
-                  </span>
-                </div>
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                
+                {/* Visualizador de Fachada */}
+                <div className="lg:col-span-7 space-y-4">
+                  <div className="p-6 rounded-2xl bg-white dark:bg-[#1e293b]/50 border border-slate-200 dark:border-[#334155] space-y-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-black uppercase text-slate-500 dark:text-slate-400">Acabado Seleccionado</span>
+                      <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                        {currentFacade.badge}
+                      </span>
+                    </div>
 
-                {/* Lienzo Visual Arquitectónico SVG */}
-                <div className="relative rounded-2xl p-6 bg-gradient-to-b from-slate-100 to-slate-200 dark:from-[#0b0f19] dark:to-[#182235] border border-slate-200 dark:border-white/10 flex flex-col items-center justify-center min-h-[220px] overflow-hidden">
-                  
-                  {/* Mockup Arquitectónico Modular */}
-                  <svg className="w-full max-w-md h-36 drop-shadow-xl" viewBox="0 0 400 160" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    {/* Suelo / Terreno */}
-                    <rect x="20" y="130" width="360" height="8" rx="4" fill="#64748b" opacity="0.3" />
-                    {/* Deck Exterior */}
-                    {includeDeck && (
-                      <rect x="30" y="122" width="340" height="8" rx="2" fill="#b45309" stroke="#78350f" strokeWidth="1" />
-                    )}
-                    {/* Módulo Principal */}
-                    <rect x="60" y="30" width="280" height="92" rx="6" fill={currentFacade.primaryColor} stroke={currentFacade.frameColor} strokeWidth="3" />
-                    
-                    {/* Paneles de Fachada Decorativos */}
-                    <rect x="70" y="36" width="60" height="80" rx="3" fill={currentFacade.accentColor} opacity="0.85" />
-                    
-                    {/* Ventanales Panorámicos Low-E */}
-                    <rect x="140" y="42" width="90" height="68" rx="4" fill={currentFacade.glassTint} opacity="0.75" stroke={currentFacade.frameColor} strokeWidth="2" />
-                    <line x1="185" y1="42" x2="185" y2="110" stroke={currentFacade.frameColor} strokeWidth="2" />
-                    
-                    {/* Puerta Principal de Entrada */}
-                    <rect x="240" y="42" width="45" height="80" rx="2" fill="#0f172a" stroke={currentFacade.frameColor} strokeWidth="2" />
-                    <circle cx="276" cy="82" r="2.5" fill="#f8fafc" />
-
-                    {/* Logo ANCLA en el módulo */}
-                    <text x="75" y="55" fill="#ffffff" fontSize="8" fontWeight="bold" fontFamily="sans-serif">ANCLA</text>
-                    <text x="75" y="65" fill="#ffffff" fontSize="6" fontFamily="sans-serif">{currentModel.id}</text>
-                  </svg>
-
-                  <div className="flex items-center space-x-3 mt-3">
-                    <span className="text-[11px] font-black px-3 py-1 rounded-full bg-white dark:bg-[#0f172a] shadow-sm border border-slate-200 dark:border-white/10 text-[#0f172a] dark:text-white">
-                      {currentFacade.badge} • {currentModel.name}
-                    </span>
-                    <span className="text-[10px] font-mono tabular-nums text-slate-500 dark:text-slate-400">
-                      {currentModel.dimensions}
-                    </span>
-                  </div>
-                </div>
-
-                {/* SELECTOR INTERACTIVO DE 4 TEMAS DE FACHADA */}
-                <div>
-                  <label className="block text-[11px] font-black uppercase text-slate-500 dark:text-slate-400 mb-2">
-                    Seleccionar Esquema de Color & Material de Fachada:
-                  </label>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                    {Object.values(FACADE_THEMES).map((theme) => {
-                      const isSelected = facadeThemeKey === theme.id;
-                      return (
-                        <button
-                          key={theme.id}
-                          type="button"
-                          onClick={() => setFacadeThemeKey(theme.id)}
-                          className={`p-3.5 rounded-2xl border text-left transition-all cursor-pointer space-y-1.5 ${
-                            isSelected
-                              ? 'bg-emerald-500/10 dark:bg-emerald-950/30 border-emerald-500 ring-1 ring-emerald-500/50 shadow-md'
-                              : 'bg-white dark:bg-[#0f172a] border-slate-200 dark:border-[#334155] hover:border-slate-400'
-                          }`}
+                    <div className="w-full h-64 rounded-xl border-2 flex items-center justify-center p-4 relative overflow-hidden transition-all duration-300"
+                      style={{ 
+                        backgroundColor: currentFacade.primaryColor,
+                        borderColor: currentFacade.frameColor
+                      }}
+                    >
+                      <div className="w-full max-w-sm aspect-video rounded-xl border-2 shadow-2xl relative flex overflow-hidden"
+                        style={{ borderColor: currentFacade.frameColor }}
+                      >
+                        <div className="w-1/3 h-full border-r-2 flex flex-col justify-between p-2"
+                          style={{ backgroundColor: currentFacade.accentColor, borderColor: currentFacade.frameColor }}
                         >
-                          <div className="flex items-center justify-between">
-                            <span className="text-xs font-bold text-[#0f172a] dark:text-white">{theme.badge}</span>
-                            <div 
-                              className="w-4 h-4 rounded-full border border-white shadow-xs" 
-                              style={{ backgroundColor: theme.primaryColor }}
-                            />
-                          </div>
-                          <p className="text-[10px] text-slate-500 dark:text-slate-400 line-clamp-2">
-                            {theme.description}
-                          </p>
-                        </button>
-                      );
-                    })}
+                          <span className="text-[8px] font-black text-white/60">ANCLA MODULAR</span>
+                        </div>
+                        <div className="w-2/3 h-full p-2 flex space-x-1.5" style={{ backgroundColor: `${currentFacade.glassTint}22` }}>
+                          <div className="flex-1 h-full rounded border border-white/20"></div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <p className="text-xs text-slate-500 dark:text-slate-400 italic">
+                      💡 {currentFacade.description}
+                    </p>
                   </div>
                 </div>
 
-                {/* Especificaciones de Acabados Interiores */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2 text-xs">
-                  <div>
-                    <label className="block text-[10px] font-extrabold uppercase text-slate-500 mb-1">
-                      Muros Interiores:
-                    </label>
-                    <select
-                      value={interiorFinish}
-                      onChange={(e) => setInteriorFinish(e.target.value)}
-                      className="w-full bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs text-[#0f172a] dark:text-white font-bold"
+                {/* Paletas de Selección */}
+                <div className="lg:col-span-5 space-y-3">
+                  <label className="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider block">
+                    Seleccionar Paleta de Fachada:
+                  </label>
+                  {Object.values(FACADE_THEMES).map((theme) => (
+                    <div
+                      key={theme.id}
+                      onClick={() => setFacadeThemeKey(theme.id)}
+                      className={`p-3.5 rounded-2xl border text-left transition-all cursor-pointer space-y-1.5 ${
+                        facadeThemeKey === theme.id
+                          ? 'border-emerald-500 bg-emerald-500/10 ring-2 ring-emerald-500/30'
+                          : 'border-slate-200 dark:border-white/5 hover:border-slate-300 bg-white dark:bg-[#1e293b]/40'
+                      }`}
                     >
-                      <option value="Paneles Termoacústicos Blanco Cálido">Paneles Termoacústicos Blanco Cálido</option>
-                      <option value="Revestimiento Textura Madera Clara">Revestimiento Textura Madera Clara</option>
-                      <option value="Acabado Mármol Calacatta">Acabado Mármol Calacatta (Zonas Húmedas)</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-[10px] font-extrabold uppercase text-slate-500 mb-1">
-                      Piso SPC (Alto Tráfico 6mm):
-                    </label>
-                    <select
-                      value={floorStyle}
-                      onChange={(e) => setFloorStyle(e.target.value)}
-                      className="w-full bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs text-[#0f172a] dark:text-white font-bold"
-                    >
-                      <option value="Roble Escandinavo SPC 6mm">Roble Escandinavo SPC 6mm (Vetas Claras)</option>
-                      <option value="Nogal Rústico Oscuro SPC 6mm">Nogal Rústico Oscuro SPC 6mm</option>
-                      <option value="Gris Cemento Microcemento SPC">Gris Cemento Microcemento SPC</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-[10px] font-extrabold uppercase text-slate-500 mb-1">
-                      Domótica & Smart Home:
-                    </label>
-                    <select
-                      value={smartHomePack}
-                      onChange={(e) => setSmartHomePack(e.target.value)}
-                      className="w-full bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs text-[#0f172a] dark:text-white font-bold"
-                    >
-                      <option value="Tuya Smart Pack (Iluminación + Clima + Cerradura Digital)">Tuya Smart Pack (Completo)</option>
-                      <option value="Estándar Tradicional">Estándar Tradicional</option>
-                      <option value="Hospitality Hotelero">Hospitality Hotelero (Keycard)</option>
-                    </select>
-                  </div>
+                      <div className="flex items-center space-x-2">
+                        <span className="w-4 h-4 rounded-full border shadow-xs" style={{ backgroundColor: theme.primaryColor }}></span>
+                        <span className="w-4 h-4 rounded-full border shadow-xs" style={{ backgroundColor: theme.accentColor }}></span>
+                        <span className="text-xs font-bold text-[#0f172a] dark:text-white">{theme.badge}</span>
+                      </div>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-tight">{theme.description}</p>
+                    </div>
+                  ))}
                 </div>
 
               </div>
-
             </div>
           )}
 
           {/* ========================================================================= */}
-          {/* PESTAÑA 3: CHINA SPEC SHEET TRILINGÜE (ES / EN / 中文) */}
+          {/* PESTAÑA 3: CHINA SPEC SHEET */}
           {/* ========================================================================= */}
           {activeTab === 'china_spec' && (
             <div className="space-y-6 animate-fade-in">
-              <div className="p-5 rounded-2xl bg-white dark:bg-[#1e293b] border border-indigo-500/30 space-y-4 shadow-sm">
-                <div className="flex items-center justify-between border-b border-slate-200 dark:border-[#334155] pb-3">
-                  <div className="flex items-center space-x-2">
-                    <Factory className="w-5 h-5 text-indigo-500" />
-                    <span className="text-xs font-black uppercase tracking-wider text-[#0f172a] dark:text-white">
-                      CHINA FACTORY TECHNICAL SPECIFICATION • 工厂制造规范
-                    </span>
+              <div className="p-6 rounded-2xl bg-white dark:bg-[#1e293b]/50 border border-slate-200 dark:border-[#334155] space-y-4">
+                <div className="flex items-center justify-between border-b dark:border-[#334155] pb-3">
+                  <div>
+                    <h3 className="text-xs font-black uppercase text-[#0f172a] dark:text-white">Especificaciones de Fabricación en Planta (China)</h3>
+                    <p className="text-[11px] text-slate-400">Certificación ISO 9001 / CE / Ensamble Robotizado de Precisión</p>
                   </div>
-                  <span className="text-[10px] font-black px-2.5 py-0.5 rounded bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/30 font-mono">
-                    REF: ANCLA-CN-{currentModel.id}
-                  </span>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-500/10 text-blue-600 font-mono">Q350 STEEL</span>
                 </div>
 
-                {/* Tabla Trilingüe de Especificaciones */}
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left text-xs border-collapse font-sans">
-                    <thead>
-                      <tr className="bg-slate-50 dark:bg-[#0f172a] text-[10px] font-black uppercase text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-[#334155]">
-                        <th className="p-3 w-1/4">Componente (Español)</th>
-                        <th className="p-3 w-1/3">International Spec (English)</th>
-                        <th className="p-3 w-5/12 font-sans">中国工厂制造标准 (Chinese)</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-100 dark:divide-[#334155]/60 text-[11px]">
-                      
-                      <tr className="hover:bg-slate-50 dark:hover:bg-slate-800/40">
-                        <td className="p-3 font-bold text-slate-800 dark:text-slate-200">1. Estructura Principal</td>
-                        <td className="p-3 text-slate-600 dark:text-slate-300 font-mono">Galvanized Steel Frame Q350 Standard</td>
-                        <td className="p-3 text-emerald-600 dark:text-emerald-400 font-medium">{currentModel.specs_zh.structure}</td>
-                      </tr>
-
-                      <tr className="hover:bg-slate-50 dark:hover:bg-slate-800/40">
-                        <td className="p-3 font-bold text-slate-800 dark:text-slate-200">2. Aislamiento Térmico</td>
-                        <td className="p-3 text-slate-600 dark:text-slate-300 font-mono">PU Sandwich Panel (λ ≤ 0.022 W/m·K)</td>
-                        <td className="p-3 text-emerald-600 dark:text-emerald-400 font-medium">{currentModel.specs_zh.insulation}</td>
-                      </tr>
-
-                      <tr className="hover:bg-slate-50 dark:hover:bg-slate-800/40">
-                        <td className="p-3 font-bold text-slate-800 dark:text-slate-200">3. Fachada Exterior</td>
-                        <td className="p-3 text-slate-600 dark:text-slate-300 font-mono">Fluorocarbon Coating / Composite Cladding</td>
-                        <td className="p-3 text-emerald-600 dark:text-emerald-400 font-medium">{currentModel.specs_zh.exterior}</td>
-                      </tr>
-
-                      <tr className="hover:bg-slate-50 dark:hover:bg-slate-800/40">
-                        <td className="p-3 font-bold text-slate-800 dark:text-slate-200">4. Ventanería & Puertas</td>
-                        <td className="p-3 text-slate-600 dark:text-slate-300 font-mono">Double Tempered Low-E 5+9A+5mm Glass</td>
-                        <td className="p-3 text-emerald-600 dark:text-emerald-400 font-medium">{currentModel.specs_zh.windows}</td>
-                      </tr>
-
-                      <tr className="hover:bg-slate-50 dark:hover:bg-slate-800/40">
-                        <td className="p-3 font-bold text-slate-800 dark:text-slate-200">5. Sistema de Pisos</td>
-                        <td className="p-3 text-slate-600 dark:text-slate-300 font-mono">High-Traffic SPC Click Flooring</td>
-                        <td className="p-3 text-emerald-600 dark:text-emerald-400 font-medium">{currentModel.specs_zh.flooring}</td>
-                      </tr>
-
-                      <tr className="hover:bg-slate-50 dark:hover:bg-slate-800/40">
-                        <td className="p-3 font-bold text-slate-800 dark:text-slate-200">6. Instalación Eléctrica</td>
-                        <td className="p-3 text-slate-600 dark:text-slate-300 font-mono">Dual 110V/220V RETIE Standard Certified</td>
-                        <td className="p-3 text-emerald-600 dark:text-emerald-400 font-medium">{currentModel.specs_zh.electrical}</td>
-                      </tr>
-
-                      <tr className="hover:bg-slate-50 dark:hover:bg-slate-800/40">
-                        <td className="p-3 font-bold text-slate-800 dark:text-slate-200">7. Plomería & Drenaje</td>
-                        <td className="p-3 text-slate-600 dark:text-slate-300 font-mono">PEX High-Pressure Hot/Cold Water System</td>
-                        <td className="p-3 text-emerald-600 dark:text-emerald-400 font-medium">{currentModel.specs_zh.plumbing}</td>
-                      </tr>
-
-                      <tr className="hover:bg-slate-50 dark:hover:bg-slate-800/40">
-                        <td className="p-3 font-bold text-slate-800 dark:text-slate-200">8. Cubicaje de Embarque</td>
-                        <td className="p-3 text-slate-600 dark:text-slate-300 font-mono">40ft High Cube Container (40HC)</td>
-                        <td className="p-3 text-emerald-600 dark:text-emerald-400 font-medium">{currentModel.specs_zh.shipping}</td>
-                      </tr>
-
-                    </tbody>
-                  </table>
-                </div>
-
-                <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-[#334155] flex items-center justify-between text-xs">
-                  <span className="text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
-                    <ShieldCheck className="w-4 h-4 text-emerald-500" />
-                    <span>Control de Calidad en Fábrica: 100% de pruebas de estanqueidad y soldadura certificadas.</span>
-                  </span>
-                  <span className="text-xs font-mono font-bold text-slate-700 dark:text-slate-300">
-                    Contenedor: {currentModel.container_capacity}
-                  </span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                  {Object.entries(currentModel.specs_zh || {}).map(([key, val]) => (
+                    <div key={key} className="p-3 rounded-xl bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-white/5 space-y-1">
+                      <span className="text-[10px] font-bold uppercase text-emerald-600 dark:text-emerald-400">{key}</span>
+                      <p className="font-mono text-[11px] text-slate-700 dark:text-slate-300">{val}</p>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -820,7 +687,7 @@ export default function AnclaTechnicalDossier({ isOpen, onClose, contact, onSave
         <div className="px-6 py-4 border-t border-slate-200 dark:border-[#334155] bg-[#f1f5f9] dark:bg-[#0b0f19] flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
           <div className="text-xs text-slate-500 dark:text-slate-400">
             <span>Propuesta Activa: </span>
-            <strong className="text-[#0f172a] dark:text-white">{currentModel.name} ({currentFacade.badge})</strong> • Total: <strong className="text-emerald-600 dark:text-emerald-400 font-mono">${Math.round(calculations.totalUSD).toLocaleString()} USD</strong>
+            <strong className="text-[#0f172a] dark:text-white">{currentModel.name} ({currentFacade.badge})</strong> • Total: <strong className="text-emerald-600 dark:text-emerald-400 font-mono">{formatCOP(calculations.totalCOP)} COP</strong>
           </div>
 
           <div className="flex items-center space-x-3">
@@ -839,9 +706,10 @@ export default function AnclaTechnicalDossier({ isOpen, onClose, contact, onSave
                   onSaveDossier({
                     modelId: currentModel.id,
                     modelName: currentModel.name,
-                    totalUSD: calculations.totalUSD,
-                    deposit60: calculations.deposit60,
-                    balance40: calculations.balance40,
+                    totalCOP: calculations.totalCOP,
+                    totalUSD: calculations.totalCOP,
+                    deposit60: calculations.deposit50,
+                    balance40: calculations.balance50,
                     exteriorColor: currentFacade.name,
                     interiorFinish,
                     floorStyle

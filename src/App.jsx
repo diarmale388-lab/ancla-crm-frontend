@@ -12,6 +12,7 @@ import AnalyticsView from './components/analytics/AnalyticsView';
 import BroadcastView from './components/broadcast/BroadcastView';
 import { AuditLogsView } from './components/admin/AuditLogsView';
 import { ShowroomDashboard } from './components/showroom/ShowroomDashboard';
+import ProposalPortal from './components/dossier/ProposalPortal';
 import { Bot, Mail, Lock, AlertCircle, Sparkles, User, CheckCircle2, Copy, Check } from 'lucide-react';
 
 function App() {
@@ -136,6 +137,18 @@ function App() {
 
   if (isConfirmados) {
     return <ShowroomDashboard />;
+  }
+
+  const isPropuesta = 
+    window.location.pathname === '/propuesta' || 
+    window.location.search.includes('page=propuesta') || 
+    window.location.search.includes('ref=') ||
+    window.location.hash === '#/propuesta' || 
+    window.location.hash.startsWith('#propuesta') ||
+    window.location.hash.startsWith('#/propuesta');
+
+  if (isPropuesta) {
+    return <ProposalPortal />;
   }
 
   if (!isAuthenticated) {
