@@ -851,7 +851,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                   {[
                     { key: 'cedula', label: 'Documento Identidad (Cédula/RUT)', icon: FileText, color: 'text-blue-500', url: docCedulaUrl },
                     { key: 'escritura', label: 'Escrituras / Certificado Lote', icon: FileText, color: 'text-purple-500', url: docEscrituraUrl },
-                    { key: 'comprobante', label: 'Comprobante Anticipo 60%', icon: FileText, color: 'text-emerald-500', url: docComprobanteUrl },
+                    { key: 'comprobante', label: 'Comprobante Anticipo 50%', icon: FileText, color: 'text-emerald-500', url: docComprobanteUrl },
                     { key: 'contrato', label: 'Contrato de Compraventa ANCLA', icon: FileText, color: 'text-amber-500', url: docContratoUrl }
                   ].map((doc) => {
                     const DocIcon = doc.icon;
@@ -1009,7 +1009,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
               if (dossierData.modelName) setInterestProduct(dossierData.modelName);
               if (dossierData.totalUSD) setQuotedValue(dossierData.totalUSD);
               if (dossierData.exteriorColor) {
-                setProposalNotes(`Modelo: ${dossierData.modelName} | Total: $${Math.round(dossierData.totalUSD).toLocaleString()} USD (60% Anticipo: $${Math.round(dossierData.deposit60).toLocaleString()} USD / 40% Balanza: $${Math.round(dossierData.balance40).toLocaleString()} USD) | Acabados: ${dossierData.exteriorColor}`);
+                setProposalNotes(`Modelo: ${dossierData.modelName} | Total: $${Math.round(dossierData.totalUSD).toLocaleString()} USD (50% Anticipo: $${Math.round(dossierData.deposit50 || dossierData.deposit60).toLocaleString()} USD / 50% Balanza: $${Math.round(dossierData.balance50 || dossierData.balance40).toLocaleString()} USD) | Acabados: ${dossierData.exteriorColor}`);
               }
             }}
           />

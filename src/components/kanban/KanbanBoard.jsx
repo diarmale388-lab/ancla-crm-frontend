@@ -1169,7 +1169,7 @@ export const KanbanBoard = () => {
               await updateLeadDetails(selectedLeadForDossier.id, {
                 interest_product: dossierData.modelName,
                 quoted_value: dossierData.totalUSD,
-                proposal_notes: `Dossier: ${dossierData.modelName} ($${Math.round(dossierData.totalUSD).toLocaleString()} USD | Anticipo: $${Math.round(dossierData.deposit60).toLocaleString()} USD)`
+                proposal_notes: `Dossier: ${dossierData.modelName} ($${Math.round(dossierData.totalUSD).toLocaleString()} USD | 50% Anticipo: $${Math.round(dossierData.deposit50 || dossierData.deposit60).toLocaleString()} USD)`
               });
               
               // Si venía de un Smart Drag Guard a Propuesta Enviada, completar el movimiento

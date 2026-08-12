@@ -192,10 +192,8 @@ export default function AnclaTechnicalDossier({ isOpen, onClose, contact, onSave
     const subtotal = base + deckTotal + solarTotal + acTotal + floorTotal + freightTotal;
     const safeDiscount = Number(discountPercent) || 0;
     const discountAmount = subtotal * (safeDiscount / 100);
-    const totalUSD = Math.max(0, subtotal - discountAmount);
-
-    const deposit60 = totalUSD * 0.60;
-    const balance40 = totalUSD * 0.40;
+    const deposit50 = totalUSD * 0.50;
+    const balance50 = totalUSD * 0.50;
 
     return {
       base,
@@ -207,8 +205,10 @@ export default function AnclaTechnicalDossier({ isOpen, onClose, contact, onSave
       subtotal,
       discountAmount,
       totalUSD,
-      deposit60,
-      balance40
+      deposit50,
+      balance50,
+      deposit60: deposit50, // Backward compatibility
+      balance40: balance50
     };
   }, [currentModel, includeDeck, deckArea, includeSolar, acUnits, includeSpcFloor, freightDistanceKm, discountPercent]);
 
@@ -549,18 +549,18 @@ export default function AnclaTechnicalDossier({ isOpen, onClose, contact, onSave
                     {/* Hitos de Pago 60 / 40 */}
                     <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-[#0b0f19] border border-slate-200 dark:border-[#334155] space-y-2 text-xs">
                       <span className="text-[10px] font-black uppercase text-slate-500 dark:text-slate-400 tracking-wider block">
-                        Hitos de Pago de Fabricación:
+                        Hitos de Pago de Fabricación (Regla 50/50):
                       </span>
                       <div className="flex justify-between font-mono">
-                        <span className="text-slate-600 dark:text-slate-300">60% Anticipo (Producción):</span>
+                        <span className="text-slate-600 dark:text-slate-300">50% Anticipo de Fabricación:</span>
                         <span className="font-bold text-amber-600 dark:text-amber-400 tabular-nums">
-                          ${Math.round(calculations.deposit60).toLocaleString()} USD
+                          ${Math.round(calculations.deposit50).toLocaleString()} USD
                         </span>
                       </div>
                       <div className="flex justify-between font-mono">
-                        <span className="text-slate-600 dark:text-slate-300">40% Balanza (Contra Entrega):</span>
+                        <span className="text-slate-600 dark:text-slate-300">50% Balanza Final (Contra Entrega):</span>
                         <span className="font-bold text-teal-600 dark:text-teal-400 tabular-nums">
-                          ${Math.round(calculations.balance40).toLocaleString()} USD
+                          ${Math.round(calculations.balance50).toLocaleString()} USD
                         </span>
                       </div>
                     </div>

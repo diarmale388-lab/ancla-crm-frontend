@@ -6,6 +6,7 @@ const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
 const distDir = path.join(__dirname, 'dist');
 const rootDir = __dirname;
+const publicDir = path.join(__dirname, 'public');
 
 // 1. Sincronizar dist/index.source.html a dist/index.html y root index.html
 let htmlContent = '';
@@ -28,9 +29,31 @@ if (fs.existsSync(distAssets)) {
   fs.cpSync(distAssets, rootAssets, { recursive: true });
 }
 
-// 3. Sincronizar .htaccess si existe
-if (fs.existsSync(path.join(distDir, '.htaccess'))) {
-  fs.copyFileSync(path.join(distDir, '.htaccess'), path.join(rootDir, '.htaccess'));
-}
+// 3. Sincronizar archivos estáticos y PWA de public/ y dist/ a la raíz
+const pwaFiles = [
+  'manifest.webmanifest',
+  'manifest.json',
+  'sw.js',
+  'icon-192x192.png',
+  'icon-512x512.png',
+  'apple-touch-icon-180x180.png',
+  'apple-touch-icon.png',
+  'favicon.png',
+  'favicon.ico',
+  'ancla_medallion.png',
+  '.htaccess'
+];
 
-console.log('✅ Sincronización exitosa para Hostinger LiteSpeed (index.html y assets actualizados)');
+pwaFiles.forEach((file) => {
+  const fromPublic = path.join(publicDir, file);
+  const fromDist = path.join(distDir, file);
+  const toRoot = path.join(rootDir, file);
+
+  if (fs.existsSync(fromDist)) {
+    fs.copyFileSync(fromDist, toRoot);
+  } else if (fs.existsSync(fromPublic)) {
+    fs.copyFileSync(fromPublic, toRoot);
+  }
+});
+
+console.log('✅ Sincronización completa de PWA & Hostinger LiteSpeed (index.html, assets, manifest e íconos actualizados)');

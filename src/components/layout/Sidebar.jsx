@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useChatStore } from '../../store/useChatStore';
 import { useThemeStore } from '../../store/useThemeStore';
@@ -14,13 +14,53 @@ import {
   BarChart3,
   Volume2,
   Terminal,
-  Building
+  Building,
+  Download,
+  Smartphone,
+  X,
+  Share
 } from 'lucide-react';
 
 export const Sidebar = ({ activeTab, setActiveTab }) => {
   const { user, logout } = useAuthStore();
   const { disconnectWebSocket } = useChatStore();
   const { theme, toggleTheme } = useThemeStore();
+
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [isInstallable, setIsInstallable] = useState(false);
+  const [showIosPrompt, setShowIosPrompt] = useState(false);
+
+  useEffect(() => {
+    const handleBeforeInstall = (e) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+      setIsInstallable(true);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstall);
+
+    // Detect iOS safari
+    const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
+    if (isIos && !isStandalone) {
+      setIsInstallable(true);
+    }
+
+    return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstall);
+  }, []);
+
+  const handleInstallClick = async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        setIsInstallable(false);
+        setDeferredPrompt(null);
+      }
+    } else {
+      setShowIosPrompt(true);
+    }
+  };
 
   const handleLogout = () => {
     disconnectWebSocket();
@@ -199,6 +239,20 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
           </button>
         </div>
 
+        {/* Botón Instalar App PWA */}
+        {isInstallable && (
+          <button
+            onClick={handleInstallClick}
+            className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white flex items-center justify-center transition-all shadow-md active:scale-95 cursor-pointer relative group"
+            title="Instalar ANCLA CRM en tu dispositivo (App)"
+          >
+            <Download className="w-5 h-5 animate-pulse" />
+            <div className="absolute left-14 bottom-0 bg-[#111b27] border border-emerald-500/40 text-emerald-300 text-[10px] py-1.5 px-3 rounded-lg opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 shadow-xl font-bold">
+              Instalar App ANCLA CRM
+            </div>
+          </button>
+        )}
+
         {/* Botón Toggler Día/Noche */}
         <button
           onClick={toggleTheme}
@@ -226,6 +280,45 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
           </div>
         </div>
       </div>
+
+      {/* Modal Guía iOS para Instalar PWA */}
+      {showIosPrompt && (
+        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in font-sans">
+          <div className="bg-[#111b27] border border-white/10 rounded-3xl p-6 max-w-sm w-full shadow-2xl space-y-4 text-white text-center">
+            <div className="flex justify-between items-center border-b border-white/10 pb-3">
+              <div className="flex items-center space-x-2">
+                <Smartphone className="w-5 h-5 text-emerald-400" />
+                <h3 className="text-xs font-black uppercase tracking-wider">Instalar en iPhone / iPad</h3>
+              </div>
+              <button onClick={() => setShowIosPrompt(false)} className="text-slate-400 hover:text-white">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <p className="text-xs text-slate-300 leading-relaxed">
+              Para instalar la app oficial en iOS y ejecutar a pantalla completa:
+            </p>
+
+            <div className="p-3.5 bg-black/40 rounded-2xl border border-white/5 space-y-2 text-left text-xs">
+              <div className="flex items-center space-x-2">
+                <span className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold flex items-center justify-center text-[10px]">1</span>
+                <span>Toca el botón <Share className="w-4 h-4 inline text-blue-400 mx-1" /> <strong>Compartir</strong> en Safari.</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <span className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold flex items-center justify-center text-[10px]">2</span>
+                <span>Desplázate hacia abajo y pulsa <strong>"Agregar al inicio"</strong>.</span>
+              </div>
+            </div>
+
+            <button
+              onClick={() => setShowIosPrompt(false)}
+              className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-black rounded-xl text-xs transition-all shadow-md"
+            >
+              Entendido
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

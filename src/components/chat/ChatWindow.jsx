@@ -219,7 +219,7 @@ export const ChatWindow = () => {
   const [proposalFreightCity, setProposalFreightCity] = useState('');
   const [proposalFreightCost, setProposalFreightCost] = useState(800);
   const [proposalDiscount, setProposalDiscount] = useState(5);
-  const [proposalPaymentTerms, setProposalPaymentTerms] = useState('60% Anticipo, 40% contra entrega');
+  const [proposalPaymentTerms, setProposalPaymentTerms] = useState('50% Anticipo de Fabricación, 50% Balanza Final');
   const [proposalNotes, setProposalNotes] = useState('Garantía estructural de 5 años. Transporte e instalación incluidos.');
 
   const [proposalLoading, setProposalLoading] = useState(false);
@@ -265,7 +265,7 @@ export const ChatWindow = () => {
           freight_city: proposalFreightCity || 'Armenia / Eje Cafetero',
           freight_cost: parseFloat(proposalFreightCost) || 800,
           discount_pct: parseFloat(proposalDiscount) || 0,
-          payment_terms: proposalPaymentTerms || '60% Anticipo / 40% Balanza',
+          payment_terms: proposalPaymentTerms || '50% Anticipo de Fabricación / 50% Balanza Final',
           custom_notes: proposalNotes
         })
       });
@@ -2057,7 +2057,7 @@ export const ChatWindow = () => {
             useChatStore.getState().updateContactDetails(activeContact.id, {
               interest_product: dossierData.modelName,
               quoted_value: dossierData.totalUSD,
-              proposal_notes: `Dossier: ${dossierData.modelName} ($${Math.round(dossierData.totalUSD).toLocaleString()} USD | 60% Anticipo: $${Math.round(dossierData.deposit60).toLocaleString()} USD / 40% Balanza: $${Math.round(dossierData.balance40).toLocaleString()} USD)`
+              proposal_notes: `Dossier: ${dossierData.modelName} ($${Math.round(dossierData.totalUSD).toLocaleString()} USD | 50% Anticipo: $${Math.round(dossierData.deposit50 || dossierData.deposit60).toLocaleString()} USD / 50% Balanza: $${Math.round(dossierData.balance50 || dossierData.balance40).toLocaleString()} USD)`
             });
           }}
         />
