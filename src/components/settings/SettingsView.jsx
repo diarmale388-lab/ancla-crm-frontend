@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSettingsStore } from '../../store/useSettingsStore';
 import { useAuthStore } from '../../store/useAuthStore';
-import { Bot, Key, Check, AlertCircle, Save, Upload, Trash2, FileText, Image as ImageIcon, Video, Plus, Sparkles, BookOpen, Mail, Calendar, Link, Unlink, UserPlus } from 'lucide-react';
+import { Bot, Key, Check, AlertCircle, Save, Upload, Trash2, FileText, Image as ImageIcon, Video, Plus, Sparkles, BookOpen, Mail, Calendar, Link, Unlink, UserPlus, Smartphone, Download, Share, X } from 'lucide-react';
 
 export const SettingsView = () => {
   const { 
@@ -60,6 +60,19 @@ export const SettingsView = () => {
   const [inviting, setInviting] = useState(false);
   const [inviteError, setInviteError] = useState('');
   const [inviteSuccess, setInviteSuccess] = useState('');
+  const [showPwaModal, setShowPwaModal] = useState(false);
+
+  const handleInstallPwa = async () => {
+    if (window.__deferredPrompt) {
+      window.__deferredPrompt.prompt();
+      const { outcome } = await window.__deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        window.__deferredPrompt = null;
+      }
+    } else {
+      setShowPwaModal(true);
+    }
+  };
 
   const handleGenerateInvitation = async (e) => {
     if (e) e.preventDefault();
@@ -315,6 +328,34 @@ export const SettingsView = () => {
       {/* Cuerpo */}
       <div className="flex-1 overflow-y-auto p-6">
         <div className="max-w-3xl mx-auto space-y-6">
+          
+          {/* Tarjeta de Instalación PWA en Dispositivo Móvil / Escritorio */}
+          <div className="bg-gradient-to-r from-emerald-600/15 via-teal-500/10 to-blue-500/10 border border-emerald-500/30 p-5 rounded-3xl shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex items-center space-x-3.5">
+              <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center flex-shrink-0 shadow-inner">
+                <Smartphone className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="text-sm font-black text-slate-800 dark:text-white flex items-center gap-2">
+                  <span>Instalar App en tu Dispositivo</span>
+                  <span className="text-[10px] bg-emerald-500 text-white font-mono px-2 py-0.2 rounded-full font-bold">PWA</span>
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 leading-relaxed">
+                  Ejecuta el CRM a pantalla completa como una App nativa en tu iPhone, iPad, Android, Windows o Mac.
+                </p>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleInstallPwa}
+              className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-black text-xs flex items-center justify-center space-x-2 transition-all shadow-md cursor-pointer shrink-0"
+            >
+              <Download className="w-4 h-4" />
+              <span>📱 Instalar App en Inicio</span>
+            </button>
+          </div>
+
           <form onSubmit={handleSubmit} className="space-y-6">
             
             {/* Tarjeta de entrenamiento de la IA */}
@@ -1168,14 +1209,58 @@ export const SettingsView = () => {
                   >
                     Recortar y Guardar
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => setShowCropper(false)}
-                    className="py-2.5 px-4 bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-700 dark:text-slate-350 font-bold rounded-xl text-xs transition-all active:scale-[0.98]"
-                  >
-                    Cancelar
+                    <button
+                      type="button"
+                      onClick={() => setShowCropper(false)}
+                      className="py-2.5 px-4 bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-700 dark:text-slate-350 font-bold rounded-xl text-xs transition-all active:scale-[0.98]"
+                    >
+                      Cancelar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+          {/* Modal Guía para Instalar PWA Manualmente */}
+          {showPwaModal && (
+            <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in font-sans">
+              <div className="bg-[#111b27] border border-white/10 rounded-3xl p-6 max-w-sm w-full shadow-2xl space-y-4 text-white text-center">
+                <div className="flex justify-between items-center border-b border-white/10 pb-3">
+                  <div className="flex items-center space-x-2">
+                    <Smartphone className="w-5 h-5 text-emerald-400" />
+                    <h3 className="text-xs font-black uppercase tracking-wider">Instalar App en tu Celular</h3>
+                  </div>
+                  <button onClick={() => setShowPwaModal(false)} className="text-slate-400 hover:text-white cursor-pointer">
+                    <X className="w-5 h-5" />
                   </button>
                 </div>
+
+                <p className="text-xs text-slate-300 leading-relaxed">
+                  Para instalar la app oficial en tu dispositivo y usarla a pantalla completa:
+                </p>
+
+                <div className="p-3.5 bg-black/40 rounded-2xl border border-white/5 space-y-3 text-left text-xs">
+                  <div>
+                    <span className="font-bold text-emerald-400 block mb-1">📱 En iPhone / iPad (Safari):</span>
+                    <p className="text-slate-300 text-[11px]">
+                      Toca el botón <Share className="w-3.5 h-3.5 inline text-blue-400 mx-1" /> <strong>Compartir</strong> y luego pulsa <strong>"Agregar al inicio"</strong>.
+                    </p>
+                  </div>
+                  <div className="border-t border-white/5 pt-2">
+                    <span className="font-bold text-emerald-400 block mb-1">🤖 En Android / Chrome:</span>
+                    <p className="text-slate-300 text-[11px]">
+                      Toca los 3 puntos (⋮) en la esquina superior y selecciona <strong>"Instalar aplicación"</strong> o <strong>"Agregar a la pantalla principal"</strong>.
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setShowPwaModal(false)}
+                  className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-black rounded-xl text-xs transition-all shadow-md cursor-pointer"
+                >
+                  Entendido
+                </button>
               </div>
             </div>
           )}

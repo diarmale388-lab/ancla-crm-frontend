@@ -195,15 +195,18 @@ export const ChatWindow = () => {
     }
   };
 
-  // Control de visibilidad del panel lateral derecho (responsivo)
-  const [showRightSidebar, setShowRightSidebar] = useState(true);
+  // Control de visibilidad del panel lateral derecho (100% oculto por defecto en móviles y tablets)
+  const [showRightSidebar, setShowRightSidebar] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth >= 1280;
+    }
+    return false;
+  });
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth < 1024) {
+      if (window.innerWidth < 1280) {
         setShowRightSidebar(false);
-      } else {
-        setShowRightSidebar(true);
       }
     };
     window.addEventListener('resize', handleResize);
@@ -1251,11 +1254,19 @@ export const ChatWindow = () => {
         </div>
       </div>
 
-      {/* 3/3: Panel Lateral Derecho - Ficha de Contacto & Herramientas (320px) */}
+      {/* 3/3: Panel Lateral Derecho - Ficha de Contacto & Herramientas */}
+      {showRightSidebar && (
+        <div 
+          onClick={() => setShowRightSidebar(false)}
+          className="xl:hidden fixed inset-0 bg-black/60 backdrop-blur-xs z-40 animate-fade-in"
+        />
+      )}
       <div 
-        className={`flex flex-col border-l border-slate-200 dark:border-white/5 bg-white dark:bg-slate-900 transition-all ${
-          showRightSidebar ? 'flex animate-fade-in' : 'hidden'
-        } lg:relative absolute right-0 top-0 w-80 sm:w-88 h-full z-20 shadow-2xl lg:shadow-none`}
+        className={`flex-col border-l border-slate-200 dark:border-white/5 bg-white dark:bg-slate-900 transition-all ${
+          showRightSidebar 
+            ? 'flex fixed xl:relative right-0 top-0 bottom-0 w-full sm:w-88 max-w-[92vw] h-full z-50 shadow-2xl xl:shadow-none animate-fade-in' 
+            : 'hidden'
+        }`}
       >
         {/* Header Fijo Sticky (Avatar, Nombre, Matriz 1-Clic y 3 Pestañas Superiores) */}
         <div className="p-4 border-b border-slate-200 dark:border-white/5 bg-slate-50/80 dark:bg-slate-900/90 backdrop-blur-md sticky top-0 z-10 space-y-3">
@@ -1267,10 +1278,10 @@ export const ChatWindow = () => {
             <button
               type="button"
               onClick={() => setShowRightSidebar(false)}
-              className="xl:hidden p-1.5 rounded-lg hover:bg-slate-200 dark:hover:bg-white/5 text-slate-400 hover:text-slate-600 cursor-pointer transition-all"
+              className="p-1.5 rounded-lg hover:bg-slate-200 dark:hover:bg-white/5 text-slate-400 hover:text-slate-600 dark:hover:text-white cursor-pointer transition-all"
               title="Cerrar Detalles"
             >
-              <ArrowLeft className="w-3.5 h-3.5 rotate-180" />
+              <X className="w-4 h-4" />
             </button>
           </div>
 

@@ -1,12 +1,14 @@
-// ANCLA Special Projects - Service Worker PWA
-const CACHE_NAME = 'ancla-crm-cache-v1';
+// ANCLA Special Projects - Service Worker PWA v1.0.1
+const CACHE_NAME = 'ancla-crm-cache-v1.0.1';
 const STATIC_ASSETS = [
   '/',
   '/manifest.webmanifest',
   '/icon-192x192.png',
   '/icon-512x512.png',
   '/apple-touch-icon-180x180.png',
-  '/favicon.png'
+  '/apple-touch-icon.png',
+  '/favicon.png',
+  '/favicon.ico'
 ];
 
 self.addEventListener('install', (event) => {
@@ -24,6 +26,7 @@ self.addEventListener('activate', (event) => {
       return Promise.all(
         keys.map((key) => {
           if (key !== CACHE_NAME) {
+            console.log('🧹 Eliminando caché obsoleta:', key);
             return caches.delete(key);
           }
         })
@@ -44,8 +47,8 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     fetch(event.request)
       .then((response) => {
-        // Clone and cache successful GET responses for assets
-        if (response.status === 200 && event.request.method === 'GET') {
+        // Cache successful GET responses for static assets
+        if (response.status === 200 && event.request.method === 'GET' && (url.pathname.endsWith('.png') || url.pathname.endsWith('.svg') || url.pathname.endsWith('.webmanifest'))) {
           const respClone = response.clone();
           caches.open(CACHE_NAME).then((cache) => {
             cache.put(event.request, respClone);

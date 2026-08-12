@@ -34,6 +34,7 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
     const handleBeforeInstall = (e) => {
       e.preventDefault();
       setDeferredPrompt(e);
+      window.__deferredPrompt = e;
       setIsInstallable(true);
     };
 
@@ -326,8 +327,8 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
       </div>
 
       {/* Barra de Navegación Inferior Móvil (Mobile BottomNav WhatsApp-Style) */}
-      <div className={`md:hidden fixed bottom-0 left-0 right-0 h-16 bg-[#ffffff] dark:bg-[#111b21] border-t border-slate-200 dark:border-[#202c33] z-40 flex items-center justify-around px-2 shadow-2xl transition-transform duration-200 select-none ${
-        activeTab === 'chats' && selectedContactId ? 'translate-y-full pointer-events-none' : 'translate-y-0'
+      <div className={`md:hidden fixed bottom-0 left-0 right-0 h-16 bg-[#ffffff] dark:bg-[#111b21] border-t border-slate-200 dark:border-[#202c33] z-40 items-center justify-around px-2 shadow-2xl transition-all duration-200 select-none ${
+        activeTab === 'chats' && selectedContactId ? 'hidden' : 'flex'
       }`}>
         {/* Pestaña 1: 💬 Chats */}
         <button
