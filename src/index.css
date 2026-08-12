@@ -15,6 +15,13 @@
     width: 100%;
   }
 
+  input, textarea, select, [contenteditable="true"], .select-text, code, pre {
+    -webkit-user-select: text !important;
+    -moz-user-select: text !important;
+    -ms-user-select: text !important;
+    user-select: text !important;
+  }
+
   /* Custom scrollbars */
   ::-webkit-scrollbar {
     width: 6px;

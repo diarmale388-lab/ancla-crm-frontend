@@ -12,7 +12,7 @@ import AnalyticsView from './components/analytics/AnalyticsView';
 import BroadcastView from './components/broadcast/BroadcastView';
 import { AuditLogsView } from './components/admin/AuditLogsView';
 import { ShowroomDashboard } from './components/showroom/ShowroomDashboard';
-import { Bot, Mail, Lock, AlertCircle, Sparkles, User, CheckCircle2 } from 'lucide-react';
+import { Bot, Mail, Lock, AlertCircle, Sparkles, User, CheckCircle2, Copy, Check } from 'lucide-react';
 
 function App() {
   const { isAuthenticated, user, login, loading, error, checkAuth } = useAuthStore();
@@ -253,9 +253,59 @@ function App() {
               <h1 className="text-2xl font-bold text-slate-800 dark:text-white dark:bg-gradient-to-r dark:from-white dark:to-slate-400 dark:bg-clip-text dark:text-transparent">
                 Antigravity CRM
               </h1>
-              <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Ingresa tus credenciales para continuar</p>
-              <div className="mt-2.5 p-2 px-3.5 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-[11px] font-semibold text-emerald-700 dark:text-emerald-350">
-                🔑 Acceso Admin: <span className="font-bold">admin@crm.com</span> | Pass: <span className="font-bold">adminpassword</span>
+              {/* ⚡ Autocompletar Credenciales y Copiado en 1-Clic */}
+              <div className="mt-4 w-full p-3.5 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl flex flex-col space-y-2.5 text-xs text-left">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-emerald-800 dark:text-emerald-300 flex items-center gap-1.5">
+                    <span>🔑</span>
+                    <span>Acceso Rápido Administrador</span>
+                  </span>
+                  <span className="text-[10px] bg-emerald-600 text-white font-mono px-2 py-0.5 rounded-full font-bold">Oficial</span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11.5px] font-mono">
+                  <div className="p-2 bg-white dark:bg-dark-800 rounded-xl border border-slate-200 dark:border-white/10 flex items-center justify-between">
+                    <span className="truncate select-all text-slate-800 dark:text-slate-100 font-semibold">admin@crm.com</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setEmail('admin@crm.com');
+                        navigator.clipboard?.writeText('admin@crm.com');
+                      }}
+                      className="text-slate-400 hover:text-emerald-500 ml-1.5 p-1 rounded hover:bg-slate-100 dark:hover:bg-white/5 cursor-pointer"
+                      title="Copiar y Llenar Email"
+                    >
+                      <Copy className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+
+                  <div className="p-2 bg-white dark:bg-dark-800 rounded-xl border border-slate-200 dark:border-white/10 flex items-center justify-between">
+                    <span className="truncate select-all text-slate-800 dark:text-slate-100 font-semibold">adminpassword</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setPassword('adminpassword');
+                        navigator.clipboard?.writeText('adminpassword');
+                      }}
+                      className="text-slate-400 hover:text-emerald-500 ml-1.5 p-1 rounded hover:bg-slate-100 dark:hover:bg-white/5 cursor-pointer"
+                      title="Copiar y Llenar Contraseña"
+                    >
+                      <Copy className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEmail('admin@crm.com');
+                    setPassword('adminpassword');
+                  }}
+                  className="w-full py-2 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-black rounded-xl text-xs flex items-center justify-center space-x-1.5 shadow-sm transition-all cursor-pointer"
+                >
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>⚡ 1-Clic: Autocompletar Credenciales</span>
+                </button>
               </div>
             </div>
 
