@@ -73,7 +73,7 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
   return (
     <>
       {/* Desktop Vertical Sidebar (>= md) */}
-      <div className="w-[64px] h-full bg-[#f0f2f5] dark:bg-[#111b21] border-r border-slate-200 dark:border-[#202c33] hidden md:flex flex-col justify-between items-center py-4 flex-shrink-0 z-35 select-none transition-colors duration-300">
+      <div className="desktop-sidebar w-[64px] h-full bg-[#f0f2f5] dark:bg-[#111b21] border-r border-slate-200 dark:border-[#202c33] hidden md:flex flex-col justify-between items-center py-4 flex-shrink-0 z-35 select-none transition-colors duration-300">
       
       {/* Sección Superior de Iconos */}
       <div className="flex flex-col items-center space-y-5 w-full">
@@ -327,7 +327,7 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
       </div>
 
       {/* Barra de Navegación Inferior Móvil (Mobile BottomNav WhatsApp-Style) */}
-      <div className={`md:hidden fixed bottom-0 left-0 right-0 h-16 bg-[#ffffff] dark:bg-[#111b21] border-t border-slate-200 dark:border-[#202c33] z-40 items-center justify-around px-2 shadow-2xl transition-all duration-200 select-none ${
+      <div className={`mobile-bottom-nav md:hidden fixed bottom-0 left-0 right-0 h-16 bg-[#ffffff] dark:bg-[#111b21] border-t border-slate-200 dark:border-[#202c33] z-40 items-center justify-around px-2 shadow-2xl transition-all duration-200 select-none ${
         activeTab === 'chats' && selectedContactId ? 'hidden' : 'flex'
       }`}>
         {/* Pestaña 1: 💬 Chats */}

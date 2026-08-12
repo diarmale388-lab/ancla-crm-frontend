@@ -1262,14 +1262,14 @@ export const ChatWindow = () => {
         />
       )}
       <div 
-        className={`flex-col border-l border-slate-200 dark:border-white/5 bg-white dark:bg-slate-900 transition-all ${
+        className={`right-sidebar-panel flex-col border-l border-slate-200 dark:border-white/5 bg-white dark:bg-slate-900 transition-all h-full max-h-screen overflow-hidden ${
           showRightSidebar 
-            ? 'flex fixed xl:relative right-0 top-0 bottom-0 w-full sm:w-88 max-w-[92vw] h-full z-50 shadow-2xl xl:shadow-none animate-fade-in' 
+            ? 'flex fixed xl:relative right-0 top-0 bottom-0 w-full sm:w-88 max-w-[92vw] xl:max-w-none h-full z-50 shadow-2xl xl:shadow-none animate-fade-in' 
             : 'hidden'
         }`}
       >
         {/* Header Fijo Sticky (Avatar, Nombre, Matriz 1-Clic y 3 Pestañas Superiores) */}
-        <div className="p-4 border-b border-slate-200 dark:border-white/5 bg-slate-50/80 dark:bg-slate-900/90 backdrop-blur-md sticky top-0 z-10 space-y-3">
+        <div className="p-4 border-b border-slate-200 dark:border-white/5 bg-slate-50/80 dark:bg-slate-900/90 backdrop-blur-md sticky top-0 z-10 space-y-3 flex-shrink-0">
           <div className="flex items-center justify-between">
             <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center space-x-1.5">
               <User className="w-4 h-4 text-emerald-500" />

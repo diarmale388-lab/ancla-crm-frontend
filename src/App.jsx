@@ -115,6 +115,13 @@ function App() {
     }
   }, [isAuthenticated, user]);
 
+  // 3. Sincronizar clase móvil has-active-chat para WhatsApp nativo en celular
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      document.body.classList.toggle('has-active-chat', !!(activeTab === 'chats' && selectedContactId));
+    }
+  }, [activeTab, selectedContactId]);
+
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     if (!email || !password) return;
@@ -328,14 +335,14 @@ function App() {
       {/* Panel de Contenido Principal */}
       <div className={`flex-1 flex h-full overflow-hidden ${activeTab === 'chats' && selectedContactId ? 'pb-0' : 'pb-16 md:pb-0'}`}>
         {activeTab === 'chats' && (
-          <div className="flex-1 flex h-full overflow-hidden relative">
+          <div className="flex-1 flex h-full overflow-hidden relative chat-main-container">
             {/* Lista de Chats (Panel Izquierdo - Full width en móvil cuando no hay chat seleccionado) */}
-            <div className={`${selectedContactId ? 'hidden md:block' : 'block'} w-full md:w-[28%] lg:w-[24%] min-w-0 md:min-w-[280px] md:max-w-[360px] flex-shrink-0 border-r border-slate-200 dark:border-white/5 h-full overflow-hidden`}>
+            <div className={`contacts-container ${selectedContactId ? 'hidden md:block' : 'block'} w-full md:w-[28%] lg:w-[24%] min-w-0 md:min-w-[280px] md:max-w-[360px] flex-shrink-0 border-r border-slate-200 dark:border-white/5 h-full overflow-hidden`}>
               <ContactList />
             </div>
             
             {/* Ventana de Conversación (Panel Derecho - Full screen en móvil cuando hay chat seleccionado) */}
-            <div className={`${selectedContactId ? 'block' : 'hidden md:block'} flex-1 h-full overflow-hidden`}>
+            <div className={`conversation-container ${selectedContactId ? 'block' : 'hidden md:block'} flex-1 h-full overflow-hidden`}>
               <ChatWindow />
             </div>
           </div>

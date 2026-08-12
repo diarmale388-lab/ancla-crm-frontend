@@ -8,14 +8,24 @@ const distDir = path.join(__dirname, 'dist');
 const rootDir = __dirname;
 const publicDir = path.join(__dirname, 'public');
 
-// 1. Sincronizar dist/index.source.html a dist/index.html y root index.html
+// 1. Sincronizar dist/index.source.html a dist/index.html y root index.html con Cache Buster Timestamp
 let htmlContent = '';
+const timestamp = Date.now();
+
 if (fs.existsSync(path.join(distDir, 'index.source.html'))) {
   htmlContent = fs.readFileSync(path.join(distDir, 'index.source.html'), 'utf-8');
-  fs.writeFileSync(path.join(distDir, 'index.html'), htmlContent);
-  fs.writeFileSync(path.join(rootDir, 'index.html'), htmlContent);
 } else if (fs.existsSync(path.join(distDir, 'index.html'))) {
   htmlContent = fs.readFileSync(path.join(distDir, 'index.html'), 'utf-8');
+}
+
+if (htmlContent) {
+  // Inyectar timestamp dinámico a todos los bundles JS y CSS
+  htmlContent = htmlContent.replace(/(src|href)=["'](\/assets\/[^"']+)["']/g, (match, attr, url) => {
+    const cleanUrl = url.split('?')[0];
+    return `${attr}="${cleanUrl}?v=${timestamp}"`;
+  });
+
+  fs.writeFileSync(path.join(distDir, 'index.html'), htmlContent);
   fs.writeFileSync(path.join(rootDir, 'index.html'), htmlContent);
 }
 
@@ -56,4 +66,4 @@ pwaFiles.forEach((file) => {
   }
 });
 
-console.log('✅ Sincronización completa de PWA & Hostinger LiteSpeed (index.html, assets, manifest e íconos actualizados)');
+console.log(`✅ Sincronización completa de PWA & Hostinger LiteSpeed con Cache Buster (?v=${timestamp})`);
