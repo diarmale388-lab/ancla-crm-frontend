@@ -673,7 +673,7 @@ export const ChatWindow = () => {
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
-        className="flex-1 min-w-0 flex flex-col h-full bg-white dark:bg-dark-900 border-r border-slate-200 dark:border-white/5 overflow-hidden relative"
+        className="flex-1 min-w-0 min-h-0 flex flex-col h-full bg-white dark:bg-dark-900 border-r border-slate-200 dark:border-white/5 overflow-hidden relative"
       >
         {isDragging && (
           <div className="absolute inset-0 bg-emerald-600/10 dark:bg-emerald-500/25 border-4 border-dashed border-emerald-500 backdrop-blur-xs flex flex-col items-center justify-center z-30 pointer-events-none animate-fade-in">
