@@ -148,13 +148,11 @@ export const ContactList = () => {
         
         {/* Brand Logo and Action Icons */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <img 
-              src="/ancla_official_logo.png" 
-              alt="ANCLA Special Projects" 
-              className="h-9 w-auto object-contain select-none"
-            />
-          </div>
+          <img 
+            src="/logo_ancla.png" 
+            alt="ANCLA Special Projects" 
+            className="h-10 w-auto object-contain mix-blend-multiply dark:invert dark:mix-blend-screen select-none"
+          />
 
           <div className="flex items-center space-x-2 text-[#54656f] dark:text-slate-300 relative">
             
