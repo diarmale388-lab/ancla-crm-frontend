@@ -64,6 +64,7 @@ export const CalendarView = () => {
   // Estados de Calendario Mensual Grande
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [mobileCalendarTab, setMobileCalendarTab] = useState('agenda'); // 'agenda' | 'month'
   
   // Estados para agendar
   const [selectedLeadId, setSelectedLeadId] = useState('');
@@ -380,40 +381,75 @@ export const CalendarView = () => {
 
   return (
     <div className="flex-1 flex flex-col h-full bg-slate-50 dark:bg-dark-950 overflow-hidden transition-colors duration-300">
-      {/* Cabecera */}
-      <div className="p-6 border-b border-slate-200 dark:border-white/5 bg-white dark:bg-dark-900/90 backdrop-blur-md flex items-center justify-between glass">
-        <div>
-          <h2 className="text-xl font-bold text-slate-800 dark:text-white">Agenda & Citas</h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Control de citas comerciales y horarios agendados por la IA o de forma manual</p>
+      {/* Cabecera Adaptativa PWA */}
+      <div className="p-3.5 sm:p-6 border-b border-slate-200 dark:border-white/5 bg-white dark:bg-dark-900/90 backdrop-blur-md flex flex-col space-y-3 flex-shrink-0 select-none">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-base sm:text-xl font-bold text-slate-800 dark:text-white flex items-center space-x-2">
+              <CalendarIcon className="w-5 h-5 text-emerald-500" />
+              <span>Agenda & Citas</span>
+            </h2>
+            <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-0.5 hidden sm:block">Control de citas comerciales y horarios agendados por la IA o de forma manual</p>
+          </div>
+          
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={() => setShowConfigModal(true)}
+              className="p-2 sm:px-4 sm:py-2.5 rounded-xl bg-slate-100 dark:bg-white/5 hover:bg-slate-200 text-slate-700 dark:text-slate-200 text-xs font-semibold border border-slate-200 dark:border-white/5 transition-all cursor-pointer"
+              title="Configurar Horarios"
+            >
+              <Settings className="w-4 h-4" />
+              <span className="hidden sm:inline ml-1.5">Configurar Horarios</span>
+            </button>
+
+            <button
+              onClick={handleDownloadReport}
+              className="hidden sm:flex items-center space-x-1.5 bg-emerald-50 dark:bg-emerald-500/10 hover:bg-emerald-100 text-emerald-600 dark:text-emerald-400 text-xs font-semibold px-4 py-2.5 rounded-xl border border-emerald-200 dark:border-emerald-500/20 transition-all cursor-pointer"
+            >
+              <Download className="w-4 h-4" />
+              <span>Reporte</span>
+            </button>
+            
+            <button
+              onClick={() => {
+                setSelectedSlot('');
+                setSelectedLeadId('');
+                setShowAddModal(true);
+              }}
+              className="flex items-center space-x-1 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white text-xs font-bold px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl shadow-md transition-all cursor-pointer"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Agendar</span>
+            </button>
+          </div>
         </div>
-        
-        <div className="flex items-center space-x-3">
+
+        {/* Tab Bar Móvil (< md): Selector de Vista '📋 Citas de Hoy' vs '📅 Calendario Mensual' */}
+        <div className="md:hidden bg-slate-100 dark:bg-slate-800/80 p-1 rounded-xl grid grid-cols-2 gap-1 border border-slate-200 dark:border-white/5">
           <button
-            onClick={handleDownloadReport}
-            className="flex items-center space-x-1.5 bg-emerald-50 dark:bg-emerald-500/10 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-semibold px-4 py-2.5 rounded-xl border border-emerald-200 dark:border-emerald-500/20 transition-all duration-300"
+            type="button"
+            onClick={() => setMobileCalendarTab('agenda')}
+            className={`py-1.5 px-3 rounded-lg text-xs font-bold flex items-center justify-center space-x-1.5 transition-all ${
+              mobileCalendarTab === 'agenda'
+                ? 'bg-white dark:bg-[#0b0f19] text-[#0f172a] dark:text-white shadow-xs font-black'
+                : 'text-slate-500 dark:text-slate-400'
+            }`}
           >
-            <Download className="w-4 h-4" />
-            <span>Descargar Reporte</span>
+            <Clock className="w-3.5 h-3.5 text-emerald-500" />
+            <span>📋 Citas del Día</span>
           </button>
 
           <button
-            onClick={() => setShowConfigModal(true)}
-            className="flex items-center space-x-1.5 bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-700 dark:text-slate-200 text-xs font-semibold px-4 py-2.5 rounded-xl border border-slate-200 dark:border-white/5 transition-all duration-300"
+            type="button"
+            onClick={() => setMobileCalendarTab('month')}
+            className={`py-1.5 px-3 rounded-lg text-xs font-bold flex items-center justify-center space-x-1.5 transition-all ${
+              mobileCalendarTab === 'month'
+                ? 'bg-white dark:bg-[#0b0f19] text-[#0f172a] dark:text-white shadow-xs font-black'
+                : 'text-slate-500 dark:text-slate-400'
+            }`}
           >
-            <Settings className="w-4 h-4" />
-            <span>Configurar Horarios</span>
-          </button>
-          
-          <button
-            onClick={() => {
-              setSelectedSlot('');
-              setSelectedLeadId('');
-              setShowAddModal(true);
-            }}
-            className="flex items-center space-x-1.5 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-md transition-all duration-300"
-          >
-            <Plus className="w-4 h-4" />
-            <span>Agendar Cita</span>
+            <CalendarIcon className="w-3.5 h-3.5 text-indigo-500" />
+            <span>📅 Vista Mes</span>
           </button>
         </div>
       </div>
@@ -422,7 +458,7 @@ export const CalendarView = () => {
       <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
         
         {/* Lado Izquierdo: El Calendario Mensual (Desktop) & Selector de Días (Mobile) */}
-        <div className="flex-1 p-3.5 md:p-6 overflow-y-auto flex flex-col bg-white dark:bg-dark-900 border-b md:border-b-0">
+        <div className={`${mobileCalendarTab === 'month' ? 'flex' : 'hidden md:flex'} flex-1 p-3.5 md:p-6 overflow-y-auto flex-col bg-white dark:bg-dark-900 border-b md:border-b-0`}>
           <div className="w-full max-w-4xl mx-auto flex flex-col h-full">
             
             {/* Navegación del Calendario y Leyenda */}
@@ -625,7 +661,7 @@ export const CalendarView = () => {
         </div>
 
         {/* Lado Derecho: Detalle de Citas del Día Seleccionado */}
-        <div className="w-full md:w-96 border-t md:border-t-0 md:border-l border-slate-200 dark:border-white/5 bg-slate-50/50 dark:bg-dark-900/50 p-6 flex flex-col overflow-y-auto">
+        <div className={`${mobileCalendarTab === 'agenda' ? 'flex' : 'hidden md:flex'} w-full md:w-96 border-t md:border-t-0 md:border-l border-slate-200 dark:border-white/5 bg-slate-50/50 dark:bg-dark-900/50 p-4 sm:p-6 flex-col overflow-y-auto`}>
           <div className="flex-1 space-y-5">
             <div>
               <span className="text-[10px] text-slate-400 dark:text-slate-500 uppercase font-black tracking-wider block">Citas Programadas</span>
