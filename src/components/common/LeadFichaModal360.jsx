@@ -359,30 +359,30 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
             </div>
           </div>
 
-          {/* Fila 2: Track Único Horizontal con Todos los Badges & Acciones (Scroll Suave en Celular) */}
-          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5 max-w-full text-[10px] font-bold whitespace-nowrap">
-            <span className="px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20 font-extrabold shrink-0">
+          {/* Fila 2: Track Único Horizontal con Paleta Neutra Controlada (Regla #3 del Video) */}
+          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1 max-w-full text-xs font-semibold whitespace-nowrap">
+            <span className="px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 font-bold shrink-0">
               🏞️ {lotStatus || 'Buscando Lote'}
             </span>
             {lotCity && (
-              <span className="px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-700 dark:text-blue-300 border border-blue-500/20 font-bold shrink-0">
+              <span className="px-2.5 py-1 rounded-lg bg-slate-200/80 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300/50 dark:border-slate-700 font-semibold shrink-0">
                 📍 {lotCity}
               </span>
             )}
-            <span className="px-2 py-0.5 rounded-md bg-purple-500/10 text-purple-700 dark:text-purple-300 border border-purple-500/20 font-bold shrink-0">
+            <span className="px-2.5 py-1 rounded-lg bg-slate-200/80 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300/50 dark:border-slate-700 font-semibold shrink-0">
               🏗️ {interestProduct || 'Flex Home 56m²'}
             </span>
-            <span className="px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/20 font-bold shrink-0">
+            <span className="px-2.5 py-1 rounded-lg bg-slate-200/80 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300/50 dark:border-slate-700 font-semibold shrink-0">
               💼 {clientType || 'Persona Natural'}
             </span>
 
             {/* Asesor Selector Pill */}
-            <div className="flex items-center space-x-1 bg-emerald-500/10 border border-emerald-500/30 rounded-md px-2 py-0.5 shrink-0">
-              <span className="text-[10px] font-black text-emerald-600 dark:text-emerald-400">👤 Asesor:</span>
+            <div className="flex items-center space-x-1.5 bg-slate-200/80 dark:bg-slate-800 border border-slate-300/50 dark:border-slate-700 rounded-lg px-2.5 py-1 shrink-0">
+              <span className="text-xs font-bold text-slate-600 dark:text-slate-400">👤 Asesor:</span>
               <select
                 value={assignedUserId || ''}
                 onChange={(e) => setAssignedUserId(e.target.value ? parseInt(e.target.value, 10) : null)}
-                className="bg-transparent text-[10px] font-extrabold text-slate-800 dark:text-white cursor-pointer focus:outline-none max-w-[110px] truncate"
+                className="bg-transparent text-xs font-bold text-slate-800 dark:text-white cursor-pointer focus:outline-none max-w-[120px] truncate"
               >
                 <option value="" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white">Sin Asignar (Liliana / Admin)</option>
                 <option value="4" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white">Asesor Comercial ANCLA</option>
@@ -395,18 +395,18 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
             <button
               type="button"
               onClick={() => setShowDossierModal(true)}
-              className="px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 font-bold text-[10px] flex items-center space-x-1 transition-all cursor-pointer shrink-0"
+              className="px-2.5 py-1 rounded-lg bg-slate-200/80 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300/50 dark:border-slate-700 font-bold text-xs flex items-center space-x-1 transition-all cursor-pointer shrink-0 hover:bg-slate-300 dark:hover:bg-slate-700"
             >
-              <DollarSign className="w-3 h-3" />
+              <DollarSign className="w-3.5 h-3.5 text-emerald-500" />
               <span>Dossier</span>
             </button>
 
             <button
               type="button"
               onClick={() => setShowChinaSpecs(true)}
-              className="px-2 py-0.5 rounded-md bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/30 font-bold text-[10px] flex items-center space-x-1 transition-all cursor-pointer shrink-0"
+              className="px-2.5 py-1 rounded-lg bg-slate-200/80 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300/50 dark:border-slate-700 font-bold text-xs flex items-center space-x-1 transition-all cursor-pointer shrink-0 hover:bg-slate-300 dark:hover:bg-slate-700"
             >
-              <Factory className="w-3 h-3" />
+              <Factory className="w-3.5 h-3.5 text-indigo-400" />
               <span>China</span>
             </button>
           </div>
