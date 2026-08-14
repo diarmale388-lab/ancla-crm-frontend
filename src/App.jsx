@@ -285,10 +285,10 @@ function App() {
               <div>
                 <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Usuario o Correo</label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-3.5 w-4 h-4 text-slate-400" />
+                  <User className="absolute left-3 top-3.5 w-4 h-4 text-slate-400" />
                   <input
                     type="text"
-                    placeholder="Usuario o Correo"
+                    placeholder="Escribe diarmale388, liliana, asesor o tu correo"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl pl-10 pr-4 py-3 text-sm text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/30 transition-all duration-300"
