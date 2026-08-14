@@ -116,9 +116,9 @@
 }
 
 /* ==========================================================================
-   REGLAS MÓVILES ESTRICTAS (< 768px) - ESTILO WHATSAPP NATIVO 100% FLUIDO
+   REGLAS MÓVILES ESTRICTAS (< 1024px) - ESTILO WHATSAPP NATIVO 100% FLUIDO
    ========================================================================== */
-@media screen and (max-width: 767.98px) {
+@media screen and (max-width: 1023.98px) {
   /* 1. Ocultar totalmente la barra lateral de escritorio */
   .desktop-sidebar {
     display: none !important;
