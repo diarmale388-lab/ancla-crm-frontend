@@ -65,6 +65,18 @@ export const CalendarView = () => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [mobileCalendarTab, setMobileCalendarTab] = useState('agenda'); // 'agenda' | 'month'
+  const dayRefs = React.useRef({});
+
+  // Auto-scroll la cinta horizontal de días al día seleccionado (ej: Día 14 de Agosto)
+  useEffect(() => {
+    const dateStr = `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}`;
+    const targetEl = dayRefs.current[dateStr];
+    if (targetEl) {
+      setTimeout(() => {
+        targetEl.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      }, 150);
+    }
+  }, [selectedDate, currentMonth]);
   
   // Estados para agendar
   const [selectedLeadId, setSelectedLeadId] = useState('');
@@ -484,8 +496,8 @@ export const CalendarView = () => {
                 </div>
               </div>
 
-              {/* Selector de Días Horizontal en Celular (Cinta Interactiva Móvil 100% Fluida) */}
-              <div className="md:hidden flex overflow-x-auto space-x-2 pb-2.5 no-scrollbar mb-2 border-b border-slate-100 dark:border-slate-800">
+              {/* Selector de Días Horizontal en Celular (Cinta Interactiva Móvil con Auto-Centrado & Resaltado de Impacto) */}
+              <div className="md:hidden flex overflow-x-auto space-x-2 py-1.5 px-0.5 pb-3 no-scrollbar mb-2 border-b border-slate-100 dark:border-slate-800">
                 {getDaysInMonth(currentMonth).filter(Boolean).map((day) => {
                   const dateStr = `${day.getFullYear()}-${String(day.getMonth() + 1).padStart(2, '0')}-${String(day.getDate()).padStart(2, '0')}`;
                   const dayApps = getAppointmentsForDate(day);
@@ -495,29 +507,34 @@ export const CalendarView = () => {
                   return (
                     <button
                       key={`mobile-day-${dateStr}`}
+                      ref={(el) => (dayRefs.current[dateStr] = el)}
                       type="button"
                       onClick={() => setSelectedDate(day)}
-                      className={`flex-shrink-0 w-16 py-2.5 px-2 rounded-2xl flex flex-col items-center justify-center transition-all cursor-pointer border ${
+                      className={`flex-shrink-0 w-16 py-2.5 px-2 rounded-2xl flex flex-col items-center justify-center transition-all cursor-pointer select-none ${
                         isSelected
-                          ? 'bg-emerald-600 border-emerald-500 text-white shadow-md scale-105 font-black'
+                          ? 'bg-gradient-to-b from-emerald-500 to-teal-600 border-2 border-emerald-400 text-white shadow-lg shadow-emerald-500/30 scale-105 font-black ring-4 ring-emerald-500/20'
                           : isTdy
-                            ? 'bg-blue-500/15 border-blue-500 text-blue-700 dark:text-blue-300 font-bold'
-                            : 'bg-slate-50 dark:bg-slate-800/80 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-semibold'
+                            ? 'bg-blue-500/15 border-2 border-blue-500 text-blue-700 dark:text-blue-300 font-bold'
+                            : 'bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-semibold hover:border-slate-300'
                       }`}
                     >
-                      <span className="text-[10px] uppercase font-bold opacity-80">
+                      <span className={`text-[10px] uppercase font-black ${isSelected ? 'text-emerald-100' : 'opacity-70'}`}>
                         {day.toLocaleDateString('es-ES', { weekday: 'short' })}
                       </span>
-                      <span className="text-sm font-black font-mono mt-0.5">
+                      <span className="text-base font-black font-mono mt-0.5 leading-none">
                         {day.getDate()}
                       </span>
-                      {dayApps.length > 0 && (
-                        <span className={`mt-1 text-[9px] font-bold px-1.5 py-0.5 rounded-full ${
+                      {dayApps.length > 0 ? (
+                        <span className={`mt-1 text-[9px] font-black px-1.5 py-0.2 rounded-full ${
                           isSelected ? 'bg-white/30 text-white' : 'bg-emerald-500 text-white'
                         }`}>
                           {dayApps.length} {dayApps.length === 1 ? 'cita' : 'citas'}
                         </span>
-                      )}
+                      ) : isTdy ? (
+                        <span className={`mt-1 text-[8.5px] font-black px-1 rounded-full ${isSelected ? 'bg-white/20 text-white' : 'text-blue-600 dark:text-blue-300'}`}>
+                          HOY
+                        </span>
+                      ) : null}
                     </button>
                   );
                 })}

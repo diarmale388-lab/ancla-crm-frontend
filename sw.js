@@ -1,5 +1,5 @@
-// ANCLA Special Projects - Service Worker PWA v1.0.4
-const CACHE_NAME = 'ancla-crm-cache-v1.0.4';
+// ANCLA Special Projects - Service Worker PWA v1.0.5
+const CACHE_NAME = 'ancla-crm-cache-v1.0.5';
 const STATIC_ASSETS = [
   '/',
   '/manifest.webmanifest',
