@@ -53,6 +53,8 @@ const pwaFiles = [
   'ancla_medallion.png',
   'ancla_official_logo.png',
   'leon_fx_logo.png',
+  'notification-badge.png',
+  'notification-icon.png',
   '.htaccess'
 ];
 
