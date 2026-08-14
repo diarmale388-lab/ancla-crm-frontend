@@ -329,7 +329,7 @@ function App() {
   }
 
   return (
-    <div className="flex flex-col md:flex-row h-screen bg-slate-100 dark:bg-dark-950 text-slate-800 dark:text-white overflow-hidden w-screen transition-colors duration-300">
+    <div className="flex flex-col md:flex-row h-full h-[100dvh] bg-slate-100 dark:bg-dark-950 text-slate-800 dark:text-white overflow-hidden w-full max-w-[100vw] transition-colors duration-300">
       {/* Sidebar de navegación */}
       <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
 

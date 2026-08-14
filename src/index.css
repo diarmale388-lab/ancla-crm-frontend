@@ -12,7 +12,11 @@
     @apply bg-slate-50 text-slate-800 dark:bg-dark-950 dark:text-slate-100 transition-colors duration-300;
     overflow: hidden;
     height: 100%;
+    height: 100dvh;
     width: 100%;
+    max-width: 100vw;
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
   }
 
   html.public-scroll-active, body.public-scroll-active {
@@ -27,12 +31,20 @@
     -moz-user-select: text !important;
     -ms-user-select: text !important;
     user-select: text !important;
+    touch-action: manipulation;
+  }
+
+  /* Prevenir Auto-Zoom de iOS Safari al tocar campos de texto */
+  @media screen and (max-width: 767px) {
+    input, select, textarea {
+      font-size: 16px !important;
+    }
   }
 
   /* Custom scrollbars */
   ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 5px;
+    height: 5px;
   }
   
   ::-webkit-scrollbar-track {

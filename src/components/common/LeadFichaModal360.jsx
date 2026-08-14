@@ -279,10 +279,10 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-3 sm:p-5 overflow-hidden animate-fade-in font-sans">
+    <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-0 sm:p-5 overflow-hidden animate-fade-in font-sans">
       
       {/* Contenedor Principal con Dual Theme: #f8fafc en Claro / #0b0f19 en Oscuro */}
-      <div className="bg-[#f8fafc] dark:bg-[#0b0f19] border border-[#e2e8f0] dark:border-[#334155] rounded-3xl w-full max-w-5xl h-[92vh] max-h-[880px] flex flex-col shadow-2xl overflow-hidden text-[#0f172a] dark:text-[#f8fafc] transition-colors">
+      <div className="bg-[#f8fafc] dark:bg-[#0b0f19] border-0 sm:border border-[#e2e8f0] dark:border-[#334155] rounded-none sm:rounded-3xl w-full max-w-5xl h-full sm:h-[92vh] max-h-[100dvh] sm:max-h-[880px] flex flex-col shadow-2xl overflow-hidden text-[#0f172a] dark:text-[#f8fafc] transition-colors">
         
         {/* 1. HEADER COMPACTO & ACCIONES RÁPIDAS (Paneles: #f1f5f9 / #0f172a) */}
         <div className="px-6 py-4 border-b border-[#e2e8f0] dark:border-[#334155] bg-[#f1f5f9] dark:bg-[#0f172a] flex flex-col md:flex-row items-start md:items-center justify-between gap-3 shrink-0">
