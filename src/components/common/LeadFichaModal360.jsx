@@ -291,8 +291,8 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
             <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-500 text-white font-black text-base flex items-center justify-center shadow-sm shrink-0">
               {contact.first_name ? contact.first_name[0].toUpperCase() : 'C'}
             </div>
-            <div className="min-w-0">
-              <div className="flex items-center space-x-2 flex-wrap">
+            <div className="min-w-0 space-y-1">
+              <div className="flex items-center space-x-2 flex-wrap gap-y-1">
                 <h3 className="text-base font-black text-[#0f172a] dark:text-[#f8fafc] truncate">
                   {contact.first_name || 'Prospecto'} {contact.last_name || ''}
                 </h3>
@@ -303,10 +303,24 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                   {contact.source || 'Meta Ads'}
                 </span>
               </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-2 mt-0.5 font-mono tabular-nums">
-                <span>📱 {contact.phone}</span>
-                {contact.lot_city && <span className="font-sans">• 📍 {contact.lot_city}</span>}
-              </p>
+
+              {/* 4 PILARES DIAGNÓSTICO EN 3 SEGUNDOS (RESPUESTAS DE LILIANA) */}
+              <div className="flex items-center gap-1.5 flex-wrap text-[11px] font-bold">
+                <span className="px-2 py-0.5 rounded-lg bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20 font-extrabold">
+                  🏞️ {lotStatus || 'Buscando Lote'}
+                </span>
+                {lotCity && (
+                  <span className="px-2 py-0.5 rounded-lg bg-blue-500/10 text-blue-700 dark:text-blue-300 border border-blue-500/20 font-bold">
+                    📍 {lotCity}
+                  </span>
+                )}
+                <span className="px-2 py-0.5 rounded-lg bg-purple-500/10 text-purple-700 dark:text-purple-300 border border-purple-500/20 font-bold">
+                  🏗️ {interestProduct || 'Flex Home 56m²'}
+                </span>
+                <span className="px-2 py-0.5 rounded-lg bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/20 font-bold">
+                  💼 {clientType || 'Persona Natural'}
+                </span>
+              </div>
             </div>
           </div>
 
@@ -439,185 +453,187 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                 </div>
               </div>
 
-              {/* Bloque 1B: Grid de 2 Columnas para Datos de Contacto y Terreno */}
+              {/* Bloque 1B: Grid de 2 Columnas para Diagnóstico de Negocio & Evaluación Financiera */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 
-                {/* Columna Izquierda: Información de Contacto & Terreno */}
+                {/* Columna Izquierda: LOS 4 PILARES COMERCIALES DE ANCLA (RESPUESTAS DE LILIANA) */}
                 <div className="p-5 rounded-2xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-[#334155] shadow-sm space-y-3.5">
-                  <span className="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center space-x-2">
-                    <User className="w-4 h-4 text-emerald-500" />
-                    <span>Datos de Contacto & Terreno</span>
-                  </span>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center space-x-2">
+                      <Layers className="w-4 h-4 text-emerald-500" />
+                      <span>Diagnóstico de Proyecto (Pilares ANCLA)</span>
+                    </span>
+                    <span className="text-[10px] font-extrabold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+                      Clave para Cierre
+                    </span>
+                  </div>
 
-                  {/* Selector Destacado de Asesor Responsable */}
-                  <div className="p-2.5 rounded-xl bg-emerald-500/10 dark:bg-emerald-950/30 border border-emerald-500/30">
-                    <label className="block text-[10px] font-extrabold uppercase tracking-wider text-emerald-700 dark:text-emerald-300 mb-1">👤 Asesor Comercial Asignado</label>
+                  {/* Pilar 1: Estado del Lote */}
+                  <div>
+                    <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">🏞️ 1. ¿Tiene Terreno / Lote Propio?</label>
                     <select
-                      value={assignedUserId || ''}
-                      onChange={(e) => setAssignedUserId(e.target.value ? parseInt(e.target.value, 10) : null)}
-                      className="w-full bg-white dark:bg-slate-900 border border-emerald-500/30 rounded-xl px-3 py-1.5 text-xs font-black text-emerald-800 dark:text-emerald-200 cursor-pointer"
+                      value={lotStatus}
+                      onChange={(e) => setLotStatus(e.target.value)}
+                      className="w-full bg-slate-50 dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-black text-[#0f172a] dark:text-[#f8fafc] cursor-pointer focus:border-emerald-500"
                     >
-                      <option value="">Sin Asignar (Liliana / Admin General)</option>
-                      <option value="4">Asesor Comercial ANCLA (asesor@anclaspecialprojects.com)</option>
-                      <option value="3">Liliana León (Directora Comercial)</option>
-                      <option value="5">Super Admin (diarmale388)</option>
+                      <option value="Sí, ya tengo">✅ Sí, ya tiene lote propio listo</option>
+                      <option value="Buscando Lote">🟡 Buscando lote / terreno en la zona</option>
+                      <option value="En Negociación">⏳ En trámite de compra / promesa</option>
+                      <option value="Terreno Arrendado">📜 Terreno arrendado / concesión</option>
                     </select>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1">Nombre</label>
-                      <input
-                        type="text"
-                        value={firstName}
-                        onChange={(e) => setFirstName(e.target.value)}
-                        className="w-full bg-white dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-bold text-[#0f172a] dark:text-[#f8fafc] focus:outline-none focus:border-emerald-500"
-                        placeholder="Nombre"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1">Apellido</label>
-                      <input
-                        type="text"
-                        value={lastName}
-                        onChange={(e) => setLastName(e.target.value)}
-                        className="w-full bg-white dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-bold text-[#0f172a] dark:text-[#f8fafc] focus:outline-none focus:border-emerald-500"
-                        placeholder="Apellido"
-                      />
-                    </div>
+                  {/* Pilar 2: Municipio de la Obra */}
+                  <div>
+                    <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">📍 2. Municipio / Ubicación de la Obra</label>
+                    <input
+                      type="text"
+                      value={lotCity}
+                      onChange={(e) => setLotCity(e.target.value)}
+                      className="w-full bg-slate-50 dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-bold text-[#0f172a] dark:text-[#f8fafc] focus:outline-none focus:border-emerald-500"
+                      placeholder="Ej: Armenia, Subachoque, Nemocón, Rionegro, Melgar"
+                    />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1">Teléfono</label>
-                      <input
-                        type="text"
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        className="w-full bg-white dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-mono tabular-nums font-bold text-[#0f172a] dark:text-[#f8fafc] focus:outline-none focus:border-emerald-500"
-                        placeholder="573001234567"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1">Email</label>
-                      <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="w-full bg-white dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-semibold text-[#0f172a] dark:text-[#f8fafc] focus:outline-none focus:border-emerald-500"
-                        placeholder="correo@ejemplo.com"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-3 pt-1">
-                    <div>
-                      <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1">Ubicación del Lote</label>
-                      <input
-                        type="text"
-                        value={lotCity}
-                        onChange={(e) => setLotCity(e.target.value)}
-                        className="w-full bg-white dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-semibold text-[#0f172a] dark:text-[#f8fafc] focus:outline-none focus:border-emerald-500"
-                        placeholder="Ej: Nemocón / Armenia"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1">Estado del Lote</label>
-                      <select
-                        value={lotStatus}
-                        onChange={(e) => setLotStatus(e.target.value)}
-                        className="w-full bg-white dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-bold text-[#0f172a] dark:text-[#f8fafc] cursor-pointer"
-                      >
-                        <option value="Sí, ya tengo">Sí, ya tengo lote propio</option>
-                        <option value="Buscando Lote">Buscando Lote / Terreno</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  {/* Selector Asesor Comercial Asignado */}
-                  <div className="pt-1">
-                    <label className="block text-[10px] font-extrabold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 mb-1">👤 Asesor Comercial Asignado</label>
+                  {/* Pilar 3: Modelo de Interés */}
+                  <div>
+                    <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">🏗️ 3. Modelo Arquitectónico de Interés</label>
                     <select
-                      value={assignedUserId || ''}
-                      onChange={(e) => setAssignedUserId(e.target.value ? parseInt(e.target.value, 10) : null)}
-                      className="w-full bg-emerald-500/10 dark:bg-emerald-950/30 border border-emerald-500/30 rounded-xl px-3 py-2 text-xs font-bold text-emerald-800 dark:text-emerald-200 cursor-pointer"
+                      value={interestProduct}
+                      onChange={(e) => setInterestProduct(e.target.value)}
+                      className="w-full bg-slate-50 dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-black text-[#0f172a] dark:text-[#f8fafc] cursor-pointer focus:border-emerald-500"
                     >
-                      <option value="">Sin Asignar (Liliana / Admin General)</option>
-                      <option value="4">Asesor Comercial ANCLA (asesor@anclaspecialprojects.com)</option>
-                      <option value="3">Liliana León (Directora Comercial)</option>
-                      <option value="5">Super Admin (diarmale388)</option>
+                      <option value="Cápsula Living CL-13">🏕️ Cápsula Living CL-13 (13m² - $78.000.000 COP)</option>
+                      <option value="Cápsula Living CL-26">🚀 Cápsula Living CL-26 (26m² - $148.800.000 COP)</option>
+                      <option value="Flex Home EXP-36">🏠 Flex Home EXP-36 (36m² - $118.800.000 COP)</option>
+                      <option value="Flex Home EXP-56">🏡 Flex Home EXP-56 (56m² - A Medida / $188.000.000 COP)</option>
+                      <option value="Glamping & Turismo">🌿 Glamping & Proyecto Turístico Modular</option>
+                      <option value="Bodega Industrial">🏢 Bodega Industrial / Estructura Acero</option>
+                      <option value="Llave en Mano">🔑 Proyecto Especial Llave en Mano</option>
+                    </select>
+                  </div>
+
+                  {/* Pilar 4: Perfil del Cliente / Comprador */}
+                  <div>
+                    <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">💼 4. Perfil del Cliente / Comprador</label>
+                    <select
+                      value={clientType}
+                      onChange={(e) => setClientType(e.target.value)}
+                      className="w-full bg-slate-50 dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-black text-[#0f172a] dark:text-[#f8fafc] cursor-pointer focus:border-emerald-500"
+                    >
+                      <option value="Persona Natural">🏠 Persona Natural (Vivienda Propia / Campestre)</option>
+                      <option value="Empresario">🏢 Empresario / Uso Corporativo / Sede</option>
+                      <option value="Inversionista">💼 Inversionista / Desarrollador Turístico</option>
                     </select>
                   </div>
                 </div>
 
-                {/* Columna Derecha: Modelo, Presupuesto & Cotización */}
-                <div className="p-5 rounded-2xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-[#334155] shadow-sm space-y-3.5">
-                  <span className="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center space-x-2">
-                    <Building2 className="w-4 h-4 text-emerald-500" />
-                    <span>Modelo & Evaluación Financiera</span>
-                  </span>
+                {/* Columna Derecha: Evaluación Financiera & Datos de Contacto */}
+                <div className="space-y-4 flex flex-col justify-between">
+                  {/* Tarjeta Financiera */}
+                  <div className="p-5 rounded-2xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-[#334155] shadow-sm space-y-3.5">
+                    <span className="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center space-x-2">
+                      <DollarSign className="w-4 h-4 text-emerald-500" />
+                      <span>Evaluación Financiera & Cotizaciones ($COP)</span>
+                    </span>
 
-                  <div>
-                    <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1">Modelo de Interés</label>
-                    <select
-                      value={interestProduct}
-                      onChange={(e) => setInterestProduct(e.target.value)}
-                      className="w-full bg-white dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-bold text-[#0f172a] dark:text-[#f8fafc] cursor-pointer"
-                    >
-                      <option value="Cápsula Living CL-13">Cápsula Living CL-13 (13m² - $78.000.000 COP)</option>
-                      <option value="Cápsula Living CL-26">Cápsula Living CL-26 (26m² - $148.800.000 COP)</option>
-                      <option value="Flex Home EXP-36">Flex Home EXP-36 (36m² - $118.800.000 COP)</option>
-                      <option value="Flex Home EXP-56">Flex Home EXP-56 (56m² - A Medida / $188.000.000 COP)</option>
-                      <option value="Glamping & Turismo">Glamping & Turismo Modular</option>
-                      <option value="Llave en Mano">Llave en Mano (Proyecto Completo)</option>
-                    </select>
-                  </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1">Presupuesto ($ COP)</label>
+                        <input
+                          type="number"
+                          value={estimatedBudget}
+                          onChange={(e) => setEstimatedBudget(e.target.value)}
+                          className="w-full bg-slate-50 dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-mono tabular-nums font-bold text-[#0f172a] dark:text-[#f8fafc] focus:outline-none focus:border-emerald-500"
+                          placeholder="Ej: 150000000"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1">Valor Cotizado ($ COP)</label>
+                        <input
+                          type="number"
+                          value={quotedValue}
+                          onChange={(e) => setQuotedValue(e.target.value)}
+                          className="w-full bg-slate-50 dark:bg-[#182235] border border-emerald-500/40 rounded-xl px-3 py-2 text-xs font-mono tabular-nums font-black text-emerald-600 dark:text-emerald-400 focus:outline-none focus:border-emerald-500"
+                          placeholder="Ej: 78500000"
+                        />
+                      </div>
+                    </div>
 
-                  <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1">Presupuesto ($ COP)</label>
-                      <input
-                        type="number"
-                        value={estimatedBudget}
-                        onChange={(e) => setEstimatedBudget(e.target.value)}
-                        className="w-full bg-white dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-mono tabular-nums font-bold text-[#0f172a] dark:text-[#f8fafc] focus:outline-none focus:border-emerald-500"
-                        placeholder="Ej: 150000000"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1">Valor Cotizado ($ COP)</label>
-                      <input
-                        type="number"
-                        value={quotedValue}
-                        onChange={(e) => setQuotedValue(e.target.value)}
-                        className="w-full bg-white dark:bg-[#182235] border border-emerald-500/40 rounded-xl px-3 py-2 text-xs font-mono tabular-nums font-black text-emerald-600 dark:text-emerald-400 focus:outline-none focus:border-emerald-500"
-                        placeholder="Ej: 78500000"
-                      />
+                      <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1">Propuesta PDF (Enlace)</label>
+                      <div className="flex gap-2">
+                        <input
+                          type="url"
+                          value={proposalPdfUrl}
+                          onChange={(e) => setProposalPdfUrl(e.target.value)}
+                          className="flex-1 bg-slate-50 dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-semibold text-[#0f172a] dark:text-[#f8fafc] focus:outline-none focus:border-emerald-500"
+                          placeholder="https://anclaspecialprojects.com/cotizacion.pdf"
+                        />
+                        {proposalPdfUrl && (
+                          <a
+                            href={proposalPdfUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="px-3 py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold flex items-center justify-center shrink-0 hover:bg-emerald-500"
+                          >
+                            <ExternalLink className="w-3.5 h-3.5" />
+                          </a>
+                        )}
+                      </div>
                     </div>
                   </div>
 
-                  <div>
-                    <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1">Enlace / URL Propuesta PDF</label>
-                    <div className="flex gap-2">
-                      <input
-                        type="url"
-                        value={proposalPdfUrl}
-                        onChange={(e) => setProposalPdfUrl(e.target.value)}
-                        className="flex-1 bg-white dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-semibold text-[#0f172a] dark:text-[#f8fafc] focus:outline-none focus:border-emerald-500"
-                        placeholder="https://anclaspecialprojects.com/cotizacion.pdf"
-                      />
-                      {proposalPdfUrl && (
-                        <a
-                          href={proposalPdfUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="px-3 py-2 bg-emerald-500 text-white rounded-xl text-xs font-bold flex items-center justify-center shrink-0 hover:bg-emerald-600"
-                        >
-                          <ExternalLink className="w-3.5 h-3.5" />
-                        </a>
-                      )}
+                  {/* Tarjeta de Contacto Directo */}
+                  <div className="p-5 rounded-2xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-[#334155] shadow-sm space-y-3">
+                    <span className="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center space-x-2">
+                      <User className="w-4 h-4 text-emerald-500" />
+                      <span>Datos Directos del Titular</span>
+                    </span>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1">Nombre</label>
+                        <input
+                          type="text"
+                          value={firstName}
+                          onChange={(e) => setFirstName(e.target.value)}
+                          className="w-full bg-slate-50 dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-bold text-[#0f172a] dark:text-[#f8fafc]"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1">Apellido</label>
+                        <input
+                          type="text"
+                          value={lastName}
+                          onChange={(e) => setLastName(e.target.value)}
+                          className="w-full bg-slate-50 dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-bold text-[#0f172a] dark:text-[#f8fafc]"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1">Teléfono</label>
+                        <input
+                          type="text"
+                          value={phone}
+                          onChange={(e) => setPhone(e.target.value)}
+                          className="w-full bg-slate-50 dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-mono font-bold text-[#0f172a] dark:text-[#f8fafc]"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1">Email</label>
+                        <input
+                          type="email"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          className="w-full bg-slate-50 dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-semibold text-[#0f172a] dark:text-[#f8fafc]"
+                        />
+                      </div>
                     </div>
                   </div>
+
                 </div>
 
               </div>
