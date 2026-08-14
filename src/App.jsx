@@ -243,27 +243,25 @@ function App() {
             )}
           </div>
         ) : (
-          /* Login Card de Alta Gama con Logo Imponente & Fondo Blanco de Contraste */
-          <div className="w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-white/10 rounded-3xl p-7 sm:p-8 shadow-2xl transition-all duration-300">
+          /* Login Card de Alta Gama con Logo Imponente Sin Parches ni Marcos Feos */
+          <div className="w-full max-w-md bg-white border border-slate-200/90 rounded-3xl p-7 sm:p-9 shadow-2xl transition-all duration-300">
             <div className="flex flex-col items-center mb-6 text-center">
               
-              {/* Logo Oficial ANCLA Special Projects - Tamaño Grande e Imponente */}
-              <div className="w-full max-w-[280px] bg-white p-3 rounded-2xl border border-slate-100 shadow-sm mb-4 flex items-center justify-center">
-                <img 
-                  src="/ancla_official_logo.png" 
-                  alt="ANCLA Special Projects" 
-                  className="w-full h-auto max-h-28 object-contain"
-                />
-              </div>
+              {/* Logo Oficial ANCLA Special Projects - Gigante e Imponente (Sin marcos ni parches) */}
+              <img 
+                src="/ancla_official_logo.png" 
+                alt="ANCLA Special Projects" 
+                className="w-full max-w-[320px] sm:max-w-[350px] h-auto object-contain mb-3 drop-shadow-sm"
+              />
 
-              <h1 className="text-xl font-black text-slate-900 dark:text-white tracking-tight">
+              <h1 className="text-xl font-black text-slate-900 tracking-tight">
                 ANCLA CRM
               </h1>
-              <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mt-1">Gestión Comercial & Proyectos Modulares LATAM</p>
+              <p className="text-xs font-bold text-slate-500 mt-0.5">Gestión Comercial & Proyectos Modulares LATAM</p>
             </div>
 
             {error && (
-              <div className="mb-5 p-4 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center space-x-3 text-red-600 dark:text-red-400 animate-shake">
+              <div className="mb-5 p-4 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center space-x-3 text-red-600 animate-shake">
                 <AlertCircle className="w-5 h-5 flex-shrink-0" />
                 <span className="text-xs font-semibold">{error}</span>
               </div>

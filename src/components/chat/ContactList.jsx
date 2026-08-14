@@ -21,6 +21,36 @@ export const ContactList = () => {
   useEffect(() => {
     fetchContacts();
   }, [currentUser?.id]);
+
+  const [deferredPrompt, setDeferredPrompt] = useState(typeof window !== 'undefined' ? window.__deferredPrompt : null);
+
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+      window.__deferredPrompt = e;
+    };
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+  }, []);
+
+  const handleInstallApp = async () => {
+    const promptEvent = deferredPrompt || (typeof window !== 'undefined' ? window.__deferredPrompt : null);
+    if (promptEvent && promptEvent.prompt) {
+      try {
+        promptEvent.prompt();
+        const choice = await promptEvent.userChoice;
+        if (choice.outcome === 'accepted') {
+          setDeferredPrompt(null);
+          if (typeof window !== 'undefined') window.__deferredPrompt = null;
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    } else {
+      alert("📲 Para instalar ANCLA CRM en tu celular:\n\n• En Android (Chrome): Toca los 3 puntos del navegador arriba a la derecha y presiona 'Instalar aplicación' o 'Agregar a pantalla de inicio'.\n\n• En iPhone (Safari): Toca el botón Compartir abajo en el centro y presiona 'Agregar a inicio'.");
+    }
+  };
   
   // Filtro de estado de IA
   const [activeFilter, setActiveFilter] = useState('all');
