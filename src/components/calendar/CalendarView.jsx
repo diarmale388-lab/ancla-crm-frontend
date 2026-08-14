@@ -393,8 +393,8 @@ export const CalendarView = () => {
 
   return (
     <div className="flex-1 flex flex-col h-full bg-slate-50 dark:bg-dark-950 overflow-y-auto md:overflow-hidden transition-colors duration-300">
-      {/* Cabecera Adaptativa PWA (Sticky en Móvil / Estática en PC) */}
-      <div className="p-3.5 sm:p-6 border-b border-slate-200 dark:border-white/5 bg-white/95 dark:bg-dark-900/95 backdrop-blur-md flex flex-col space-y-3 flex-shrink-0 select-none sticky top-0 z-30 shadow-xs md:static md:shadow-none">
+      {/* CABECERA & CINTA DE DÍAS PEGEDAS (Sticky en Móvil sin espacio desaprovechado / Estática en PC) */}
+      <div className="p-3 sm:p-6 border-b border-slate-200 dark:border-white/5 bg-white/95 dark:bg-dark-900/95 backdrop-blur-md flex flex-col space-y-2.5 flex-shrink-0 select-none sticky top-0 z-30 shadow-xs md:static md:shadow-none">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-base sm:text-xl font-bold text-slate-800 dark:text-white flex items-center space-x-2">
@@ -436,11 +436,92 @@ export const CalendarView = () => {
           </div>
         </div>
 
-        {/* VISTA UNIFICADA MÓVIL Y ESCRITORIO */}
-        <div className="flex-1 flex flex-col md:flex-row overflow-y-auto md:overflow-hidden bg-slate-50 dark:bg-dark-950">
-          
-          {/* LADO IZQUIERDO: CALENDARIO MENSUAL / CINTA DÍAS (Sticky en Móvil / Estático en PC) */}
-          <div className="w-full md:flex-1 p-3.5 sm:p-6 overflow-y-auto flex flex-col bg-white dark:bg-dark-900 border-b md:border-b-0 md:border-r border-slate-200 dark:border-white/5 shrink-0 sticky top-[57px] md:static z-20 shadow-xs md:shadow-none">
+        {/* NAVEGACIÓN Y CINTA DÍAS MÓVIL (Integrada en la Cabecera Fija para Móviles) */}
+        <div className="md:hidden flex flex-col space-y-2 pt-1 border-t border-slate-100 dark:border-slate-800/60">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-black text-slate-800 dark:text-white capitalize">
+              {MONTH_NAMES[currentMonth.getMonth()]} {currentMonth.getFullYear()}
+            </h3>
+            
+            <div className="flex space-x-1">
+              <button 
+                type="button" 
+                onClick={handlePrevMonth}
+                className="p-1 rounded-lg bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-700 dark:text-slate-200 cursor-pointer active:scale-95 transition-all"
+                title="Mes Anterior"
+              >
+                <ChevronLeft className="w-3.5 h-3.5" />
+              </button>
+              <button 
+                type="button" 
+                onClick={() => {
+                  setCurrentMonth(new Date());
+                  setSelectedDate(new Date());
+                }}
+                className="px-2 py-1 text-[11px] font-bold rounded-lg bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-750 dark:text-slate-250 cursor-pointer active:scale-95 transition-all"
+              >
+                Hoy
+              </button>
+              <button 
+                type="button" 
+                onClick={handleNextMonth}
+                className="p-1 rounded-lg bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-700 dark:text-slate-200 cursor-pointer active:scale-95 transition-all"
+                title="Mes Siguiente"
+              >
+                <ChevronRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+
+          {/* Cinta Interactiva Móvil de Días */}
+          <div className="flex overflow-x-auto space-x-2 py-1 px-0.5 no-scrollbar">
+            {getDaysInMonth(currentMonth).filter(Boolean).map((day) => {
+              const dateStr = `${day.getFullYear()}-${String(day.getMonth() + 1).padStart(2, '0')}-${String(day.getDate()).padStart(2, '0')}`;
+              const dayApps = getAppointmentsForDate(day);
+              const isSelected = selectedDate.toDateString() === day.toDateString();
+              const isTdy = day.toDateString() === new Date().toDateString();
+
+              return (
+                <button
+                  key={`mobile-day-${dateStr}`}
+                  ref={(el) => (dayRefs.current[dateStr] = el)}
+                  type="button"
+                  onClick={() => setSelectedDate(day)}
+                  className={`flex-shrink-0 w-15 py-2 px-1.5 rounded-2xl flex flex-col items-center justify-center transition-all cursor-pointer select-none ${
+                    isSelected
+                      ? 'bg-gradient-to-b from-emerald-500 to-teal-600 border-2 border-emerald-400 text-white shadow-md shadow-emerald-500/30 scale-105 font-black ring-2 ring-emerald-500/20'
+                      : isTdy
+                        ? 'bg-blue-500/15 border-2 border-blue-500 text-blue-700 dark:text-blue-300 font-bold'
+                        : 'bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-semibold hover:border-slate-300'
+                  }`}
+                >
+                  <span className={`text-[9.5px] uppercase font-bold tracking-wider ${isSelected ? 'text-emerald-100' : 'text-slate-600 dark:text-slate-300'}`}>
+                    {DAY_NAMES[day.getDay()]}
+                  </span>
+                  <span className={`text-sm font-black my-0.5 ${isSelected ? 'text-white' : 'text-slate-800 dark:text-white'}`}>
+                    {day.getDate()}
+                  </span>
+                  {dayApps.length > 0 ? (
+                    <span className={`text-[8.5px] px-1.5 py-0.2 rounded-full font-extrabold ${
+                      isSelected ? 'bg-white text-emerald-700 font-black' : 'bg-emerald-500/20 text-emerald-800 dark:text-emerald-300'
+                    }`}>
+                      {dayApps.length} citas
+                    </span>
+                  ) : (
+                    <span className="text-[8px] opacity-0">-</span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* VISTA UNIFICADA MÓVIL Y ESCRITORIO */}
+      <div className="flex-1 flex flex-col md:flex-row overflow-y-auto md:overflow-hidden bg-slate-50 dark:bg-dark-950">
+        
+        {/* LADO IZQUIERDO: CALENDARIO MENSUAL DESKTOP (Solo visible en PC md:block) */}
+        <div className="hidden md:flex md:flex-1 p-3.5 sm:p-6 overflow-y-auto flex-col bg-white dark:bg-dark-900 border-r border-slate-200 dark:border-white/5 shrink-0">
             <div className="w-full max-w-4xl mx-auto flex flex-col">
               
               {/* Navegación del Mes & Controles */}
@@ -494,50 +575,6 @@ export const CalendarView = () => {
                     <ChevronRight className="w-4 h-4" />
                   </button>
                 </div>
-              </div>
-
-              {/* Selector de Días Horizontal en Celular (Cinta Interactiva Móvil con Auto-Centrado & Resaltado de Impacto) */}
-              <div className="md:hidden flex overflow-x-auto space-x-2 py-1.5 px-0.5 pb-3 no-scrollbar mb-2 border-b border-slate-100 dark:border-slate-800">
-                {getDaysInMonth(currentMonth).filter(Boolean).map((day) => {
-                  const dateStr = `${day.getFullYear()}-${String(day.getMonth() + 1).padStart(2, '0')}-${String(day.getDate()).padStart(2, '0')}`;
-                  const dayApps = getAppointmentsForDate(day);
-                  const isSelected = selectedDate.toDateString() === day.toDateString();
-                  const isTdy = day.toDateString() === new Date().toDateString();
-
-                  return (
-                    <button
-                      key={`mobile-day-${dateStr}`}
-                      ref={(el) => (dayRefs.current[dateStr] = el)}
-                      type="button"
-                      onClick={() => setSelectedDate(day)}
-                      className={`flex-shrink-0 w-16 py-2.5 px-2 rounded-2xl flex flex-col items-center justify-center transition-all cursor-pointer select-none ${
-                        isSelected
-                          ? 'bg-gradient-to-b from-emerald-500 to-teal-600 border-2 border-emerald-400 text-white shadow-lg shadow-emerald-500/30 scale-105 font-black ring-4 ring-emerald-500/20'
-                          : isTdy
-                            ? 'bg-blue-500/15 border-2 border-blue-500 text-blue-700 dark:text-blue-300 font-bold'
-                            : 'bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-semibold hover:border-slate-300'
-                      }`}
-                    >
-                      <span className={`text-[10px] uppercase font-black ${isSelected ? 'text-emerald-100' : 'opacity-70'}`}>
-                        {day.toLocaleDateString('es-ES', { weekday: 'short' })}
-                      </span>
-                      <span className="text-base font-black font-mono mt-0.5 leading-none">
-                        {day.getDate()}
-                      </span>
-                      {dayApps.length > 0 ? (
-                        <span className={`mt-1 text-[9px] font-black px-1.5 py-0.2 rounded-full ${
-                          isSelected ? 'bg-white/30 text-white' : 'bg-emerald-500 text-white'
-                        }`}>
-                          {dayApps.length} {dayApps.length === 1 ? 'cita' : 'citas'}
-                        </span>
-                      ) : isTdy ? (
-                        <span className={`mt-1 text-[8.5px] font-black px-1 rounded-full ${isSelected ? 'bg-white/20 text-white' : 'text-blue-600 dark:text-blue-300'}`}>
-                          HOY
-                        </span>
-                      ) : null}
-                    </button>
-                  );
-                })}
               </div>
 
               {/* Días de la semana (Desktop) */}
@@ -770,7 +807,6 @@ export const CalendarView = () => {
         </div>
       </div>
     </div>
-  </div>
 
       {/* Modal de Horario Excepcional / Festivo */}
       {showHolidayModal && (
