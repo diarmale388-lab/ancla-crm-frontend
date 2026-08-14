@@ -392,9 +392,9 @@ export const CalendarView = () => {
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-slate-50 dark:bg-dark-950 overflow-y-auto md:overflow-hidden transition-colors duration-300">
-      {/* Cabecera Adaptativa PWA (Estática en PC, Sticky en Móvil) */}
-      <div className="p-3.5 sm:p-6 border-b border-slate-200 dark:border-white/5 bg-white/95 dark:bg-dark-900/95 backdrop-blur-md flex flex-col space-y-3 flex-shrink-0 select-none md:static sticky top-0 z-30 shadow-xs">
+    <div className="flex-1 flex flex-col h-full bg-slate-50 dark:bg-dark-950 overflow-hidden transition-colors duration-300">
+      {/* Cabecera Adaptativa PWA */}
+      <div className="p-3.5 sm:p-6 border-b border-slate-200 dark:border-white/5 bg-white dark:bg-dark-900/90 backdrop-blur-md flex flex-col space-y-3 flex-shrink-0 select-none">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-base sm:text-xl font-bold text-slate-800 dark:text-white flex items-center space-x-2">
@@ -435,13 +435,12 @@ export const CalendarView = () => {
             </button>
           </div>
         </div>
-      </div>
 
-      {/* VISTA UNIFICADA MÓVIL Y ESCRITORIO (REESTABLECIDA LIMPIA EN PC) */}
-      <div className="flex-1 flex flex-col md:flex-row overflow-y-auto md:overflow-hidden bg-slate-50 dark:bg-dark-950">
-        
-        {/* LADO IZQUIERDO: CALENDARIO MENSUAL */}
-        <div className="w-full md:flex-1 p-3.5 sm:p-6 md:overflow-y-auto flex flex-col bg-white dark:bg-dark-900 border-b md:border-b-0 md:border-r border-slate-200 dark:border-white/5 shrink-0 md:shrink md:static sticky top-0 z-20 shadow-2xs">
+        {/* VISTA UNIFICADA MÓVIL Y ESCRITORIO (SIN ESPACIO DESPERDICIADO & SIN PESTAÑAS SEPARADAS) */}
+        <div className="flex-1 flex flex-col md:flex-row overflow-hidden bg-slate-50 dark:bg-dark-950">
+          
+          {/* LADO IZQUIERDO: CALENDARIO MENSUAL (Desktop 7x5 / Mobile Cinta Interactiva) */}
+          <div className="w-full md:flex-1 p-3.5 sm:p-6 overflow-y-auto flex flex-col bg-white dark:bg-dark-900 border-b md:border-b-0 md:border-r border-slate-200 dark:border-white/5 shrink-0">
             <div className="w-full max-w-4xl mx-auto flex flex-col">
               
               {/* Navegación del Mes & Controles */}
@@ -453,31 +452,43 @@ export const CalendarView = () => {
 
                 {/* Leyenda Explicativa de Colores */}
                 <div className="hidden sm:flex items-center gap-2 text-[10.5px] font-bold text-slate-600 dark:text-slate-300 flex-wrap">
-                  <span className="flex items-center space-x-1"><span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span><span>Presencial</span></span>
-                  <span className="flex items-center space-x-1"><span className="w-2.5 h-2.5 rounded-full bg-blue-500"></span><span>Virtual</span></span>
-                  <span className="flex items-center space-x-1"><span className="w-2.5 h-2.5 rounded-full bg-purple-500"></span><span>Llamada</span></span>
+                  <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-800 dark:text-emerald-300 border border-emerald-500/30">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                    <span>🏢 Presencial</span>
+                  </span>
+                  <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-500/10 text-blue-800 dark:text-blue-300 border border-blue-500/30">
+                    <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+                    <span>💻 Virtual</span>
+                  </span>
+                  <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-indigo-500/10 text-indigo-800 dark:text-indigo-300 border border-indigo-500/30">
+                    <span className="w-2 h-2 rounded-full bg-indigo-500"></span>
+                    <span>📞 Llamada</span>
+                  </span>
                 </div>
-
-                <div className="flex items-center space-x-1">
-                  <button
+                
+                <div className="flex space-x-1.5">
+                  <button 
+                    type="button" 
                     onClick={handlePrevMonth}
-                    className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors cursor-pointer"
+                    className="p-1.5 sm:p-2 rounded-xl bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-700 dark:text-slate-200 cursor-pointer active:scale-95 transition-all"
                     title="Mes Anterior"
                   >
                     <ChevronLeft className="w-4 h-4" />
                   </button>
-                  <button
+                  <button 
+                    type="button" 
                     onClick={() => {
                       setCurrentMonth(new Date());
                       setSelectedDate(new Date());
                     }}
-                    className="px-2.5 py-1 text-xs font-bold rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition-colors cursor-pointer"
+                    className="px-3 py-1.5 text-xs font-bold rounded-xl bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-750 dark:text-slate-250 cursor-pointer active:scale-95 transition-all"
                   >
                     Hoy
                   </button>
-                  <button
+                  <button 
+                    type="button" 
                     onClick={handleNextMonth}
-                    className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors cursor-pointer"
+                    className="p-1.5 sm:p-2 rounded-xl bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-700 dark:text-slate-200 cursor-pointer active:scale-95 transition-all"
                     title="Mes Siguiente"
                   >
                     <ChevronRight className="w-4 h-4" />
@@ -639,7 +650,7 @@ export const CalendarView = () => {
           </div>
 
           {/* LADO DERECHO / INFERIOR MÓVIL: LISTADO INTEGRADOR DE CITAS DEL DÍA SELECCIONADO */}
-          <div className="w-full md:w-96 bg-slate-50/80 dark:bg-dark-950 p-4 sm:p-6 pb-32 sm:pb-8 flex flex-col md:overflow-y-auto flex-1 min-h-0">
+          <div className="w-full md:w-96 bg-slate-50/80 dark:bg-dark-950 p-4 sm:p-6 flex flex-col overflow-y-auto flex-1">
           <div className="flex-1 space-y-5">
             <div>
               <span className="text-[10px] text-slate-400 dark:text-slate-500 uppercase font-black tracking-wider block">Citas Programadas</span>
@@ -759,6 +770,7 @@ export const CalendarView = () => {
           </div>
         </div>
       </div>
+    </div>
 
       {/* Modal de Horario Excepcional / Festivo */}
       {showHolidayModal && (
