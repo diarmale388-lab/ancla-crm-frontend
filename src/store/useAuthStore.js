@@ -14,7 +14,7 @@ export const useAuthStore = create((set, get) => ({
     set({ loading: true, error: null });
     try {
       const formData = new URLSearchParams();
-      formData.append('username', email);
+      formData.append('username', email.trim());
       formData.append('password', password);
 
       const response = await fetch(`${API_URL}/auth/login`, {
@@ -26,33 +26,41 @@ export const useAuthStore = create((set, get) => ({
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || 'Error al iniciar sesión');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.detail || 'Usuario o contraseña incorrectos');
       }
 
       const data = await response.json();
+      if (!data.access_token) {
+        throw new Error('Respuesta inválida del servidor');
+      }
+
       localStorage.setItem('token', data.access_token);
-      set({ token: data.access_token, isAuthenticated: true });
+      set({ token: data.access_token, isAuthenticated: true, loading: false, error: null });
       
-      // Obtener el perfil inmediatamente
-      await get().fetchProfile();
+      // Intentar obtener el perfil sin bloquear el login si hay lag de red
+      get().fetchProfile();
       return true;
     } catch (err) {
-      set({ error: err.message, loading: false });
+      set({ error: err.message, loading: false, isAuthenticated: false });
       return false;
     }
   },
 
   logout: () => {
-    localStorage.removeItem('token');
+    try {
+      localStorage.removeItem('token');
+    } catch (e) {}
     set({ token: null, user: null, isAuthenticated: false, error: null });
   },
 
   fetchProfile: async () => {
     const { token } = get();
-    if (!token) return;
+    if (!token) {
+      set({ isAuthenticated: false, user: null });
+      return;
+    }
 
-    set({ loading: true });
     try {
       const response = await fetch(`${API_URL}/auth/me`, {
         headers: {
@@ -60,16 +68,21 @@ export const useAuthStore = create((set, get) => ({
         },
       });
 
-      if (!response.ok) {
-        throw new Error('No se pudo obtener el perfil');
+      if (response.status === 401) {
+        // Únicamente si el backend responde 401 explícito (token verdaderamente caducado)
+        console.warn("Token expirado (401). Cerrando sesión.");
+        get().logout();
+        return;
       }
 
-      const data = await response.json();
-      set({ user: data, loading: false });
+      if (response.ok) {
+        const data = await response.json();
+        set({ user: data, isAuthenticated: true, loading: false });
+      }
     } catch (err) {
-      // Si el token expiró o es inválido, forzar logout
-      get().logout();
-      set({ loading: false });
+      console.warn("Lag o micro-interrupción de red en celular. Manteniendo sesión activa:", err);
+      // En celulares, mantener la sesión activa aunque falle la red momentáneamente
+      set({ loading: false, isAuthenticated: true });
     }
   },
 
@@ -78,6 +91,8 @@ export const useAuthStore = create((set, get) => ({
     if (token) {
       set({ token, isAuthenticated: true });
       await get().fetchProfile();
+    } else {
+      set({ isAuthenticated: false, user: null });
     }
   }
 }));
