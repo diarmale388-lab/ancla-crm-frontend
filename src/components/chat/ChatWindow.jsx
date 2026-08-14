@@ -1328,17 +1328,11 @@ export const ChatWindow = () => {
         </div>
       </div>
 
-      {/* 3/3: Panel Lateral Derecho - Ficha de Contacto & Herramientas */}
-      {showRightSidebar && (
-        <div 
-          onClick={() => setShowRightSidebar(false)}
-          className="xl:hidden fixed inset-0 bg-black/60 backdrop-blur-xs z-40 animate-fade-in"
-        />
-      )}
+      {/* 3/3: Panel Lateral Derecho - Ficha de Contacto & Herramientas (Navegación Inline sin Bloqueos de Pantalla) */}
       <div 
-        className={`right-sidebar-panel flex-col border-l border-slate-200 dark:border-white/5 bg-white dark:bg-slate-900 transition-all h-full max-h-screen overflow-hidden flex-shrink-0 ${
+        className={`right-sidebar-panel flex-col border-l border-slate-200 dark:border-white/5 bg-white dark:bg-slate-900 transition-all h-full overflow-hidden flex-shrink-0 ${
           showRightSidebar 
-            ? 'flex fixed xl:relative right-0 top-0 bottom-0 w-80 sm:w-88 xl:w-[320px] 2xl:w-[340px] max-w-[90vw] xl:max-w-[340px] h-full z-50 shadow-2xl xl:shadow-none animate-fade-in' 
+            ? 'flex w-80 sm:w-88 xl:w-[320px] 2xl:w-[340px] max-w-[90vw] xl:max-w-[340px] h-full shadow-md animate-fade-in' 
             : 'hidden'
         }`}
       >

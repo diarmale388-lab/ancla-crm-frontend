@@ -116,10 +116,15 @@ function App() {
     }
   }, [isAuthenticated, user]);
 
-  // 3. Sincronizar clase móvil has-active-chat para WhatsApp nativo en celular
+  // 3. Sincronizar clase móvil has-active-chat sólo en pantallas móviles (< 768px)
   useEffect(() => {
     if (typeof document !== 'undefined') {
-      document.body.classList.toggle('has-active-chat', !!(activeTab === 'chats' && selectedContactId));
+      const isMobile = window.innerWidth < 768;
+      if (isMobile) {
+        document.body.classList.toggle('has-active-chat', !!(activeTab === 'chats' && selectedContactId));
+      } else {
+        document.body.classList.remove('has-active-chat');
+      }
     }
   }, [activeTab, selectedContactId]);
 
