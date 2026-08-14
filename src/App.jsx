@@ -262,16 +262,21 @@ function App() {
             )}
           </div>
         ) : (
-          /* Login Card */
-          <div className="w-full max-w-md bg-white dark:bg-dark-900 border border-slate-200 dark:border-white/5 rounded-3xl p-8 shadow-2xl glass transition-colors duration-300">
-            <div className="flex flex-col items-center mb-8">
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center mb-4 shadow-xl shadow-emerald-500/10">
-                <Bot className="w-8 h-8 text-dark-950 font-bold" />
+          /* Login Card con Branding Ejecutivo Oficial ANCLA & Firma León FX */
+          <div className="w-full max-w-md bg-white dark:bg-dark-900 border border-slate-200 dark:border-white/5 rounded-3xl p-8 shadow-2xl transition-all duration-300">
+            <div className="flex flex-col items-center mb-6 text-center">
+              {/* Logo Oficial ANCLA Special Projects */}
+              <div className="w-48 h-auto mb-3 flex items-center justify-center">
+                <img 
+                  src="/ancla_official_logo.png" 
+                  alt="ANCLA Special Projects" 
+                  className="w-full h-auto object-contain max-h-24 drop-shadow-sm"
+                />
               </div>
-              <h1 className="text-2xl font-bold text-slate-800 dark:text-white dark:bg-gradient-to-r dark:from-white dark:to-slate-400 dark:bg-clip-text dark:text-transparent">
+              <h1 className="text-xl font-black text-slate-800 dark:text-white tracking-tight">
                 ANCLA CRM
               </h1>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Ingresa tus credenciales de acceso</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Gestión Comercial & Proyectos Modulares LATAM</p>
             </div>
 
             {error && (
@@ -281,9 +286,9 @@ function App() {
               </div>
             )}
 
-            <form onSubmit={handleLoginSubmit} className="space-y-5">
+            <form onSubmit={handleLoginSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Usuario o Correo</label>
+                <label className="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1.5">Usuario o Correo</label>
                 <div className="relative">
                   <User className="absolute left-3 top-3.5 w-4 h-4 text-slate-400" />
                   <input
@@ -298,7 +303,7 @@ function App() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Contraseña</label>
+                <label className="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1.5">Contraseña</label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-3.5 w-4 h-4 text-slate-400" />
                   <input
@@ -315,7 +320,7 @@ function App() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-semibold py-3.5 px-4 rounded-xl shadow-lg shadow-emerald-500/10 hover:shadow-emerald-500/20 active:scale-[0.98] transition-all duration-300 flex items-center justify-center space-x-2 cursor-pointer"
+                className="w-full bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg shadow-emerald-500/10 hover:shadow-emerald-500/20 active:scale-[0.98] transition-all duration-300 flex items-center justify-center space-x-2 cursor-pointer mt-2"
               >
                 {loading ? (
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -327,6 +332,17 @@ function App() {
                 )}
               </button>
             </form>
+
+            {/* Footer de Firma Ejecutiva León FX */}
+            <div className="pt-5 mt-6 border-t border-slate-100 dark:border-slate-800 flex items-center justify-center space-x-2 text-slate-400 dark:text-slate-500">
+              <span className="text-[11px] font-bold tracking-wider uppercase">By:</span>
+              <img 
+                src="/leon_fx_logo.png" 
+                alt="León FX" 
+                className="w-5 h-5 object-contain"
+              />
+              <span className="text-xs font-black text-slate-700 dark:text-slate-300 tracking-tight">León FX</span>
+            </div>
           </div>
         )}
       </div>
