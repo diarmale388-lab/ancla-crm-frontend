@@ -230,17 +230,19 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
           </div>
         )}
 
-        {/* Botón Instalar App PWA (Mac, iPad, iPhone, Android, Windows) */}
-        <button
-          onClick={handleInstallClick}
-          className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white flex items-center justify-center transition-all shadow-md active:scale-95 cursor-pointer relative group"
-          title="Instalar ANCLA CRM en Mac, iPad, iPhone, Windows o Android"
-        >
-          <Download className="w-5 h-5 animate-pulse" />
-          <div className="absolute left-14 bottom-0 bg-[#111b27] border border-emerald-500/40 text-emerald-300 text-[10px] py-1.5 px-3 rounded-lg opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 shadow-xl font-bold">
-            Instalar App (Mac / iPad / Móvil)
-          </div>
-        </button>
+        {/* Botón Instalar App PWA (Mac, iPad, iPhone, Android, Windows) - Oculto si ya está instalada como PWA */}
+        {isInstallable && !window.matchMedia('(display-mode: standalone)').matches && (
+          <button
+            onClick={handleInstallClick}
+            className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white flex items-center justify-center transition-all shadow-md active:scale-95 cursor-pointer relative group"
+            title="Instalar ANCLA CRM en Mac, iPad, iPhone, Windows o Android"
+          >
+            <Download className="w-5 h-5 animate-pulse" />
+            <div className="absolute left-14 bottom-0 bg-[#111b27] border border-emerald-500/40 text-emerald-300 text-[10px] py-1.5 px-3 rounded-lg opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 shadow-xl font-bold">
+              Instalar App (Mac / iPad / Móvil)
+            </div>
+          </button>
+        )}
 
         {/* Botón Toggler Día/Noche */}
         <button

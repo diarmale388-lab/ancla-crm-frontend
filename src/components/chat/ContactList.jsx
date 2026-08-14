@@ -17,12 +17,19 @@ export const ContactList = () => {
   const [showNewContactModal, setShowNewContactModal] = useState(false);
   const [showMenuDropdown, setShowMenuDropdown] = useState(false);
 
+  const isStandalone = typeof window !== 'undefined' && (
+    window.navigator.standalone === true ||
+    window.matchMedia('(display-mode: standalone)').matches ||
+    window.matchMedia('(display-mode: fullscreen)').matches ||
+    window.matchMedia('(display-mode: minimal-ui)').matches
+  );
+
+  const [deferredPrompt, setDeferredPrompt] = useState(typeof window !== 'undefined' ? window.__deferredPrompt : null);
+
   // Garantizar que los contactos se carguen al montar el componente en celulares
   useEffect(() => {
     fetchContacts();
   }, [currentUser?.id]);
-
-  const [deferredPrompt, setDeferredPrompt] = useState(typeof window !== 'undefined' ? window.__deferredPrompt : null);
 
   useEffect(() => {
     const handleBeforeInstallPrompt = (e) => {
@@ -137,30 +144,35 @@ export const ContactList = () => {
     <div className="w-full bg-white dark:bg-dark-900 border-r border-slate-200 dark:border-white/5 flex flex-col h-full transition-colors duration-300">
       
       {/* WhatsApp Web Header Section (Theme Aware) */}
-      <div className="bg-[#f0f2f5] dark:bg-[#111b21] px-4 pt-5 pb-2 flex flex-col space-y-3.5 flex-shrink-0 select-none border-b border-slate-200 dark:border-white/5">
+      <div className="bg-[#f0f2f5] dark:bg-[#111b21] px-4 pt-4 pb-3 flex flex-col space-y-3 flex-shrink-0 select-none border-b border-slate-200 dark:border-white/5">
         
         {/* Brand Logo and Action Icons */}
         <div className="flex items-center justify-between">
-          <img 
-            src="/logo_ancla.png" 
-            alt="ANCLA Special Projects" 
-            className="h-10 w-auto object-contain mix-blend-multiply dark:invert dark:mix-blend-screen select-none"
-          />
-          <div className="flex items-center space-x-3.5 text-[#54656f] dark:text-slate-300 relative">
-            
-            {/* BOTÓN PROMINENTE DE INSTALAR APP EN MÓVIL */}
-            <button
-              onClick={handleInstallApp}
-              className="flex items-center space-x-1 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white text-[10.5px] font-extrabold px-2.5 py-1.5 rounded-full shadow-md active:scale-95 transition-all cursor-pointer mr-1"
-              title="Instalar App ANCLA CRM en tu Celular"
-            >
-              <span>📲 Instalar App</span>
-            </button>
+          <div className="flex items-center space-x-2">
+            <img 
+              src="/ancla_official_logo.png" 
+              alt="ANCLA Special Projects" 
+              className="h-9 w-auto object-contain select-none"
+            />
+          </div>
 
-            {/* 1. Botón Cambiar Tema Día / Noche (1-Clic en Celular) */}
+          <div className="flex items-center space-x-2 text-[#54656f] dark:text-slate-300 relative">
+            
+            {/* BOTÓN PROMINENTE DE INSTALAR APP EN MÓVIL (Únicamente visible en navegador móvil si NO está instalada aún) */}
+            {!isStandalone && (
+              <button
+                onClick={handleInstallApp}
+                className="md:hidden flex items-center space-x-1 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white text-[10.5px] font-extrabold px-2.5 py-1.5 rounded-full shadow-md active:scale-95 transition-all cursor-pointer mr-1"
+                title="Instalar App ANCLA CRM en tu Celular"
+              >
+                <span>📲 Instalar App</span>
+              </button>
+            )}
+
+            {/* 1. Botón Cambiar Tema Día / Noche (Visible sólo en Móvil para evitar duplicar con el Sidebar de PC) */}
             <button
               onClick={toggleTheme}
-              className="p-1.5 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 text-amber-500 dark:text-amber-400 cursor-pointer transition-colors"
+              className="md:hidden p-1.5 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 text-amber-500 dark:text-amber-400 cursor-pointer transition-colors"
               title={theme === 'dark' ? 'Cambiar a Modo Día (Claro)' : 'Cambiar a Modo Noche (Oscuro)'}
             >
               {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5 text-indigo-600" />}
@@ -169,16 +181,16 @@ export const ContactList = () => {
             {/* 2. Botón Agregar Cliente */}
             <button 
               onClick={() => setShowNewContactModal(true)}
-              className="hover:bg-slate-100 dark:hover:bg-slate-800 p-1.5 rounded-full cursor-pointer transition-colors"
+              className="hover:bg-slate-200 dark:hover:bg-slate-800 p-1.5 rounded-full cursor-pointer transition-colors text-emerald-600 dark:text-emerald-400"
               title="Agregar Nuevo Cliente / Prospecto"
             >
-              <UserPlus className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+              <UserPlus className="w-5 h-5" />
             </button>
 
             {/* 3. Botón Menú Opciones Móvil (3 Puntos) */}
             <button 
               onClick={() => setShowMenuDropdown(!showMenuDropdown)}
-              className="hover:bg-slate-100 dark:hover:bg-slate-800 p-1.5 rounded-full cursor-pointer transition-colors relative"
+              className="hover:bg-slate-200 dark:hover:bg-slate-800 p-1.5 rounded-full cursor-pointer transition-colors relative"
               title="Menú de Opciones"
             >
               <MoreVertical className="w-5 h-5" />
@@ -187,16 +199,18 @@ export const ContactList = () => {
             {/* Menú Desplegable Flotante */}
             {showMenuDropdown && (
               <div className="absolute right-0 top-9 w-56 bg-white dark:bg-[#111b21] border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl py-2 z-50 animate-fade-in font-sans">
-                <button
-                  onClick={() => {
-                    handleInstallApp();
-                    setShowMenuDropdown(false);
-                  }}
-                  className="w-full px-4 py-2.5 text-left text-xs font-black flex items-center space-x-2.5 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 transition-colors"
-                >
-                  <span className="text-sm">📲</span>
-                  <span>Instalar App en Celular</span>
-                </button>
+                {!isStandalone && (
+                  <button
+                    onClick={() => {
+                      handleInstallApp();
+                      setShowMenuDropdown(false);
+                    }}
+                    className="w-full px-4 py-2.5 text-left text-xs font-black flex items-center space-x-2.5 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 transition-colors"
+                  >
+                    <span className="text-sm">📲</span>
+                    <span>Instalar App en Celular</span>
+                  </button>
+                )}
 
                 <button
                   onClick={() => {
