@@ -284,106 +284,104 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
       {/* Contenedor Principal con Dual Theme: #f8fafc en Claro / #0b0f19 en Oscuro */}
       <div className="bg-[#f8fafc] dark:bg-[#0b0f19] border-0 sm:border border-[#e2e8f0] dark:border-[#334155] rounded-none sm:rounded-3xl w-full max-w-5xl h-full sm:h-[92vh] max-h-[100dvh] sm:max-h-[880px] flex flex-col shadow-2xl overflow-hidden text-[#0f172a] dark:text-[#f8fafc] transition-colors">
         
-        {/* 1. HEADER COMPACTO & ACCIONES RÁPIDAS (Paneles: #f1f5f9 / #0f172a) */}
-        <div className="px-6 py-4 border-b border-[#e2e8f0] dark:border-[#334155] bg-[#f1f5f9] dark:bg-[#0f172a] flex flex-col md:flex-row items-start md:items-center justify-between gap-3 shrink-0">
+        {/* 1. HEADER COMPACTO & ACCIONES RÁPIDAS */}
+        <div className="px-4 sm:px-6 py-3 border-b border-[#e2e8f0] dark:border-[#334155] bg-[#f1f5f9] dark:bg-[#0f172a] flex flex-col gap-2 shrink-0">
           
-          <div className="flex items-center space-x-3.5 min-w-0">
-            <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-500 text-white font-black text-base flex items-center justify-center shadow-sm shrink-0">
-              {contact.first_name ? contact.first_name[0].toUpperCase() : 'C'}
-            </div>
-            <div className="min-w-0 space-y-1">
-              <div className="flex items-center space-x-2 flex-wrap gap-y-1">
-                <h3 className="text-base font-black text-[#0f172a] dark:text-[#f8fafc] truncate">
-                  {contact.first_name || 'Prospecto'} {contact.last_name || ''}
-                </h3>
-                <span className="text-[10px] font-mono tabular-nums font-bold px-2 py-0.5 rounded-md bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
-                  ID #{contact.id}
-                </span>
-                <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
-                  {contact.source || 'Meta Ads'}
-                </span>
+          {/* Fila 1: Datos Principales (Izquierda) + Acciones Principales (Derecha) */}
+          <div className="flex items-center justify-between gap-2 min-w-0">
+            <div className="flex items-center space-x-2.5 min-w-0">
+              <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-500 text-white font-black text-sm sm:text-base flex items-center justify-center shadow-sm shrink-0">
+                {contact.first_name ? contact.first_name[0].toUpperCase() : 'C'}
               </div>
-
-              {/* 4 PILARES DIAGNÓSTICO EN 3 SEGUNDOS (RESPUESTAS DE LILIANA) */}
-              <div className="flex items-center gap-1.5 flex-wrap text-[11px] font-bold">
-                <span className="px-2 py-0.5 rounded-lg bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20 font-extrabold">
-                  🏞️ {lotStatus || 'Buscando Lote'}
-                </span>
-                {lotCity && (
-                  <span className="px-2 py-0.5 rounded-lg bg-blue-500/10 text-blue-700 dark:text-blue-300 border border-blue-500/20 font-bold">
-                    📍 {lotCity}
+              <div className="min-w-0">
+                <div className="flex items-center space-x-1.5 flex-wrap">
+                  <h3 className="text-sm sm:text-base font-black text-[#0f172a] dark:text-[#f8fafc] truncate">
+                    {contact.first_name || 'Prospecto'} {contact.last_name || ''}
+                  </h3>
+                  <span className="text-[9px] sm:text-[10px] font-mono tabular-nums font-bold px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                    #{contact.id}
                   </span>
-                )}
-                <span className="px-2 py-0.5 rounded-lg bg-purple-500/10 text-purple-700 dark:text-purple-300 border border-purple-500/20 font-bold">
-                  🏗️ {interestProduct || 'Flex Home 56m²'}
-                </span>
-                <span className="px-2 py-0.5 rounded-lg bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/20 font-bold">
-                  💼 {clientType || 'Persona Natural'}
-                </span>
+                </div>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 font-mono tabular-nums truncate">
+                  📱 {contact.phone}
+                </p>
               </div>
+            </div>
+
+            {/* Acciones Rápidas Superior Derecho */}
+            <div className="flex items-center space-x-1.5 shrink-0">
+              <button
+                type="button"
+                onClick={handleOpenCrmChat}
+                className="px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 text-white font-bold text-xs flex items-center space-x-1 shadow-sm transition-all active:scale-95 cursor-pointer"
+              >
+                <MessageCircle className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Chat CRM</span>
+              </button>
+
+              <button
+                onClick={onClose}
+                className="p-1.5 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 transition-all cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
             </div>
           </div>
 
-          {/* Quick Action Buttons & Asesor Selector */}
-          <div className="flex items-center space-x-2 w-full md:w-auto justify-end flex-wrap gap-y-1.5">
-            <div className="flex items-center space-x-1.5 bg-emerald-500/10 border border-emerald-500/30 rounded-xl px-3 py-1.5 shadow-xs">
-              <span className="text-xs font-black text-emerald-600 dark:text-emerald-400">👤 Asesor:</span>
-              <select
-                value={assignedUserId || ''}
-                onChange={(e) => setAssignedUserId(e.target.value ? parseInt(e.target.value, 10) : null)}
-                className="bg-transparent text-xs font-extrabold text-slate-800 dark:text-white cursor-pointer focus:outline-none"
-              >
-                <option value="" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white">Sin Asignar (Liliana / Admin)</option>
-                <option value="4" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white">Asesor Comercial ANCLA</option>
-                <option value="3" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white">Liliana León (Directora)</option>
-                <option value="5" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white">Super Admin (diarmale388)</option>
-              </select>
+          {/* Fila 2: Pilares Diagnóstico + Selectores & Dossier */}
+          <div className="flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
+            {/* 4 Badges de Diagnóstico (Scroll Horizontal Suave) */}
+            <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5 max-w-full text-[10px] sm:text-[11px] font-bold">
+              <span className="px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20 font-extrabold whitespace-nowrap shrink-0">
+                🏞️ {lotStatus || 'Buscando Lote'}
+              </span>
+              {lotCity && (
+                <span className="px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-700 dark:text-blue-300 border border-blue-500/20 font-bold whitespace-nowrap shrink-0">
+                  📍 {lotCity}
+                </span>
+              )}
+              <span className="px-2 py-0.5 rounded-md bg-purple-500/10 text-purple-700 dark:text-purple-300 border border-purple-500/20 font-bold whitespace-nowrap shrink-0">
+                🏗️ {interestProduct || 'Flex Home 56m²'}
+              </span>
+              <span className="px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/20 font-bold whitespace-nowrap shrink-0">
+                💼 {clientType || 'Persona Natural'}
+              </span>
             </div>
 
-            <button
-              type="button"
-              onClick={handleOpenCrmChat}
-              className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold text-xs flex items-center space-x-1.5 shadow-sm transition-all active:scale-95 cursor-pointer"
-            >
-              <MessageCircle className="w-3.5 h-3.5" />
-              <span>Chat CRM</span>
-            </button>
+            {/* Acciones Secundarias */}
+            <div className="flex items-center space-x-1.5 shrink-0 text-xs">
+              <div className="flex items-center space-x-1 bg-emerald-500/10 border border-emerald-500/30 rounded-lg px-2 py-1">
+                <span className="text-[10px] font-black text-emerald-600 dark:text-emerald-400">👤 Asesor:</span>
+                <select
+                  value={assignedUserId || ''}
+                  onChange={(e) => setAssignedUserId(e.target.value ? parseInt(e.target.value, 10) : null)}
+                  className="bg-transparent text-[10px] font-extrabold text-slate-800 dark:text-white cursor-pointer focus:outline-none max-w-[120px] truncate"
+                >
+                  <option value="" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white">Sin Asignar (Liliana / Admin)</option>
+                  <option value="4" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white">Asesor Comercial ANCLA</option>
+                  <option value="3" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white">Liliana León (Directora)</option>
+                  <option value="5" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white">Super Admin (diarmale388)</option>
+                </select>
+              </div>
 
-            <button
-              type="button"
-              onClick={() => setShowDossierModal(true)}
-              className="px-3 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 font-bold text-xs flex items-center space-x-1.5 transition-all active:scale-95 cursor-pointer"
-            >
-              <DollarSign className="w-3.5 h-3.5" />
-              <span>Dossier COP</span>
-            </button>
+              <button
+                type="button"
+                onClick={() => setShowDossierModal(true)}
+                className="px-2 py-1 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 font-bold text-[10px] flex items-center space-x-1 transition-all cursor-pointer"
+              >
+                <DollarSign className="w-3 h-3" />
+                <span>Dossier</span>
+              </button>
 
-            <button
-              type="button"
-              onClick={() => setShowChinaSpecs(true)}
-              className="px-3 py-1.5 rounded-xl bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 border border-indigo-500/30 font-bold text-xs flex items-center space-x-1.5 transition-all active:scale-95 cursor-pointer"
-            >
-              <Factory className="w-3.5 h-3.5" />
-              <span>Ficha China</span>
-            </button>
-
-            <a
-              href={`https://wa.me/${String(contact?.phone || '').replace(/\D/g, '')}`}
-              target="_blank"
-              rel="noreferrer"
-              className="px-2.5 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs hover:bg-slate-200 dark:hover:bg-slate-800 flex items-center space-x-1 transition-all"
-              title="Abrir en WhatsApp Web"
-            >
-              <ExternalLink className="w-3.5 h-3.5 text-emerald-500" />
-              <span>Web</span>
-            </a>
-
-            <button
-              onClick={onClose}
-              className="p-1.5 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 transition-all cursor-pointer"
-            >
-              <X className="w-5 h-5" />
-            </button>
+              <button
+                type="button"
+                onClick={() => setShowChinaSpecs(true)}
+                className="px-2 py-1 rounded-lg bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/30 font-bold text-[10px] flex items-center space-x-1 transition-all cursor-pointer"
+              >
+                <Factory className="w-3 h-3" />
+                <span>China</span>
+              </button>
+            </div>
           </div>
         </div>
 

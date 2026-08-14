@@ -221,39 +221,39 @@ export const ContactList = () => {
                 <div
                   key={contact.id}
                   onClick={() => fetchMessages(contact.id)}
-                  className={`py-2 px-3 flex items-center space-x-2.5 cursor-pointer transition-all duration-200 border-l-4 ${
+                  className={`py-3 px-3.5 sm:py-2.5 sm:px-3 flex items-center space-x-3 cursor-pointer transition-all duration-200 border-l-4 ${
                     isSelected 
                       ? 'bg-slate-100 dark:bg-slate-800/80 border-emerald-500' 
                       : 'border-transparent hover:bg-slate-50 dark:hover:bg-slate-850/30'
                   }`}
                 >
-                  {/* Avatar */}
+                  {/* Avatar (Estilo WhatsApp Nativo) */}
                   <div className="relative flex-shrink-0">
                     {contact.avatar_url ? (
                       <img 
                         src={contact.avatar_url} 
-                        className="w-9.5 h-9.5 rounded-full object-cover border border-slate-200 dark:border-white/10 shadow-sm"
+                        className="w-11 h-11 sm:w-9.5 sm:h-9.5 rounded-full object-cover border border-slate-200 dark:border-white/10 shadow-sm"
                         alt={initials}
                       />
                     ) : (
-                      <div className="w-9.5 h-9.5 rounded-full bg-[#dfe5e7] dark:bg-slate-700 flex items-end justify-center overflow-hidden border border-slate-200 dark:border-white/10 flex-shrink-0 select-none">
-                        <svg className="w-8 h-8 text-[#a9b7be] dark:text-slate-500" fill="currentColor" viewBox="0 0 24 24">
+                      <div className="w-11 h-11 sm:w-9.5 sm:h-9.5 rounded-full bg-[#dfe5e7] dark:bg-slate-700 flex items-end justify-center overflow-hidden border border-slate-200 dark:border-white/10 flex-shrink-0 select-none">
+                        <svg className="w-9 h-9 sm:w-8 sm:h-8 text-[#a9b7be] dark:text-slate-500" fill="currentColor" viewBox="0 0 24 24">
                           <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                         </svg>
                       </div>
                     )}
                     {/* Icono de Canal (WhatsApp / Instagram) */}
-                    <span className={`absolute -bottom-1 -right-1 p-0.5 rounded-full text-white border ${
+                    <span className={`absolute -bottom-0.5 -right-0.5 p-0.5 rounded-full text-white border ${
                       isInstagram ? 'bg-gradient-to-tr from-purple-600 to-pink-500' : 'bg-emerald-500'
                     } border-white dark:border-dark-900`}>
                       {isInstagram ? (
-                        <svg className="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <svg className="w-3 h-3 sm:w-2.5 sm:h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                           <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
                           <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
                           <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
                         </svg>
                       ) : (
-                        <MessageCircle className="w-2.5 h-2.5" />
+                        <MessageCircle className="w-3 h-3 sm:w-2.5 sm:h-2.5" />
                       )}
                     </span>
                   </div>
@@ -261,14 +261,14 @@ export const ContactList = () => {
                   {/* Info del Contacto */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
-                      <h3 className={`text-xs font-bold truncate leading-tight flex items-center gap-1.5 ${
+                      <h3 className={`text-sm sm:text-xs font-bold truncate leading-tight flex items-center gap-1.5 ${
                         isSelected ? 'text-slate-900 dark:text-white' : 'text-slate-800 dark:text-slate-200'
                       }`}>
                         <span className="truncate">{contact.first_name ? `${contact.first_name} ${contact.last_name || ''}` : contact.phone}</span>
                         <span className="text-[9px] font-mono text-slate-400 font-semibold px-1 py-0.5 bg-slate-100 dark:bg-slate-800 rounded-md border border-slate-200 dark:border-white/5 flex-shrink-0">#{contact.id}</span>
                       </h3>
                       <div className="flex flex-col items-end justify-center">
-                        <span className={`text-[9px] ${
+                        <span className={`text-[10px] sm:text-[9px] ${
                           contact.last_message_sender === 'contact' && !isSelected 
                             ? 'text-emerald-500 font-bold' 
                             : 'text-slate-400 dark:text-slate-500'
@@ -280,8 +280,8 @@ export const ContactList = () => {
                         )}
                       </div>
                     </div>
-                    <div className="flex items-center justify-between mt-0.5">
-                      <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate flex-1 pr-2 leading-tight">
+                    <div className="flex items-center justify-between mt-1 sm:mt-0.5">
+                      <p className="text-xs sm:text-[11px] text-slate-500 dark:text-slate-400 truncate flex-1 pr-2 leading-tight">
                         {contact.last_message_content || 'Sin mensajes aún'}
                       </p>
                       <div className="flex items-center space-x-1">

@@ -1242,11 +1242,11 @@ export const ChatWindow = () => {
 
           <form onSubmit={handleSend} className="flex items-center space-x-2">
             
-            {/* Botón de Plantillas */}
+            {/* Botón de Plantillas (Desktop/Tablet) */}
             <button
               type="button"
               onClick={() => setShowTemplates(!showTemplates)}
-              className={`p-2.5 rounded-xl border transition-all ${
+              className={`hidden sm:flex p-2.5 rounded-xl border transition-all shrink-0 ${
                 showTemplates 
                   ? 'bg-blue-600 border-blue-600 text-white shadow-md'
                   : 'bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/5 text-slate-500 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/10'
@@ -1256,12 +1256,12 @@ export const ChatWindow = () => {
               <Sparkles className="w-4 h-4" />
             </button>
 
-            {/* Botón de Emojis */}
+            {/* Botón de Emojis (Desktop/Tablet) */}
             {!isInternalNote && (
               <button
                 type="button"
                 onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                className={`p-2.5 rounded-xl border transition-all ${
+                className={`hidden sm:flex p-2.5 rounded-xl border transition-all shrink-0 ${
                   showEmojiPicker 
                     ? 'bg-amber-500 border-amber-550 text-white shadow-md animate-pulse'
                     : 'bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/5 text-slate-500 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/10'
@@ -1272,11 +1272,11 @@ export const ChatWindow = () => {
               </button>
             )}
 
-            {/* Botón de Adjuntar Archivo */}
+            {/* Botón de Adjuntar Archivo (Siempre Visible) */}
             <button
               type="button"
               onClick={handleAttachmentClick}
-              className="p-2.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/5 text-slate-500 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/10 cursor-pointer active:scale-95"
+              className="p-2.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/5 text-slate-500 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/10 cursor-pointer active:scale-95 shrink-0"
               title="Adjuntar Imagen, Audio o PDF"
             >
               <Paperclip className="w-4 h-4" />
@@ -1289,38 +1289,41 @@ export const ChatWindow = () => {
               accept="image/*,audio/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain"
             />
 
+            {/* Campo de Texto Principal (Flex-1) */}
             <input
               type="text"
-              placeholder={isInternalNote ? "Escribe una nota interna para el equipo (Privada)..." : "Escribe un mensaje de WhatsApp..."}
+              placeholder={isInternalNote ? "Nota interna privada..." : "Escribe un mensaje de WhatsApp..."}
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
-              className={`flex-1 border rounded-xl px-4 py-2.5 text-sm focus:outline-none transition-all ${
+              className={`flex-1 min-w-0 border rounded-xl px-3.5 py-2.5 text-sm focus:outline-none transition-all ${
                 isInternalNote 
                   ? 'bg-amber-500/5 border-amber-300 focus:border-amber-500 text-slate-800 dark:text-amber-100'
                   : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-white/5 text-slate-855 dark:text-white focus:border-emerald-500/50'
               }`}
             />
 
-            {/* Copiloto disparador */}
+            {/* Copiloto disparador (Desktop/Tablet) */}
             {!isInternalNote && (
               <button
                 type="button"
                 onClick={triggerAiSuggestion}
                 disabled={aiLoading}
-                className="p-2.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/5 text-slate-500 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/10"
+                className="hidden sm:flex p-2.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/5 text-slate-500 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/10 shrink-0"
                 title="Copiloto de IA"
               >
                 <Bot className={`w-4 h-4 ${aiLoading ? 'animate-spin text-emerald-500' : ''}`} />
               </button>
             )}
 
+            {/* Botón de Enviar Mensaje (SIEMPRE VISIBLE Y HIGHLIGHTED) */}
             <button
               type="submit"
-              className={`p-2.5 rounded-xl text-white shadow-md transition-all ${
+              className={`p-2.5 sm:p-3 rounded-xl text-white shadow-md transition-all shrink-0 active:scale-95 cursor-pointer min-w-[42px] flex items-center justify-center ${
                 isInternalNote 
                   ? 'bg-amber-600 hover:bg-amber-500'
                   : 'bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400'
               }`}
+              title="Enviar Mensaje"
             >
               <Send className="w-4 h-4" />
             </button>
