@@ -158,14 +158,14 @@ function App() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-dark-950 text-slate-800 dark:text-white flex flex-col justify-center items-center p-4 relative overflow-hidden transition-colors duration-300">
-        {/* Decorative elements */}
+      <div className="min-h-screen bg-slate-100 dark:bg-dark-950 text-slate-800 dark:text-white flex flex-col justify-center items-center p-4 relative overflow-hidden transition-colors duration-300">
+        {/* Elementos Decorativos Ejecutivos de Fondo */}
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl -z-10 animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl -z-10 animate-pulse" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl -z-10 animate-pulse" style={{ animationDelay: '2s' }}></div>
 
         {invitationToken ? (
           /* Registro de Invitado */
-          <div className="w-full max-w-md bg-white dark:bg-dark-900 border border-slate-200 dark:border-white/5 rounded-3xl p-8 shadow-2xl glass transition-colors duration-300">
+          <div className="w-full max-w-md bg-white dark:bg-dark-900 border border-slate-200 dark:border-white/5 rounded-3xl p-8 shadow-2xl transition-colors duration-300">
             <div className="flex flex-col items-center mb-6">
               <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-purple-500 to-indigo-400 flex items-center justify-center mb-4 shadow-xl shadow-purple-500/10">
                 <User className="w-8 h-8 text-white font-bold" />
@@ -178,54 +178,35 @@ function App() {
 
             {validatingToken && (
               <div className="flex flex-col items-center py-6">
-                <div className="w-8 h-8 border-3 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
-                <span className="text-xs text-slate-400 mt-3 font-semibold">Validando invitación...</span>
+                <div className="w-8 h-8 border-3 border-purple-500 border-t-transparent rounded-full animate-spin mb-3"></div>
+                <p className="text-xs text-slate-500">Validando invitación...</p>
               </div>
             )}
 
             {invitationError && (
-              <div className="space-y-4">
-                <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center space-x-3 text-red-600 dark:text-red-400">
-                  <AlertCircle className="w-5 h-5 flex-shrink-0" />
-                  <span className="text-xs font-semibold">{invitationError}</span>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    window.history.replaceState({}, document.title, window.location.pathname);
-                    setInvitationToken(null);
-                  }}
-                  className="w-full bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-700 dark:text-slate-200 font-bold py-2 rounded-xl text-xs cursor-pointer"
-                >
-                  Volver al Inicio de Sesión
-                </button>
+              <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 text-xs font-medium mb-4 flex items-center space-x-2">
+                <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                <span>{invitationError}</span>
               </div>
             )}
 
-            {invitationDetails && (
-              <form onSubmit={handleRegisterSubmit} className="space-y-5">
-                <div className="p-3.5 bg-purple-500/5 border border-purple-500/10 rounded-xl text-xs space-y-1 text-left">
-                  <p className="text-slate-500 dark:text-slate-405 font-medium">
-                    Invitación válida para: <strong className="text-purple-600 dark:text-purple-400">{invitationDetails.email}</strong>
+            {registerSuccess && (
+              <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold mb-4 flex items-center space-x-2">
+                <CheckCircle2 className="w-5 h-5 flex-shrink-0" />
+                <span>{registerSuccess}</span>
+              </div>
+            )}
+
+            {invitationDetails && !registerSuccess && (
+              <form onSubmit={handleRegisterSubmit} className="space-y-4">
+                <div className="p-3 bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800/30 rounded-2xl mb-2">
+                  <p className="text-[11px] text-purple-700 dark:text-purple-300 font-medium">
+                    Invitación asignada a: <strong>{invitationDetails.email}</strong>
                   </p>
-                  <p className="text-slate-500 dark:text-slate-405">
-                    Rol asignado: <span className="font-extrabold capitalize">{invitationDetails.role === 'admin' ? 'Administrador' : 'Asesor Comercial'}</span>
+                  <p className="text-[10px] text-purple-500 dark:text-purple-400">
+                    Rol: <span className="uppercase font-bold">{invitationDetails.role}</span>
                   </p>
                 </div>
-
-                {registerError && (
-                  <div className="p-3.5 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center space-x-2.5 text-red-600 dark:text-red-400 text-xs">
-                    <AlertCircle className="w-4 h-4 flex-shrink-0" />
-                    <span>{registerError}</span>
-                  </div>
-                )}
-
-                {registerSuccess && (
-                  <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center space-x-2.5 text-emerald-600 dark:text-emerald-450 text-xs">
-                    <CheckCircle2 className="w-4 h-4 flex-shrink-0 animate-bounce" />
-                    <span>{registerSuccess}</span>
-                  </div>
-                )}
 
                 <div>
                   <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Nombre Completo</label>
@@ -262,56 +243,58 @@ function App() {
             )}
           </div>
         ) : (
-          /* Login Card con Branding Ejecutivo Oficial ANCLA & Firma León FX */
-          <div className="w-full max-w-md bg-white dark:bg-dark-900 border border-slate-200 dark:border-white/5 rounded-3xl p-8 shadow-2xl transition-all duration-300">
+          /* Login Card de Alta Gama con Logo Imponente & Fondo Blanco de Contraste */
+          <div className="w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-white/10 rounded-3xl p-7 sm:p-8 shadow-2xl transition-all duration-300">
             <div className="flex flex-col items-center mb-6 text-center">
-              {/* Logo Oficial ANCLA Special Projects */}
-              <div className="w-48 h-auto mb-3 flex items-center justify-center">
+              
+              {/* Logo Oficial ANCLA Special Projects - Tamaño Grande e Imponente */}
+              <div className="w-full max-w-[280px] bg-white p-3 rounded-2xl border border-slate-100 shadow-sm mb-4 flex items-center justify-center">
                 <img 
                   src="/ancla_official_logo.png" 
                   alt="ANCLA Special Projects" 
-                  className="w-full h-auto object-contain max-h-24 drop-shadow-sm"
+                  className="w-full h-auto max-h-28 object-contain"
                 />
               </div>
-              <h1 className="text-xl font-black text-slate-800 dark:text-white tracking-tight">
+
+              <h1 className="text-xl font-black text-slate-900 dark:text-white tracking-tight">
                 ANCLA CRM
               </h1>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Gestión Comercial & Proyectos Modulares LATAM</p>
+              <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mt-1">Gestión Comercial & Proyectos Modulares LATAM</p>
             </div>
 
             {error && (
-              <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center space-x-3 text-red-600 dark:text-red-400 animate-shake">
+              <div className="mb-5 p-4 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center space-x-3 text-red-600 dark:text-red-400 animate-shake">
                 <AlertCircle className="w-5 h-5 flex-shrink-0" />
-                <span className="text-xs font-medium">{error}</span>
+                <span className="text-xs font-semibold">{error}</span>
               </div>
             )}
 
             <form onSubmit={handleLoginSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1.5">Usuario o Correo</label>
+                <label className="block text-[11px] font-black text-slate-700 dark:text-slate-200 uppercase tracking-wider mb-1.5">Usuario o Correo</label>
                 <div className="relative">
-                  <User className="absolute left-3 top-3.5 w-4 h-4 text-slate-400" />
+                  <User className="absolute left-3.5 top-3.5 w-4.5 h-4.5 text-slate-400" />
                   <input
                     type="text"
-                    placeholder="Escribe diarmale388, liliana, asesor o tu correo"
+                    placeholder="diarmale388, liliana, asesor o correo"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl pl-10 pr-4 py-3 text-sm text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/30 transition-all duration-300"
+                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/10 rounded-xl pl-11 pr-4 py-3 text-sm font-medium text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all duration-300"
                     required
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1.5">Contraseña</label>
+                <label className="block text-[11px] font-black text-slate-700 dark:text-slate-200 uppercase tracking-wider mb-1.5">Contraseña</label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-3.5 w-4 h-4 text-slate-400" />
+                  <Lock className="absolute left-3.5 top-3.5 w-4.5 h-4.5 text-slate-400" />
                   <input
                     type="password"
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl pl-10 pr-4 py-3 text-sm text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/30 transition-all duration-300"
+                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/10 rounded-xl pl-11 pr-4 py-3 text-sm font-medium text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all duration-300"
                     required
                   />
                 </div>
@@ -320,28 +303,28 @@ function App() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg shadow-emerald-500/10 hover:shadow-emerald-500/20 active:scale-[0.98] transition-all duration-300 flex items-center justify-center space-x-2 cursor-pointer mt-2"
+                className="w-full bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-black text-xs py-3.5 px-4 rounded-xl shadow-lg shadow-emerald-500/25 active:scale-[0.98] transition-all duration-300 flex items-center justify-center space-x-2 cursor-pointer mt-3"
               >
                 {loading ? (
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                 ) : (
                   <>
                     <Sparkles className="w-4 h-4" />
-                    <span>Iniciar sesión</span>
+                    <span>INICIAR SESIÓN</span>
                   </>
                 )}
               </button>
             </form>
 
             {/* Footer de Firma Ejecutiva León FX */}
-            <div className="pt-5 mt-6 border-t border-slate-100 dark:border-slate-800 flex items-center justify-center space-x-2 text-slate-400 dark:text-slate-500">
-              <span className="text-[11px] font-bold tracking-wider uppercase">By:</span>
+            <div className="pt-4 mt-6 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-center space-x-2 text-slate-400 dark:text-slate-500">
+              <span className="text-[10px] font-black tracking-wider uppercase">By:</span>
               <img 
                 src="/leon_fx_logo.png" 
                 alt="León FX" 
                 className="w-5 h-5 object-contain"
               />
-              <span className="text-xs font-black text-slate-700 dark:text-slate-300 tracking-tight">León FX</span>
+              <span className="text-xs font-black text-slate-800 dark:text-slate-200 tracking-tight">León FX</span>
             </div>
           </div>
         )}
