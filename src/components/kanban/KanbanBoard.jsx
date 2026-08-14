@@ -31,6 +31,7 @@ export const KanbanBoard = () => {
   const [filterDateRange, setFilterDateRange] = useState('ALL');
   const [filterSpecificDate, setFilterSpecificDate] = useState('');
   const [filterOnlyUrgent, setFilterOnlyUrgent] = useState(false);
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
 
   // Ordenamiento para la Vista Tabla
   const [tableSortColumn, setTableSortColumn] = useState('updated_at');
@@ -504,228 +505,229 @@ export const KanbanBoard = () => {
     <div className="flex-1 flex flex-col h-full bg-[#f8fafc] dark:bg-[#0b0f19] text-[#0f172a] dark:text-[#f8fafc] overflow-hidden select-none transition-colors duration-300 font-sans">
       
       {/* 1. ENCABEZADO PRINCIPAL & SWITCH DUAL KANBAN / TABLA */}
-      <div className="p-5 border-b border-slate-200 dark:border-white/5 bg-white/90 dark:bg-[#0f172a]/90 backdrop-blur-md flex flex-col space-y-4 flex-shrink-0 shadow-xs">
+      {/* 1. ENCABEZADO PRINCIPAL & SWITCH DUAL KANBAN / TABLA (ADAPTATIVO Y COMPACTO EN MÓVIL) */}
+      <div className="p-3 sm:p-5 border-b border-slate-200 dark:border-white/5 bg-white/90 dark:bg-[#0f172a]/90 backdrop-blur-md flex flex-col space-y-3 flex-shrink-0 shadow-xs select-none">
         
-        {/* Fila 1: Título, Switcher de Vista y Botones de Acción */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <div className="flex items-center space-x-3 min-w-0">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center shadow-md text-slate-950 font-black shrink-0">
-              <TrendingUp className="w-5 h-5" />
+        {/* Fila 1: Título, Botón Filtros Móvil, Switcher de Vista y Botones de Acción */}
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center space-x-2 sm:space-x-3 min-w-0">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center shadow-md text-slate-950 font-black shrink-0">
+              <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <div className="min-w-0">
-              <h2 className="text-base font-black text-[#0f172a] dark:text-white tracking-tight flex items-center space-x-2 truncate">
-                <span>Pipeline Comercial 360°</span>
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 font-bold uppercase tracking-wider">
+              <h2 className="text-xs sm:text-base font-black text-[#0f172a] dark:text-white tracking-tight flex items-center space-x-1.5 truncate">
+                <span>Pipeline 360°</span>
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 font-bold uppercase tracking-wider hidden sm:inline-block">
                   Linear Style
                 </span>
               </h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
+              <p className="text-xs text-slate-500 dark:text-slate-400 truncate hidden sm:block">
                 Gestión estratégica, semáforo SLA de inactividad y reglas de arrastre inteligentes
               </p>
             </div>
           </div>
 
-          <div className="flex items-center space-x-2 w-full sm:w-auto justify-end flex-wrap gap-y-1.5">
-            
+          <div className="flex items-center space-x-1.5 shrink-0">
+            {/* Botón Plegable de Filtros para Celular (< sm) */}
+            <button
+              type="button"
+              onClick={() => setShowMobileFilters(prev => !prev)}
+              className="sm:hidden px-2.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold text-xs flex items-center space-x-1 border border-slate-200 dark:border-slate-700 cursor-pointer active:scale-95 transition-all"
+            >
+              <SlidersHorizontal className="w-3.5 h-3.5 text-emerald-500" />
+              <span>{showMobileFilters ? 'Ocultar' : 'Filtros'}</span>
+            </button>
+
             {/* MÓDULO 4: SELECTOR DUAL DE VISTA (TABLERO KANBAN ↔ TABLA EJECUTIVA) */}
-            <div className="bg-slate-100 dark:bg-slate-800/80 p-1 rounded-xl flex items-center space-x-1 border border-slate-200 dark:border-white/5 shadow-2xs">
+            <div className="bg-slate-100 dark:bg-slate-800/80 p-0.5 sm:p-1 rounded-xl flex items-center space-x-0.5 border border-slate-200 dark:border-white/5 shadow-2xs">
               <button
                 type="button"
                 onClick={() => setViewMode('kanban')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center space-x-1.5 transition-all cursor-pointer ${
+                className={`px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg text-xs font-bold flex items-center space-x-1 transition-all cursor-pointer ${
                   viewMode === 'kanban'
                     ? 'bg-white dark:bg-[#0b0f19] text-[#0f172a] dark:text-white shadow-xs font-black'
                     : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
+                title="Tablero Kanban"
               >
                 <KanbanSquare className="w-3.5 h-3.5 text-emerald-500" />
-                <span>Tablero Kanban</span>
+                <span className="hidden sm:inline">Kanban</span>
               </button>
               <button
                 type="button"
                 onClick={() => setViewMode('table')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center space-x-1.5 transition-all cursor-pointer ${
+                className={`px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg text-xs font-bold flex items-center space-x-1 transition-all cursor-pointer ${
                   viewMode === 'table'
                     ? 'bg-white dark:bg-[#0b0f19] text-[#0f172a] dark:text-white shadow-xs font-black'
                     : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
+                title="Tabla Ejecutiva"
               >
                 <List className="w-3.5 h-3.5 text-indigo-500" />
-                <span>Tabla Ejecutiva</span>
+                <span className="hidden sm:inline">Tabla</span>
               </button>
             </div>
 
             <button
               onClick={() => { fetchLeads(); fetchStages(); fetchAppointments(); }}
-              className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-all cursor-pointer"
+              className="p-1.5 sm:p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-all cursor-pointer"
               title="Refrescar datos"
             >
-              <RefreshCw className="w-4 h-4" />
-            </button>
-
-            <button
-              onClick={() => setActiveTab('showroom')}
-              className="flex items-center space-x-1.5 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white text-xs font-black py-2 px-3.5 rounded-xl shadow-sm transition-all active:scale-95 cursor-pointer"
-            >
-              <span>🏠</span>
-              <span>Showroom Armenia</span>
+              <RefreshCw className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </button>
           </div>
         </div>
 
-        {/* Fila 2: Barra de KPIs en Tiempo Real */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        {/* Sección Plegable en Celular: KPIs y Filtros Avanzados */}
+        <div className={`${showMobileFilters ? 'block' : 'hidden sm:block'} space-y-3 animate-fade-in`}>
           
-          <div className="bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-white/5 p-3 rounded-2xl flex items-center space-x-3 shadow-xs">
-            <div className="w-9 h-9 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
-              <User className="w-4 h-4" />
+          {/* Fila 2: Barra de KPIs en Tiempo Real */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-3">
+            <div className="bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-white/5 p-2.5 sm:p-3 rounded-2xl flex items-center space-x-2.5 sm:space-x-3 shadow-xs">
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
+                <User className="w-4 h-4" />
+              </div>
+              <div className="min-w-0">
+                <span className="text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider block">Leads en Embudo</span>
+                <span className="text-xs sm:text-sm font-black text-slate-900 dark:text-white leading-tight font-mono tabular-nums">{kpis.totalActive} prospectos</span>
+              </div>
             </div>
-            <div className="min-w-0">
-              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider block">Leads en Embudo</span>
-              <span className="text-sm font-black text-slate-900 dark:text-white leading-tight font-mono tabular-nums">{kpis.totalActive} prospectos</span>
+
+            <div className="bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-white/5 p-2.5 sm:p-3 rounded-2xl flex items-center space-x-2.5 sm:space-x-3 shadow-xs">
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                <DollarSign className="w-4 h-4" />
+              </div>
+              <div className="min-w-0">
+                <span className="text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider block">Valor Proyectado</span>
+                <span className="text-xs sm:text-sm font-black text-emerald-600 dark:text-emerald-400 leading-tight font-mono tabular-nums truncate block">{formatCOP(kpis.projectedValue)}</span>
+              </div>
+            </div>
+
+            <div className="bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-white/5 p-2.5 sm:p-3 rounded-2xl flex items-center space-x-2.5 sm:space-x-3 shadow-xs">
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+                <Calendar className="w-4 h-4" />
+              </div>
+              <div className="min-w-0">
+                <span className="text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider block">Citas del Mes</span>
+                <span className="text-xs sm:text-sm font-black text-amber-600 dark:text-amber-400 leading-tight font-mono tabular-nums">{kpis.confirmedApptsThisMonth} agendadas</span>
+              </div>
+            </div>
+
+            <div className="bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-white/5 p-2.5 sm:p-3 rounded-2xl flex items-center space-x-2.5 sm:space-x-3 shadow-xs">
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0">
+                <Award className="w-4 h-4" />
+              </div>
+              <div className="min-w-0">
+                <span className="text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider block">Conversión</span>
+                <span className="text-xs sm:text-sm font-black text-purple-600 dark:text-purple-400 leading-tight font-mono tabular-nums">{kpis.conversionRate}% ({kpis.wonLeads})</span>
+              </div>
             </div>
           </div>
 
-          <div className="bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-white/5 p-3 rounded-2xl flex items-center space-x-3 shadow-xs">
-            <div className="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
-              <DollarSign className="w-4 h-4" />
-            </div>
-            <div className="min-w-0">
-              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider block">Valor Proyectado ($COP)</span>
-              <span className="text-sm font-black text-emerald-600 dark:text-emerald-400 leading-tight font-mono tabular-nums truncate block">{formatCOP(kpis.projectedValue)}</span>
-            </div>
-          </div>
+          {/* Fila 3: Filtros Avanzados y Botón Maestro de SLA Crítico */}
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-2.5 pt-1">
+            <div className="flex items-center space-x-2 w-full lg:w-auto">
+              <div className="relative flex-1 sm:w-64">
+                <Search className="absolute left-3 top-2.5 w-3.5 h-3.5 text-slate-400" />
+                <input
+                  type="text"
+                  placeholder="Buscar prospecto, teléfono..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl pl-8 pr-7 py-1.5 text-xs text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:border-emerald-500"
+                />
+                {searchQuery && (
+                  <button 
+                    onClick={() => setSearchQuery('')}
+                    className="absolute right-2 top-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
 
-          <div className="bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-white/5 p-3 rounded-2xl flex items-center space-x-3 shadow-xs">
-            <div className="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
-              <Calendar className="w-4 h-4" />
+              <button
+                type="button"
+                onClick={() => setFilterOnlyUrgent(prev => !prev)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center space-x-1.5 transition-all cursor-pointer shrink-0 border ${
+                  filterOnlyUrgent
+                    ? 'bg-rose-600 text-white border-rose-500 shadow-md font-black ring-2 ring-rose-500/50 animate-pulse'
+                    : urgentLeadsCount > 0
+                    ? 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/30 hover:bg-rose-500/20'
+                    : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-white/5'
+                }`}
+                title="Filtrar prospectos sin contacto por más de 48 horas"
+              >
+                <AlertTriangle className={`w-3.5 h-3.5 ${urgentLeadsCount > 0 ? 'text-rose-500' : 'text-slate-400'}`} />
+                <span>🚨 Requiere Atención ({urgentLeadsCount})</span>
+              </button>
             </div>
-            <div className="min-w-0">
-              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider block">Citas del Mes</span>
-              <span className="text-sm font-black text-amber-600 dark:text-amber-400 leading-tight font-mono tabular-nums">{kpis.confirmedApptsThisMonth} agendadas</span>
-            </div>
-          </div>
 
-          <div className="bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-white/5 p-3 rounded-2xl flex items-center space-x-3 shadow-xs">
-            <div className="w-9 h-9 rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0">
-              <Award className="w-4 h-4" />
-            </div>
-            <div className="min-w-0">
-              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider block">Tasa de Conversión</span>
-              <span className="text-sm font-black text-purple-600 dark:text-purple-400 leading-tight font-mono tabular-nums">{kpis.conversionRate}% ({kpis.wonLeads} ganados)</span>
-            </div>
-          </div>
+            <div className="flex flex-wrap items-center gap-1.5 w-full lg:w-auto">
+              <select
+                value={filterAdvisor}
+                onChange={(e) => setFilterAdvisor(e.target.value)}
+                className="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-white/5 text-slate-700 dark:text-slate-200 text-xs font-semibold rounded-xl px-2.5 py-1.5 focus:outline-none cursor-pointer"
+              >
+                <option value="ALL">👤 Asesores</option>
+                {uniqueAdvisors.map(([id, name]) => (
+                  <option key={id} value={id}>{name}</option>
+                ))}
+              </select>
 
-        </div>
+              <select
+                value={filterProduct}
+                onChange={(e) => setFilterProduct(e.target.value)}
+                className="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-white/5 text-slate-700 dark:text-slate-200 text-xs font-semibold rounded-xl px-2.5 py-1.5 focus:outline-none cursor-pointer"
+              >
+                <option value="ALL">🏗️ Proyecto</option>
+                <option value="Flex Home">Flex Home</option>
+                <option value="Living">Cápsulas Living</option>
+                <option value="Llave en Mano">Llave en Mano</option>
+                <option value="Glamping">Glamping</option>
+                <option value="Bodega">Bodegas</option>
+              </select>
 
-        {/* Fila 3: Filtros Avanzados y Botón Maestro de SLA Crítico */}
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-2.5 pt-1">
-          
-          {/* Búsqueda y Botón Filtro SLA Inactividad */}
-          <div className="flex items-center space-x-2 w-full lg:w-auto">
-            <div className="relative flex-1 sm:w-64">
-              <Search className="absolute left-3 top-2.5 w-3.5 h-3.5 text-slate-400" />
-              <input
-                type="text"
-                placeholder="Buscar prospecto, teléfono..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl pl-8 pr-7 py-1.5 text-xs text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:border-emerald-500"
-              />
-              {searchQuery && (
-                <button 
-                  onClick={() => setSearchQuery('')}
-                  className="absolute right-2 top-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+              <select
+                value={filterLotStatus}
+                onChange={(e) => setFilterLotStatus(e.target.value)}
+                className="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-white/5 text-slate-700 dark:text-slate-200 text-xs font-semibold rounded-xl px-2.5 py-1.5 focus:outline-none cursor-pointer"
+              >
+                <option value="ALL">🗺️ Estado de Lote</option>
+                <option value="Lote Propio">Lote Propio</option>
+                <option value="Buscando Lote">Buscando Lote</option>
+              </select>
+
+              <select
+                value={filterDateRange}
+                onChange={(e) => setFilterDateRange(e.target.value)}
+                className="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-white/5 text-slate-700 dark:text-slate-200 text-xs font-semibold rounded-xl px-2.5 py-1.5 focus:outline-none cursor-pointer"
+              >
+                <option value="ALL">📅 Fechas</option>
+                <option value="TODAY">📅 Registrados Hoy</option>
+                <option value="THIS_WEEK">📅 Esta Semana</option>
+                <option value="THIS_MONTH">📅 Este Mes</option>
+              </select>
+
+              {(searchQuery || filterAdvisor !== 'ALL' || filterProduct !== 'ALL' || filterLotStatus !== 'ALL' || filterDateRange !== 'ALL' || filterOnlyUrgent) && (
+                <button
+                  onClick={() => {
+                    setSearchQuery('');
+                    setFilterAdvisor('ALL');
+                    setFilterProduct('ALL');
+                    setFilterLotStatus('ALL');
+                    setFilterDateRange('ALL');
+                    setFilterSpecificDate('');
+                    setFilterOnlyUrgent(false);
+                  }}
+                  className="bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20 text-xs font-bold px-2.5 py-1.5 rounded-xl hover:bg-rose-500/20 transition-all flex items-center space-x-1 cursor-pointer"
                 >
-                  <X className="w-3.5 h-3.5" />
+                  <X className="w-3 h-3" />
+                  <span>Limpiar</span>
                 </button>
               )}
             </div>
-
-            {/* MÓDULO 1: BOTÓN DE FILTRO MAESTRO [ 🚨 Requiere Atención (X) ] */}
-            <button
-              type="button"
-              onClick={() => setFilterOnlyUrgent(prev => !prev)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center space-x-1.5 transition-all cursor-pointer shrink-0 border ${
-                filterOnlyUrgent
-                  ? 'bg-rose-600 text-white border-rose-500 shadow-md font-black ring-2 ring-rose-500/50 animate-pulse'
-                  : urgentLeadsCount > 0
-                  ? 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/30 hover:bg-rose-500/20'
-                  : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-white/5'
-              }`}
-              title="Filtrar prospectos sin contacto por más de 48 horas"
-            >
-              <AlertTriangle className={`w-3.5 h-3.5 ${urgentLeadsCount > 0 ? 'text-rose-500' : 'text-slate-400'}`} />
-              <span>🚨 Requiere Atención ({urgentLeadsCount})</span>
-            </button>
           </div>
-
-          {/* Filtros Dropdowns Compactos */}
-          <div className="flex flex-wrap items-center gap-1.5 w-full lg:w-auto">
-            <select
-              value={filterAdvisor}
-              onChange={(e) => setFilterAdvisor(e.target.value)}
-              className="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-white/5 text-slate-700 dark:text-slate-200 text-xs font-semibold rounded-xl px-2.5 py-1.5 focus:outline-none cursor-pointer"
-            >
-              <option value="ALL">👤 Asesores</option>
-              {uniqueAdvisors.map(([id, name]) => (
-                <option key={id} value={id}>{name}</option>
-              ))}
-            </select>
-
-            <select
-              value={filterProduct}
-              onChange={(e) => setFilterProduct(e.target.value)}
-              className="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-white/5 text-slate-700 dark:text-slate-200 text-xs font-semibold rounded-xl px-2.5 py-1.5 focus:outline-none cursor-pointer"
-            >
-              <option value="ALL">🏗️ Proyecto</option>
-              <option value="Flex Home">Flex Home</option>
-              <option value="Living">Cápsulas Living</option>
-              <option value="Llave en Mano">Llave en Mano</option>
-              <option value="Glamping">Glamping</option>
-              <option value="Bodega">Bodegas</option>
-            </select>
-
-            <select
-              value={filterLotStatus}
-              onChange={(e) => setFilterLotStatus(e.target.value)}
-              className="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-white/5 text-slate-700 dark:text-slate-200 text-xs font-semibold rounded-xl px-2.5 py-1.5 focus:outline-none cursor-pointer"
-            >
-              <option value="ALL">🗺️ Estado de Lote</option>
-              <option value="Lote Propio">Lote Propio</option>
-              <option value="Buscando Lote">Buscando Lote</option>
-            </select>
-
-            <select
-              value={filterDateRange}
-              onChange={(e) => setFilterDateRange(e.target.value)}
-              className="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-white/5 text-slate-700 dark:text-slate-200 text-xs font-semibold rounded-xl px-2.5 py-1.5 focus:outline-none cursor-pointer"
-            >
-              <option value="ALL">📅 Fechas</option>
-              <option value="TODAY">📅 Registrados Hoy</option>
-              <option value="THIS_WEEK">📅 Esta Semana</option>
-              <option value="THIS_MONTH">📅 Este Mes</option>
-            </select>
-
-            {(searchQuery || filterAdvisor !== 'ALL' || filterProduct !== 'ALL' || filterLotStatus !== 'ALL' || filterDateRange !== 'ALL' || filterOnlyUrgent) && (
-              <button
-                onClick={() => {
-                  setSearchQuery('');
-                  setFilterAdvisor('ALL');
-                  setFilterProduct('ALL');
-                  setFilterLotStatus('ALL');
-                  setFilterDateRange('ALL');
-                  setFilterSpecificDate('');
-                  setFilterOnlyUrgent(false);
-                }}
-                className="bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20 text-xs font-bold px-2.5 py-1.5 rounded-xl hover:bg-rose-500/20 transition-all flex items-center space-x-1 cursor-pointer"
-              >
-                <X className="w-3 h-3" />
-                <span>Limpiar</span>
-              </button>
-            )}
-          </div>
-
         </div>
 
       </div>

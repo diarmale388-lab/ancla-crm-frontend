@@ -455,8 +455,8 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                   <span>Clasificación Comercial 1-Clic</span>
                 </span>
                 
-                {/* Selector Segmentado Unificado */}
-                <div className="bg-slate-100 dark:bg-slate-800/50 p-1 rounded-xl flex gap-1">
+                {/* Selector Segmentado Unificado (Grid Adaptativo 5 Columnas de Alta Legibilidad sin Cortes) */}
+                <div className="bg-slate-100 dark:bg-slate-800/60 p-1.5 rounded-xl grid grid-cols-5 gap-1 max-w-full overflow-x-auto no-scrollbar">
                   {QUALIFICATION_LEVELS.map((lvl) => {
                     const isSelected = qualificationLevel === lvl.id;
                     return (
@@ -464,14 +464,14 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                         key={lvl.id}
                         type="button"
                         onClick={() => setQualificationLevel(lvl.id)}
-                        className={`flex-1 py-2 px-2.5 rounded-lg text-xs font-bold flex items-center justify-center space-x-1.5 transition-all cursor-pointer ${
+                        className={`py-2 px-1 rounded-lg text-[11px] sm:text-xs font-bold flex items-center justify-center space-x-1 transition-all cursor-pointer shrink-0 select-none ${
                           isSelected 
-                            ? 'bg-white dark:bg-[#182235] text-[#0f172a] dark:text-[#f8fafc] shadow-xs ring-1 ring-emerald-500/40 font-extrabold' 
+                            ? 'bg-white dark:bg-[#182235] text-[#0f172a] dark:text-[#f8fafc] shadow-xs ring-1 ring-emerald-500/50 font-black' 
                             : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
                         }`}
                       >
-                        <span>{lvl.icon}</span>
-                        <span className="truncate">{lvl.label.split(' ')[0]}</span>
+                        <span className="text-xs">{lvl.icon}</span>
+                        <span className="truncate max-w-[65px] text-center">{lvl.label.split(' ')[0]}</span>
                       </button>
                     );
                   })}
