@@ -737,11 +737,11 @@ export const ChatWindow = () => {
             <button
               type="button"
               onClick={() => setShowFichaModal360(true)}
-              className="px-2.5 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 text-[11px] font-bold flex items-center space-x-1.5 transition-all active:scale-95 cursor-pointer shadow-xs"
+              className="px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-extrabold text-[11px] flex items-center space-x-1.5 transition-all active:scale-95 cursor-pointer shadow-sm shrink-0"
               title="Abrir Ficha Técnica Comercial 360°"
             >
-              <Sparkles className="w-3.5 h-3.5 text-emerald-500" />
-              <span className="hidden sm:inline font-semibold">Ficha 360°</span>
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Ficha 360°</span>
             </button>
 
             {/* Re-asignación Rápida de Vendedor (Escondida en pantallas extra pequeñas para ahorrar espacio) */}
