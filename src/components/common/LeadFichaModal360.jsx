@@ -3,7 +3,7 @@ import {
   X, Sparkles, Phone, Mail, MapPin, Building2, DollarSign, Calendar as CalendarIcon, 
   FileText, Check, MessageSquare, AlertCircle, Clock, Send, ShieldCheck, Flame, 
   User, CheckCircle2, FileUp, ExternalLink, HelpCircle, RefreshCw, MessageCircle, 
-  Factory, FolderLock, UserCheck, Activity, Layers, ArrowUpRight, Upload
+  Factory, FolderLock, FolderArchive, UserCheck, Activity, Layers, ArrowUpRight, Upload
 } from 'lucide-react';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useChatStore } from '../../store/useChatStore';
