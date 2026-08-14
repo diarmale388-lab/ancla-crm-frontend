@@ -310,8 +310,22 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
             </div>
           </div>
 
-          {/* Quick Action Buttons */}
+          {/* Quick Action Buttons & Asesor Selector */}
           <div className="flex items-center space-x-2 w-full md:w-auto justify-end flex-wrap gap-y-1.5">
+            <div className="flex items-center space-x-1.5 bg-emerald-500/10 border border-emerald-500/30 rounded-xl px-3 py-1.5 shadow-xs">
+              <span className="text-xs font-black text-emerald-600 dark:text-emerald-400">👤 Asesor:</span>
+              <select
+                value={assignedUserId || ''}
+                onChange={(e) => setAssignedUserId(e.target.value ? parseInt(e.target.value, 10) : null)}
+                className="bg-transparent text-xs font-extrabold text-slate-800 dark:text-white cursor-pointer focus:outline-none"
+              >
+                <option value="" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white">Sin Asignar (Liliana / Admin)</option>
+                <option value="4" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white">Asesor Comercial ANCLA</option>
+                <option value="3" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white">Liliana León (Directora)</option>
+                <option value="5" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white">Super Admin (diarmale388)</option>
+              </select>
+            </div>
+
             <button
               type="button"
               onClick={handleOpenCrmChat}
@@ -434,6 +448,21 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                     <User className="w-4 h-4 text-emerald-500" />
                     <span>Datos de Contacto & Terreno</span>
                   </span>
+
+                  {/* Selector Destacado de Asesor Responsable */}
+                  <div className="p-2.5 rounded-xl bg-emerald-500/10 dark:bg-emerald-950/30 border border-emerald-500/30">
+                    <label className="block text-[10px] font-extrabold uppercase tracking-wider text-emerald-700 dark:text-emerald-300 mb-1">👤 Asesor Comercial Asignado</label>
+                    <select
+                      value={assignedUserId || ''}
+                      onChange={(e) => setAssignedUserId(e.target.value ? parseInt(e.target.value, 10) : null)}
+                      className="w-full bg-white dark:bg-slate-900 border border-emerald-500/30 rounded-xl px-3 py-1.5 text-xs font-black text-emerald-800 dark:text-emerald-200 cursor-pointer"
+                    >
+                      <option value="">Sin Asignar (Liliana / Admin General)</option>
+                      <option value="4">Asesor Comercial ANCLA (asesor@anclaspecialprojects.com)</option>
+                      <option value="3">Liliana León (Directora Comercial)</option>
+                      <option value="5">Super Admin (diarmale388)</option>
+                    </select>
+                  </div>
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
