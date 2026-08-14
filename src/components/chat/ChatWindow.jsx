@@ -687,11 +687,16 @@ export const ChatWindow = () => {
           <div className="flex items-center min-w-0">
             {/* Botón de Atrás (solo móvil/tablet) */}
             <button
-              onClick={() => setSelectedContactId(null)}
-              className="md:hidden p-2 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/5 text-slate-550 dark:text-slate-400 hover:text-slate-700 dark:hover:text-white mr-2.5 active:scale-95 transition-all cursor-pointer"
+              onClick={() => {
+                setSelectedContactId(null);
+                if (typeof document !== 'undefined') {
+                  document.body.classList.remove('has-active-chat');
+                }
+              }}
+              className="lg:hidden p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 mr-2 flex-shrink-0 active:scale-95 transition-all cursor-pointer"
               title="Volver a los chats"
             >
-              <ArrowLeft className="w-4 h-4" />
+              <ArrowLeft className="w-5 h-5" />
             </button>
             {/* Avatar del contacto en el Header */}
             <div className="relative mr-3 flex-shrink-0">
