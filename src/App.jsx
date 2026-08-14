@@ -119,7 +119,7 @@ function App() {
   // 3. Sincronizar clase móvil has-active-chat sólo en pantallas móviles (< 768px)
   useEffect(() => {
     if (typeof document !== 'undefined') {
-      const isMobile = window.innerWidth < 1024;
+      const isMobile = window.innerWidth < 768;
       if (isMobile) {
         document.body.classList.toggle('has-active-chat', !!(activeTab === 'chats' && selectedContactId));
       } else {

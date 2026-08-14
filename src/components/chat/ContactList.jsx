@@ -118,6 +118,15 @@ export const ContactList = () => {
           />
           <div className="flex items-center space-x-3.5 text-[#54656f] dark:text-slate-300 relative">
             
+            {/* BOTÓN PROMINENTE DE INSTALAR APP EN MÓVIL */}
+            <button
+              onClick={handleInstallApp}
+              className="flex items-center space-x-1 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white text-[10.5px] font-extrabold px-2.5 py-1.5 rounded-full shadow-md active:scale-95 transition-all cursor-pointer mr-1"
+              title="Instalar App ANCLA CRM en tu Celular"
+            >
+              <span>📲 Instalar App</span>
+            </button>
+
             {/* 1. Botón Cambiar Tema Día / Noche (1-Clic en Celular) */}
             <button
               onClick={toggleTheme}
@@ -147,7 +156,18 @@ export const ContactList = () => {
 
             {/* Menú Desplegable Flotante */}
             {showMenuDropdown && (
-              <div className="absolute right-0 top-9 w-52 bg-white dark:bg-[#111b21] border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl py-2 z-50 animate-fade-in font-sans">
+              <div className="absolute right-0 top-9 w-56 bg-white dark:bg-[#111b21] border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl py-2 z-50 animate-fade-in font-sans">
+                <button
+                  onClick={() => {
+                    handleInstallApp();
+                    setShowMenuDropdown(false);
+                  }}
+                  className="w-full px-4 py-2.5 text-left text-xs font-black flex items-center space-x-2.5 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 transition-colors"
+                >
+                  <span className="text-sm">📲</span>
+                  <span>Instalar App en Celular</span>
+                </button>
+
                 <button
                   onClick={() => {
                     toggleTheme();
