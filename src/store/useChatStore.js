@@ -17,6 +17,7 @@ export const useChatStore = create((set, get) => ({
   typingContacts: {}, // Guarda los IDs de los contactos donde la IA está escribiendo: { contact_id: boolean }
   activeTab: 'chats',
   setActiveTab: (tab) => set({ activeTab: tab }),
+  setSelectedContactId: (id) => set({ selectedContactId: id }),
 
   fetchContacts: async (isSilent = false) => {
     const token = useAuthStore.getState().token;

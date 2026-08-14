@@ -8,7 +8,7 @@ import LeadFichaModal360 from '../common/LeadFichaModal360';
 import EmailPreviewModal from '../common/EmailPreviewModal';
 import AnclaTechnicalDossier from '../common/AnclaTechnicalDossier';
 import { MessageBubble } from './MessageBubble';
-import { Send, Bot, WifiOff, MessageCircle, Sparkles, User, Phone, Mail, Calendar, Check, ChevronDown, BookOpen, Clock, Lock, Trash2, ShieldAlert, ArrowLeft, CornerUpLeft, Forward, Pencil, X, Download, Smile, Paperclip, Upload, Search, DollarSign } from 'lucide-react';
+import { Send, Bot, WifiOff, MessageCircle, Sparkles, User, Phone, Mail, Calendar, Check, ChevronDown, BookOpen, Clock, Lock, Trash2, ShieldAlert, ArrowLeft, CornerUpLeft, Forward, Pencil, X, Download, Smile, Paperclip, Upload, Search, DollarSign, MoreVertical } from 'lucide-react';
 
 export const ChatWindow = () => {
   const { 
@@ -195,7 +195,7 @@ export const ChatWindow = () => {
     }
   };
 
-  // Control de visibilidad del panel lateral derecho (100% oculto por defecto en móviles y tablets)
+  const [showMobileHeaderMenu, setShowMobileHeaderMenu] = useState(false);
   const [showRightSidebar, setShowRightSidebar] = useState(() => {
     if (typeof window !== 'undefined') {
       return window.innerWidth >= 1280;
@@ -737,8 +737,8 @@ export const ChatWindow = () => {
             </div>
           </div>
 
-          <div className="flex items-center space-x-2 sm:space-x-3">
-            {/* Botón Compacto Ficha 360° en Header */}
+          <div className="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
+            {/* Botón Destacado Ficha 360° (Siempre visible en 1 clic) */}
             <button
               type="button"
               onClick={() => setShowFichaModal360(true)}
@@ -749,93 +749,162 @@ export const ChatWindow = () => {
               <span>Ficha 360°</span>
             </button>
 
-            {/* Re-asignación Rápida de Vendedor (Escondida en pantallas extra pequeñas para ahorrar espacio) */}
-            <div className="hidden xs:flex items-center space-x-1.5 bg-slate-50 dark:bg-white/5 px-2.5 py-1.5 rounded-xl border border-slate-200 dark:border-white/5">
-              <User className="w-3.5 h-3.5 text-blue-500" />
-              <select
-                value={activeContact.assigned_user_id || ''}
-                onChange={(e) => assignContact(activeContact.id, e.target.value)}
-                className="bg-transparent border-none text-[10px] font-bold text-slate-600 dark:text-slate-350 focus:outline-none cursor-pointer pr-4 appearance-none"
+            {/* MENÚ MÓVIL ESTILO WHATSAPP (Solo en Móvil < md) */}
+            <div className="relative md:hidden">
+              <button
+                type="button"
+                onClick={() => setShowMobileHeaderMenu(!showMobileHeaderMenu)}
+                className="p-2 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200 cursor-pointer active:scale-95"
+                title="Más opciones del chat"
               >
-                <option value="">Sin Asignar</option>
-                {agents.map((agent) => (
-                  <option key={agent.id} value={agent.id}>{agent.full_name}</option>
-                ))}
-              </select>
+                <MoreVertical className="w-5 h-5 text-slate-700 dark:text-slate-200" />
+              </button>
+
+              {showMobileHeaderMenu && (
+                <div className="fixed inset-0 bg-black/40 z-40" onClick={() => setShowMobileHeaderMenu(false)} />
+              )}
+
+              {showMobileHeaderMenu && (
+                <div className="absolute right-0 top-11 w-64 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-2xl shadow-2xl z-50 p-2 space-y-1 animate-fade-in text-xs font-bold text-slate-700 dark:text-slate-200">
+                  <button
+                    type="button"
+                    onClick={() => { setShowMobileHeaderMenu(false); handleTriggerAiResponse(); }}
+                    disabled={aiTriggering}
+                    className="w-full text-left px-3 py-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-extrabold flex items-center space-x-2.5 transition-all"
+                  >
+                    <Sparkles className="w-4 h-4 text-emerald-500" />
+                    <span>Sofi: Forzar Respuesta IA</span>
+                  </button>
+
+                  <div className="px-3 py-2 rounded-xl bg-slate-50 dark:bg-white/5 flex items-center justify-between">
+                    <span className="flex items-center space-x-2">
+                      <Bot className="w-4 h-4 text-emerald-500" />
+                      <span>Piloto IA</span>
+                    </span>
+                    <input
+                      type="checkbox"
+                      checked={activeContact.chatbot_enabled}
+                      onChange={(e) => toggleChatbot(activeContact.id, e.target.checked)}
+                      className="w-7 h-4 accent-emerald-500 rounded cursor-pointer"
+                    />
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => { setShowMobileHeaderMenu(false); setShowMsgSearch(!showMsgSearch); }}
+                    className="w-full text-left px-3 py-2 rounded-xl hover:bg-slate-100 dark:hover:bg-white/5 flex items-center space-x-2.5"
+                  >
+                    <Search className="w-4 h-4 text-blue-500" />
+                    <span>Buscar en este chat</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => { setShowMobileHeaderMenu(false); setShowRightSidebar(!showRightSidebar); }}
+                    className="w-full text-left px-3 py-2 rounded-xl hover:bg-slate-100 dark:hover:bg-white/5 flex items-center space-x-2.5"
+                  >
+                    <BookOpen className="w-4 h-4 text-indigo-500" />
+                    <span>Ver Detalles & Propuestas</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      setShowMobileHeaderMenu(false);
+                      if (window.confirm(`¿Borrar el chat de ${activeContact.first_name || activeContact.phone}?`)) {
+                        await deleteContact(activeContact.id);
+                      }
+                    }}
+                    className="w-full text-left px-3 py-2 rounded-xl hover:bg-rose-500/10 text-rose-600 dark:text-rose-400 flex items-center space-x-2.5 border-t border-slate-100 dark:border-white/5 pt-2 mt-1"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                    <span>Eliminar Conversación</span>
+                  </button>
+                </div>
+              )}
             </div>
 
-            {/* Piloto Automático Switch */}
-            <div className="flex items-center space-x-1.5 sm:space-x-2 bg-slate-50 dark:bg-white/5 px-2.5 sm:py-1.5 py-1 rounded-xl border border-slate-200 dark:border-white/5">
-              <Bot className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-              <span className="hidden sm:inline text-[10px] font-bold text-slate-600 dark:text-slate-300">Piloto IA</span>
-              <input
-                type="checkbox"
-                checked={activeContact.chatbot_enabled}
-                onChange={(e) => toggleChatbot(activeContact.id, e.target.checked)}
-                className="w-8 h-4 rounded-full bg-slate-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
-              />
-            </div>
+            {/* BOTONES DESPLEGADOS EN ESCRITORIO (Solo en Pantallas Desktop md+) */}
+            <div className="hidden md:flex items-center space-x-2">
+              <div className="flex items-center space-x-1.5 bg-slate-50 dark:bg-white/5 px-2.5 py-1.5 rounded-xl border border-slate-200 dark:border-white/5">
+                <User className="w-3.5 h-3.5 text-blue-500" />
+                <select
+                  value={activeContact.assigned_user_id || ''}
+                  onChange={(e) => assignContact(activeContact.id, e.target.value)}
+                  className="bg-transparent border-none text-[10px] font-bold text-slate-600 dark:text-slate-350 focus:outline-none cursor-pointer pr-4 appearance-none"
+                >
+                  <option value="">Sin Asignar</option>
+                  {agents.map((agent) => (
+                    <option key={agent.id} value={agent.id}>{agent.full_name}</option>
+                  ))}
+                </select>
+              </div>
 
-            {/* Botón para Forzar Respuesta de IA */}
-            <button
-              type="button"
-              onClick={handleTriggerAiResponse}
-              disabled={aiTriggering}
-              className={`flex items-center space-x-1.5 text-[10px] font-bold px-3 py-1.5 rounded-xl transition-all shadow-sm ${
-                aiTriggering 
-                  ? 'bg-emerald-700/50 text-white cursor-not-allowed'
-                  : 'bg-emerald-600 hover:bg-emerald-500 text-white active:scale-95 cursor-pointer'
-              }`}
-              title="Fuerza a Sofi IA a responder ahora mismo al último mensaje del cliente"
-            >
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Sofi: Responder</span>
-            </button>
+              <div className="flex items-center space-x-1.5 bg-slate-50 dark:bg-white/5 px-2.5 py-1.5 rounded-xl border border-slate-200 dark:border-white/5">
+                <Bot className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                <span className="text-[10px] font-bold text-slate-600 dark:text-slate-300">Piloto IA</span>
+                <input
+                  type="checkbox"
+                  checked={activeContact.chatbot_enabled}
+                  onChange={(e) => toggleChatbot(activeContact.id, e.target.checked)}
+                  className="w-8 h-4 rounded-full bg-slate-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
+                />
+              </div>
 
-            {/* Botón Eliminar Chat / Borrar conversación */}
-            <button
-              onClick={async () => {
-                if (window.confirm(`¿Estás seguro de que deseas eliminar permanentemente el chat con ${activeContact.first_name || activeContact.phone}? Esta acción borrará todo su historial.`)) {
-                  const success = await deleteContact(activeContact.id);
-                  if (success) {
-                    alert("Chat eliminado correctamente.");
+              <button
+                type="button"
+                onClick={handleTriggerAiResponse}
+                disabled={aiTriggering}
+                className={`flex items-center space-x-1.5 text-[10px] font-bold px-3 py-1.5 rounded-xl transition-all shadow-sm ${
+                  aiTriggering 
+                    ? 'bg-emerald-700/50 text-white cursor-not-allowed'
+                    : 'bg-emerald-600 hover:bg-emerald-500 text-white active:scale-95 cursor-pointer'
+                }`}
+                title="Fuerza a Sofi IA a responder ahora mismo al último mensaje del cliente"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>Sofi: Responder</span>
+              </button>
+
+              <button
+                onClick={async () => {
+                  if (window.confirm(`¿Estás seguro de que deseas eliminar permanentemente el chat con ${activeContact.first_name || activeContact.phone}?`)) {
+                    await deleteContact(activeContact.id);
                   }
-                }
-              }}
-              className="p-1.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/5 text-slate-500 hover:text-red-500 hover:bg-red-500/10 transition-all cursor-pointer"
-              title="Eliminar Chat y Borrar Conversación"
-            >
-              <Trash2 className="w-4 h-4" />
-            </button>
+                }}
+                className="p-1.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/5 text-slate-500 hover:text-red-500 hover:bg-red-500/10 transition-all cursor-pointer"
+                title="Eliminar Chat y Borrar Conversación"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
 
-            {/* Botón para buscar mensajes en la conversación (Tipo WhatsApp) */}
-            <button
-              onClick={() => {
-                setShowMsgSearch(!showMsgSearch);
-                if (showMsgSearch) setMsgSearchTerm('');
-              }}
-              className={`p-2 rounded-xl border transition-all cursor-pointer active:scale-95 ${
-                showMsgSearch
-                  ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400 shadow-sm'
-                  : 'bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/5 text-slate-500 hover:bg-slate-100 dark:hover:bg-white/10'
-              }`}
-              title="Buscar mensajes en esta conversación"
-            >
-              <Search className="w-4 h-4" />
-            </button>
+              <button
+                onClick={() => {
+                  setShowMsgSearch(!showMsgSearch);
+                  if (showMsgSearch) setMsgSearchTerm('');
+                }}
+                className={`p-2 rounded-xl border transition-all cursor-pointer active:scale-95 ${
+                  showMsgSearch
+                    ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400 shadow-sm'
+                    : 'bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/5 text-slate-500 hover:bg-slate-100 dark:hover:bg-white/10'
+                }`}
+                title="Buscar mensajes en esta conversación"
+              >
+                <Search className="w-4 h-4" />
+              </button>
 
-            {/* Botón para alternar panel derecho */}
-            <button
-              onClick={() => setShowRightSidebar(!showRightSidebar)}
-              className={`p-2 rounded-xl border transition-all cursor-pointer active:scale-95 ${
-                showRightSidebar
-                  ? 'bg-blue-500/10 border-blue-500/20 text-blue-600 dark:text-blue-400 shadow-sm'
-                  : 'bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/5 text-slate-500 hover:bg-slate-100 dark:hover:bg-white/10'
-              }`}
-              title={showRightSidebar ? "Ocultar Detalles" : "Mostrar Detalles"}
-            >
-              <BookOpen className="w-4 h-4" />
-            </button>
+              <button
+                onClick={() => setShowRightSidebar(!showRightSidebar)}
+                className={`p-2 rounded-xl border transition-all cursor-pointer active:scale-95 ${
+                  showRightSidebar
+                    ? 'bg-blue-500/10 border-blue-500/20 text-blue-600 dark:text-blue-400 shadow-sm'
+                    : 'bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/5 text-slate-500 hover:bg-slate-100 dark:hover:bg-white/10'
+                }`}
+                title={showRightSidebar ? "Ocultar Detalles" : "Mostrar Detalles"}
+              >
+                <BookOpen className="w-4 h-4" />
+              </button>
+            </div>
           </div>
         </div>
 
