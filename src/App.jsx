@@ -158,22 +158,22 @@ function App() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-slate-100 dark:bg-dark-950 text-slate-800 dark:text-white flex flex-col justify-center items-center p-4 relative overflow-hidden transition-colors duration-300">
+      <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col justify-center items-center p-4 sm:p-6 overflow-y-auto relative transition-colors duration-300">
         {/* Elementos Decorativos Ejecutivos de Fondo */}
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl -z-10 animate-pulse"></div>
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl -z-10 animate-pulse" style={{ animationDelay: '2s' }}></div>
 
         {invitationToken ? (
           /* Registro de Invitado */
-          <div className="w-full max-w-md bg-white dark:bg-dark-900 border border-slate-200 dark:border-white/5 rounded-3xl p-8 shadow-2xl transition-colors duration-300">
+          <div className="w-full max-w-md bg-white border border-slate-200 rounded-3xl p-8 shadow-2xl transition-colors duration-300">
             <div className="flex flex-col items-center mb-6">
               <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-purple-500 to-indigo-400 flex items-center justify-center mb-4 shadow-xl shadow-purple-500/10">
                 <User className="w-8 h-8 text-white font-bold" />
               </div>
-              <h1 className="text-xl font-bold text-slate-800 dark:text-white">
+              <h1 className="text-xl font-bold text-slate-800">
                 Registro de Asesor
               </h1>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Completa tus datos para activar tu cuenta</p>
+              <p className="text-xs text-slate-500 mt-1">Completa tus datos para activar tu cuenta</p>
             </div>
 
             {validatingToken && (
@@ -184,14 +184,14 @@ function App() {
             )}
 
             {invitationError && (
-              <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 text-xs font-medium mb-4 flex items-center space-x-2">
+              <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-600 text-xs font-medium mb-4 flex items-center space-x-2">
                 <AlertCircle className="w-5 h-5 flex-shrink-0" />
                 <span>{invitationError}</span>
               </div>
             )}
 
             {registerSuccess && (
-              <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold mb-4 flex items-center space-x-2">
+              <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 text-xs font-bold mb-4 flex items-center space-x-2">
                 <CheckCircle2 className="w-5 h-5 flex-shrink-0" />
                 <span>{registerSuccess}</span>
               </div>
@@ -199,36 +199,36 @@ function App() {
 
             {invitationDetails && !registerSuccess && (
               <form onSubmit={handleRegisterSubmit} className="space-y-4">
-                <div className="p-3 bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800/30 rounded-2xl mb-2">
-                  <p className="text-[11px] text-purple-700 dark:text-purple-300 font-medium">
+                <div className="p-3 bg-purple-50 border border-purple-200 rounded-2xl mb-2">
+                  <p className="text-[11px] text-purple-700 font-medium">
                     Invitación asignada a: <strong>{invitationDetails.email}</strong>
                   </p>
-                  <p className="text-[10px] text-purple-500 dark:text-purple-400">
+                  <p className="text-[10px] text-purple-500">
                     Rol: <span className="uppercase font-bold">{invitationDetails.role}</span>
                   </p>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Nombre Completo</label>
+                  <label className="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">Nombre Completo</label>
                   <input
                     type="text"
                     placeholder="Escribe tu nombre y apellido"
                     value={registerName}
                     onChange={(e) => setRegisterName(e.target.value)}
                     required
-                    className="w-full bg-slate-100 dark:bg-slate-805 border border-slate-200 dark:border-white/5 rounded-xl px-4 py-3 text-xs text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/30 transition-all"
+                    className="w-full bg-slate-100 border border-slate-300 rounded-xl px-4 py-3 text-xs text-slate-900 placeholder-slate-400 focus:bg-white focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Contraseña</label>
+                  <label className="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">Contraseña</label>
                   <input
                     type="password"
                     placeholder="Elige una contraseña segura"
                     value={registerPassword}
                     onChange={(e) => setRegisterPassword(e.target.value)}
                     required
-                    className="w-full bg-slate-100 dark:bg-slate-805 border border-slate-200 dark:border-white/5 rounded-xl px-4 py-3 text-xs text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/30 transition-all"
+                    className="w-full bg-slate-100 border border-slate-300 rounded-xl px-4 py-3 text-xs text-slate-900 placeholder-slate-400 focus:bg-white focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all"
                   />
                 </div>
 
@@ -243,11 +243,11 @@ function App() {
             )}
           </div>
         ) : (
-          /* Login Card de Alta Gama con Logo Imponente Sin Parches ni Marcos Feos */
-          <div className="w-full max-w-md bg-white border border-slate-200/90 rounded-3xl p-7 sm:p-9 shadow-2xl transition-all duration-300">
+          /* Login Card de Alta Gama en Vista Día Pura */
+          <div className="w-full max-w-md bg-white border border-slate-200/90 rounded-3xl p-7 sm:p-9 shadow-2xl transition-all duration-300 my-auto">
             <div className="flex flex-col items-center mb-6 text-center">
               
-              {/* Logo Oficial ANCLA Special Projects - Gigante e Imponente (Sin marcos ni parches) */}
+              {/* Logo Oficial ANCLA Special Projects - Gigante e Imponente */}
               <img 
                 src="/ancla_official_logo.png" 
                 alt="ANCLA Special Projects" 
@@ -269,7 +269,7 @@ function App() {
 
             <form onSubmit={handleLoginSubmit} className="space-y-4">
               <div>
-                <label className="block text-[11px] font-black text-slate-700 dark:text-slate-200 uppercase tracking-wider mb-1.5">Usuario o Correo</label>
+                <label className="block text-[11px] font-black text-slate-700 uppercase tracking-wider mb-1.5">Usuario o Correo</label>
                 <div className="relative">
                   <User className="absolute left-3.5 top-3.5 w-4.5 h-4.5 text-slate-400" />
                   <input
@@ -277,14 +277,14 @@ function App() {
                     placeholder="diarmale388, liliana, asesor o correo"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/10 rounded-xl pl-11 pr-4 py-3 text-sm font-medium text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all duration-300"
+                    className="w-full bg-slate-100 border border-slate-300 rounded-xl pl-11 pr-4 py-3 text-sm font-medium text-slate-900 placeholder-slate-400 focus:bg-white focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all duration-300"
                     required
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-[11px] font-black text-slate-700 dark:text-slate-200 uppercase tracking-wider mb-1.5">Contraseña</label>
+                <label className="block text-[11px] font-black text-slate-700 uppercase tracking-wider mb-1.5">Contraseña</label>
                 <div className="relative">
                   <Lock className="absolute left-3.5 top-3.5 w-4.5 h-4.5 text-slate-400" />
                   <input
@@ -292,7 +292,7 @@ function App() {
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/10 rounded-xl pl-11 pr-4 py-3 text-sm font-medium text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all duration-300"
+                    className="w-full bg-slate-100 border border-slate-300 rounded-xl pl-11 pr-4 py-3 text-sm font-medium text-slate-900 placeholder-slate-400 focus:bg-white focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all duration-300"
                     required
                   />
                 </div>
