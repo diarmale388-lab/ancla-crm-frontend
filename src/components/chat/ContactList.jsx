@@ -43,7 +43,9 @@ export const ContactList = () => {
 
   const filteredContacts = contacts.filter((c) => {
     // 0. Aislamiento RBAC por Rol: Asesores comerciales sólo ven sus contactos asignados
-    if (currentUser && currentUser.role !== 'admin' && c.assigned_user_id && c.assigned_user_id !== currentUser.id) {
+    const userRole = String(currentUser?.role || '').toLowerCase();
+    const isAdmin = userRole === 'admin' || userRole.includes('admin');
+    if (currentUser && !isAdmin && c.assigned_user_id && c.assigned_user_id !== currentUser.id) {
       return false;
     }
 
