@@ -650,8 +650,8 @@ export const CalendarView = () => {
           </div>
 
           {/* LADO DERECHO / INFERIOR MÓVIL: LISTADO INTEGRADOR DE CITAS DEL DÍA SELECCIONADO */}
-          <div className="w-full md:w-96 bg-slate-50/80 dark:bg-dark-950 p-4 sm:p-6 flex flex-col overflow-y-auto flex-1">
-          <div className="flex-1 space-y-5">
+          <div className="w-full md:w-96 bg-slate-50/80 dark:bg-dark-950 p-4 sm:p-6 pb-28 md:pb-6 flex flex-col md:overflow-y-auto">
+          <div className="space-y-5">
             <div>
               <span className="text-[10px] text-slate-400 dark:text-slate-500 uppercase font-black tracking-wider block">Citas Programadas</span>
               <h4 className="text-sm font-bold text-slate-800 dark:text-white mt-1 capitalize">
@@ -744,10 +744,9 @@ export const CalendarView = () => {
                 });
               })()}
             </div>
-          </div>
 
-          {/* Botones para Configurar Horario Excepcional y Agendar Cita */}
-          <div className="pt-4 border-t border-slate-200 dark:border-white/5 mt-5 flex-shrink-0 space-y-2">
+            {/* Botones para Configurar Horario Excepcional y Agendar Cita */}
+            <div className="pt-4 border-t border-slate-200 dark:border-white/5 mt-5 space-y-2">
             <button
               onClick={() => setShowHolidayModal(true)}
               className="w-full bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 font-bold py-2.5 px-4 rounded-xl border border-amber-500/30 text-xs active:scale-[0.98] transition-all cursor-pointer flex items-center justify-center space-x-1.5"
@@ -771,6 +770,7 @@ export const CalendarView = () => {
         </div>
       </div>
     </div>
+  </div>
 
       {/* Modal de Horario Excepcional / Festivo */}
       {showHolidayModal && (
