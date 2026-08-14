@@ -393,8 +393,8 @@ export const CalendarView = () => {
 
   return (
     <div className="flex-1 flex flex-col h-full bg-slate-50 dark:bg-dark-950 overflow-y-auto md:overflow-hidden transition-colors duration-300">
-      {/* Cabecera Adaptativa PWA */}
-      <div className="p-3.5 sm:p-6 border-b border-slate-200 dark:border-white/5 bg-white dark:bg-dark-900/90 backdrop-blur-md flex flex-col space-y-3 flex-shrink-0 select-none">
+      {/* Cabecera Adaptativa PWA (Fija/Estática Estilo Salesforce / Google Calendar) */}
+      <div className="p-3.5 sm:p-6 border-b border-slate-200 dark:border-white/5 bg-white/95 dark:bg-dark-900/95 backdrop-blur-md flex flex-col space-y-3 flex-shrink-0 select-none sticky top-0 z-30 shadow-xs">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-base sm:text-xl font-bold text-slate-800 dark:text-white flex items-center space-x-2">
@@ -435,12 +435,13 @@ export const CalendarView = () => {
             </button>
           </div>
         </div>
+      </div>
 
-        {/* VISTA UNIFICADA MÓVIL Y ESCRITORIO (SIN ESPACIO DESPERDICIADO & FLUIDEZ DE SCROLL) */}
-        <div className="flex-1 flex flex-col md:flex-row overflow-y-auto md:overflow-hidden bg-slate-50 dark:bg-dark-950">
-          
-          {/* LADO IZQUIERDO: CALENDARIO MENSUAL (Desktop 7x5 / Mobile Cinta Interactiva) */}
-          <div className="w-full md:flex-1 p-3.5 sm:p-6 md:overflow-y-auto flex flex-col bg-white dark:bg-dark-900 border-b md:border-b-0 md:border-r border-slate-200 dark:border-white/5 shrink-0">
+      {/* VISTA UNIFICADA MÓVIL Y ESCRITORIO (SIN ESPACIO DESPERDICIADO & FLUIDEZ DE SCROLL) */}
+      <div className="flex-1 flex flex-col md:flex-row overflow-y-auto md:overflow-hidden bg-slate-50 dark:bg-dark-950">
+        
+        {/* LADO IZQUIERDO: CALENDARIO MENSUAL (Sticky en Móvil para navegación rápida) */}
+        <div className="w-full md:flex-1 p-3.5 sm:p-6 md:overflow-y-auto flex flex-col bg-white dark:bg-dark-900 border-b md:border-b-0 md:border-r border-slate-200 dark:border-white/5 shrink-0 sticky top-0 z-20 shadow-2xs">
             <div className="w-full max-w-4xl mx-auto flex flex-col">
               
               {/* Navegación del Mes & Controles */}
@@ -770,7 +771,6 @@ export const CalendarView = () => {
           </div>
         </div>
       </div>
-    </div>
 
       {/* Modal de Horario Excepcional / Festivo */}
       {showHolidayModal && (
