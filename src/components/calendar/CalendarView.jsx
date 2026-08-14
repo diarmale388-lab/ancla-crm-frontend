@@ -392,7 +392,7 @@ export const CalendarView = () => {
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-slate-50 dark:bg-dark-950 overflow-hidden transition-colors duration-300">
+    <div className="flex-1 flex flex-col h-full bg-slate-50 dark:bg-dark-950 overflow-y-auto md:overflow-hidden transition-colors duration-300">
       {/* Cabecera Adaptativa PWA */}
       <div className="p-3.5 sm:p-6 border-b border-slate-200 dark:border-white/5 bg-white dark:bg-dark-900/90 backdrop-blur-md flex flex-col space-y-3 flex-shrink-0 select-none">
         <div className="flex items-center justify-between">
@@ -650,7 +650,7 @@ export const CalendarView = () => {
           </div>
 
           {/* LADO DERECHO / INFERIOR MÓVIL: LISTADO INTEGRADOR DE CITAS DEL DÍA SELECCIONADO */}
-          <div className="w-full md:w-96 bg-slate-50/80 dark:bg-dark-950 p-4 sm:p-6 flex flex-col md:overflow-y-auto flex-1 min-h-0">
+          <div className="w-full md:w-96 bg-slate-50/80 dark:bg-dark-950 p-4 sm:p-6 pb-32 sm:pb-8 flex flex-col md:overflow-y-auto flex-1 min-h-0">
           <div className="flex-1 space-y-5">
             <div>
               <span className="text-[10px] text-slate-400 dark:text-slate-500 uppercase font-black tracking-wider block">Citas Programadas</span>
