@@ -683,8 +683,8 @@ export const ChatWindow = () => {
         )}
         
         {/* Header del Chat */}
-        <div className="p-4 border-b border-slate-200 dark:border-white/5 bg-white dark:bg-dark-900/90 flex items-center justify-between">
-          <div className="flex items-center min-w-0">
+        <div className="p-3.5 sm:p-4 border-b border-slate-200 dark:border-white/5 bg-white dark:bg-dark-900/90 flex items-center justify-between gap-2 select-none">
+          <div className="flex items-center min-w-0 flex-1 mr-2 overflow-hidden">
             {/* Botón de Atrás (solo móvil/tablet) */}
             <button
               onClick={() => {
@@ -699,7 +699,7 @@ export const ChatWindow = () => {
               <ArrowLeft className="w-5 h-5" />
             </button>
             {/* Avatar del contacto en el Header */}
-            <div className="relative mr-3 flex-shrink-0">
+            <div className="relative mr-2.5 flex-shrink-0">
               {activeContact.avatar_url ? (
                 <img 
                   src={activeContact.avatar_url} 
@@ -715,13 +715,13 @@ export const ChatWindow = () => {
               )}
             </div>
             
-            <div className="min-w-0">
-              <div className="flex items-center space-x-1.5">
-                <h3 className="text-sm font-bold text-slate-800 dark:text-white truncate">
+            <div className="min-w-0 flex-1 overflow-hidden">
+              <div className="flex items-center space-x-1.5 min-w-0">
+                <h3 className="text-xs sm:text-sm font-bold text-slate-800 dark:text-white truncate max-w-[130px] sm:max-w-[180px] md:max-w-[200px] lg:max-w-[280px]">
                   {activeContact.first_name ? `${activeContact.first_name} ${activeContact.last_name || ''}`.trim() : activeContact.phone}
                 </h3>
                 {activeContact.qualification_level && (
-                  <span className={`text-[9px] px-2 py-0.5 rounded-full font-extrabold border ${
+                  <span className={`text-[9px] px-2 py-0.5 rounded-full font-extrabold border shrink-0 hidden sm:inline-block ${
                     activeContact.qualification_level === 'potencial' ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20' :
                     activeContact.qualification_level === 'explorador' ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20' :
                     'bg-slate-500/10 text-slate-500 dark:text-slate-400 border-slate-500/20'
@@ -730,9 +730,9 @@ export const ChatWindow = () => {
                   </span>
                 )}
               </div>
-              <span className="text-[10px] text-slate-400 flex items-center space-x-2 mt-0.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
-                <span>{activeContact.interest_product ? `Interés: ${activeContact.interest_product}` : 'ANCLA Special Projects'}</span>
+              <span className="text-[10px] text-slate-400 flex items-center space-x-2 mt-0.5 truncate">
+                <span className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0"></span>
+                <span className="truncate">{activeContact.interest_product ? `Interés: ${activeContact.interest_product}` : 'ANCLA Special Projects'}</span>
               </span>
             </div>
           </div>
@@ -825,13 +825,13 @@ export const ChatWindow = () => {
             </div>
 
             {/* BOTONES DESPLEGADOS EN ESCRITORIO (Solo en Pantallas Desktop md+) */}
-            <div className="hidden md:flex items-center space-x-2">
-              <div className="flex items-center space-x-1.5 bg-slate-50 dark:bg-white/5 px-2.5 py-1.5 rounded-xl border border-slate-200 dark:border-white/5">
-                <User className="w-3.5 h-3.5 text-blue-500" />
+            <div className="hidden md:flex items-center space-x-1.5 lg:space-x-2 shrink-0">
+              <div className="flex items-center space-x-1 bg-slate-50 dark:bg-white/5 px-2 py-1.5 rounded-xl border border-slate-200 dark:border-white/5 max-w-[130px] lg:max-w-[160px]">
+                <User className="w-3.5 h-3.5 text-blue-500 shrink-0" />
                 <select
                   value={activeContact.assigned_user_id || ''}
                   onChange={(e) => assignContact(activeContact.id, e.target.value)}
-                  className="bg-transparent border-none text-[10px] font-bold text-slate-600 dark:text-slate-350 focus:outline-none cursor-pointer pr-4 appearance-none"
+                  className="bg-transparent border-none text-[10px] font-bold text-slate-600 dark:text-slate-350 focus:outline-none cursor-pointer truncate appearance-none w-full"
                 >
                   <option value="">Sin Asignar</option>
                   {agents.map((agent) => (
@@ -840,14 +840,14 @@ export const ChatWindow = () => {
                 </select>
               </div>
 
-              <div className="flex items-center space-x-1.5 bg-slate-50 dark:bg-white/5 px-2.5 py-1.5 rounded-xl border border-slate-200 dark:border-white/5">
-                <Bot className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                <span className="text-[10px] font-bold text-slate-600 dark:text-slate-300">Piloto IA</span>
+              <div className="flex items-center space-x-1.5 bg-slate-50 dark:bg-white/5 px-2 py-1.5 rounded-xl border border-slate-200 dark:border-white/5 shrink-0">
+                <Bot className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                <span className="text-[10px] font-bold text-slate-600 dark:text-slate-300 hidden lg:inline">Piloto IA</span>
                 <input
                   type="checkbox"
                   checked={activeContact.chatbot_enabled}
                   onChange={(e) => toggleChatbot(activeContact.id, e.target.checked)}
-                  className="w-8 h-4 rounded-full bg-slate-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
+                  className="w-7 h-4 rounded-full bg-slate-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
                 />
               </div>
 
@@ -855,7 +855,7 @@ export const ChatWindow = () => {
                 type="button"
                 onClick={handleTriggerAiResponse}
                 disabled={aiTriggering}
-                className={`flex items-center space-x-1.5 text-[10px] font-bold px-3 py-1.5 rounded-xl transition-all shadow-sm ${
+                className={`flex items-center space-x-1.5 text-[10px] font-bold px-2.5 py-1.5 rounded-xl transition-all shadow-sm shrink-0 ${
                   aiTriggering 
                     ? 'bg-emerald-700/50 text-white cursor-not-allowed'
                     : 'bg-emerald-600 hover:bg-emerald-500 text-white active:scale-95 cursor-pointer'
