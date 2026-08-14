@@ -141,6 +141,37 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
   const [nextAction, setNextAction] = useState('RECALL');
   const [nextActionDate, setNextActionDate] = useState('');
   const [loadingBitacora, setLoadingBitacora] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+
+  const handleVoiceDictation = () => {
+    if (typeof window === 'undefined') return;
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("Tu navegador no soporta dictado por voz automático. Puedes usar el micrófono incorporado en el teclado de tu celular.");
+      return;
+    }
+
+    try {
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'es-ES';
+      recognition.continuous = false;
+      recognition.interimResults = false;
+
+      recognition.onstart = () => setIsListening(true);
+      recognition.onend = () => setIsListening(false);
+      recognition.onerror = () => setIsListening(false);
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        setNewNoteContent(prev => prev ? `${prev} ${transcript}` : transcript);
+      };
+
+      recognition.start();
+    } catch (err) {
+      console.error("Error al iniciar dictado por voz:", err);
+      setIsListening(false);
+    }
+  };
 
   // Estados auxiliares
   const [generatingAiSummary, setGeneratingAiSummary] = useState(false);
@@ -804,12 +835,27 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1">Notas Detalladas</label>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500">Notas Detalladas</label>
+                    <button
+                      type="button"
+                      onClick={handleVoiceDictation}
+                      className={`text-[10px] font-bold px-2 py-0.5 rounded-lg border transition-all flex items-center space-x-1 cursor-pointer ${
+                        isListening 
+                          ? 'bg-rose-500 text-white border-rose-600 animate-pulse'
+                          : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/20'
+                      }`}
+                      title="Habla a tu micrófono para dictar la nota automáticamente"
+                    >
+                      <span>🎙️</span>
+                      <span>{isListening ? 'Escuchando Voz...' : 'Dictar por Voz'}</span>
+                    </button>
+                  </div>
                   <textarea
                     value={newNoteContent}
                     onChange={(e) => setNewNoteContent(e.target.value)}
                     rows={2}
-                    placeholder="Escribe detalles clave de la atención..."
+                    placeholder="Escribe o dicta detalles clave de la llamada o atención..."
                     className="w-full bg-white dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl p-3 text-xs font-medium text-[#0f172a] dark:text-[#f8fafc] focus:outline-none focus:border-emerald-500 resize-none"
                   />
                 </div>
@@ -825,10 +871,10 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                 </div>
               </form>
 
-              {/* Bloque 2C: Historial Cronológico de Atenciones */}
+              {/* Bloque 2C: Historial Cronológico de Atenciones (Línea de Tiempo Vertical Salesforce/HubSpot) */}
               <div className="space-y-3">
                 <span className="text-[11px] font-black uppercase tracking-wider text-slate-500 dark:text-slate-400 block">
-                  Historial de Bitácora ({bitacoraNotes.length})
+                  Línea de Tiempo & Historial Cronológico ({bitacoraNotes.length} Registros)
                 </span>
 
                 {bitacoraNotes.length === 0 ? (
@@ -836,26 +882,30 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                     No hay atenciones registradas aún para este prospecto.
                   </p>
                 ) : (
-                  bitacoraNotes.map((n) => {
-                    const resObj = CALL_RESULTS.find(r => r.id === n.call_result);
-                    const objObj = OBJECTIONS.find(o => o.id === n.detected_objection);
-                    const nextObj = NEXT_ACTIONS.find(a => a.id === n.next_action);
+                  <div className="relative pl-6 space-y-4 before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200 dark:before:bg-slate-800">
+                    {bitacoraNotes.map((n) => {
+                      const resObj = CALL_RESULTS.find(r => r.id === n.call_result);
+                      const objObj = OBJECTIONS.find(o => o.id === n.detected_objection);
+                      const nextObj = NEXT_ACTIONS.find(a => a.id === n.next_action);
 
-                    return (
-                      <div key={n.id} className="p-4 rounded-2xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-[#334155] space-y-2 shadow-sm">
-                        <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
-                          <div className="flex items-center space-x-2">
-                            <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
-                              {n.note_type}
-                            </span>
-                            <span className="text-xs font-bold text-slate-600 dark:text-slate-300">
-                              {n.author_name}
+                      return (
+                        <div key={n.id} className="relative p-4 rounded-2xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-[#334155] space-y-2 shadow-sm">
+                          {/* Punto conector de la línea de tiempo */}
+                          <div className="absolute -left-[23px] top-4 w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-white dark:border-[#0b0f19] shadow-xs" />
+
+                          <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
+                            <div className="flex items-center space-x-2">
+                              <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                                {n.note_type}
+                              </span>
+                              <span className="text-xs font-bold text-slate-600 dark:text-slate-300">
+                                👤 {n.author_name}
+                              </span>
+                            </div>
+                            <span className="text-[11px] font-mono tabular-nums text-slate-400 font-bold">
+                              📅 {new Date(n.created_at).toLocaleString('es-ES', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
                             </span>
                           </div>
-                          <span className="text-[11px] font-mono tabular-nums text-slate-400">
-                            {new Date(n.created_at).toLocaleString('es-ES', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
-                          </span>
-                        </div>
 
                         <div className="flex flex-wrap gap-1.5 text-[10px] font-bold">
                           {resObj && (
@@ -882,7 +932,8 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                         )}
                       </div>
                     );
-                  })
+                  })}
+                  </div>
                 )}
               </div>
 
