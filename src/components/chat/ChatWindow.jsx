@@ -1512,6 +1512,24 @@ export const ChatWindow = () => {
                   ))}
                 </select>
               </div>
+
+              {/* Selector de Asesor Asignado (Visibilidad Directa) */}
+              <div className="p-3 rounded-xl bg-emerald-500/10 dark:bg-emerald-950/20 border border-emerald-500/20 space-y-1.5 shadow-xs">
+                <span className="text-[10px] text-emerald-600 dark:text-emerald-400 uppercase font-extrabold tracking-wider block">👤 Asesor Asignado</span>
+                <select
+                  value={activeContact.assigned_user_id || ''}
+                  onChange={(e) => {
+                    const val = e.target.value ? parseInt(e.target.value, 10) : null;
+                    updateContactDetails(activeContact.id, { assigned_user_id: val });
+                  }}
+                  className="w-full bg-white dark:bg-slate-900 border border-emerald-500/30 rounded-xl px-3 py-1.5 text-xs font-bold text-emerald-800 dark:text-emerald-200 cursor-pointer"
+                >
+                  <option value="">Sin Asignar (Liliana / Admin General)</option>
+                  <option value="4">Asesor Comercial ANCLA (asesor@anclaspecialprojects.com)</option>
+                  <option value="3">Liliana León (Directora Comercial)</option>
+                  <option value="5">Super Admin (diarmale388)</option>
+                </select>
+              </div>
             </div>
           )}
 

@@ -84,6 +84,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
   const [quotedValue, setQuotedValue] = useState(contact.quoted_value || '');
   const [proposalPdfUrl, setProposalPdfUrl] = useState(contact.proposal_pdf_url || '');
   const [proposalNotes, setProposalNotes] = useState(contact.proposal_notes || '');
+  const [assignedUserId, setAssignedUserId] = useState(contact.assigned_user_id || null);
 
   // Acabados y Personalización (Pestaña 3)
   const [exteriorColor, setExteriorColor] = useState('Negro Mate Industrial (RAL 9005)');
@@ -261,7 +262,8 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
           contact_response_status: contactResponseStatus,
           quoted_value: quotedValue ? parseFloat(quotedValue) : 0,
           proposal_pdf_url: proposalPdfUrl,
-          proposal_notes: proposalNotes
+          proposal_notes: proposalNotes,
+          assigned_user_id: assignedUserId
         })
       });
       if (res.ok) {
@@ -501,6 +503,21 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                         <option value="Buscando Lote">Buscando Lote / Terreno</option>
                       </select>
                     </div>
+                  </div>
+
+                  {/* Selector Asesor Comercial Asignado */}
+                  <div className="pt-1">
+                    <label className="block text-[10px] font-extrabold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 mb-1">👤 Asesor Comercial Asignado</label>
+                    <select
+                      value={assignedUserId || ''}
+                      onChange={(e) => setAssignedUserId(e.target.value ? parseInt(e.target.value, 10) : null)}
+                      className="w-full bg-emerald-500/10 dark:bg-emerald-950/30 border border-emerald-500/30 rounded-xl px-3 py-2 text-xs font-bold text-emerald-800 dark:text-emerald-200 cursor-pointer"
+                    >
+                      <option value="">Sin Asignar (Liliana / Admin General)</option>
+                      <option value="4">Asesor Comercial ANCLA (asesor@anclaspecialprojects.com)</option>
+                      <option value="3">Liliana León (Directora Comercial)</option>
+                      <option value="5">Super Admin (diarmale388)</option>
+                    </select>
                   </div>
                 </div>
 
