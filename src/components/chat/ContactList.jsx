@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useChatStore } from '../../store/useChatStore';
 import { useSettingsStore } from '../../store/useSettingsStore';
 import { useAuthStore } from '../../store/useAuthStore';
-import { Search, MessageCircle, Bot, AlertCircle, Play, Sparkles, User, X, ArrowLeft } from 'lucide-react';
+import { Search, MessageCircle, Bot, AlertCircle, Play, Sparkles, User, X, ArrowLeft, UserPlus } from 'lucide-react';
+import NewContactModal from './NewContactModal';
 
 export const ContactList = () => {
   const { contacts, selectedContactId, fetchMessages, loading, error, fetchContacts } = useChatStore();
@@ -11,6 +12,7 @@ export const ContactList = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [simulating, setSimulating] = useState(false);
   const [simMessage, setSimMessage] = useState('');
+  const [showNewContactModal, setShowNewContactModal] = useState(false);
   
   // Filtro de estado de IA
   const [activeFilter, setActiveFilter] = useState('all');
@@ -104,18 +106,11 @@ export const ContactList = () => {
           />
           <div className="flex items-center space-x-5 text-[#54656f]">
             <button 
-              onClick={() => {
-                const phone = prompt("Ingresa el número de teléfono del nuevo contacto (con indicativo de país, ej. +57...):");
-                if (phone) {
-                  alert("Abriendo nuevo chat con " + phone);
-                }
-              }}
-              className="hover:bg-slate-100 p-1.5 rounded-full cursor-pointer transition-colors"
-              title="Nuevo Chat"
+              onClick={() => setShowNewContactModal(true)}
+              className="hover:bg-slate-100 dark:hover:bg-slate-800 p-1.5 rounded-full cursor-pointer transition-colors"
+              title="Agregar Nuevo Cliente / Prospecto"
             >
-              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-              </svg>
+              <UserPlus className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
             </button>
             <button 
               onClick={() => alert("Menú de opciones de WhatsApp Business")}
@@ -325,6 +320,12 @@ export const ContactList = () => {
           })
         )}
       </div>
+
+      {/* Modal para Crear Nuevo Cliente Manualmente */}
+      <NewContactModal 
+        isOpen={showNewContactModal} 
+        onClose={() => setShowNewContactModal(false)} 
+      />
     </div>
   );
 };
