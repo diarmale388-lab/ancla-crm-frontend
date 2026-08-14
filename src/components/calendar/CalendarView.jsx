@@ -436,11 +436,11 @@ export const CalendarView = () => {
           </div>
         </div>
 
-        {/* VISTA UNIFICADA MÓVIL Y ESCRITORIO (SIN ESPACIO DESPERDICIADO & SIN PESTAÑAS SEPARADAS) */}
-        <div className="flex-1 flex flex-col md:flex-row overflow-hidden bg-slate-50 dark:bg-dark-950">
+        {/* VISTA UNIFICADA MÓVIL Y ESCRITORIO (SIN ESPACIO DESPERDICIADO & FLUIDEZ DE SCROLL) */}
+        <div className="flex-1 flex flex-col md:flex-row overflow-y-auto md:overflow-hidden bg-slate-50 dark:bg-dark-950">
           
           {/* LADO IZQUIERDO: CALENDARIO MENSUAL (Desktop 7x5 / Mobile Cinta Interactiva) */}
-          <div className="w-full md:flex-1 p-3.5 sm:p-6 overflow-y-auto flex flex-col bg-white dark:bg-dark-900 border-b md:border-b-0 md:border-r border-slate-200 dark:border-white/5 shrink-0">
+          <div className="w-full md:flex-1 p-3.5 sm:p-6 md:overflow-y-auto flex flex-col bg-white dark:bg-dark-900 border-b md:border-b-0 md:border-r border-slate-200 dark:border-white/5 shrink-0">
             <div className="w-full max-w-4xl mx-auto flex flex-col">
               
               {/* Navegación del Mes & Controles */}
@@ -650,7 +650,7 @@ export const CalendarView = () => {
           </div>
 
           {/* LADO DERECHO / INFERIOR MÓVIL: LISTADO INTEGRADOR DE CITAS DEL DÍA SELECCIONADO */}
-          <div className="w-full md:w-96 bg-slate-50/80 dark:bg-dark-950 p-4 sm:p-6 flex flex-col overflow-y-auto flex-1">
+          <div className="w-full md:w-96 bg-slate-50/80 dark:bg-dark-950 p-4 sm:p-6 flex flex-col md:overflow-y-auto flex-1 min-h-0">
           <div className="flex-1 space-y-5">
             <div>
               <span className="text-[10px] text-slate-400 dark:text-slate-500 uppercase font-black tracking-wider block">Citas Programadas</span>
