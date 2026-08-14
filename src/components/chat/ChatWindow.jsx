@@ -693,7 +693,7 @@ export const ChatWindow = () => {
                   document.body.classList.remove('has-active-chat');
                 }
               }}
-              className="lg:hidden p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 mr-2 flex-shrink-0 active:scale-95 transition-all cursor-pointer"
+              className="md:hidden p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 mr-2 flex-shrink-0 active:scale-95 transition-all cursor-pointer"
               title="Volver a los chats"
             >
               <ArrowLeft className="w-5 h-5" />
