@@ -117,49 +117,117 @@ self.addEventListener('message', (event) => {
 });
 
 // Manejador de Notificaciones Push nativas para Android, iOS (PWA 16.4+) y PC en segundo plano
+// Manejador de Notificaciones Push nativas con Agrupación Inteligente Estilo WhatsApp
 self.addEventListener('push', (event) => {
-  let data = {
+  let incoming = {
     title: 'ANCLA CRM',
-    body: 'Tienes un nuevo mensaje o actualización en ANCLA CRM',
+    body: 'Nuevo mensaje recibido en ANCLA CRM',
     icon: '/ancla_app_icon_192.png',
     badge: '/notification-badge.png',
-    tag: 'ancla-push-notification',
+    contact_name: 'Prospecto',
+    contact_id: null,
     data: { url: '/' }
   };
 
   if (event.data) {
     try {
       const parsed = event.data.json();
-      data = { ...data, ...parsed };
+      incoming = { ...incoming, ...parsed };
       if (parsed.data) {
-        data.data = { ...data.data, ...parsed.data };
+        incoming.data = { ...incoming.data, ...parsed.data };
       }
     } catch (e) {
-      data.body = event.data.text() || data.body;
+      incoming.body = event.data.text() || incoming.body;
     }
   }
 
-  const options = {
-    body: data.body,
-    icon: data.icon || '/ancla_app_icon_192.png',
-    badge: data.badge || '/notification-badge.png',
-    vibrate: [200, 100, 200, 100, 200],
-    tag: data.tag || `ancla_push_${Date.now()}`,
-    renotify: true,
-    requireInteraction: false,
-    actions: [
-      { action: 'open_chat', title: '💬 Abrir Chat' }
-    ],
-    data: {
-      dateOfArrival: Date.now(),
-      url: data.data?.url || data.url || '/'
-    }
-  };
+  // Extraer nombre del remitente del título si viene como "💬 Nombre"
+  let senderName = incoming.contact_name || incoming.title.replace(/^💬\s*/, '').strip?.() || 'Nuevo Prospecto';
+  if (incoming.title && incoming.title.startsWith('💬 ')) {
+    senderName = incoming.title.replace(/^💬\s*/, '');
+  }
+
+  const messageText = incoming.body;
+  const contactId = incoming.data?.contact_id || incoming.contact_id || senderName;
 
   event.waitUntil(
-    self.registration.showNotification(data.title || 'ANCLA CRM', options)
-      .then(() => playNotificationSound())
-      .catch((err) => console.error('Error al mostrar notificación push en SW:', err))
+    (async () => {
+      // 1. Reproducir el tono oficial de doble pulso idéntico al CRM
+      await playNotificationSound();
+
+      // 2. Consultar notificaciones previas aún no leídas en la barra del sistema para agrupar estilo WhatsApp
+      const existingNotifs = await self.registration.getNotifications();
+      let notifTitle = `💬 ${senderName}`;
+      let notifBody = messageText;
+      let notifTag = `ancla_chat_${contactId}`;
+
+      if (existingNotifs && existingNotifs.length > 0) {
+        let unreadMap = new Map(); // Map de contactName -> [mensajes]
+        
+        // Agregar notificaciones anteriores activas
+        for (let n of existingNotifs) {
+          const cName = n.data?.senderName || n.title.replace(/^💬\s*/, '');
+          const prevMsgs = n.data?.messages || [n.body];
+          if (!unreadMap.has(cName)) {
+            unreadMap.set(cName, []);
+          }
+          unreadMap.get(cName).push(...prevMsgs);
+        }
+
+        // Agregar el mensaje entrante actual
+        if (!unreadMap.has(senderName)) {
+          unreadMap.set(senderName, []);
+        }
+        unreadMap.get(senderName).push(messageText);
+
+        const totalChats = unreadMap.size;
+        let totalMessages = 0;
+        unreadMap.forEach((msgs) => totalMessages += msgs.length);
+
+        if (totalChats === 1) {
+          // Caso A: Múltiples mensajes de UN solo chat (ej: Diego Machado Leon)
+          const singleMsgs = unreadMap.get(senderName);
+          notifTitle = `💬 ${senderName}`;
+          if (singleMsgs.length > 1) {
+            notifBody = singleMsgs.map(m => `• ${m}`).join('\n');
+          } else {
+            notifBody = singleMsgs[0];
+          }
+          notifTag = `ancla_chat_${contactId}`;
+        } else {
+          // Caso B: Mensajes de MÚLTIPLES chats (ej: WhatsApp · 2 mensajes de 2 chats)
+          notifTitle = `ANCLA CRM · ${totalMessages} mensajes de ${totalChats} chats`;
+          let lines = [];
+          unreadMap.forEach((msgs, cName) => {
+            const lastMsg = msgs[msgs.length - 1];
+            lines.push(`${cName}: ${lastMsg}`);
+          });
+          notifBody = lines.join('\n');
+          notifTag = 'ancla_summary_notification';
+        }
+      }
+
+      const options = {
+        body: notifBody,
+        icon: '/ancla_app_icon_192.png',
+        badge: '/notification-badge.png',
+        vibrate: [200, 100, 200, 100, 200],
+        tag: notifTag,
+        renotify: true,
+        requireInteraction: false,
+        actions: [
+          { action: 'open_chat', title: '💬 Abrir Chat' }
+        ],
+        data: {
+          dateOfArrival: Date.now(),
+          url: incoming.data?.url || incoming.url || '/',
+          senderName: senderName,
+          messages: [messageText]
+        }
+      };
+
+      return self.registration.showNotification(notifTitle, options);
+    })()
   );
 });
 
