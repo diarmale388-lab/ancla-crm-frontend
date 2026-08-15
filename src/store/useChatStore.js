@@ -664,7 +664,7 @@ export const useChatStore = create((set, get) => ({
     }
   },
 
-  playNotificationChime: () => {
+  playNotificationChime: async () => {
     try {
       const AudioCtx = window.AudioContext || window.webkitAudioContext;
       if (!AudioCtx) return;
@@ -675,7 +675,7 @@ export const useChatStore = create((set, get) => ({
 
       const ctx = window._crmAudioCtx;
       if (ctx.state === 'suspended') {
-        ctx.resume();
+        await ctx.resume();
       }
 
       const now = ctx.currentTime;
