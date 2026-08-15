@@ -793,17 +793,24 @@ export const useChatStore = create((set, get) => ({
       const vapidData = await vapidRes.json();
       const vapidPublicKey = vapidData.public_key;
 
-      // C. Obtener el Service Worker y crear la suscripción
+      // C. Obtener el Service Worker y crear la suscripción VAPID fresca
       const registration = await navigator.serviceWorker.ready;
       let subscription = await registration.pushManager.getSubscription();
+      const applicationServerKey = urlB64ToUint8Array(vapidPublicKey);
 
-      if (!subscription) {
-        const applicationServerKey = urlB64ToUint8Array(vapidPublicKey);
-        subscription = await registration.pushManager.subscribe({
-          userVisibleOnly: true,
-          applicationServerKey
-        });
+      // Si existía una suscripción previa del navegador, la renovamos para asegurar la sincronización con PostgreSQL
+      if (subscription) {
+        try {
+          await subscription.unsubscribe();
+        } catch (unsubErr) {
+          console.warn('Renovando suscripción previa:', unsubErr);
+        }
       }
+
+      subscription = await registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey
+      });
 
       // D. Enviar la suscripción a PostgreSQL para que el backend la asocie al asesor
       const subJson = subscription.toJSON();
