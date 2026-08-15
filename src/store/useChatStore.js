@@ -437,64 +437,7 @@ export const useChatStore = create((set, get) => ({
           const { event: eventName, data } = payload;
 
         if (eventName === 'message_received' || eventName === 'new_message') {
-          // 🎵 REPRODUCIR CHIME AUDIBLE Y NOTIFICAR EN LA BARRA SUPERIOR DE ESTADO (ANDROID, IOS & PC)
-          const isFromContact = data.sender_type === 'contact' || data.sender_type === 'CONTACT';
-          
-          if (isFromContact) {
-            get().playNotificationChime();
-            
-            const senderName = data.contact_name || 'Nuevo Prospecto';
-            const msgBody = data.content || 'Ha enviado un mensaje nuevo a ANCLA CRM';
-
-            // 1. Enviar notificación al Service Worker PWA (Muestra el icono en la BARRA SUPERIOR DE ESTADO del celular)
-            if (typeof navigator !== 'undefined' && navigator.serviceWorker && navigator.serviceWorker.controller) {
-              navigator.serviceWorker.controller.postMessage({
-                type: 'SHOW_NOTIFICATION',
-                payload: {
-                  title: `💬 ${senderName}`,
-                  body: msgBody,
-                  icon: '/ancla_app_icon_192.png',
-                  tag: `msg_${data.contact_id}`
-                }
-              });
-            } else if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted') {
-              try {
-                if ('serviceWorker' in navigator && navigator.serviceWorker.ready) {
-                  navigator.serviceWorker.ready.then(reg => {
-                    reg.showNotification(`💬 ${senderName}`, {
-                      body: msgBody,
-                      icon: '/ancla_app_icon_192.png',
-                      badge: '/ancla_app_icon_192.png',
-                      vibrate: [200, 100, 200, 100, 200],
-                      tag: `msg_${data.contact_id}`,
-                      renotify: true
-                    });
-                  });
-                } else {
-                  new Notification(`💬 ${senderName}`, {
-                    body: msgBody,
-                    icon: '/ancla_app_icon_192.png',
-                    tag: `msg_${data.contact_id}`,
-                    renotify: true
-                  });
-                }
-              } catch (notifErr) {
-                console.warn('Error emitiendo notificación:', notifErr);
-              }
-            }
-
-            // 2. Actualizar el Globo Rojo de Mensajes Pendientes (Badge API) en el icono de la App (como WhatsApp)
-            if (typeof navigator !== 'undefined' && 'setAppBadge' in navigator) {
-              try {
-                const currentUnread = (get().contacts || []).filter(c => c.unread_count > 0).length + 1;
-                navigator.setAppBadge(currentUnread);
-              } catch (badgeErr) {
-                console.warn('App Badge error:', badgeErr);
-              }
-            }
-          }
-
-          // Desactivar el estado typing al recibir la respuesta
+          // ⚡ 1. ACTUALIZACIÓN DE ESTADO Y RENDERIZADO EN PANTALLA INSTANTÁNEO (0ms de latencia)
           set((state) => ({
             typingContacts: { ...state.typingContacts, [data.contact_id]: false }
           }));
@@ -509,7 +452,7 @@ export const useChatStore = create((set, get) => ({
             });
           }
 
-          // Actualización instantánea de la lista lateral y reordenamiento al primer lugar
+          // Actualización e instantánea reordenación de la lista de chats en primer lugar
           const currentContacts = get().contacts;
           const targetIndex = currentContacts.findIndex((c) => String(c.id) === String(data.contact_id));
           if (targetIndex !== -1) {
@@ -521,8 +464,66 @@ export const useChatStore = create((set, get) => ({
             const remaining = currentContacts.filter((c) => String(c.id) !== String(data.contact_id));
             set({ contacts: [updatedContact, ...remaining] });
           } else {
-            get().fetchContacts();
+            get().fetchContacts(true);
           }
+
+          // 🎵 2. EJECUCIÓN ASÍNCRONA NO BLOQUEANTE DE SONIDO Y NOTIFICACIÓN PUSH (En hilo secundario sin afectar la UI)
+          setTimeout(() => {
+            const isFromContact = data.sender_type === 'contact' || data.sender_type === 'CONTACT';
+            if (isFromContact) {
+              get().playNotificationChime();
+              
+              const senderName = data.contact_name || 'Nuevo Prospecto';
+              const msgBody = data.content || 'Ha enviado un mensaje nuevo a ANCLA CRM';
+
+              // Notificación en Service Worker (Barra de estado superior en celulares Android, iOS y PC)
+              if (typeof navigator !== 'undefined' && navigator.serviceWorker && navigator.serviceWorker.controller) {
+                navigator.serviceWorker.controller.postMessage({
+                  type: 'SHOW_NOTIFICATION',
+                  payload: {
+                    title: `💬 ${senderName}`,
+                    body: msgBody,
+                    icon: '/ancla_app_icon_192.png',
+                    tag: `msg_${data.contact_id}`
+                  }
+                });
+              } else if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted') {
+                try {
+                  if ('serviceWorker' in navigator && navigator.serviceWorker.ready) {
+                    navigator.serviceWorker.ready.then(reg => {
+                      reg.showNotification(`💬 ${senderName}`, {
+                        body: msgBody,
+                        icon: '/ancla_app_icon_192.png',
+                        badge: '/ancla_app_icon_192.png',
+                        vibrate: [200, 100, 200, 100, 200],
+                        tag: `msg_${data.contact_id}`,
+                        renotify: true
+                      });
+                    });
+                  } else {
+                    new Notification(`💬 ${senderName}`, {
+                      body: msgBody,
+                      icon: '/ancla_app_icon_192.png',
+                      tag: `msg_${data.contact_id}`,
+                      renotify: true
+                    });
+                  }
+                } catch (notifErr) {
+                  console.warn('Error emitiendo notificación:', notifErr);
+                }
+              }
+
+              // Globo Rojo Badge API
+              if (typeof navigator !== 'undefined' && 'setAppBadge' in navigator) {
+                try {
+                  const currentUnread = (get().contacts || []).filter(c => c.unread_count > 0).length + 1;
+                  navigator.setAppBadge(currentUnread);
+                } catch (badgeErr) {
+                  console.warn('App Badge error:', badgeErr);
+                }
+              }
+            }
+          }, 0);
 
         } else if (eventName === 'message_sent') {
           const activeContactId = get().selectedContactId;

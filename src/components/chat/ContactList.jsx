@@ -263,25 +263,6 @@ export const ContactList = () => {
           </div>
         </div>
 
-        {/* Banner de Notificaciones (Si el usuario aún no ha permitido notificaciones nativas o sonido) */}
-        {typeof window !== 'undefined' && 'Notification' in window && Notification.permission !== 'granted' && (
-          <button
-            onClick={() => {
-              const store = useChatStore.getState();
-              if (store.requestNotificationPermission) {
-                store.requestNotificationPermission();
-              }
-            }}
-            className="w-full bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-700/50 rounded-xl p-2.5 flex items-center space-x-2.5 text-left text-emerald-800 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 transition-all cursor-pointer shadow-sm active:scale-98"
-          >
-            <Bell className="w-5 h-5 text-emerald-600 dark:text-emerald-400 flex-shrink-0 animate-bounce" />
-            <div className="flex-1 min-w-0">
-              <p className="text-[11px] font-black leading-tight">Activar Pitido & Notificaciones en Celular / PC</p>
-              <p className="text-[9.5px] opacity-80 truncate mt-0.5">Toca aquí para recibir avisos e icono arriba al llegar mensajes</p>
-            </div>
-          </button>
-        )}
-
         {/* Buscador de Chats */}
         <div className="relative">
           <Search className="absolute left-3.5 top-2.5 w-4 h-4 text-[#667781]" />
