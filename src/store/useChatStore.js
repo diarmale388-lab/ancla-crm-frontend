@@ -437,28 +437,59 @@ export const useChatStore = create((set, get) => ({
           const { event: eventName, data } = payload;
 
         if (eventName === 'message_received' || eventName === 'new_message') {
-          // 🎵 REPRODUCIR CHIME AUDIBLE ROBUSTO ESTILO WHATSAPP Y EMITIR NOTIFICACIÓN PUSH
+          // 🎵 REPRODUCIR CHIME AUDIBLE Y NOTIFICAR EN LA BARRA SUPERIOR DE ESTADO (ANDROID, IOS & PC)
           const isFromContact = data.sender_type === 'contact' || data.sender_type === 'CONTACT';
           
           if (isFromContact) {
             get().playNotificationChime();
             
-            // Emitir Notificación de Escritorio / Celular (Windows, Android, iOS PWA)
             const senderName = data.contact_name || 'Nuevo Prospecto';
-            const msgBody = data.content || 'Ha enviado un mensaje nuevo';
+            const msgBody = data.content || 'Ha enviado un mensaje nuevo a ANCLA CRM';
 
-            if (typeof window !== 'undefined' && 'Notification' in window) {
-              if (Notification.permission === 'granted') {
-                try {
-                  new Notification(`💬 ANCLA CRM: ${senderName}`, {
+            // 1. Enviar notificación al Service Worker PWA (Muestra el icono en la BARRA SUPERIOR DE ESTADO del celular)
+            if (typeof navigator !== 'undefined' && navigator.serviceWorker && navigator.serviceWorker.controller) {
+              navigator.serviceWorker.controller.postMessage({
+                type: 'SHOW_NOTIFICATION',
+                payload: {
+                  title: `💬 ${senderName}`,
+                  body: msgBody,
+                  icon: '/ancla_app_icon_192.png',
+                  tag: `msg_${data.contact_id}`
+                }
+              });
+            } else if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted') {
+              try {
+                if ('serviceWorker' in navigator && navigator.serviceWorker.ready) {
+                  navigator.serviceWorker.ready.then(reg => {
+                    reg.showNotification(`💬 ${senderName}`, {
+                      body: msgBody,
+                      icon: '/ancla_app_icon_192.png',
+                      badge: '/ancla_app_icon_192.png',
+                      vibrate: [200, 100, 200, 100, 200],
+                      tag: `msg_${data.contact_id}`,
+                      renotify: true
+                    });
+                  });
+                } else {
+                  new Notification(`💬 ${senderName}`, {
                     body: msgBody,
                     icon: '/ancla_app_icon_192.png',
-                    tag: `msg_${data.contact_id}_${data.id}`,
+                    tag: `msg_${data.contact_id}`,
                     renotify: true
                   });
-                } catch (notifErr) {
-                  console.warn('Error al emitir notificación nativa:', notifErr);
                 }
+              } catch (notifErr) {
+                console.warn('Error emitiendo notificación:', notifErr);
+              }
+            }
+
+            // 2. Actualizar el Globo Rojo de Mensajes Pendientes (Badge API) en el icono de la App (como WhatsApp)
+            if (typeof navigator !== 'undefined' && 'setAppBadge' in navigator) {
+              try {
+                const currentUnread = (get().contacts || []).filter(c => c.unread_count > 0).length + 1;
+                navigator.setAppBadge(currentUnread);
+              } catch (badgeErr) {
+                console.warn('App Badge error:', badgeErr);
               }
             }
           }

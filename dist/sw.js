@@ -1,14 +1,14 @@
-// ANCLA Special Projects - Service Worker PWA v1.2.8
-const CACHE_NAME = 'ancla-crm-cache-v1.2.8';
+// ANCLA Special Projects - Service Worker PWA v1.2.9
+const CACHE_NAME = 'ancla-crm-cache-v1.2.9';
 const STATIC_ASSETS = [
   '/',
   '/manifest.webmanifest',
+  '/ancla_app_icon_192.png',
+  '/ancla_app_icon_512.png',
+  '/ancla_apple_icon_180.png',
   '/icon-192x192.png',
   '/icon-512x512.png',
-  '/apple-touch-icon-180x180.png',
   '/apple-touch-icon.png',
-  '/notification-badge.png',
-  '/notification-icon.png',
   '/favicon.png',
   '/favicon.ico'
 ];
@@ -71,6 +71,25 @@ self.addEventListener('fetch', (event) => {
   );
 });
 
+// Listener de mensajes directos desde la aplicación web para mostrar notificaciones nativas en barra superior (Android, iOS PWA y Windows)
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SHOW_NOTIFICATION') {
+    const { title, body, icon, tag } = event.data.payload || {};
+    const options = {
+      body: body || 'Nuevo mensaje pendiente por leer en ANCLA CRM',
+      icon: icon || '/ancla_app_icon_192.png',
+      badge: '/ancla_app_icon_192.png',
+      vibrate: [200, 100, 200, 100, 200],
+      tag: tag || 'ancla_pwa_notification',
+      renotify: true,
+      data: { url: '/' }
+    };
+    event.waitUntil(
+      self.registration.showNotification(title || 'ANCLA CRM', options)
+    );
+  }
+});
+
 // Manejador de Notificaciones Push para Android e iOS PWA
 self.addEventListener('push', (event) => {
   let data = { title: 'ANCLA CRM', body: 'Tienes un nuevo mensaje o actualización en ANCLA CRM' };
@@ -84,9 +103,11 @@ self.addEventListener('push', (event) => {
 
   const options = {
     body: data.body,
-    icon: '/icon-192x192.png',           // Icono a color en el panel desplegable de notificaciones
-    badge: '/notification-badge.png',    // Silueta monocromática blanca transparente para la BARRA SUPERIOR DE ESTADO
-    vibrate: [100, 50, 100],
+    icon: '/ancla_app_icon_192.png',
+    badge: '/ancla_app_icon_192.png',
+    vibrate: [200, 100, 200, 100, 200],
+    tag: data.tag || 'ancla-push-notification',
+    renotify: true,
     data: {
       dateOfArrival: Date.now(),
       primaryKey: '1',

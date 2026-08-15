@@ -18,7 +18,8 @@ import {
   Download,
   Smartphone,
   X,
-  Share
+  Share,
+  Bell
 } from 'lucide-react';
 
 export const Sidebar = ({ activeTab, setActiveTab }) => {
@@ -243,6 +244,20 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
             </div>
           </button>
         )}
+
+        {/* Botón Activar / Probar Notificaciones de Audio & Barra Superior */}
+        <button
+          onClick={() => {
+            const store = useChatStore.getState();
+            if (store.requestNotificationPermission) {
+              store.requestNotificationPermission();
+            }
+          }}
+          className="w-10 h-10 rounded-xl flex items-center justify-center transition-all cursor-pointer relative text-[#54656f] dark:text-[#8696a0] hover:bg-[#e9edef] hover:text-[#008069] dark:hover:bg-[#202c33] dark:hover:text-[#00a884]"
+          title="Activar y Probar Notificaciones de Audio & Barra Superior"
+        >
+          <Bell className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+        </button>
 
         {/* Botón Toggler Día/Noche */}
         <button
