@@ -110,6 +110,35 @@ function App() {
       fetchContacts();
       connectWebSocket();
       startSilentPolling();
+
+      // Solicitar permiso de notificaciones nativas y desbloquear canal de sonido
+      const store = useChatStore.getState();
+      if (store.requestNotificationPermission) {
+        store.requestNotificationPermission();
+      }
+
+      const unlockAudio = () => {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (AudioCtx && !window._crmAudioCtx) {
+          window._crmAudioCtx = new AudioCtx();
+        }
+        if (window._crmAudioCtx && window._crmAudioCtx.state === 'suspended') {
+          window._crmAudioCtx.resume();
+        }
+        if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'default') {
+          Notification.requestPermission();
+        }
+      };
+
+      window.addEventListener('click', unlockAudio, { once: true });
+      window.addEventListener('touchstart', unlockAudio, { once: true });
+      window.addEventListener('pointerdown', unlockAudio, { once: true });
+
+      return () => {
+        window.removeEventListener('click', unlockAudio);
+        window.removeEventListener('touchstart', unlockAudio);
+        window.removeEventListener('pointerdown', unlockAudio);
+      };
     } else if (!isAuthenticated) {
       disconnectWebSocket();
       stopSilentPolling();

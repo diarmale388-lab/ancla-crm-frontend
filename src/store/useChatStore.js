@@ -437,64 +437,30 @@ export const useChatStore = create((set, get) => ({
           const { event: eventName, data } = payload;
 
         if (eventName === 'message_received' || eventName === 'new_message') {
-          // Sonido de alerta fuerte estilo WhatsApp al recibir mensaje
-          // Sonido de alerta FUERTE estilo WhatsApp al recibir mensaje
-          try {
-            const AudioCtx = window.AudioContext || window.webkitAudioContext;
-            if (AudioCtx) {
-              if (!window._crmAudioCtx) {
-                window._crmAudioCtx = new AudioCtx();
-                // Desbloquear audio en el primer clic/toque en la página (política autoplay de navegadores)
-                const unlock = () => {
-                  if (window._crmAudioCtx && window._crmAudioCtx.state === 'suspended') {
-                    window._crmAudioCtx.resume();
-                  }
-                };
-                window.addEventListener('click', unlock, { once: true });
-                window.addEventListener('keydown', unlock, { once: true });
+          // 🎵 REPRODUCIR CHIME AUDIBLE ROBUSTO ESTILO WHATSAPP Y EMITIR NOTIFICACIÓN PUSH
+          const isFromContact = data.sender_type === 'contact' || data.sender_type === 'CONTACT';
+          
+          if (isFromContact) {
+            get().playNotificationChime();
+            
+            // Emitir Notificación de Escritorio / Celular (Windows, Android, iOS PWA)
+            const senderName = data.contact_name || 'Nuevo Prospecto';
+            const msgBody = data.content || 'Ha enviado un mensaje nuevo';
+
+            if (typeof window !== 'undefined' && 'Notification' in window) {
+              if (Notification.permission === 'granted') {
+                try {
+                  new Notification(`💬 ANCLA CRM: ${senderName}`, {
+                    body: msgBody,
+                    icon: '/ancla_app_icon_192.png',
+                    tag: `msg_${data.contact_id}_${data.id}`,
+                    renotify: true
+                  });
+                } catch (notifErr) {
+                  console.warn('Error al emitir notificación nativa:', notifErr);
+                }
               }
-              const ctx = window._crmAudioCtx;
-              if (ctx.state === 'suspended') ctx.resume();
-              const now = ctx.currentTime;
-
-              // Tono 1: Doble oscilador (Senoidal + Triángulo) en D5 (587.33 Hz) para máximo cuerpo y volumen
-              const osc1 = ctx.createOscillator();
-              const osc1Sub = ctx.createOscillator();
-              const gain1 = ctx.createGain();
-              osc1.type = 'sine';
-              osc1Sub.type = 'triangle';
-              osc1.frequency.setValueAtTime(587.33, now);
-              osc1Sub.frequency.setValueAtTime(880.00, now);
-              gain1.gain.setValueAtTime(0.95, now);
-              gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
-              osc1.connect(gain1);
-              osc1Sub.connect(gain1);
-              gain1.connect(ctx.destination);
-              osc1.start(now);
-              osc1Sub.start(now);
-              osc1.stop(now + 0.15);
-              osc1Sub.stop(now + 0.15);
-
-              // Tono 2: Doble oscilador en D6 (1174.66 Hz) - Campana brillante y fuerte
-              const osc2 = ctx.createOscillator();
-              const osc2Sub = ctx.createOscillator();
-              const gain2 = ctx.createGain();
-              osc2.type = 'sine';
-              osc2Sub.type = 'triangle';
-              osc2.frequency.setValueAtTime(1174.66, now + 0.10);
-              osc2Sub.frequency.setValueAtTime(1479.98, now + 0.10);
-              gain2.gain.setValueAtTime(1.0, now + 0.10);
-              gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.40);
-              osc2.connect(gain2);
-              osc2Sub.connect(gain2);
-              gain2.connect(ctx.destination);
-              osc2.start(now + 0.10);
-              osc2Sub.start(now + 0.10);
-              osc2.stop(now + 0.40);
-              osc2Sub.stop(now + 0.40);
             }
-          } catch (audioErr) {
-            console.warn('Audio alert error:', audioErr);
           }
 
           // Desactivar el estado typing al recibir la respuesta
@@ -663,6 +629,88 @@ export const useChatStore = create((set, get) => ({
     } catch (err) {
       console.error(err);
       return null;
+    }
+  },
+
+  playNotificationChime: () => {
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+
+      if (!window._crmAudioCtx) {
+        window._crmAudioCtx = new AudioCtx();
+      }
+
+      const ctx = window._crmAudioCtx;
+      if (ctx.state === 'suspended') {
+        ctx.resume();
+      }
+
+      const now = ctx.currentTime;
+
+      // 🔔 Tono Dual WhatsApp Premium: C5 (523.25 Hz) -> G5 (783.99 Hz)
+      const osc1 = ctx.createOscillator();
+      const osc1Sub = ctx.createOscillator();
+      const gain1 = ctx.createGain();
+      
+      osc1.type = 'sine';
+      osc1Sub.type = 'triangle';
+      osc1.frequency.setValueAtTime(523.25, now);
+      osc1Sub.frequency.setValueAtTime(1046.50, now);
+      
+      gain1.gain.setValueAtTime(0.9, now);
+      gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+      
+      osc1.connect(gain1);
+      osc1Sub.connect(gain1);
+      gain1.connect(ctx.destination);
+      
+      osc1.start(now);
+      osc1Sub.start(now);
+      osc1.stop(now + 0.18);
+      osc1Sub.stop(now + 0.18);
+
+      // Tono 2: Nota aguda cristalina G5 (783.99 Hz)
+      const osc2 = ctx.createOscillator();
+      const osc2Sub = ctx.createOscillator();
+      const gain2 = ctx.createGain();
+      
+      osc2.type = 'sine';
+      osc2Sub.type = 'triangle';
+      osc2.frequency.setValueAtTime(783.99, now + 0.12);
+      osc2Sub.frequency.setValueAtTime(1567.98, now + 0.12);
+      
+      gain2.gain.setValueAtTime(1.0, now + 0.12);
+      gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+      
+      osc2.connect(gain2);
+      osc2Sub.connect(gain2);
+      gain2.connect(ctx.destination);
+      
+      osc2.start(now + 0.12);
+      osc2Sub.start(now + 0.12);
+      osc2.stop(now + 0.45);
+      osc2Sub.stop(now + 0.45);
+
+    } catch (audioErr) {
+      console.warn('Error al reproducir pitido de notificación:', audioErr);
+    }
+  },
+
+  requestNotificationPermission: async () => {
+    if (typeof window !== 'undefined' && 'Notification' in window) {
+      if (Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+        const permission = await Notification.requestPermission();
+        if (permission === 'granted') {
+          get().playNotificationChime();
+          new Notification('💬 ANCLA CRM', {
+            body: '¡Notificaciones de audio y banners activadas con éxito!',
+            icon: '/ancla_app_icon_192.png'
+          });
+        }
+      } else if (Notification.permission === 'granted') {
+        get().playNotificationChime();
+      }
     }
   },
 
