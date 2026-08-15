@@ -5,6 +5,22 @@ const isLocal = typeof window !== 'undefined' && (window.location.hostname === '
 const API_URL = import.meta.env.VITE_API_URL || (isLocal ? 'http://localhost:8001/api/v1' : 'https://ancla-crm-backend-production.up.railway.app/api/v1');
 const WS_URL = import.meta.env.VITE_WS_URL || (isLocal ? 'ws://localhost:8001/ws' : 'wss://ancla-crm-backend-production.up.railway.app/ws');
 
+// Helper para convertir clave pública VAPID de base64url a Uint8Array requerido por PushManager
+function urlB64ToUint8Array(base64String) {
+  const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+  const base64 = (base64String + padding)
+    .replace(/-/g, '+')
+    .replace(/_/g, '/');
+
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+
+  for (let i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
+}
+
 export const useChatStore = create((set, get) => ({
   contacts: [],
   messages: [],
@@ -16,6 +32,9 @@ export const useChatStore = create((set, get) => ({
   socket: null,
   typingContacts: {}, // Guarda los IDs de los contactos donde la IA está escribiendo: { contact_id: boolean }
   activeTab: 'chats',
+  pushPermission: typeof window !== 'undefined' && 'Notification' in window ? Notification.permission : 'default',
+  isPushSubscribed: false,
+  isPushLoading: false,
   setActiveTab: (tab) => set({ activeTab: tab }),
   setSelectedContactId: (id) => set({ selectedContactId: id }),
 
@@ -473,44 +492,34 @@ export const useChatStore = create((set, get) => ({
             if (isFromContact) {
               get().playNotificationChime();
               
-              const senderName = data.contact_name || 'Nuevo Prospecto';
+              const senderName = data.contact_name
+                || (data.contact && `${data.contact.first_name || ''} ${data.contact.last_name || ''}`.trim())
+                || 'Nuevo Prospecto';
               const msgBody = data.content || 'Ha enviado un mensaje nuevo a ANCLA CRM';
 
               // Notificación en Service Worker (Barra de estado superior en celulares Android, iOS y PC)
-              if (typeof navigator !== 'undefined' && navigator.serviceWorker && navigator.serviceWorker.controller) {
-                navigator.serviceWorker.controller.postMessage({
-                  type: 'SHOW_NOTIFICATION',
-                  payload: {
-                    title: `💬 ${senderName}`,
+              // Usa navigator.serviceWorker.ready en vez de .controller para funcionar desde la primera carga
+              if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
+                navigator.serviceWorker.ready.then(reg => {
+                  reg.showNotification(`💬 ${senderName}`, {
                     body: msgBody,
                     icon: '/ancla_app_icon_192.png',
-                    tag: `msg_${data.contact_id}`
-                  }
-                });
-              } else if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted') {
-                try {
-                  if ('serviceWorker' in navigator && navigator.serviceWorker.ready) {
-                    navigator.serviceWorker.ready.then(reg => {
-                      reg.showNotification(`💬 ${senderName}`, {
-                        body: msgBody,
-                        icon: '/ancla_app_icon_192.png',
-                        badge: '/ancla_app_icon_192.png',
-                        vibrate: [200, 100, 200, 100, 200],
-                        tag: `msg_${data.contact_id}`,
-                        renotify: true
-                      });
-                    });
-                  } else {
+                    badge: '/notification-badge.png',
+                    vibrate: [200, 100, 200, 100, 200],
+                    tag: `msg_${data.contact_id}`,
+                    renotify: true,
+                    data: { url: '/' }
+                  });
+                }).catch(swErr => {
+                  console.warn('SW notification fallback:', swErr);
+                  if ('Notification' in window && Notification.permission === 'granted') {
                     new Notification(`💬 ${senderName}`, {
                       body: msgBody,
                       icon: '/ancla_app_icon_192.png',
-                      tag: `msg_${data.contact_id}`,
-                      renotify: true
+                      tag: `msg_${data.contact_id}`
                     });
                   }
-                } catch (notifErr) {
-                  console.warn('Error emitiendo notificación:', notifErr);
-                }
+                });
               }
 
               // Globo Rojo Badge API
@@ -729,21 +738,138 @@ export const useChatStore = create((set, get) => ({
     }
   },
 
-  requestNotificationPermission: async () => {
-    if (typeof window !== 'undefined' && 'Notification' in window) {
-      if (Notification.permission !== 'granted' && Notification.permission !== 'denied') {
-        const permission = await Notification.requestPermission();
-        if (permission === 'granted') {
-          get().playNotificationChime();
-          new Notification('💬 ANCLA CRM', {
-            body: '¡Notificaciones de audio y banners activadas con éxito!',
-            icon: '/ancla_app_icon_192.png'
-          });
-        }
-      } else if (Notification.permission === 'granted') {
-        get().playNotificationChime();
+  // 🔔 1. Verificar estado actual de la suscripción WebPush en el navegador
+  checkPushSubscriptionStatus: async () => {
+    if (typeof window === 'undefined' || !('Notification' in window)) return;
+
+    const currentPermission = Notification.permission;
+    set({ pushPermission: currentPermission });
+
+    if ('serviceWorker' in navigator && 'PushManager' in window && currentPermission === 'granted') {
+      try {
+        const reg = await navigator.serviceWorker.ready;
+        const sub = await reg.pushManager.getSubscription();
+        set({ isPushSubscribed: !!sub });
+      } catch (e) {
+        console.warn('Error verificando suscripción Push:', e);
       }
     }
+  },
+
+  // 🔔 2. Suscripción Nativa WebPush (VAPID) para Android, iOS (PWA 16.4+) y PC
+  subscribeToPushNotifications: async (interactive = false) => {
+    const token = useAuthStore.getState().token;
+    if (!token) return { success: false, message: 'Usuario no autenticado' };
+
+    if (typeof window === 'undefined' || !('Notification' in window) || !('serviceWorker' in navigator)) {
+      return { success: false, message: 'Este navegador no soporta notificaciones WebPush.' };
+    }
+
+    set({ isPushLoading: true });
+    try {
+      // A. Solicitar permiso al usuario
+      let permission = Notification.permission;
+      if (permission !== 'granted') {
+        permission = await Notification.requestPermission();
+        set({ pushPermission: permission });
+      }
+
+      if (permission !== 'granted') {
+        set({ isPushLoading: false, isPushSubscribed: false });
+        return {
+          success: false,
+          permission,
+          message: permission === 'denied'
+            ? 'Notificaciones bloqueadas en el navegador. Por favor habilítalas en Ajustes del Sitio.'
+            : 'Permiso de notificaciones no concedido.'
+        };
+      }
+
+      // B. Obtener Clave Pública VAPID del Backend
+      const vapidRes = await fetch(`${API_URL}/notifications/vapid-public-key`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (!vapidRes.ok) throw new Error('No se pudo obtener la clave VAPID pública.');
+      const vapidData = await vapidRes.json();
+      const vapidPublicKey = vapidData.public_key;
+
+      // C. Obtener el Service Worker y crear la suscripción
+      const registration = await navigator.serviceWorker.ready;
+      let subscription = await registration.pushManager.getSubscription();
+
+      if (!subscription) {
+        const applicationServerKey = urlB64ToUint8Array(vapidPublicKey);
+        subscription = await registration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey
+        });
+      }
+
+      // D. Enviar la suscripción a PostgreSQL para que el backend la asocie al asesor
+      const subJson = subscription.toJSON();
+      const saveRes = await fetch(`${API_URL}/notifications/subscribe`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          endpoint: subscription.endpoint,
+          keys: {
+            p256dh: subJson.keys?.p256dh,
+            auth: subJson.keys?.auth
+          },
+          user_agent: navigator.userAgent
+        })
+      });
+
+      if (!saveRes.ok) throw new Error('Error al registrar dispositivo en la base de datos.');
+
+      set({ isPushSubscribed: true, pushPermission: 'granted', isPushLoading: false });
+      get().playNotificationChime();
+
+      if (interactive) {
+        // Enviar notificación local de bienvenida
+        registration.showNotification('🚀 ANCLA CRM - Notificaciones Activas', {
+          body: '¡Excelente! Ahora recibirás alertas en tiempo real incluso con la pantalla apagada o la app cerrada.',
+          icon: '/ancla_app_icon_192.png',
+          badge: '/notification-badge.png',
+          vibrate: [200, 100, 200, 100, 200],
+          tag: 'ancla_welcome_push'
+        });
+      }
+
+      return { success: true, message: '¡Dispositivo registrado exitosamente para notificaciones en segundo plano!' };
+    } catch (err) {
+      console.error('Error suscribiendo a WebPush:', err);
+      set({ isPushLoading: false });
+      return { success: false, message: err.message || 'Error durante la suscripción push.' };
+    }
+  },
+
+  // 🔔 3. Enviar notificación Push de prueba desde el backend
+  sendTestPushNotification: async () => {
+    const token = useAuthStore.getState().token;
+    if (!token) return { success: false, message: 'No autenticado' };
+
+    try {
+      const response = await fetch(`${API_URL}/notifications/test-push`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      const data = await response.json();
+      return data;
+    } catch (err) {
+      console.error('Error enviando push de prueba:', err);
+      return { status: 'error', message: err.message };
+    }
+  },
+
+  requestNotificationPermission: async () => {
+    await get().subscribeToPushNotifications(false);
   },
 
   disconnectWebSocket: () => {
@@ -754,3 +880,4 @@ export const useChatStore = create((set, get) => ({
     }
   }
 }));
+

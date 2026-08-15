@@ -167,16 +167,21 @@ export const ContactList = () => {
               </button>
             )}
 
-            {/* Botón Activar / Probar Notificaciones de Audio e Icono en Barra Superior */}
+            {/* Botón Activar / Probar Notificaciones de Audio e Icono en Barra Superior en Celular */}
             <button
-              onClick={() => {
+              onClick={async () => {
                 const store = useChatStore.getState();
-                if (store.requestNotificationPermission) {
+                if (store.subscribeToPushNotifications) {
+                  const success = await store.subscribeToPushNotifications();
+                  if (success && store.sendTestPushNotification) {
+                    store.sendTestPushNotification();
+                  }
+                } else if (store.requestNotificationPermission) {
                   store.requestNotificationPermission();
                 }
               }}
               className="p-1.5 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 text-emerald-600 dark:text-emerald-400 cursor-pointer transition-colors"
-              title="Activar / Probar Pitido de Audio y Notificaciones en Barra Superior"
+              title="Activar Notificaciones Push VAPID en Celular (Pantalla Bloqueada)"
             >
               <Bell className="w-5 h-5 animate-bounce" />
             </button>

@@ -19,17 +19,34 @@ import {
   Smartphone,
   X,
   Share,
-  Bell
+  Bell,
+  CheckCircle2,
+  AlertTriangle,
+  Send,
+  Radio,
+  Info,
+  ShieldCheck,
+  Loader2
 } from 'lucide-react';
 
 export const Sidebar = ({ activeTab, setActiveTab }) => {
   const { user, logout } = useAuthStore();
-  const { disconnectWebSocket } = useChatStore();
+  const { 
+    disconnectWebSocket, 
+    pushPermission, 
+    isPushSubscribed, 
+    isPushLoading, 
+    subscribeToPushNotifications, 
+    sendTestPushNotification 
+  } = useChatStore();
   const { theme, toggleTheme } = useThemeStore();
 
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [isInstallable, setIsInstallable] = useState(false);
   const [showIosPrompt, setShowIosPrompt] = useState(false);
+  const [showPushModal, setShowPushModal] = useState(false);
+  const [testPushStatus, setTestPushStatus] = useState(null);
+  const [isTestingPush, setIsTestingPush] = useState(false);
 
   useEffect(() => {
     const handleBeforeInstall = (e) => {
@@ -245,18 +262,24 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
           </button>
         )}
 
-        {/* Botón Activar / Probar Notificaciones de Audio & Barra Superior */}
+        {/* Botón Gestor de Notificaciones Push PWA (Android / iOS / PC con pantalla bloqueada) */}
         <button
-          onClick={() => {
-            const store = useChatStore.getState();
-            if (store.requestNotificationPermission) {
-              store.requestNotificationPermission();
-            }
-          }}
-          className="w-10 h-10 rounded-xl flex items-center justify-center transition-all cursor-pointer relative text-[#54656f] dark:text-[#8696a0] hover:bg-[#e9edef] hover:text-[#008069] dark:hover:bg-[#202c33] dark:hover:text-[#00a884]"
-          title="Activar y Probar Notificaciones de Audio & Barra Superior"
+          onClick={() => setShowPushModal(true)}
+          className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all cursor-pointer relative ${
+            pushPermission === 'granted'
+              ? 'text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/10'
+              : 'text-amber-500 hover:bg-amber-500/10 animate-pulse'
+          }`}
+          title={
+            pushPermission === 'granted'
+              ? 'Notificaciones Push Activas (Pantalla Bloqueada)'
+              : '⚠️ Activar Notificaciones en Celular (Pantalla Bloqueada)'
+          }
         >
-          <Bell className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+          <Bell className="w-5 h-5" />
+          <span className={`absolute top-2 right-2 w-2 h-2 rounded-full ${
+            pushPermission === 'granted' ? 'bg-emerald-500' : 'bg-amber-500 animate-ping'
+          }`} />
         </button>
 
         {/* Botón Toggler Día/Noche */}
@@ -286,6 +309,130 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
           </div>
         </div>
       </div>
+
+      {/* Modal Gestor y Diagnóstico de Notificaciones Push en Celulares */}
+      {showPushModal && (
+        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in font-sans">
+          <div className="bg-[#111b27] border border-white/10 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4 text-white">
+            <div className="flex justify-between items-center border-b border-white/10 pb-3">
+              <div className="flex items-center space-x-2.5">
+                <Radio className="w-5 h-5 text-emerald-400 animate-pulse" />
+                <h3 className="text-sm font-black uppercase tracking-wider">Centro de Notificaciones Push</h3>
+              </div>
+              <button onClick={() => { setShowPushModal(false); setTestPushStatus(null); }} className="text-slate-400 hover:text-white cursor-pointer">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Estado del Permiso */}
+            <div className="p-3.5 rounded-2xl bg-black/40 border border-white/5 space-y-2.5">
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-slate-300 font-medium">Permiso en este dispositivo:</span>
+                <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-black uppercase tracking-wider ${
+                  pushPermission === 'granted'
+                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                    : pushPermission === 'denied'
+                    ? 'bg-red-500/20 text-red-300 border border-red-500/30'
+                    : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                }`}>
+                  {pushPermission === 'granted' ? 'Concedido ✅' : pushPermission === 'denied' ? 'Bloqueado ❌' : 'Pendiente ⏳'}
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-slate-300 font-medium">Servicio WebPush (VAPID):</span>
+                <span className="text-emerald-400 font-bold flex items-center gap-1">
+                  <ShieldCheck className="w-4 h-4" /> Conectado (FCM/APNs)
+                </span>
+              </div>
+            </div>
+
+            {/* Explicación de Funcionamiento */}
+            <div className="text-xs text-slate-300 space-y-2 leading-relaxed bg-white/5 p-3.5 rounded-2xl border border-white/5">
+              <p className="flex items-start gap-1.5">
+                <Info className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
+                <span>
+                  Las notificaciones <strong>Push nativas</strong> te alertarán con <strong>sonido y vibración</strong> cada vez que un prospecto escriba a WhatsApp, incluso con la <strong>pantalla del celular apagada o la aplicación cerrada</strong>.
+                </span>
+              </p>
+            </div>
+
+            {/* Resultado de prueba de push */}
+            {testPushStatus && (
+              <div className={`p-3 rounded-xl text-xs flex items-start gap-2 ${
+                testPushStatus.status === 'success'
+                  ? 'bg-emerald-500/20 text-emerald-200 border border-emerald-500/40'
+                  : 'bg-amber-500/20 text-amber-200 border border-amber-500/40'
+              }`}>
+                {testPushStatus.status === 'success' ? (
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                ) : (
+                  <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                )}
+                <span>{testPushStatus.message}</span>
+              </div>
+            )}
+
+            {/* Botones de Acción */}
+            <div className="space-y-2.5 pt-1">
+              <button
+                type="button"
+                disabled={isPushLoading}
+                onClick={async () => {
+                  const res = await subscribeToPushNotifications(true);
+                  if (res) {
+                    setTestPushStatus({ status: res.success ? 'success' : 'warning', message: res.message });
+                  }
+                }}
+                className={`w-full py-2.5 font-black rounded-xl text-xs transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer ${
+                  pushPermission === 'granted'
+                    ? 'bg-white/10 hover:bg-white/20 text-white border border-white/10'
+                    : 'bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white shadow-emerald-500/20'
+                }`}
+              >
+                {isPushLoading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" /> Registrando Dispositivo...
+                  </>
+                ) : pushPermission === 'granted' ? (
+                  <>
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400" /> Re-sincronizar Suscripción Push
+                  </>
+                ) : (
+                  <>
+                    <Bell className="w-4 h-4" /> 🚀 Activar Notificaciones en este Celular
+                  </>
+                )}
+              </button>
+
+              <button
+                type="button"
+                disabled={isTestingPush}
+                onClick={async () => {
+                  setIsTestingPush(true);
+                  setTestPushStatus(null);
+                  const res = await sendTestPushNotification();
+                  setIsTestingPush(false);
+                  if (res) {
+                    setTestPushStatus(res);
+                  }
+                }}
+                className="w-full py-2.5 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white font-black rounded-xl text-xs transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer shadow-indigo-500/20"
+              >
+                {isTestingPush ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" /> Enviando Push de Prueba...
+                  </>
+                ) : (
+                  <>
+                    <Send className="w-4 h-4" /> 🔔 Enviar Notificación de Prueba a Celulares
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Modal Guía Multi-Plataforma para Instalar App PWA (Mac, iPad, iPhone, Android) */}
       {showIosPrompt && (

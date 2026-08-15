@@ -111,8 +111,11 @@ function App() {
       connectWebSocket();
       startSilentPolling();
 
-      // Solicitar permiso de notificaciones nativas y desbloquear canal de sonido
+      // Solicitar permiso de notificaciones nativas y verificar estado WebPush
       const store = useChatStore.getState();
+      if (store.checkPushSubscriptionStatus) {
+        store.checkPushSubscriptionStatus();
+      }
       if (store.requestNotificationPermission) {
         store.requestNotificationPermission();
       }
