@@ -74,6 +74,21 @@ export const useChatStore = create((set, get) => ({
       if (!response.ok) throw new Error('Error al obtener el historial');
 
       const data = await response.json();
+      
+      // Detección de mensajes nuevos entrantes durante el polling de respaldo
+      if (isSilent && Array.isArray(data)) {
+        const prevMessages = get().messages || [];
+        if (prevMessages.length > 0 && data.length > prevMessages.length) {
+          const prevLastId = prevMessages[prevMessages.length - 1]?.id || 0;
+          const newIncoming = data.filter(
+            (m) => m.id > prevLastId && (m.sender_type === 'contact' || m.sender_type === 'CONTACT')
+          );
+          if (newIncoming.length > 0) {
+            get().playNotificationChime();
+          }
+        }
+      }
+
       set({ messages: data, loading: false });
     } catch (err) {
       if (!isSilent) set({ error: err.message, loading: false });
@@ -82,7 +97,7 @@ export const useChatStore = create((set, get) => ({
 
   pollingIntervalId: null,
 
-  // Polling silencioso de respaldo cada 3.5 segundos para garantizar 100% de actualización sin F5
+  // Polling silencioso de respaldo cada 2.5 segundos para garantizar 100% de actualización en tiempo real
   startSilentPolling: () => {
     const existing = get().pollingIntervalId;
     if (existing) clearInterval(existing);
@@ -93,15 +108,17 @@ export const useChatStore = create((set, get) => ({
       if (activeId) {
         get().fetchMessages(activeId, true);
       }
-    }, 3500);
+    }, 2500);
 
     set({ pollingIntervalId: interval });
   },
 
   stopSilentPolling: () => {
     const existing = get().pollingIntervalId;
-    if (existing) clearInterval(existing);
-    set({ pollingIntervalId: null });
+    if (existing) {
+      clearInterval(existing);
+      set({ pollingIntervalId: null });
+    }
   },
 
   sendMessage: async (contactId, content, isInternalNote = false) => {
@@ -673,7 +690,66 @@ export const useChatStore = create((set, get) => ({
     }
   },
 
+  // 🔊 Desbloqueador Global de Motores de Audio (Web Audio API + HTML5 Audio)
+  unlockAudioEngine: () => {
+    try {
+      // 1. Desbloquear Web Audio API Context
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (AudioCtx) {
+        if (!window._crmAudioCtx) {
+          window._crmAudioCtx = new AudioCtx();
+        }
+        if (window._crmAudioCtx.state === 'suspended') {
+          window._crmAudioCtx.resume().catch(() => {});
+        }
+      }
+
+      // 2. Pre-cargar instancia HTML5 Audio
+      if (typeof window !== 'undefined' && !window._crmAudioElement) {
+        const audio = new Audio('/notification.wav');
+        audio.preload = 'auto';
+        audio.volume = 1.0;
+        window._crmAudioElement = audio;
+      }
+    } catch (e) {
+      console.warn('Audio unlock warning:', e);
+    }
+  },
+
+  // 🔄 Reconexión reactiva instantánea al cambiar visibilidad o enfocar ventana
+  reconnectIfDisconnected: () => {
+    const socket = get().socket;
+    if (!socket || socket.readyState === WebSocket.CLOSED || socket.readyState === WebSocket.CLOSING) {
+      console.log('🔄 Reconectando WebSocket tras reanudar foco/visibilidad...');
+      get().connectWebSocket();
+    }
+    get().fetchContacts(true);
+    const activeId = get().selectedContactId;
+    if (activeId) {
+      get().fetchMessages(activeId, true);
+    }
+  },
+
+  // 🔔 Reproductor Híbrido Garantizado (HTML5 WAV + Sintetizador Web Audio API)
   playNotificationChime: async () => {
+    // Canal 1: Reproducción directa HTML5 Audio
+    try {
+      if (typeof window !== 'undefined') {
+        if (!window._crmAudioElement) {
+          window._crmAudioElement = new Audio('/notification.wav');
+        }
+        const audio = window._crmAudioElement.cloneNode();
+        audio.volume = 1.0;
+        const playPromise = audio.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(() => {});
+        }
+      }
+    } catch (e) {
+      // Fallback a oscilador sintetizado
+    }
+
+    // Canal 2: Sintetizador Web Audio API (Chime de doble tono cristalino)
     try {
       const AudioCtx = window.AudioContext || window.webkitAudioContext;
       if (!AudioCtx) return;
@@ -684,12 +760,12 @@ export const useChatStore = create((set, get) => ({
 
       const ctx = window._crmAudioCtx;
       if (ctx.state === 'suspended') {
-        await ctx.resume();
+        await ctx.resume().catch(() => {});
       }
 
       const now = ctx.currentTime;
 
-      // 🔔 Tono Dual WhatsApp Premium: C5 (523.25 Hz) -> G5 (783.99 Hz)
+      // Tono 1: C5 (523.25 Hz)
       const osc1 = ctx.createOscillator();
       const osc1Sub = ctx.createOscillator();
       const gain1 = ctx.createGain();
@@ -711,7 +787,7 @@ export const useChatStore = create((set, get) => ({
       osc1.stop(now + 0.18);
       osc1Sub.stop(now + 0.18);
 
-      // Tono 2: Nota aguda cristalina G5 (783.99 Hz)
+      // Tono 2: G5 (783.99 Hz)
       const osc2 = ctx.createOscillator();
       const osc2Sub = ctx.createOscillator();
       const gain2 = ctx.createGain();
@@ -734,7 +810,7 @@ export const useChatStore = create((set, get) => ({
       osc2Sub.stop(now + 0.45);
 
     } catch (audioErr) {
-      console.warn('Error al reproducir pitido de notificación:', audioErr);
+      console.warn('Web Audio synthesis error:', audioErr);
     }
   },
 

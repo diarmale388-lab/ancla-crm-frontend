@@ -1380,18 +1380,44 @@ export const CalendarView = () => {
                         <div className="space-y-2 pl-7">
                           {(d.intervals || []).map((interval, idx) => (
                             <div key={idx} className="flex items-center space-x-2 animate-fade-in">
-                              <input
+                               <input
                                 type="time"
-                                value={interval.start_time}
+                                value={(() => {
+                                  const val = interval.start_time || '09:00';
+                                  if (val.includes('a. m.') || val.includes('p. m.') || val.includes('AM') || val.includes('PM')) {
+                                    const isPM = /p\.?\s*m\.?/i.test(val) || /pm/i.test(val);
+                                    const clean = val.replace(/[^0-9:]/g, '').trim();
+                                    const parts = clean.split(':');
+                                    let h = parseInt(parts[0] || '9', 10);
+                                    let m = parseInt(parts[1] || '0', 10);
+                                    if (isPM && h < 12) h += 12;
+                                    if (!isPM && h === 12) h = 0;
+                                    return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+                                  }
+                                  return val;
+                                })()}
                                 onChange={(e) => updateIntervalTimeLocal(d.day_of_week, idx, 'start_time', e.target.value)}
-                                className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl px-3 py-2 text-xs text-slate-800 dark:text-white focus:outline-none"
+                                className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl px-3 py-2 text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-1 focus:ring-emerald-500 font-mono font-bold"
                               />
                               <span className="text-xs text-slate-400">a</span>
                               <input
                                 type="time"
-                                value={interval.end_time}
+                                value={(() => {
+                                  const val = interval.end_time || '17:00';
+                                  if (val.includes('a. m.') || val.includes('p. m.') || val.includes('AM') || val.includes('PM')) {
+                                    const isPM = /p\.?\s*m\.?/i.test(val) || /pm/i.test(val);
+                                    const clean = val.replace(/[^0-9:]/g, '').trim();
+                                    const parts = clean.split(':');
+                                    let h = parseInt(parts[0] || '17', 10);
+                                    let m = parseInt(parts[1] || '0', 10);
+                                    if (isPM && h < 12) h += 12;
+                                    if (!isPM && h === 12) h = 0;
+                                    return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+                                  }
+                                  return val;
+                                })()}
                                 onChange={(e) => updateIntervalTimeLocal(d.day_of_week, idx, 'end_time', e.target.value)}
-                                className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl px-3 py-2 text-xs text-slate-800 dark:text-white focus:outline-none"
+                                className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl px-3 py-2 text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-1 focus:ring-emerald-500 font-mono font-bold"
                               />
                               
                               {(d.intervals || []).length > 1 && (

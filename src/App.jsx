@@ -120,27 +120,32 @@ function App() {
         store.requestNotificationPermission();
       }
 
-      const unlockAudio = () => {
-        const AudioCtx = window.AudioContext || window.webkitAudioContext;
-        if (AudioCtx && !window._crmAudioCtx) {
-          window._crmAudioCtx = new AudioCtx();
-        }
-        if (window._crmAudioCtx && window._crmAudioCtx.state === 'suspended') {
-          window._crmAudioCtx.resume();
-        }
-        if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'default') {
-          Notification.requestPermission();
+      const handleUserInteraction = () => {
+        store.unlockAudioEngine();
+      };
+
+      const handleVisibilityOrFocus = () => {
+        if (document.visibilityState === 'visible') {
+          store.unlockAudioEngine();
+          store.reconnectIfDisconnected();
         }
       };
 
-      window.addEventListener('click', unlockAudio, { once: true });
-      window.addEventListener('touchstart', unlockAudio, { once: true });
-      window.addEventListener('pointerdown', unlockAudio, { once: true });
+      // Desbloquear motor de audio en cualquier interacción del usuario
+      window.addEventListener('click', handleUserInteraction, { passive: true });
+      window.addEventListener('touchstart', handleUserInteraction, { passive: true });
+      window.addEventListener('pointerdown', handleUserInteraction, { passive: true });
+      window.addEventListener('keydown', handleUserInteraction, { passive: true });
+      window.addEventListener('focus', handleVisibilityOrFocus, { passive: true });
+      document.addEventListener('visibilitychange', handleVisibilityOrFocus, { passive: true });
 
       return () => {
-        window.removeEventListener('click', unlockAudio);
-        window.removeEventListener('touchstart', unlockAudio);
-        window.removeEventListener('pointerdown', unlockAudio);
+        window.removeEventListener('click', handleUserInteraction);
+        window.removeEventListener('touchstart', handleUserInteraction);
+        window.removeEventListener('pointerdown', handleUserInteraction);
+        window.removeEventListener('keydown', handleUserInteraction);
+        window.removeEventListener('focus', handleVisibilityOrFocus);
+        document.removeEventListener('visibilitychange', handleVisibilityOrFocus);
       };
     } else if (!isAuthenticated) {
       disconnectWebSocket();

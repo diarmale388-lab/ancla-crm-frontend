@@ -351,27 +351,33 @@ export const ChatWindow = () => {
     (app) => app.contact_id === selectedContactId && app.status === 'CONFIRMED'
   );
 
-  // Auto-scroll inteligente: solo desplaza si el usuario está cerca del fondo o al cambiar de contacto
+  // Auto-scroll robusto e inmediato: desplaza automáticamente al fondo al recibir o enviar mensajes
   const chatContainerRef = useRef(null);
   const prevContactIdRef = useRef(null);
 
+  const scrollToBottom = (behavior = 'smooth') => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior, block: 'end' });
+    }
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  };
+
   useEffect(() => {
-    if (!messagesEndRef.current) return;
     const isNewContact = prevContactIdRef.current !== selectedContactId;
     prevContactIdRef.current = selectedContactId;
 
     if (isNewContact) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'auto' });
-      return;
+      scrollToBottom('auto');
+    } else {
+      scrollToBottom('auto');
+      const timer = setTimeout(() => {
+        scrollToBottom('smooth');
+      }, 60);
+      return () => clearTimeout(timer);
     }
-
-    // Scroll inmediato sin bloqueo para mostrar siempre la conversación actualizada
-    setTimeout(() => {
-      if (messagesEndRef.current) {
-        messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-      }
-    }, 50);
-  }, [messages, isTyping, selectedContactId]);
+  }, [messages?.length, messages?.[messages?.length - 1]?.id, isTyping, selectedContactId]);
 
   // Cargar información lateral y plantillas
   useEffect(() => {

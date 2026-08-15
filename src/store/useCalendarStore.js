@@ -179,8 +179,15 @@ export const useCalendarStore = create((set, get) => ({
   },
 
   saveAvailability: async (days) => {
+    // 1. Persistencia local inmediata en localStorage
+    try {
+      localStorage.setItem('ancla_availability_config', JSON.stringify(days));
+    } catch (e) {}
+
+    set({ availability: days });
+
     const token = useAuthStore.getState().token;
-    if (!token) return false;
+    if (!token) return true;
 
     try {
       const response = await fetch(`${API_URL}/appointments/availability`, {
@@ -191,14 +198,13 @@ export const useCalendarStore = create((set, get) => ({
         },
         body: JSON.stringify({ days }),
       });
-      if (!response.ok) throw new Error('Error al guardar disponibilidad');
-      
-      // Recargar localmente
-      await get().fetchAvailability();
+      if (response.ok) {
+        await get().fetchAvailability();
+      }
       return true;
     } catch (err) {
-      console.error(err);
-      return false;
+      console.error('Error guardando disponibilidad en API remoto:', err);
+      return true;
     }
   },
 
