@@ -1,5 +1,5 @@
-// ANCLA Special Projects - Service Worker PWA v1.3.0
-const CACHE_NAME = 'ancla-crm-cache-v1.3.0';
+// ANCLA Special Projects - Service Worker PWA v1.3.3
+const CACHE_NAME = 'ancla-crm-cache-v1.3.3';
 const STATIC_ASSETS = [
   '/',
   '/manifest.webmanifest',
@@ -79,6 +79,7 @@ self.addEventListener('message', (event) => {
       body: body || 'Nuevo mensaje pendiente por leer en ANCLA CRM',
       icon: icon || '/ancla_app_icon_192.png',
       badge: '/ancla_app_icon_192.png',
+      sound: '/notification.wav',
       vibrate: [200, 100, 200, 100, 200],
       tag: tag || 'ancla_pwa_notification',
       renotify: true,
@@ -105,6 +106,7 @@ self.addEventListener('push', (event) => {
     body: data.body,
     icon: '/ancla_app_icon_192.png',
     badge: '/ancla_app_icon_192.png',
+    sound: '/notification.wav',
     vibrate: [200, 100, 200, 100, 200],
     tag: data.tag || 'ancla-push-notification',
     renotify: true,
