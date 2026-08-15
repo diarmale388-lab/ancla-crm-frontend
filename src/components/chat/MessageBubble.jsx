@@ -73,7 +73,19 @@ export const MessageBubble = ({ message, onImageClick, onReply, onForward, onEdi
     return null;
   };
 
+  const isReaction = (message.content || '').includes('[Mensaje de tipo: reaction]');
   const isImage = (message.message_type || '').toLowerCase() === 'image';
+
+  if (isReaction) {
+    return (
+      <div className="flex w-full mb-2 justify-center">
+        <div className="bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/40 text-slate-500 dark:text-slate-400 text-[10.5px] font-medium px-3 py-1 rounded-full flex items-center space-x-1.5 shadow-xs select-none">
+          <span>👍 Reacción de WhatsApp recibida</span>
+          <span className="text-[9px] opacity-70 ml-1">{formatTime(message.created_at)}</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={`flex w-full mb-3.5 ${isInternalNote ? 'justify-center' : isMe ? 'justify-end' : 'justify-start'}`}>

@@ -365,15 +365,12 @@ export const ChatWindow = () => {
       return;
     }
 
-    const container = chatContainerRef.current;
-    if (container) {
-      const isNearBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 250;
-      if (isNearBottom) {
+    // Scroll inmediato sin bloqueo para mostrar siempre la conversación actualizada
+    setTimeout(() => {
+      if (messagesEndRef.current) {
         messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
       }
-    } else {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
+    }, 50);
   }, [messages, isTyping, selectedContactId]);
 
   // Cargar información lateral y plantillas
