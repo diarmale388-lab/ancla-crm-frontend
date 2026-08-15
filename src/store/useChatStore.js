@@ -432,6 +432,9 @@ export const useChatStore = create((set, get) => ({
     }
   },
 
+  lastHeartbeat: Date.now(),
+  watchdogIntervalId: null,
+
   connectWebSocket: () => {
     const token = useAuthStore.getState().token;
     if (!token) return;
@@ -449,23 +452,45 @@ export const useChatStore = create((set, get) => ({
 
     try {
       const ws = new WebSocket(wsUrl);
-      set({ socket: ws });
+      set({ socket: ws, lastHeartbeat: Date.now() });
       let pingInterval = null;
 
       ws.onopen = () => {
         console.log('WebSocket bidireccional conectado exitosamente a:', wsUrl);
-        set({ wsConnected: true });
+        set({ wsConnected: true, lastHeartbeat: Date.now() });
 
-        // Heartbeat Ping cada 25 segundos para evitar desconexión por inactividad
+        // Heartbeat Ping cada 5 segundos para mantener la conexión viva y detectar caídas rápidamente
         clearInterval(pingInterval);
         pingInterval = setInterval(() => {
           if (ws && ws.readyState === WebSocket.OPEN) {
             ws.send('ping');
           }
-        }, 25000);
+        }, 5000);
       };
 
+      // Watchdog de salud de conexión cada 2.5s: si no hay respuesta en 5s, activa polling delta
+      if (!get().watchdogIntervalId) {
+        const watchdog = setInterval(() => {
+          const now = Date.now();
+          const lastHb = get().lastHeartbeat || 0;
+          const isConnected = get().wsConnected && ws && ws.readyState === WebSocket.OPEN;
+
+          if (!isConnected || (now - lastHb > 6000)) {
+            // Asegurar que el polling delta de respaldo esté activo
+            if (!get().pollingIntervalId) {
+              get().startSilentPolling();
+            }
+            // Intentar reconectar el WebSocket si está cerrado
+            if (!ws || ws.readyState === WebSocket.CLOSED || ws.readyState === WebSocket.CLOSING) {
+              get().connectWebSocket();
+            }
+          }
+        }, 2500);
+        set({ watchdogIntervalId: watchdog });
+      }
+
       ws.onmessage = (event) => {
+        set({ lastHeartbeat: Date.now() });
         if (event.data === 'pong' || event.data === 'ping') return;
 
         try {
@@ -632,8 +657,9 @@ export const useChatStore = create((set, get) => ({
     };
 
     ws.onclose = () => {
-      console.warn('WebSocket desconectado. Intentando reconectar en 2s...');
+      console.warn('WebSocket desconectado. Activando polling delta de respaldo e intentando reconectar...');
       set({ wsConnected: false, socket: null });
+      get().startSilentPolling();
       setTimeout(() => {
         const isAuth = useAuthStore.getState().isAuthenticated;
         if (isAuth) {
@@ -643,11 +669,13 @@ export const useChatStore = create((set, get) => ({
     };
 
     ws.onerror = (err) => {
-      console.error('Error en conexión WebSocket:', err);
+      console.error('Error en conexión WebSocket. Activando polling delta de respaldo...');
+      get().startSilentPolling();
       ws.close();
     };
     } catch (wsErr) {
       console.error('Excepción al instanciar WebSocket:', wsErr);
+      get().startSilentPolling();
     }
   },
 
@@ -951,16 +979,56 @@ export const useChatStore = create((set, get) => ({
     }
   },
 
+  startSilentPolling: () => {
+    if (get().pollingIntervalId) return;
+    const interval = setInterval(async () => {
+      const token = useAuthStore.getState().token;
+      if (!token) return;
+
+      const selectedId = get().selectedContactId;
+      if (selectedId) {
+        try {
+          const res = await fetch(`${API_URL}/chats/${selectedId}/messages`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
+          if (res.ok) {
+            const freshMsgs = await res.json();
+            set((state) => {
+              if (state.selectedContactId !== selectedId) return state;
+              if (freshMsgs.length !== state.messages.length) {
+                return { messages: freshMsgs };
+              }
+              return state;
+            });
+          }
+        } catch (e) {}
+      }
+      // Refrescar contactos silenciosamente
+      try {
+        const cRes = await fetch(`${API_URL}/chats/contacts`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (cRes.ok) {
+          const freshContacts = await cRes.json();
+          set({ contacts: freshContacts });
+        }
+      } catch (e) {}
+    }, 3000);
+    set({ pollingIntervalId: interval });
+  },
+
   requestNotificationPermission: async () => {
     await get().subscribeToPushNotifications(false);
   },
 
   disconnectWebSocket: () => {
-    const { socket } = get();
+    const { socket, pollingIntervalId, watchdogIntervalId } = get();
     if (socket) {
       socket.close();
-      set({ socket: null, wsConnected: false });
     }
+    if (pollingIntervalId) clearInterval(pollingIntervalId);
+    if (watchdogIntervalId) clearInterval(watchdogIntervalId);
+    set({ socket: null, wsConnected: false, pollingIntervalId: null, watchdogIntervalId: null });
   }
 }));
 
