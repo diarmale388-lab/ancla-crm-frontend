@@ -196,77 +196,77 @@ function App() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-[#071318] to-[#04241c] text-slate-100 flex items-center justify-center p-3 sm:p-6 lg:p-10 relative overflow-hidden font-sans select-none">
-        {/* Luces volumétricas atmosféricas de fondo */}
-        <div className="absolute top-[-15%] left-[-10%] w-[600px] h-[600px] bg-emerald-600/10 rounded-full blur-[140px] pointer-events-none"></div>
-        <div className="absolute bottom-[-15%] right-[-10%] w-[600px] h-[600px] bg-teal-500/10 rounded-full blur-[140px] pointer-events-none"></div>
+      <div className="min-h-screen bg-slate-900 text-slate-100 flex items-center justify-center p-3 sm:p-6 lg:p-10 relative overflow-hidden font-sans select-none">
+        {/* Luces volumétricas decorativas de fondo */}
+        <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-emerald-600/15 rounded-full blur-[120px] pointer-events-none"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-teal-500/15 rounded-full blur-[120px] pointer-events-none"></div>
 
         {invitationToken ? (
           /* Registro de Invitado */
-          <div className="w-full max-w-md bg-[#111b21] border border-white/10 rounded-3xl p-7 sm:p-9 shadow-2xl z-10">
+          <div className="w-full max-w-md bg-white border border-slate-200 rounded-3xl p-7 sm:p-9 shadow-2xl z-10 text-slate-800">
             <div className="flex flex-col items-center mb-6">
               <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-purple-500 to-indigo-400 flex items-center justify-center mb-4 shadow-xl shadow-purple-500/10">
                 <User className="w-8 h-8 text-white font-bold" />
               </div>
-              <h1 className="text-xl font-bold text-white">
+              <h1 className="text-xl font-bold text-slate-900">
                 Registro de Asesor
               </h1>
-              <p className="text-xs text-slate-400 mt-1">Completa tus datos para activar tu cuenta</p>
+              <p className="text-xs text-slate-500 mt-1">Completa tus datos para activar tu cuenta</p>
             </div>
 
             {validatingToken && (
               <div className="flex flex-col items-center py-6">
                 <div className="w-8 h-8 border-3 border-purple-500 border-t-transparent rounded-full animate-spin mb-3"></div>
-                <p className="text-xs text-slate-400">Validando invitación...</p>
+                <p className="text-xs text-slate-500">Validando invitación...</p>
               </div>
             )}
 
             {invitationError && (
-              <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-medium mb-4 flex items-center space-x-2">
-                <AlertCircle className="w-5 h-5 flex-shrink-0 text-red-400" />
+              <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-600 text-xs font-medium mb-4 flex items-center space-x-2">
+                <AlertCircle className="w-5 h-5 flex-shrink-0 text-red-500" />
                 <span>{invitationError}</span>
               </div>
             )}
 
             {registerSuccess && (
-              <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold mb-4 flex items-center space-x-2">
-                <CheckCircle2 className="w-5 h-5 flex-shrink-0 text-emerald-400" />
+              <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 text-xs font-bold mb-4 flex items-center space-x-2">
+                <CheckCircle2 className="w-5 h-5 flex-shrink-0 text-emerald-600" />
                 <span>{registerSuccess}</span>
               </div>
             )}
 
             {invitationDetails && !registerSuccess && (
               <form onSubmit={handleRegisterSubmit} className="space-y-4">
-                <div className="p-3 bg-purple-950/30 border border-purple-800/30 rounded-2xl mb-2">
-                  <p className="text-[11px] text-purple-300 font-medium">
+                <div className="p-3 bg-purple-50 border border-purple-200 rounded-2xl mb-2">
+                  <p className="text-[11px] text-purple-700 font-medium">
                     Invitación asignada a: <strong>{invitationDetails.email}</strong>
                   </p>
-                  <p className="text-[10px] text-purple-400">
+                  <p className="text-[10px] text-purple-500">
                     Rol: <span className="uppercase font-bold">{invitationDetails.role}</span>
                   </p>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Nombre Completo</label>
+                  <label className="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">Nombre Completo</label>
                   <input
                     type="text"
                     placeholder="Escribe tu nombre y apellido"
                     value={registerName}
                     onChange={(e) => setRegisterName(e.target.value)}
                     required
-                    className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 text-xs text-white placeholder-slate-500 focus:bg-slate-950 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all"
+                    className="w-full bg-slate-100 border border-slate-300 rounded-xl px-4 py-3 text-xs text-slate-900 placeholder-slate-400 focus:bg-white focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Contraseña</label>
+                  <label className="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">Contraseña</label>
                   <input
                     type="password"
                     placeholder="Elige una contraseña segura"
                     value={registerPassword}
                     onChange={(e) => setRegisterPassword(e.target.value)}
                     required
-                    className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 text-xs text-white placeholder-slate-500 focus:bg-slate-950 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all"
+                    className="w-full bg-slate-100 border border-slate-300 rounded-xl px-4 py-3 text-xs text-slate-900 placeholder-slate-400 focus:bg-white focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all"
                   />
                 </div>
 
@@ -282,161 +282,164 @@ function App() {
           </div>
         ) : (
           /* =========================================================================
-             LOGIN CARD MASTERPIECE: 2 VISTAS ESPECIALIZADAS (PC VS MÓVIL)
+             LOGIN CARD PRO MASTERPIECE: COLORES Y ESTRUCTURA PREFERIDA
              ========================================================================= */
-          <div className="w-full max-w-sm md:max-w-4xl bg-[#111b21] rounded-3xl border border-white/10 shadow-2xl shadow-black/80 overflow-hidden z-10 transition-all duration-300">
+          <div className="w-full max-w-4xl bg-white rounded-3xl lg:rounded-[32px] border border-slate-200/90 shadow-2xl overflow-hidden grid grid-cols-1 lg:grid-cols-12 z-10 transition-all duration-300">
             
-            {/* GRID DUAL (En Desktop es Split 2 Columnas, en Móvil es 1 Sola Columna Compacta) */}
-            <div className="grid grid-cols-1 md:grid-cols-12">
+            {/* LADO IZQUIERDO: HERO BRANDING ARQUITECTÓNICO & PRESTIGIO */}
+            <div className="lg:col-span-5 bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950 p-7 sm:p-9 lg:p-10 flex flex-col justify-between relative overflow-hidden text-white border-b lg:border-b-0 lg:border-r border-white/10">
+              <div className="absolute -right-20 -top-20 w-60 h-60 bg-emerald-500/20 rounded-full blur-3xl pointer-events-none"></div>
               
-              {/* LADO IZQUIERDO: HERO BRANDING MINIMALISTA (Solo visible en Desktop md+) */}
-              <div className="hidden md:flex md:col-span-5 bg-gradient-to-br from-slate-950 via-[#0c181f] to-[#052920] p-8 lg:p-10 flex-col justify-between relative overflow-hidden border-r border-white/10">
-                <div className="absolute -right-16 -top-16 w-56 h-56 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none"></div>
-                
-                <div>
-                  {/* Logo Oficial ANCLA con Contorno Blanco Puro Iluminado */}
-                  <div className="mb-6">
+              <div>
+                {/* Cápsula Blanca Elegante para el Logo Original ANCLA de Alta Definición */}
+                <div className="mb-5">
+                  <div className="bg-white p-3 sm:p-3.5 rounded-2xl shadow-xl border border-white/20 inline-flex items-center justify-center max-w-[260px]">
                     <img 
-                      src="/ancla_logo_outline.png" 
+                      src="/ancla_official_logo.png" 
                       alt="ANCLA Special Projects" 
-                      className="w-full max-w-[240px] h-auto object-contain drop-shadow-xl"
+                      className="w-full h-auto object-contain"
                     />
                   </div>
+                </div>
 
-                  <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-[10px] font-extrabold tracking-wider uppercase mb-3">
-                    <Sparkles className="w-3.5 h-3.5" />
-                    <span>Portal Comercial</span>
-                  </span>
+                <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-[10px] font-extrabold tracking-wider uppercase mb-3">
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>Gestión Comercial Inteligente</span>
+                </span>
 
-                  <h2 className="text-xl font-black text-white tracking-tight leading-snug">
-                    Gestión & Proyectos Modulares LATAM
-                  </h2>
-                  <p className="text-xs text-slate-400 mt-2 leading-relaxed">
-                    Plataforma privada de seguimiento comercial y atención de clientes.
+                <h2 className="text-lg sm:text-xl font-black text-white tracking-tight leading-snug">
+                  Arquitectura & Casas Modulares de Alta Gama
+                </h2>
+                <p className="text-xs text-slate-400 mt-2 leading-relaxed">
+                  Plataforma integral de calificación de leads, agendamiento de asesorías y seguimiento comercial.
+                </p>
+              </div>
+
+              {/* Badges de Valor */}
+              <div className="hidden sm:flex flex-col space-y-2.5 my-5">
+                <div className="flex items-center space-x-3 p-2.5 rounded-xl bg-white/5 border border-white/5 backdrop-blur-xs">
+                  <div className="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xs shrink-0">
+                    <Zap className="w-3.5 h-3.5" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-bold text-slate-200">Fabricación & Ensamble 48h</h4>
+                    <p className="text-[10px] text-slate-400">Modelos Flex Home y Cápsulas Living</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-3 p-2.5 rounded-xl bg-white/5 border border-white/5 backdrop-blur-xs">
+                  <div className="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xs shrink-0">
+                    <Bot className="w-3.5 h-3.5" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-bold text-slate-200">Sofi AI 2.0 (Autopiloto)</h4>
+                    <p className="text-[10px] text-slate-400">Atención y calificación multicanal 24/7</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Base del Hero */}
+              <div className="pt-4 border-t border-white/10 flex items-center justify-between text-[11px] text-slate-400">
+                <span className="flex items-center space-x-1 font-medium">
+                  <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                  <span>Acceso Seguro SSL</span>
+                </span>
+                <span className="font-mono text-[10px] text-slate-500">v2.5.0</span>
+              </div>
+            </div>
+
+            {/* LADO DERECHO: FORMULARIO DE ACCESO ERGONÓMICO EN BLANCO PURO */}
+            <div className="lg:col-span-7 p-7 sm:p-10 lg:p-12 flex flex-col justify-center bg-white">
+              <div className="w-full max-w-sm mx-auto">
+                
+                <div className="mb-6">
+                  <h3 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+                    Iniciar Sesión
+                  </h3>
+                  <p className="text-xs font-semibold text-slate-500 mt-1">
+                    Ingresa con tu usuario o correo asignado.
                   </p>
                 </div>
 
-                {/* Base del Hero en Desktop */}
-                <div className="pt-6 border-t border-white/10 flex items-center justify-between text-[11px] text-slate-400">
-                  <span className="flex items-center space-x-1.5 font-medium">
-                    <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                    <span>Conexión Segura SSL</span>
-                  </span>
-                  <span className="font-mono text-[10px] text-slate-500">v2.5.0</span>
-                </div>
-              </div>
-
-              {/* LADO DERECHO (O VISTA ÚNICA EN MÓVIL): Formulario de Acceso Ergonómico */}
-              <div className="md:col-span-7 p-6 sm:p-8 lg:p-10 flex flex-col justify-center bg-[#111b21]">
-                <div className="w-full max-w-sm mx-auto">
-                  
-                  {/* Logo en Móvil (Visible SOLO en móviles < md) */}
-                  <div className="flex md:hidden flex-col items-center text-center mb-5">
-                    <img 
-                      src="/ancla_logo_outline.png" 
-                      alt="ANCLA Special Projects" 
-                      className="w-full max-w-[190px] h-auto object-contain mb-2 drop-shadow-lg"
-                    />
-                    <p className="text-[10.5px] font-semibold text-slate-400">Portal Comercial & Proyectos Modulares</p>
+                {error && (
+                  <div className="mb-5 p-3.5 rounded-xl bg-red-50 border border-red-200 flex items-center space-x-3 text-red-700 animate-shake">
+                    <AlertCircle className="w-4.5 h-4.5 shrink-0 text-red-500" />
+                    <span className="text-xs font-bold">{error}</span>
                   </div>
+                )}
 
-                  {/* Encabezado del Formulario */}
-                  <div className="mb-5 text-center md:text-left">
-                    <h1 className="text-lg sm:text-xl font-black text-white tracking-tight">
-                      Iniciar Sesión
-                    </h1>
-                    <p className="text-xs font-semibold text-slate-400 mt-0.5">
-                      Ingresa tus credenciales para acceder al CRM.
-                    </p>
-                  </div>
-
-                  {error && (
-                    <div className="mb-4 p-3 rounded-xl bg-rose-950/40 border border-rose-800/50 flex items-center space-x-2.5 text-rose-300 animate-shake">
-                      <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
-                      <span className="text-xs font-bold">{error}</span>
-                    </div>
-                  )}
-
-                  <form onSubmit={handleLoginSubmit} className="space-y-3.5">
-                    <div>
-                      <label className="block text-[10.5px] font-black text-slate-300 uppercase tracking-wider mb-1">
-                        Usuario o Correo
-                      </label>
-                      <div className="relative">
-                        <User className="absolute left-3.5 top-3 w-4 h-4 text-slate-400" />
-                        <input
-                          type="text"
-                          placeholder="diarmale388, liliana, asesor o correo"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          className="w-full bg-slate-900 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-xs sm:text-sm font-semibold text-white placeholder-slate-500 focus:bg-slate-950 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all"
-                          required
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-[10.5px] font-black text-slate-300 uppercase tracking-wider mb-1">
-                        Contraseña
-                      </label>
-                      <div className="relative">
-                        <Lock className="absolute left-3.5 top-3 w-4 h-4 text-slate-400" />
-                        <input
-                          type={showPassword ? "text" : "password"}
-                          placeholder="••••••••"
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                          className="w-full bg-slate-900 border border-white/10 rounded-xl pl-10 pr-10 py-2.5 text-xs sm:text-sm font-semibold text-white placeholder-slate-500 focus:bg-slate-950 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all"
-                          required
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-3 top-2.5 text-slate-400 hover:text-white cursor-pointer transition-colors p-0.5"
-                          title={showPassword ? "Ocultar contraseña" : "Ver contraseña"}
-                        >
-                          {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                        </button>
-                      </div>
-                    </div>
-
-                    <button
-                      type="submit"
-                      disabled={loading}
-                      className="w-full bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-black text-xs sm:text-sm py-3 px-4 rounded-xl shadow-lg shadow-emerald-500/20 active:scale-[0.98] transition-all flex items-center justify-center space-x-2 cursor-pointer mt-4"
-                    >
-                      {loading ? (
-                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      ) : (
-                        <>
-                          <Sparkles className="w-4 h-4" />
-                          <span>INGRESAR AL CRM</span>
-                        </>
-                      )}
-                    </button>
-                  </form>
-
-                  {/* Footer de Firma Ejecutiva León FX */}
-                  <div className="pt-4 mt-5 border-t border-white/5 flex items-center justify-between text-slate-400 text-[11px]">
-                    <span className="flex items-center space-x-1 font-medium text-slate-400">
-                      <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-                      <span>Acceso Seguro</span>
-                    </span>
-                    <div className="flex items-center space-x-1.5">
-                      <span className="text-[10px] font-black tracking-wider uppercase text-slate-400">By:</span>
-                      <img 
-                        src="/leon_fx_logo.png" 
-                        alt="León FX" 
-                        className="w-4 h-4 object-contain"
+                <form onSubmit={handleLoginSubmit} className="space-y-4">
+                  <div>
+                    <label className="block text-[11px] font-black text-slate-700 uppercase tracking-wider mb-1.5">
+                      Usuario o Correo
+                    </label>
+                    <div className="relative">
+                      <User className="absolute left-3.5 top-3 w-4 h-4 text-slate-400" />
+                      <input
+                        type="text"
+                        placeholder="diarmale388, liliana, asesor o correo"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-10 pr-4 py-2.5 text-xs sm:text-sm font-semibold text-slate-900 placeholder-slate-400 focus:bg-white focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all"
+                        required
                       />
-                      <span className="text-xs font-black text-slate-200 tracking-tight">León FX</span>
                     </div>
                   </div>
 
+                  <div>
+                    <label className="block text-[11px] font-black text-slate-700 uppercase tracking-wider mb-1.5">
+                      Contraseña
+                    </label>
+                    <div className="relative">
+                      <Lock className="absolute left-3.5 top-3 w-4 h-4 text-slate-400" />
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        placeholder="••••••••"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-10 pr-10 py-2.5 text-xs sm:text-sm font-semibold text-slate-900 placeholder-slate-400 focus:bg-white focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all"
+                        required
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 cursor-pointer transition-colors p-0.5"
+                        title={showPassword ? "Ocultar contraseña" : "Ver contraseña"}
+                      >
+                        {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-black text-xs sm:text-sm py-3 px-4 rounded-xl shadow-lg shadow-emerald-500/25 active:scale-[0.98] transition-all flex items-center justify-center space-x-2 cursor-pointer mt-4"
+                  >
+                    {loading ? (
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    ) : (
+                      <>
+                        <Sparkles className="w-4 h-4" />
+                        <span>INGRESAR AL CRM</span>
+                      </>
+                    )}
+                  </button>
+                </form>
+
+                {/* Footer de Firma Ejecutiva León FX */}
+                <div className="pt-6 mt-6 border-t border-slate-100 flex items-center justify-center space-x-2 text-slate-400">
+                  <span className="text-[10px] font-black tracking-wider uppercase">By:</span>
+                  <img 
+                    src="/leon_fx_logo.png" 
+                    alt="León FX" 
+                    className="w-4 h-4 object-contain"
+                  />
+                  <span className="text-xs font-black text-slate-800 tracking-tight">León FX</span>
                 </div>
               </div>
-
             </div>
+
           </div>
         )}
       </div>
