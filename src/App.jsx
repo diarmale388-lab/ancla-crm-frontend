@@ -196,77 +196,77 @@ function App() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-slate-900 text-slate-100 flex items-center justify-center p-3 sm:p-6 lg:p-10 relative overflow-hidden font-sans select-none">
-        {/* Luces volumétricas de fondo */}
-        <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-emerald-600/15 rounded-full blur-[120px] pointer-events-none"></div>
-        <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-teal-500/15 rounded-full blur-[120px] pointer-events-none"></div>
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-[#0b141a] to-emerald-950 text-slate-100 flex items-center justify-center p-3 sm:p-6 relative overflow-hidden font-sans select-none">
+        {/* Luces volumétricas sutiles de fondo */}
+        <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-emerald-600/10 rounded-full blur-[120px] pointer-events-none"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-teal-500/10 rounded-full blur-[120px] pointer-events-none"></div>
 
         {invitationToken ? (
           /* Registro de Invitado */
-          <div className="w-full max-w-md bg-white dark:bg-[#111b21] border border-slate-200 dark:border-white/10 rounded-3xl p-8 shadow-2xl transition-colors duration-300 z-10">
+          <div className="w-full max-w-md bg-[#111b21] border border-white/10 rounded-3xl p-7 sm:p-9 shadow-2xl z-10">
             <div className="flex flex-col items-center mb-6">
               <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-purple-500 to-indigo-400 flex items-center justify-center mb-4 shadow-xl shadow-purple-500/10">
                 <User className="w-8 h-8 text-white font-bold" />
               </div>
-              <h1 className="text-xl font-bold text-slate-800 dark:text-white">
+              <h1 className="text-xl font-bold text-white">
                 Registro de Asesor
               </h1>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Completa tus datos para activar tu cuenta</p>
+              <p className="text-xs text-slate-400 mt-1">Completa tus datos para activar tu cuenta</p>
             </div>
 
             {validatingToken && (
               <div className="flex flex-col items-center py-6">
                 <div className="w-8 h-8 border-3 border-purple-500 border-t-transparent rounded-full animate-spin mb-3"></div>
-                <p className="text-xs text-slate-500">Validando invitación...</p>
+                <p className="text-xs text-slate-400">Validando invitación...</p>
               </div>
             )}
 
             {invitationError && (
-              <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-600 text-xs font-medium mb-4 flex items-center space-x-2">
-                <AlertCircle className="w-5 h-5 flex-shrink-0" />
+              <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-medium mb-4 flex items-center space-x-2">
+                <AlertCircle className="w-5 h-5 flex-shrink-0 text-red-400" />
                 <span>{invitationError}</span>
               </div>
             )}
 
             {registerSuccess && (
-              <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 text-xs font-bold mb-4 flex items-center space-x-2">
-                <CheckCircle2 className="w-5 h-5 flex-shrink-0" />
+              <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold mb-4 flex items-center space-x-2">
+                <CheckCircle2 className="w-5 h-5 flex-shrink-0 text-emerald-400" />
                 <span>{registerSuccess}</span>
               </div>
             )}
 
             {invitationDetails && !registerSuccess && (
               <form onSubmit={handleRegisterSubmit} className="space-y-4">
-                <div className="p-3 bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800/30 rounded-2xl mb-2">
-                  <p className="text-[11px] text-purple-700 dark:text-purple-300 font-medium">
+                <div className="p-3 bg-purple-950/30 border border-purple-800/30 rounded-2xl mb-2">
+                  <p className="text-[11px] text-purple-300 font-medium">
                     Invitación asignada a: <strong>{invitationDetails.email}</strong>
                   </p>
-                  <p className="text-[10px] text-purple-500 dark:text-purple-400">
+                  <p className="text-[10px] text-purple-400">
                     Rol: <span className="uppercase font-bold">{invitationDetails.role}</span>
                   </p>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">Nombre Completo</label>
+                  <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Nombre Completo</label>
                   <input
                     type="text"
                     placeholder="Escribe tu nombre y apellido"
                     value={registerName}
                     onChange={(e) => setRegisterName(e.target.value)}
                     required
-                    className="w-full bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-white/10 rounded-xl px-4 py-3 text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:bg-white dark:focus:bg-slate-950 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all"
+                    className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 text-xs text-white placeholder-slate-500 focus:bg-slate-950 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">Contraseña</label>
+                  <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Contraseña</label>
                   <input
                     type="password"
                     placeholder="Elige una contraseña segura"
                     value={registerPassword}
                     onChange={(e) => setRegisterPassword(e.target.value)}
                     required
-                    className="w-full bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-white/10 rounded-xl px-4 py-3 text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:bg-white dark:focus:bg-slate-950 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all"
+                    className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 text-xs text-white placeholder-slate-500 focus:bg-slate-950 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all"
                   />
                 </div>
 
@@ -281,75 +281,70 @@ function App() {
             )}
           </div>
         ) : (
-          /* Login Card Pro Minimalista & Sofisticada */
-          <div className="w-full max-w-[420px] bg-white dark:bg-[#111b21] rounded-3xl border border-slate-200 dark:border-white/10 p-8 sm:p-9 shadow-2xl shadow-black/40 z-10 transition-all duration-300">
+          /* Login Card Pro Adaptable (Desktop y Móvil) */
+          <div className="w-full max-w-[360px] sm:max-w-[420px] bg-[#111b21]/95 backdrop-blur-md rounded-3xl border border-white/10 p-6 sm:p-8 shadow-2xl shadow-black/70 z-10 transition-all duration-300">
             
-            {/* Cabecera con Logo Oficial ANCLA en Máximo Contraste */}
-            <div className="flex flex-col items-center text-center mb-7">
-              <div className="w-full flex items-center justify-center mb-4">
+            {/* Cabecera con Logo Oficial ANCLA de Alto Contraste (Contorno Blanco Iluminado) */}
+            <div className="flex flex-col items-center text-center mb-6">
+              <div className="w-full flex items-center justify-center mb-3">
                 <img 
-                  src="/ancla_official_logo.png" 
+                  src="/ancla_logo_outline.png" 
                   alt="ANCLA Special Projects" 
-                  className="w-full max-w-[260px] sm:max-w-[280px] h-auto object-contain drop-shadow-sm dark:hidden"
-                />
-                <img 
-                  src="/ancla_official_logo_white.png" 
-                  alt="ANCLA Special Projects" 
-                  className="w-full max-w-[260px] sm:max-w-[280px] h-auto object-contain drop-shadow-md hidden dark:block"
+                  className="w-full max-w-[210px] sm:max-w-[250px] h-auto object-contain drop-shadow-md hover:scale-[1.02] transition-transform"
                 />
               </div>
 
-              <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+              <h1 className="text-lg sm:text-xl font-black text-white tracking-tight">
                 Iniciar Sesión
               </h1>
-              <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-1">
+              <p className="text-[11px] sm:text-xs font-semibold text-slate-400 mt-0.5">
                 Portal Comercial & Proyectos Modulares
               </p>
             </div>
 
             {error && (
-              <div className="mb-5 p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-800/40 flex items-center space-x-3 text-rose-700 dark:text-rose-300 animate-shake">
-                <AlertCircle className="w-4.5 h-4.5 shrink-0 text-rose-500" />
+              <div className="mb-4 p-3 rounded-xl bg-rose-950/40 border border-rose-800/50 flex items-center space-x-2.5 text-rose-300 animate-shake">
+                <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
                 <span className="text-xs font-bold">{error}</span>
               </div>
             )}
 
-            <form onSubmit={handleLoginSubmit} className="space-y-4">
+            <form onSubmit={handleLoginSubmit} className="space-y-3.5 sm:space-y-4">
               <div>
-                <label className="block text-[11px] font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
+                <label className="block text-[10.5px] font-black text-slate-300 uppercase tracking-wider mb-1">
                   Usuario o Correo
                 </label>
                 <div className="relative">
-                  <User className="absolute left-3.5 top-3 w-4 h-4 text-slate-400 dark:text-slate-500" />
+                  <User className="absolute left-3.5 top-3 w-4 h-4 text-slate-400" />
                   <input
                     type="text"
                     placeholder="diarmale388, liliana, asesor o correo"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-xs sm:text-sm font-semibold text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 focus:bg-white dark:focus:bg-slate-950 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all"
+                    className="w-full bg-slate-900/90 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-xs sm:text-sm font-semibold text-white placeholder-slate-500 focus:bg-slate-950 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all"
                     required
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-[11px] font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
+                <label className="block text-[10.5px] font-black text-slate-300 uppercase tracking-wider mb-1">
                   Contraseña
                 </label>
                 <div className="relative">
-                  <Lock className="absolute left-3.5 top-3 w-4 h-4 text-slate-400 dark:text-slate-500" />
+                  <Lock className="absolute left-3.5 top-3 w-4 h-4 text-slate-400" />
                   <input
                     type={showPassword ? "text" : "password"}
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-xl pl-10 pr-10 py-2.5 text-xs sm:text-sm font-semibold text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 focus:bg-white dark:focus:bg-slate-950 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all"
+                    className="w-full bg-slate-900/90 border border-white/10 rounded-xl pl-10 pr-10 py-2.5 text-xs sm:text-sm font-semibold text-white placeholder-slate-500 focus:bg-slate-950 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all"
                     required
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer transition-colors"
+                    className="absolute right-3 top-2.5 text-slate-400 hover:text-white cursor-pointer transition-colors p-0.5"
                     title={showPassword ? "Ocultar contraseña" : "Ver contraseña"}
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -360,7 +355,7 @@ function App() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-black text-xs sm:text-sm py-3 px-4 rounded-xl shadow-lg shadow-emerald-500/25 active:scale-[0.98] transition-all flex items-center justify-center space-x-2 cursor-pointer mt-4"
+                className="w-full bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-black text-xs sm:text-sm py-3 px-4 rounded-xl shadow-lg shadow-emerald-500/20 active:scale-[0.98] transition-all flex items-center justify-center space-x-2 cursor-pointer mt-3"
               >
                 {loading ? (
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -374,19 +369,19 @@ function App() {
             </form>
 
             {/* Footer de Firma Ejecutiva León FX */}
-            <div className="pt-6 mt-6 border-t border-slate-100 dark:border-white/5 flex items-center justify-between text-slate-400 dark:text-slate-500 text-[11px]">
-              <span className="flex items-center space-x-1 font-medium">
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
+            <div className="pt-4 mt-5 border-t border-white/5 flex items-center justify-between text-slate-400 text-[11px]">
+              <span className="flex items-center space-x-1 font-medium text-slate-400">
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
                 <span>Acceso Seguro</span>
               </span>
               <div className="flex items-center space-x-1.5">
-                <span className="text-[10px] font-black tracking-wider uppercase">By:</span>
+                <span className="text-[10px] font-black tracking-wider uppercase text-slate-400">By:</span>
                 <img 
                   src="/leon_fx_logo.png" 
                   alt="León FX" 
                   className="w-4 h-4 object-contain"
                 />
-                <span className="text-xs font-black text-slate-800 dark:text-slate-200 tracking-tight">León FX</span>
+                <span className="text-xs font-black text-slate-200 tracking-tight">León FX</span>
               </div>
             </div>
 
