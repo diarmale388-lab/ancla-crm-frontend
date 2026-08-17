@@ -29,7 +29,8 @@ export const CalendarView = () => {
     error 
   } = useCalendarStore();
   const { leads, fetchLeads, updateContact360Details, logAdvisorStatus } = useKanbanStore();
-  const { setActiveTab, fetchMessages } = useChatStore();
+  const { user } = useAuthStore();
+  const isAdmin = String(user?.role || '').toLowerCase().includes('admin');
 
   const [showAddModal, setShowAddModal] = useState(false);
   const [showConfigModal, setShowConfigModal] = useState(false);
@@ -409,14 +410,16 @@ export const CalendarView = () => {
           </div>
           
           <div className="flex items-center space-x-2">
-            <button
-              onClick={() => setShowConfigModal(true)}
-              className="p-2 sm:px-4 sm:py-2.5 rounded-xl bg-slate-100 dark:bg-white/5 hover:bg-slate-200 text-slate-700 dark:text-slate-200 text-xs font-semibold border border-slate-200 dark:border-white/5 transition-all cursor-pointer"
-              title="Configurar Horarios"
-            >
-              <Settings className="w-4 h-4" />
-              <span className="hidden sm:inline ml-1.5">Configurar Horarios</span>
-            </button>
+            {isAdmin && (
+              <button
+                onClick={() => setShowConfigModal(true)}
+                className="p-2 sm:px-4 sm:py-2.5 rounded-xl bg-slate-100 dark:bg-white/5 hover:bg-slate-200 text-slate-700 dark:text-slate-200 text-xs font-semibold border border-slate-200 dark:border-white/5 transition-all cursor-pointer"
+                title="Configurar Horarios"
+              >
+                <Settings className="w-4 h-4" />
+                <span className="hidden sm:inline ml-1.5">Configurar Horarios</span>
+              </button>
+            )}
 
             <button
               onClick={handleDownloadReport}
@@ -788,13 +791,15 @@ export const CalendarView = () => {
 
             {/* Botones para Configurar Horario Excepcional y Agendar Cita */}
             <div className="pt-4 border-t border-slate-200 dark:border-white/5 mt-5 space-y-2">
-            <button
-              onClick={() => setShowHolidayModal(true)}
-              className="w-full bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 font-bold py-2.5 px-4 rounded-xl border border-amber-500/30 text-xs active:scale-[0.98] transition-all cursor-pointer flex items-center justify-center space-x-1.5"
-            >
-              <Settings className="w-4 h-4 text-amber-500" />
-              <span>⚙️ Configurar Horario Excepcional / Festivo</span>
-            </button>
+            {isAdmin && (
+              <button
+                onClick={() => setShowHolidayModal(true)}
+                className="w-full bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 font-bold py-2.5 px-4 rounded-xl border border-amber-500/30 text-xs active:scale-[0.98] transition-all cursor-pointer flex items-center justify-center space-x-1.5"
+              >
+                <Settings className="w-4 h-4 text-amber-500" />
+                <span>⚙️ Configurar Horario Excepcional / Festivo</span>
+              </button>
+            )}
 
             <button
               onClick={() => {
