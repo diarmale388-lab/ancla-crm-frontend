@@ -3,7 +3,7 @@ import { useChatStore } from '../../store/useChatStore';
 import { useSettingsStore } from '../../store/useSettingsStore';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useThemeStore } from '../../store/useThemeStore';
-import { Search, MessageCircle, Bot, AlertCircle, Play, Sparkles, User, X, ArrowLeft, UserPlus, Sun, Moon, MoreVertical, LogOut, RefreshCw, Bell, Volume2 } from 'lucide-react';
+import { Search, MessageCircle, Bot, AlertCircle, Play, Sparkles, User, X, ArrowLeft, UserPlus, Sun, Moon, MoreVertical, LogOut, RefreshCw, Bell, Volume2, Check } from 'lucide-react';
 import NewContactModal from './NewContactModal';
 
 export const ContactList = () => {

@@ -10,6 +10,9 @@ import AnclaTechnicalDossier from '../common/AnclaTechnicalDossier';
 import { MessageBubble } from './MessageBubble';
 import { Send, Bot, WifiOff, MessageCircle, Sparkles, User, Phone, Mail, Calendar, Check, ChevronDown, BookOpen, Clock, Lock, Trash2, ShieldAlert, ArrowLeft, CornerUpLeft, Forward, Pencil, X, Download, Smile, Paperclip, Upload, Search, DollarSign, MoreVertical } from 'lucide-react';
 
+const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+const API_URL = import.meta.env.VITE_API_URL || (isLocal ? 'http://localhost:8001/api/v1' : 'https://ancla-crm-backend-production.up.railway.app/api/v1');
+
 export const ChatWindow = () => {
   const { 
     selectedContactId, 
@@ -169,7 +172,7 @@ export const ChatWindow = () => {
     })
     .map(msg => {
       const match = msg.content.match(/\[Media ID:\s*([^\]]+)\]/);
-      return match ? `${import.meta.env.VITE_API_URL || 'http://localhost:8001/api/v1'}/chats/media/${match[1]}` : null;
+      return match ? `${API_URL}/chats/media/${match[1]}` : null;
     })
     .filter(Boolean);
 
@@ -185,8 +188,8 @@ export const ChatWindow = () => {
     if (!selectedContactId) return;
     setLoadingActivities(true);
     try {
-      const token = localStorage.getItem('token');
-      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8001/api/v1'}/chats/${selectedContactId}/activities`, {
+      const token = useAuthStore.getState().token || localStorage.getItem('token');
+      const res = await fetch(`${API_URL}/chats/${selectedContactId}/activities`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -206,8 +209,8 @@ export const ChatWindow = () => {
     if (e) e.preventDefault();
     if (!newNote.trim() || !selectedContactId) return;
     try {
-      const token = localStorage.getItem('token');
-      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8001/api/v1'}/chats/${selectedContactId}/notes`, {
+      const token = useAuthStore.getState().token || localStorage.getItem('token');
+      const res = await fetch(`${API_URL}/chats/${selectedContactId}/notes`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -278,7 +281,7 @@ export const ChatWindow = () => {
 
     try {
       const token = useAuthStore.getState().token || localStorage.getItem('token');
-      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8001/api/v1'}/proposals/generate`, {
+      const res = await fetch(`${API_URL}/proposals/generate`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -306,7 +309,7 @@ export const ChatWindow = () => {
       if (res.ok) {
         setProposalSuccess(`¡Propuesta generada por $${(data.total_final || 0).toLocaleString('es-CO')} COP!`);
         setPdfPath(data.file_path);
-        setPdfUrl(`${import.meta.env.VITE_API_URL || 'http://localhost:8001/api/v1'}${data.download_url}`);
+        setPdfUrl(`${API_URL}${data.download_url}`);
         const currentActive = contacts.find((c) => c.id === selectedContactId);
         if (currentActive?.email) {
           setRecipientEmail(currentActive.email);
@@ -332,8 +335,8 @@ export const ChatWindow = () => {
     setEmailSuccess('');
 
     try {
-      const token = localStorage.getItem('token');
-      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8001/api/v1'}/proposals/send_email`, {
+      const token = useAuthStore.getState().token || localStorage.getItem('token');
+      const res = await fetch(`${API_URL}/proposals/send_email`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -480,8 +483,8 @@ export const ChatWindow = () => {
     setAiLoading(true);
     setAiSuggestion('');
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8001/api/v1'}/chats/${selectedContactId}/copilot`, {
+      const token = useAuthStore.getState().token || localStorage.getItem('token');
+      const response = await fetch(`${API_URL}/chats/${selectedContactId}/copilot`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -509,9 +512,9 @@ export const ChatWindow = () => {
   const handleTriggerAiResponse = async () => {
     if (!activeContact || aiTriggering) return;
     setAiTriggering(true);
-    const token = localStorage.getItem('token');
+    const token = useAuthStore.getState().token || localStorage.getItem('token');
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8001/api/v1'}/chats/${activeContact.id}/trigger-ai`, {
+      const res = await fetch(`${API_URL}/chats/${activeContact.id}/trigger-ai`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
