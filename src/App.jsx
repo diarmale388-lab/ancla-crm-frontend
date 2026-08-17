@@ -282,24 +282,22 @@ function App() {
           </div>
         ) : (
           /* =========================================================================
-             LOGIN CARD PRO MASTERPIECE: COLORES Y ESTRUCTURA PREFERIDA
+             LOGIN CARD PRO MASTERPIECE: COLORES DUAL-TONE + LOGO CON CONTORNO LIMPIO
              ========================================================================= */
-          <div className="w-full max-w-4xl bg-white rounded-3xl lg:rounded-[32px] border border-slate-200/90 shadow-2xl overflow-hidden grid grid-cols-1 lg:grid-cols-12 z-10 transition-all duration-300">
+          <div className="w-full max-w-sm md:max-w-4xl bg-white rounded-3xl lg:rounded-[32px] border border-slate-200/90 shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-12 z-10 transition-all duration-300">
             
-            {/* LADO IZQUIERDO: HERO BRANDING ARQUITECTÓNICO & PRESTIGIO */}
-            <div className="lg:col-span-5 bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950 p-7 sm:p-9 lg:p-10 flex flex-col justify-between relative overflow-hidden text-white border-b lg:border-b-0 lg:border-r border-white/10">
+            {/* LADO IZQUIERDO: HERO BRANDING ARQUITECTÓNICO (Solo visible en pantallas medianas y grandes md+) */}
+            <div className="hidden md:flex md:col-span-5 bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950 p-8 lg:p-10 flex-col justify-between relative overflow-hidden text-white border-r border-white/10">
               <div className="absolute -right-20 -top-20 w-60 h-60 bg-emerald-500/20 rounded-full blur-3xl pointer-events-none"></div>
               
               <div>
-                {/* Cápsula Blanca Elegante para el Logo Original ANCLA de Alta Definición */}
-                <div className="mb-5">
-                  <div className="bg-white p-3 sm:p-3.5 rounded-2xl shadow-xl border border-white/20 inline-flex items-center justify-center max-w-[260px]">
-                    <img 
-                      src="/ancla_official_logo.png" 
-                      alt="ANCLA Special Projects" 
-                      className="w-full h-auto object-contain"
-                    />
-                  </div>
+                {/* Logo Oficial ANCLA con Contorno Blanco Puro (Fondo 100% Transparente, Sin Parche) */}
+                <div className="mb-6">
+                  <img 
+                    src="/ancla_logo_stroke.png" 
+                    alt="ANCLA Special Projects" 
+                    className="w-full max-w-[250px] h-auto object-contain drop-shadow-2xl hover:scale-[1.02] transition-transform"
+                  />
                 </div>
 
                 <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-[10px] font-extrabold tracking-wider uppercase mb-3">
@@ -316,7 +314,7 @@ function App() {
               </div>
 
               {/* Badges de Valor */}
-              <div className="hidden sm:flex flex-col space-y-2.5 my-5">
+              <div className="flex flex-col space-y-2.5 my-5">
                 <div className="flex items-center space-x-3 p-2.5 rounded-xl bg-white/5 border border-white/5 backdrop-blur-xs">
                   <div className="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xs shrink-0">
                     <Zap className="w-3.5 h-3.5" />
@@ -348,11 +346,21 @@ function App() {
               </div>
             </div>
 
-            {/* LADO DERECHO: FORMULARIO DE ACCESO ERGONÓMICO EN BLANCO PURO */}
-            <div className="lg:col-span-7 p-7 sm:p-10 lg:p-12 flex flex-col justify-center bg-white">
+            {/* LADO DERECHO: FORMULARIO DE ACCESO ERGONÓMICO EN BLANCO PURO (En móvil ocupa toda la tarjeta) */}
+            <div className="md:col-span-7 p-6 sm:p-8 lg:p-12 flex flex-col justify-center bg-white">
               <div className="w-full max-w-sm mx-auto">
                 
-                <div className="mb-6">
+                {/* Logo Oficial en Móvil (Visible únicamente en celulares < md) */}
+                <div className="flex md:hidden flex-col items-center text-center mb-5">
+                  <img 
+                    src="/ancla_official_logo.png" 
+                    alt="ANCLA Special Projects" 
+                    className="w-full max-w-[190px] h-auto object-contain mb-1.5 drop-shadow-sm"
+                  />
+                  <p className="text-[11px] font-bold text-slate-500">Gestión Comercial & Proyectos Modulares</p>
+                </div>
+
+                <div className="mb-5 text-center md:text-left">
                   <h3 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
                     Iniciar Sesión
                   </h3>
