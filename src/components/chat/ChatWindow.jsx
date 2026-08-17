@@ -32,7 +32,8 @@ export const ChatWindow = () => {
     deleteMessage,
     editMessage,
     deleteContact,
-    updateContactDetails
+    updateContactDetails,
+    triggerAiResponse
   } = useChatStore();
 
   const { 
@@ -512,24 +513,11 @@ export const ChatWindow = () => {
   const handleTriggerAiResponse = async () => {
     if (!activeContact || aiTriggering) return;
     setAiTriggering(true);
-    const token = useAuthStore.getState().token || localStorage.getItem('token');
     try {
-      const res = await fetch(`${API_URL}/chats/${activeContact.id}/trigger-ai`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      if (res.ok) {
-        fetchContacts();
-        fetchMessages(activeContact.id);
-      } else {
-        const errData = await res.json();
-        alert("Error al forzar la IA: " + (errData.detail || "Error desconocido"));
-      }
+      await triggerAiResponse(activeContact.id);
     } catch (err) {
       console.error("Error forzando respuesta de la IA:", err);
-      alert("Error de conexión al forzar la IA.");
+      alert("Error al forzar la IA: " + (err.message || "Error de conexión"));
     } finally {
       setAiTriggering(false);
     }

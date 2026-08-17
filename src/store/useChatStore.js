@@ -275,6 +275,40 @@ export const useChatStore = create((set, get) => ({
     }
   },
 
+  triggerAiResponse: async (contactId) => {
+    const token = useAuthStore.getState().token;
+    if (!token || !contactId) return false;
+
+    try {
+      const response = await fetch(`${API_URL}/chats/${contactId}/trigger-ai`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) {
+        const errData = await response.json().catch(() => ({}));
+        throw new Error(errData.detail || 'Error al forzar la IA');
+      }
+
+      // Activar optimísticamente chatbot_enabled en la lista de contactos
+      set((state) => ({
+        contacts: state.contacts.map((c) =>
+          c.id === contactId ? { ...c, chatbot_enabled: true } : c
+        )
+      }));
+
+      // Refrescar mensajes e historial
+      get().fetchContacts(true);
+      get().fetchMessages(contactId, true);
+      return true;
+    } catch (err) {
+      console.error('Error al forzar respuesta de Sofi IA:', err);
+      throw err;
+    }
+  },
+
   deleteContact: async (contactId) => {
     const token = useAuthStore.getState().token;
     if (!token) return false;
