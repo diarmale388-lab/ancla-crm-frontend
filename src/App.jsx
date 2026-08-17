@@ -302,7 +302,7 @@ function App() {
                     <span className="text-3xl sm:text-4xl font-black tracking-tight text-white leading-none font-sans">
                       ANCLA
                     </span>
-                    <span className="text-[10px] sm:text-[11px] font-black tracking-[0.3em] text-emerald-400 uppercase leading-none mt-2 font-sans">
+                    <span className="text-[10px] sm:text-[11px] font-black tracking-[0.3em] text-white uppercase leading-none mt-2 font-sans">
                       SPECIAL PROJECTS
                     </span>
                   </div>
@@ -357,26 +357,24 @@ function App() {
             {/* LADO DERECHO (Y VISTA COMPLETA EN MÓVIL) */}
             <div className="md:col-span-7 flex flex-col justify-center bg-white">
               
-              {/* CABECERA EXCLUSIVA PARA MÓVIL: Hero compacto de alta gama */}
-              <div className="flex md:hidden bg-gradient-to-br from-slate-950 via-[#071318] to-[#04241c] p-6 text-white flex-col items-center text-center relative overflow-hidden">
-                <div className="absolute -top-12 -right-12 w-36 h-36 bg-emerald-500/20 rounded-full blur-2xl pointer-events-none"></div>
-                
-                <div className="flex items-center space-x-3 mb-2 select-none z-10">
+              {/* CABECERA EXCLUSIVA PARA MÓVIL: Limpia, Blanca, Elegante y Proporcional */}
+              <div className="flex md:hidden bg-white pt-6 pb-2 px-6 flex-col items-center text-center">
+                <div className="flex items-center space-x-3.5 mb-2 select-none">
                   <img 
                     src="/ancla_icon_only.png" 
                     alt="ANCLA" 
-                    className="w-12 h-12 object-contain drop-shadow-xl flex-shrink-0"
+                    className="w-12 h-12 object-contain drop-shadow-sm flex-shrink-0"
                   />
                   <div className="flex flex-col text-left">
-                    <span className="text-2xl font-black tracking-tight text-white leading-none font-sans">
+                    <span className="text-2xl font-black tracking-tight text-slate-900 leading-none font-sans">
                       ANCLA
                     </span>
-                    <span className="text-[9px] font-black tracking-[0.26em] text-emerald-400 uppercase leading-none mt-1 font-sans">
+                    <span className="text-[9px] font-black tracking-[0.26em] text-slate-700 uppercase leading-none mt-1 font-sans">
                       SPECIAL PROJECTS
                     </span>
                   </div>
                 </div>
-                <p className="text-[11px] font-semibold text-slate-300 z-10">Portal Comercial & Arquitectura Modular</p>
+                <p className="text-[11px] font-bold text-slate-500">Portal Comercial & Arquitectura Modular</p>
               </div>
 
               {/* CUERPO DEL FORMULARIO */}
