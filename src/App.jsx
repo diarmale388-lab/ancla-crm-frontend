@@ -282,33 +282,33 @@ function App() {
           </div>
         ) : (
           /* =========================================================================
-             LOGIN CARD PRO MASTERPIECE: COLORES DUAL-TONE + LOGO CON CONTORNO LIMPIO
+             LOGIN MASTERPIECE: 2 EXPERIENCIAS ADAPTATIVAS (DESKTOP DUAL-TONE & MOBILE NATIVE)
              ========================================================================= */
-          <div className="w-full max-w-sm md:max-w-4xl bg-white rounded-3xl lg:rounded-[32px] border border-slate-200/90 shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-12 z-10 transition-all duration-300">
+          <div className="w-full max-w-sm md:max-w-4xl bg-white rounded-[28px] md:rounded-[36px] border border-slate-200/90 shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-12 z-10 transition-all duration-300">
             
-            {/* LADO IZQUIERDO: HERO BRANDING ARQUITECTÓNICO (Solo visible en pantallas medianas y grandes md+) */}
+            {/* LADO IZQUIERDO: HERO BRANDING ARQUITECTÓNICO (En Desktop md+) */}
             <div className="hidden md:flex md:col-span-5 bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950 p-8 lg:p-10 flex-col justify-between relative overflow-hidden text-white border-r border-white/10">
-              <div className="absolute -right-20 -top-20 w-60 h-60 bg-emerald-500/20 rounded-full blur-3xl pointer-events-none"></div>
+              <div className="absolute -right-20 -top-20 w-64 h-64 bg-emerald-500/20 rounded-full blur-3xl pointer-events-none"></div>
               
               <div>
-                {/* Logotipo Vectorial de Alta Definición y Máxima Nitidez para Fondo Oscuro */}
-                <div className="flex items-center space-x-3.5 mb-6 select-none">
+                {/* Logotipo Vectorial de Alta Definición y Gran Escala para Fondo Oscuro */}
+                <div className="flex items-center space-x-4 mb-7 select-none">
                   <img 
                     src="/ancla_icon_only.png" 
                     alt="ANCLA" 
-                    className="w-14 h-14 sm:w-16 sm:h-16 object-contain drop-shadow-2xl flex-shrink-0"
+                    className="w-16 h-16 sm:w-20 sm:h-20 object-contain drop-shadow-2xl flex-shrink-0"
                   />
                   <div className="flex flex-col justify-center">
-                    <span className="text-2xl sm:text-3xl font-black tracking-wider text-white leading-none font-sans">
+                    <span className="text-3xl sm:text-4xl font-black tracking-tight text-white leading-none font-sans">
                       ANCLA
                     </span>
-                    <span className="text-[9.5px] sm:text-[10.5px] font-extrabold tracking-[0.28em] text-emerald-400 uppercase leading-none mt-1.5 font-sans">
+                    <span className="text-[10px] sm:text-[11px] font-black tracking-[0.3em] text-emerald-400 uppercase leading-none mt-2 font-sans">
                       SPECIAL PROJECTS
                     </span>
                   </div>
                 </div>
 
-                <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-[10px] font-extrabold tracking-wider uppercase mb-3">
+                <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-[10.5px] font-extrabold tracking-wider uppercase mb-3.5">
                   <Sparkles className="w-3.5 h-3.5" />
                   <span>Gestión Comercial Inteligente</span>
                 </span>
@@ -321,7 +321,7 @@ function App() {
                 </p>
               </div>
 
-              {/* Badges de Valor */}
+              {/* Badges de Valor en Desktop */}
               <div className="flex flex-col space-y-2.5 my-5">
                 <div className="flex items-center space-x-3 p-2.5 rounded-xl bg-white/5 border border-white/5 backdrop-blur-xs">
                   <div className="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xs shrink-0">
@@ -354,106 +354,123 @@ function App() {
               </div>
             </div>
 
-            {/* LADO DERECHO: FORMULARIO DE ACCESO ERGONÓMICO EN BLANCO PURO (En móvil ocupa toda la tarjeta) */}
-            <div className="md:col-span-7 p-6 sm:p-8 lg:p-12 flex flex-col justify-center bg-white">
-              <div className="w-full max-w-sm mx-auto">
+            {/* LADO DERECHO (Y VISTA COMPLETA EN MÓVIL) */}
+            <div className="md:col-span-7 flex flex-col justify-center bg-white">
+              
+              {/* CABECERA EXCLUSIVA PARA MÓVIL: Hero compacto de alta gama */}
+              <div className="flex md:hidden bg-gradient-to-br from-slate-950 via-[#071318] to-[#04241c] p-6 text-white flex-col items-center text-center relative overflow-hidden">
+                <div className="absolute -top-12 -right-12 w-36 h-36 bg-emerald-500/20 rounded-full blur-2xl pointer-events-none"></div>
                 
-                {/* Logo Oficial en Móvil (Visible únicamente en celulares < md) */}
-                <div className="flex md:hidden flex-col items-center text-center mb-5">
+                <div className="flex items-center space-x-3 mb-2 select-none z-10">
                   <img 
-                    src="/ancla_official_logo.png" 
-                    alt="ANCLA Special Projects" 
-                    className="w-full max-w-[190px] h-auto object-contain mb-1.5 drop-shadow-sm"
+                    src="/ancla_icon_only.png" 
+                    alt="ANCLA" 
+                    className="w-12 h-12 object-contain drop-shadow-xl flex-shrink-0"
                   />
-                  <p className="text-[11px] font-bold text-slate-500">Gestión Comercial & Proyectos Modulares</p>
+                  <div className="flex flex-col text-left">
+                    <span className="text-2xl font-black tracking-tight text-white leading-none font-sans">
+                      ANCLA
+                    </span>
+                    <span className="text-[9px] font-black tracking-[0.26em] text-emerald-400 uppercase leading-none mt-1 font-sans">
+                      SPECIAL PROJECTS
+                    </span>
+                  </div>
                 </div>
+                <p className="text-[11px] font-semibold text-slate-300 z-10">Portal Comercial & Arquitectura Modular</p>
+              </div>
 
-                <div className="mb-5 text-center md:text-left">
-                  <h3 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-                    Iniciar Sesión
-                  </h3>
-                  <p className="text-xs font-semibold text-slate-500 mt-1">
-                    Ingresa con tu usuario o correo asignado.
-                  </p>
-                </div>
-
-                {error && (
-                  <div className="mb-5 p-3.5 rounded-xl bg-red-50 border border-red-200 flex items-center space-x-3 text-red-700 animate-shake">
-                    <AlertCircle className="w-4.5 h-4.5 shrink-0 text-red-500" />
-                    <span className="text-xs font-bold">{error}</span>
+              {/* CUERPO DEL FORMULARIO */}
+              <div className="p-6 sm:p-8 lg:p-12">
+                <div className="w-full max-w-sm mx-auto">
+                  
+                  <div className="mb-5 text-center md:text-left">
+                    <h3 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+                      Iniciar Sesión
+                    </h3>
+                    <p className="text-xs font-semibold text-slate-500 mt-1">
+                      Ingresa con tu usuario o correo asignado.
+                    </p>
                   </div>
-                )}
 
-                <form onSubmit={handleLoginSubmit} className="space-y-4">
-                  <div>
-                    <label className="block text-[11px] font-black text-slate-700 uppercase tracking-wider mb-1.5">
-                      Usuario o Correo
-                    </label>
-                    <div className="relative">
-                      <User className="absolute left-3.5 top-3 w-4 h-4 text-slate-400" />
-                      <input
-                        type="text"
-                        placeholder="diarmale388, liliana, asesor o correo"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-10 pr-4 py-2.5 text-xs sm:text-sm font-semibold text-slate-900 placeholder-slate-400 focus:bg-white focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all"
-                        required
-                      />
+                  {error && (
+                    <div className="mb-5 p-3.5 rounded-xl bg-red-50 border border-red-200 flex items-center space-x-3 text-red-700 animate-shake">
+                      <AlertCircle className="w-4.5 h-4.5 shrink-0 text-red-500" />
+                      <span className="text-xs font-bold">{error}</span>
                     </div>
-                  </div>
+                  )}
 
-                  <div>
-                    <label className="block text-[11px] font-black text-slate-700 uppercase tracking-wider mb-1.5">
-                      Contraseña
-                    </label>
-                    <div className="relative">
-                      <Lock className="absolute left-3.5 top-3 w-4 h-4 text-slate-400" />
-                      <input
-                        type={showPassword ? "text" : "password"}
-                        placeholder="••••••••"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-10 pr-10 py-2.5 text-xs sm:text-sm font-semibold text-slate-900 placeholder-slate-400 focus:bg-white focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all"
-                        required
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 cursor-pointer transition-colors p-0.5"
-                        title={showPassword ? "Ocultar contraseña" : "Ver contraseña"}
-                      >
-                        {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                      </button>
+                  <form onSubmit={handleLoginSubmit} className="space-y-4">
+                    <div>
+                      <label className="block text-[11px] font-black text-slate-700 uppercase tracking-wider mb-1.5">
+                        Usuario o Correo
+                      </label>
+                      <div className="relative">
+                        <User className="absolute left-3.5 top-3.5 w-4 h-4 text-slate-400" />
+                        <input
+                          type="text"
+                          placeholder="diarmale388, liliana, asesor o correo"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-10 pr-4 py-3 text-xs sm:text-sm font-semibold text-slate-900 placeholder-slate-400 focus:bg-white focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all"
+                          required
+                        />
+                      </div>
                     </div>
+
+                    <div>
+                      <label className="block text-[11px] font-black text-slate-700 uppercase tracking-wider mb-1.5">
+                        Contraseña
+                      </label>
+                      <div className="relative">
+                        <Lock className="absolute left-3.5 top-3.5 w-4 h-4 text-slate-400" />
+                        <input
+                          type={showPassword ? "text" : "password"}
+                          placeholder="••••••••"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-10 pr-10 py-3 text-xs sm:text-sm font-semibold text-slate-900 placeholder-slate-400 focus:bg-white focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all"
+                          required
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-3 top-3 text-slate-400 hover:text-slate-600 cursor-pointer transition-colors p-0.5"
+                          title={showPassword ? "Ocultar contraseña" : "Ver contraseña"}
+                        >
+                          {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        </button>
+                      </div>
+                    </div>
+
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className="w-full bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-black text-xs sm:text-sm py-3.5 px-4 rounded-xl shadow-lg shadow-emerald-500/25 active:scale-[0.98] transition-all flex items-center justify-center space-x-2 cursor-pointer mt-4"
+                    >
+                      {loading ? (
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      ) : (
+                        <>
+                          <Sparkles className="w-4 h-4" />
+                          <span>INGRESAR AL CRM</span>
+                        </>
+                      )}
+                    </button>
+                  </form>
+
+                  {/* Footer de Firma Ejecutiva León FX */}
+                  <div className="pt-5 mt-5 border-t border-slate-100 flex items-center justify-center space-x-2 text-slate-400">
+                    <span className="text-[10px] font-black tracking-wider uppercase">By:</span>
+                    <img 
+                      src="/leon_fx_logo.png" 
+                      alt="León FX" 
+                      className="w-4 h-4 object-contain"
+                    />
+                    <span className="text-xs font-black text-slate-800 tracking-tight">León FX</span>
                   </div>
-
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    className="w-full bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-black text-xs sm:text-sm py-3 px-4 rounded-xl shadow-lg shadow-emerald-500/25 active:scale-[0.98] transition-all flex items-center justify-center space-x-2 cursor-pointer mt-4"
-                  >
-                    {loading ? (
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    ) : (
-                      <>
-                        <Sparkles className="w-4 h-4" />
-                        <span>INGRESAR AL CRM</span>
-                      </>
-                    )}
-                  </button>
-                </form>
-
-                {/* Footer de Firma Ejecutiva León FX */}
-                <div className="pt-6 mt-6 border-t border-slate-100 flex items-center justify-center space-x-2 text-slate-400">
-                  <span className="text-[10px] font-black tracking-wider uppercase">By:</span>
-                  <img 
-                    src="/leon_fx_logo.png" 
-                    alt="León FX" 
-                    className="w-4 h-4 object-contain"
-                  />
-                  <span className="text-xs font-black text-slate-800 tracking-tight">León FX</span>
                 </div>
               </div>
+
             </div>
 
           </div>
