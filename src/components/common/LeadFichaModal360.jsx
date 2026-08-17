@@ -62,6 +62,12 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
   // Pestaña Activa: 'perfil', 'resumen_ia', 'documentacion'
   const [activeTab, setActiveTab] = useState('perfil');
 
+  const currentUser = useAuthStore(state => state.user);
+  const userRole = String(currentUser?.role || '').toLowerCase();
+  const userEmail = String(currentUser?.email || '').toLowerCase();
+  const userName = String(currentUser?.full_name || '').toLowerCase();
+  const isAdmin = !currentUser || userRole === 'admin' || userRole.includes('admin') || userEmail.includes('diarmale388') || userEmail.includes('liliana') || userName.includes('diarmale388') || userName.includes('liliana') || currentUser?.id === 5 || currentUser?.id === 3 || currentUser?.id === 6;
+
   // Estados Formulario Ficha 360°
   const [firstName, setFirstName] = useState(contact.first_name || '');
   const [lastName, setLastName] = useState(contact.last_name || '');
@@ -387,12 +393,16 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
             </span>
 
             {/* Asesor Selector Pill */}
-            <div className="flex items-center space-x-1.5 bg-slate-200/80 dark:bg-slate-800 border border-slate-300/50 dark:border-slate-700 rounded-lg px-2.5 py-1 shrink-0">
+            <div 
+              className={`flex items-center space-x-1.5 bg-slate-200/80 dark:bg-slate-800 border border-slate-300/50 dark:border-slate-700 rounded-lg px-2.5 py-1 shrink-0 ${!isAdmin ? 'opacity-80' : ''}`}
+              title={!isAdmin ? "Solo los administradores pueden reasignar prospectos" : "Reasignar Asesor"}
+            >
               <span className="text-xs font-bold text-slate-600 dark:text-slate-400">👤 Asesor:</span>
               <select
+                disabled={!isAdmin}
                 value={assignedUserId || ''}
                 onChange={(e) => setAssignedUserId(e.target.value ? parseInt(e.target.value, 10) : null)}
-                className="bg-transparent text-xs font-bold text-slate-800 dark:text-white cursor-pointer focus:outline-none max-w-[120px] truncate"
+                className={`bg-transparent text-xs font-bold text-slate-800 dark:text-white focus:outline-none max-w-[120px] truncate ${!isAdmin ? 'cursor-not-allowed' : 'cursor-pointer'}`}
               >
                 <option value="" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white">Sin Asignar (Liliana / Admin)</option>
                 <option value="4" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white">Asesor Comercial ANCLA</option>

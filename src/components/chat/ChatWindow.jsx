@@ -57,6 +57,10 @@ export const ChatWindow = () => {
   } = useKanbanStore();
 
   const currentUser = useAuthStore(state => state.user);
+  const userRole = String(currentUser?.role || '').toLowerCase();
+  const userEmail = String(currentUser?.email || '').toLowerCase();
+  const userName = String(currentUser?.full_name || '').toLowerCase();
+  const isAdmin = !currentUser || userRole === 'admin' || userRole.includes('admin') || userEmail.includes('diarmale388') || userEmail.includes('liliana') || userName.includes('diarmale388') || userName.includes('liliana') || currentUser?.id === 5 || currentUser?.id === 3 || currentUser?.id === 6;
 
   const [inputMessage, setInputMessage] = useState('');
   const [aiLoading, setAiLoading] = useState(false);
@@ -849,12 +853,16 @@ export const ChatWindow = () => {
 
             {/* BOTONES DESPLEGADOS EN ESCRITORIO (Solo en Pantallas Desktop md+) */}
             <div className="hidden md:flex items-center space-x-1.5 lg:space-x-2 shrink-0">
-              <div className="flex items-center space-x-1 bg-slate-50 dark:bg-white/5 px-2 py-1.5 rounded-xl border border-slate-200 dark:border-white/5 max-w-[130px] lg:max-w-[160px]">
-                <User className="w-3.5 h-3.5 text-blue-500 shrink-0" />
+              <div 
+                className={`flex items-center space-x-1 bg-slate-50 dark:bg-white/5 px-2 py-1.5 rounded-xl border border-slate-200 dark:border-white/5 max-w-[130px] lg:max-w-[160px] ${!isAdmin ? 'opacity-80' : ''}`}
+                title={!isAdmin ? "Solo los administradores pueden reasignar prospectos" : "Reasignar Asesor"}
+              >
+                {!isAdmin ? <Lock className="w-3 h-3 text-slate-400 shrink-0" /> : <User className="w-3.5 h-3.5 text-blue-500 shrink-0" />}
                 <select
+                  disabled={!isAdmin}
                   value={activeContact.assigned_user_id || ''}
                   onChange={(e) => assignContact(activeContact.id, e.target.value)}
-                  className="bg-transparent border-none text-[10px] font-bold text-slate-600 dark:text-slate-350 focus:outline-none cursor-pointer truncate appearance-none w-full"
+                  className={`bg-transparent border-none text-[10px] font-bold text-slate-600 dark:text-slate-350 focus:outline-none truncate appearance-none w-full ${!isAdmin ? 'cursor-not-allowed' : 'cursor-pointer'}`}
                 >
                   <option value="">Sin Asignar</option>
                   {agents.map((agent) => (
@@ -1629,14 +1637,18 @@ export const ChatWindow = () => {
 
               {/* Selector de Asesor Asignado (Visibilidad Directa) */}
               <div className="p-3 rounded-xl bg-emerald-500/10 dark:bg-emerald-950/20 border border-emerald-500/20 space-y-1.5 shadow-xs">
-                <span className="text-[10px] text-emerald-600 dark:text-emerald-400 uppercase font-extrabold tracking-wider block">👤 Asesor Asignado</span>
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] text-emerald-600 dark:text-emerald-400 uppercase font-extrabold tracking-wider block">👤 Asesor Asignado</span>
+                  {!isAdmin && <span className="text-[9px] font-black text-amber-600 dark:text-amber-400 bg-amber-500/10 px-1.5 py-0.2 rounded-md">🔒 Solo Admin</span>}
+                </div>
                 <select
+                  disabled={!isAdmin}
                   value={activeContact.assigned_user_id || ''}
                   onChange={(e) => {
                     const val = e.target.value ? parseInt(e.target.value, 10) : null;
                     updateContactDetails(activeContact.id, { assigned_user_id: val });
                   }}
-                  className="w-full bg-white dark:bg-slate-900 border border-emerald-500/30 rounded-xl px-3 py-1.5 text-xs font-bold text-emerald-800 dark:text-emerald-200 cursor-pointer"
+                  className={`w-full bg-white dark:bg-slate-900 border border-emerald-500/30 rounded-xl px-3 py-1.5 text-xs font-bold text-emerald-800 dark:text-emerald-200 ${!isAdmin ? 'cursor-not-allowed opacity-75' : 'cursor-pointer'}`}
                 >
                   <option value="">Sin Asignar (Liliana / Admin General)</option>
                   <option value="4">Asesor Comercial ANCLA (asesor@anclaspecialprojects.com)</option>
