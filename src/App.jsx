@@ -291,13 +291,21 @@ function App() {
               <div className="absolute -right-20 -top-20 w-60 h-60 bg-emerald-500/20 rounded-full blur-3xl pointer-events-none"></div>
               
               <div>
-                {/* Logo Oficial ANCLA con Contorno Blanco Puro (Fondo 100% Transparente, Sin Parche) */}
-                <div className="mb-6">
+                {/* Logotipo Vectorial de Alta Definición y Máxima Nitidez para Fondo Oscuro */}
+                <div className="flex items-center space-x-3.5 mb-6 select-none">
                   <img 
-                    src="/ancla_logo_stroke.png" 
-                    alt="ANCLA Special Projects" 
-                    className="w-full max-w-[250px] h-auto object-contain drop-shadow-2xl hover:scale-[1.02] transition-transform"
+                    src="/ancla_icon_only.png" 
+                    alt="ANCLA" 
+                    className="w-14 h-14 sm:w-16 sm:h-16 object-contain drop-shadow-2xl flex-shrink-0"
                   />
+                  <div className="flex flex-col justify-center">
+                    <span className="text-2xl sm:text-3xl font-black tracking-wider text-white leading-none font-sans">
+                      ANCLA
+                    </span>
+                    <span className="text-[9.5px] sm:text-[10.5px] font-extrabold tracking-[0.28em] text-emerald-400 uppercase leading-none mt-1.5 font-sans">
+                      SPECIAL PROJECTS
+                    </span>
+                  </div>
                 </div>
 
                 <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-[10px] font-extrabold tracking-wider uppercase mb-3">
