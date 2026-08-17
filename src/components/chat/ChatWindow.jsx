@@ -132,6 +132,35 @@ export const ChatWindow = () => {
     await sendMediaMessage(selectedContactId, file, mediaType);
   };
 
+  // Helper para generar cabeceras de fecha estilo WhatsApp Web (HOY, AYER, FECHA)
+  const getMessageDateHeader = (isoString) => {
+    if (!isoString) return '';
+    let timeStr = String(isoString);
+    const hasTimeZone = /Z$|[+-]\d{2}:?\d{2}$/.test(timeStr);
+    if (!hasTimeZone) timeStr += 'Z';
+    const date = new Date(timeStr);
+    const now = new Date();
+
+    const dBogota = new Date(date.toLocaleString('en-US', { timeZone: 'America/Bogota' }));
+    const nBogota = new Date(now.toLocaleString('en-US', { timeZone: 'America/Bogota' }));
+
+    const dDay = new Date(dBogota.getFullYear(), dBogota.getMonth(), dBogota.getDate());
+    const nDay = new Date(nBogota.getFullYear(), nBogota.getMonth(), nBogota.getDate());
+
+    const diffDays = Math.round((nDay.getTime() - dDay.getTime()) / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 0) return 'HOY';
+    if (diffDays === 1) return 'AYER';
+
+    const dayNames = ['DOMINGO', 'LUNES', 'MARTES', 'MIÉRCOLES', 'JUEVES', 'VIERNES', 'SÁBADO'];
+    const monthNames = ['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'];
+
+    if (diffDays < 7 && diffDays > 0) {
+      return `${dayNames[dBogota.getDay()]}, ${dBogota.getDate()} DE ${monthNames[dBogota.getMonth()]}`;
+    }
+    return `${dBogota.getDate()} DE ${monthNames[dBogota.getMonth()]} DE ${dBogota.getFullYear()}`;
+  };
+
   // Lista ordenada de imágenes en el chat actual para navegación del visor (lightbox)
   const chatImages = (messages || [])
     .filter(msg => {
@@ -949,20 +978,40 @@ export const ChatWindow = () => {
             showRightSidebar ? 'lg:opacity-100 opacity-60' : 'opacity-100'
           }`}
         >
-          {(msgSearchTerm.trim() ? messages.filter(m => (m.content || '').toLowerCase().includes(msgSearchTerm.trim().toLowerCase())) : messages).map((msg) => (
-            <MessageBubble 
-              key={msg.id} 
-              message={msg} 
-              onImageClick={setLightboxUrl}
-              onReply={setReplyingTo}
-              onForward={setForwardingMessage}
-              onEdit={(m) => {
-                setEditingMessage(m);
-                setInputMessage(m.content);
-              }}
-              onDelete={deleteMessage}
-            />
-          ))}
+          {(() => {
+            const list = msgSearchTerm.trim() 
+              ? messages.filter(m => (m.content || '').toLowerCase().includes(msgSearchTerm.trim().toLowerCase()))
+              : messages;
+
+            return list.map((msg, index) => {
+              const currentDateHeader = getMessageDateHeader(msg.created_at);
+              const prevDateHeader = index > 0 ? getMessageDateHeader(list[index - 1].created_at) : null;
+              const showDateDivider = currentDateHeader && currentDateHeader !== prevDateHeader;
+
+              return (
+                <React.Fragment key={msg.id || index}>
+                  {showDateDivider && (
+                    <div className="flex justify-center my-3.5 sticky top-2 z-10 select-none">
+                      <span className="bg-white/90 dark:bg-[#182229]/90 backdrop-blur-md text-[#54656f] dark:text-[#8696a0] text-[10.5px] font-black tracking-wider uppercase px-3 py-1 rounded-lg shadow-2xs border border-slate-200/60 dark:border-white/5">
+                        {currentDateHeader}
+                      </span>
+                    </div>
+                  )}
+                  <MessageBubble 
+                    message={msg} 
+                    onImageClick={setLightboxUrl}
+                    onReply={setReplyingTo}
+                    onForward={setForwardingMessage}
+                    onEdit={(m) => {
+                      setEditingMessage(m);
+                      setInputMessage(m.content);
+                    }}
+                    onDelete={deleteMessage}
+                  />
+                </React.Fragment>
+              );
+            });
+          })()}
 
           {msgSearchTerm.trim() && messages.filter(m => (m.content || '').toLowerCase().includes(msgSearchTerm.trim().toLowerCase())).length === 0 && (
             <div className="flex flex-col items-center justify-center p-8 text-center text-slate-500 dark:text-slate-400 bg-white/60 dark:bg-dark-900/60 rounded-2xl border border-slate-200/60 dark:border-white/5 mx-auto max-w-sm my-10 backdrop-blur-sm">

@@ -16,6 +16,27 @@ export const ContactList = () => {
   const [simMessage, setSimMessage] = useState('');
   const [showNewContactModal, setShowNewContactModal] = useState(false);
   const [showMenuDropdown, setShowMenuDropdown] = useState(false);
+  const [showFilterDropdown, setShowFilterDropdown] = useState(false);
+  const [readContactIds, setReadContactIds] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem('ancla_read_contacts') || '{}');
+    } catch {
+      return {};
+    }
+  });
+
+  // Guardar lectura de contacto cuando se selecciona
+  useEffect(() => {
+    if (selectedContactId) {
+      setReadContactIds(prev => {
+        const next = { ...prev, [selectedContactId]: Date.now() };
+        try {
+          localStorage.setItem('ancla_read_contacts', JSON.stringify(next));
+        } catch {}
+        return next;
+      });
+    }
+  }, [selectedContactId]);
 
   const isStandalone = typeof window !== 'undefined' && (
     window.navigator.standalone === true ||
@@ -59,32 +80,19 @@ export const ContactList = () => {
     }
   };
   
-  // Filtro de estado de IA
+  // Filtro de estado: 'all', 'unread', 'ia', 'human', 'potencial', 'explorador', 'curioso', 'whatsapp', 'instagram'
   const [activeFilter, setActiveFilter] = useState('all');
 
-  const handleStartDemo = async () => {
-    if (simulating) return;
-    setSimulating(true);
-    setSimMessage('Iniciando...');
-    const ok = await triggerDemoSimulation();
-    if (ok) {
-      setSimMessage('Simulando leads...');
-      const interval = setInterval(() => {
-        fetchContacts();
-      }, 4000);
-      
-      setTimeout(() => {
-        clearInterval(interval);
-        setSimulating(false);
-        setSimMessage('');
-        fetchContacts();
-      }, 95000);
-    } else {
-      setSimulating(false);
-      setSimMessage('Error');
-      setTimeout(() => setSimMessage(''), 3000);
-    }
+  const isContactUnread = (c) => {
+    if (!c || c.last_message_sender !== 'contact') return false;
+    if (selectedContactId === c.id) return false;
+    const lastRead = readContactIds[c.id];
+    if (!lastRead) return true;
+    const msgTime = new Date(c.last_message_time).getTime();
+    return msgTime > lastRead;
   };
+
+  const unreadCount = contacts.filter(isContactUnread).length;
 
   const filteredContacts = contacts.filter((c) => {
     // 0. Aislamiento RBAC por Rol: Asesores comerciales sólo ven sus contactos asignados
@@ -96,9 +104,15 @@ export const ContactList = () => {
       return false;
     }
 
-    // 1. Filtrar por estado del chatbot
+    // 1. Filtrar por estado / filtros rápidos
+    if (activeFilter === 'unread' && !isContactUnread(c)) return false;
     if (activeFilter === 'ia' && !c.chatbot_enabled) return false;
     if (activeFilter === 'human' && c.chatbot_enabled) return false;
+    if (activeFilter === 'potencial' && c.qualification_level !== 'potencial') return false;
+    if (activeFilter === 'explorador' && c.qualification_level !== 'explorador') return false;
+    if (activeFilter === 'curioso' && c.qualification_level !== 'curioso') return false;
+    if (activeFilter === 'whatsapp' && (c.source === 'Instagram' || String(c.phone).startsWith('IG-'))) return false;
+    if (activeFilter === 'instagram' && !(c.source === 'Instagram' || String(c.phone).startsWith('IG-'))) return false;
 
     // 2. Filtrar por término de búsqueda (Nombre, Teléfono, Email, #ID, Mensaje o Ciudad)
     const query = searchTerm.toLowerCase().trim();
@@ -132,7 +146,29 @@ export const ContactList = () => {
       timeStr = timeStr + 'Z';
     }
     const date = new Date(timeStr);
-    return date.toLocaleTimeString('es-CO', { timeZone: 'America/Bogota', hour: 'numeric', minute: '2-digit', hour12: true });
+    const now = new Date();
+    
+    // Fechas en zona horaria Colombia
+    const dBogota = new Date(date.toLocaleString('en-US', { timeZone: 'America/Bogota' }));
+    const nBogota = new Date(now.toLocaleString('en-US', { timeZone: 'America/Bogota' }));
+    
+    const dDay = new Date(dBogota.getFullYear(), dBogota.getMonth(), dBogota.getDate());
+    const nDay = new Date(nBogota.getFullYear(), nBogota.getMonth(), nBogota.getDate());
+    
+    const diffDays = Math.round((nDay.getTime() - dDay.getTime()) / (1000 * 60 * 60 * 24));
+    
+    if (diffDays === 0) {
+      return date.toLocaleTimeString('es-CO', { timeZone: 'America/Bogota', hour: 'numeric', minute: '2-digit', hour12: true });
+    } else if (diffDays === 1) {
+      return 'Ayer';
+    } else if (diffDays < 7 && diffDays > 0) {
+      const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+      return dayNames[dBogota.getDay()];
+    } else {
+      const day = String(dBogota.getDate()).padStart(2, '0');
+      const month = String(dBogota.getMonth() + 1).padStart(2, '0');
+      return `${day}/${month}/${String(dBogota.getFullYear()).slice(-2)}`;
+    }
   };
 
   const getInitials = (firstName, lastName) => {
@@ -288,48 +324,134 @@ export const ContactList = () => {
           )}
         </div>
 
-        {/* Filtros de Mensajes al estilo WhatsApp Web */}
-        <div className="flex items-center space-x-2.5 overflow-x-auto pb-1 scrollbar-none">
-          <button
-            onClick={() => setActiveFilter('all')}
-            className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
-              activeFilter === 'all'
-                ? 'bg-[#e8fae6] text-[#008069]'
-                : 'bg-[#f0f2f5] text-[#54656f] hover:bg-[#e1e3e6]'
-            }`}
-          >
-            Todos
-          </button>
-          <button
-            onClick={() => setActiveFilter('ia')}
-            className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition-colors flex items-center space-x-1 cursor-pointer ${
-              activeFilter === 'ia'
-                ? 'bg-[#e8fae6] text-[#008069]'
-                : 'bg-[#f0f2f5] text-[#54656f] hover:bg-[#e1e3e6]'
-            }`}
-          >
-            <Bot className="w-3.5 h-3.5" />
-            <span>Piloto IA</span>
-          </button>
-          <button
-            onClick={() => setActiveFilter('human')}
-            className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition-colors flex items-center space-x-1 cursor-pointer ${
-              activeFilter === 'human'
-                ? 'bg-[#e8fae6] text-[#008069]'
-                : 'bg-[#f0f2f5] text-[#54656f] hover:bg-[#e1e3e6]'
-            }`}
-          >
-            <User className="w-3.5 h-3.5" />
-            <span>Humano</span>
-          </button>
-          <button
-            onClick={() => alert("Filtros adicionales")}
-            className="bg-[#f0f2f5] text-[#54656f] hover:bg-[#e1e3e6] p-1 rounded-full cursor-pointer transition-colors"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-            </svg>
-          </button>
+        {/* Filtros de Mensajes al estilo WhatsApp Web (Responsive PC & Celular) */}
+        <div className="relative">
+          <div className="flex items-center space-x-1.5 overflow-x-auto pb-1 scrollbar-none select-none">
+            <button
+              onClick={() => setActiveFilter('all')}
+              className={`px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
+                activeFilter === 'all'
+                  ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 shadow-2xs border border-emerald-300/40 dark:border-emerald-500/30'
+                  : 'bg-[#f0f2f5] dark:bg-[#202c33] text-[#54656f] dark:text-[#8696a0] hover:bg-[#e1e3e6] dark:hover:bg-[#2a3942]'
+              }`}
+            >
+              Todos
+            </button>
+
+            <button
+              onClick={() => setActiveFilter(activeFilter === 'unread' ? 'all' : 'unread')}
+              className={`px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-bold whitespace-nowrap transition-all flex items-center space-x-1.5 cursor-pointer ${
+                activeFilter === 'unread'
+                  ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 shadow-2xs border border-emerald-300/40 dark:border-emerald-500/30'
+                  : 'bg-[#f0f2f5] dark:bg-[#202c33] text-[#54656f] dark:text-[#8696a0] hover:bg-[#e1e3e6] dark:hover:bg-[#2a3942]'
+              }`}
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              <span>No leídos</span>
+              {unreadCount > 0 && (
+                <span className="ml-1 px-1.5 py-0.2 rounded-full text-[9px] font-black bg-emerald-600 text-white">
+                  {unreadCount}
+                </span>
+              )}
+            </button>
+
+            <button
+              onClick={() => setActiveFilter(activeFilter === 'ia' ? 'all' : 'ia')}
+              className={`px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-bold whitespace-nowrap transition-all flex items-center space-x-1 cursor-pointer ${
+                activeFilter === 'ia'
+                  ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 shadow-2xs border border-emerald-300/40 dark:border-emerald-500/30'
+                  : 'bg-[#f0f2f5] dark:bg-[#202c33] text-[#54656f] dark:text-[#8696a0] hover:bg-[#e1e3e6] dark:hover:bg-[#2a3942]'
+              }`}
+            >
+              <Bot className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+              <span className="hidden sm:inline">Piloto IA</span>
+              <span className="sm:hidden">IA</span>
+            </button>
+
+            <button
+              onClick={() => setActiveFilter(activeFilter === 'human' ? 'all' : 'human')}
+              className={`px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-bold whitespace-nowrap transition-all flex items-center space-x-1 cursor-pointer ${
+                activeFilter === 'human'
+                  ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 shadow-2xs border border-emerald-300/40 dark:border-emerald-500/30'
+                  : 'bg-[#f0f2f5] dark:bg-[#202c33] text-[#54656f] dark:text-[#8696a0] hover:bg-[#e1e3e6] dark:hover:bg-[#2a3942]'
+              }`}
+            >
+              <User className="w-3.5 h-3.5 text-indigo-500" />
+              <span>Humano</span>
+            </button>
+
+            {/* Botón Flecha Desplegable con Filtros Inteligentes */}
+            <button
+              onClick={() => setShowFilterDropdown(!showFilterDropdown)}
+              className={`p-1.5 rounded-full cursor-pointer transition-all ${
+                showFilterDropdown || ['potencial', 'explorador', 'curioso', 'whatsapp', 'instagram'].includes(activeFilter)
+                  ? 'bg-emerald-600 text-white shadow-xs'
+                  : 'bg-[#f0f2f5] dark:bg-[#202c33] text-[#54656f] dark:text-[#8696a0] hover:bg-[#e1e3e6] dark:hover:bg-[#2a3942]'
+              }`}
+              title="Filtros Avanzados (Calificación y Canales)"
+            >
+              <svg className="w-3.5 h-3.5 transition-transform duration-200" style={{ transform: showFilterDropdown ? 'rotate(180deg)' : 'none' }} fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Menú Flotante de Filtros Avanzados */}
+          {showFilterDropdown && (
+            <div className="absolute right-0 top-9 w-52 bg-white dark:bg-[#111b21] border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-2 z-50 animate-fade-in font-sans text-xs space-y-1">
+              <div className="px-2 py-1 text-[10px] font-black uppercase tracking-wider text-slate-400 border-b border-slate-100 dark:border-white/5">
+                Calificación del Lead
+              </div>
+              <button
+                onClick={() => { setActiveFilter('potencial'); setShowFilterDropdown(false); }}
+                className="w-full px-2.5 py-1.5 text-left rounded-lg font-bold flex items-center justify-between hover:bg-emerald-50 dark:hover:bg-emerald-950/30 text-emerald-700 dark:text-emerald-300"
+              >
+                <span>🟢 Potencial / Caliente</span>
+                {activeFilter === 'potencial' && <Check className="w-3.5 h-3.5" />}
+              </button>
+              <button
+                onClick={() => { setActiveFilter('explorador'); setShowFilterDropdown(false); }}
+                className="w-full px-2.5 py-1.5 text-left rounded-lg font-bold flex items-center justify-between hover:bg-amber-50 dark:hover:bg-amber-950/30 text-amber-700 dark:text-amber-300"
+              >
+                <span>🟡 Explorador</span>
+                {activeFilter === 'explorador' && <Check className="w-3.5 h-3.5" />}
+              </button>
+              <button
+                onClick={() => { setActiveFilter('curioso'); setShowFilterDropdown(false); }}
+                className="w-full px-2.5 py-1.5 text-left rounded-lg font-bold flex items-center justify-between hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400"
+              >
+                <span>🔴 Curioso / Inicial</span>
+                {activeFilter === 'curioso' && <Check className="w-3.5 h-3.5" />}
+              </button>
+
+              <div className="px-2 pt-2 pb-1 text-[10px] font-black uppercase tracking-wider text-slate-400 border-b border-slate-100 dark:border-white/5">
+                Canal de Origen
+              </div>
+              <button
+                onClick={() => { setActiveFilter('whatsapp'); setShowFilterDropdown(false); }}
+                className="w-full px-2.5 py-1.5 text-left rounded-lg font-bold flex items-center justify-between hover:bg-emerald-50 dark:hover:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400"
+              >
+                <span>💬 WhatsApp</span>
+                {activeFilter === 'whatsapp' && <Check className="w-3.5 h-3.5" />}
+              </button>
+              <button
+                onClick={() => { setActiveFilter('instagram'); setShowFilterDropdown(false); }}
+                className="w-full px-2.5 py-1.5 text-left rounded-lg font-bold flex items-center justify-between hover:bg-pink-50 dark:hover:bg-pink-950/30 text-pink-600 dark:text-pink-400"
+              >
+                <span>📸 Instagram</span>
+                {activeFilter === 'instagram' && <Check className="w-3.5 h-3.5" />}
+              </button>
+
+              {activeFilter !== 'all' && (
+                <button
+                  onClick={() => { setActiveFilter('all'); setShowFilterDropdown(false); }}
+                  className="w-full mt-1.5 px-2.5 py-1.5 text-center rounded-lg font-bold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 text-[11px]"
+                >
+                  Restablecer Filtros
+                </button>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
@@ -408,14 +530,16 @@ export const ContactList = () => {
                       </h3>
                       <div className="flex flex-col items-end justify-center">
                         <span className={`text-[10px] sm:text-[9px] ${
-                          contact.last_message_sender === 'contact' && !isSelected 
-                            ? 'text-emerald-500 font-bold' 
-                            : 'text-slate-400 dark:text-slate-500'
+                          isContactUnread(contact) 
+                            ? 'text-emerald-600 dark:text-emerald-400 font-black' 
+                            : 'text-slate-400 dark:text-slate-500 font-medium'
                         }`}>
                           {formatMessageTime(contact.last_message_time)}
                         </span>
-                        {contact.last_message_sender === 'contact' && !isSelected && (
-                          <span className="w-2 h-2 mt-1 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_8px_#10b981]" title="Mensaje pendiente" />
+                        {isContactUnread(contact) && (
+                          <span className="mt-1 px-1.5 py-0.2 rounded-full text-[9px] font-black bg-emerald-600 text-white shadow-xs flex items-center justify-center animate-pulse" title="Mensaje pendiente">
+                            1
+                          </span>
                         )}
                       </div>
                     </div>
