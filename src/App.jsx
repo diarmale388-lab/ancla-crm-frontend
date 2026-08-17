@@ -196,10 +196,10 @@ function App() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-[#0b141a] to-emerald-950 text-slate-100 flex items-center justify-center p-3 sm:p-6 relative overflow-hidden font-sans select-none">
-        {/* Luces volumétricas sutiles de fondo */}
-        <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-emerald-600/10 rounded-full blur-[120px] pointer-events-none"></div>
-        <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-teal-500/10 rounded-full blur-[120px] pointer-events-none"></div>
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-[#071318] to-[#04241c] text-slate-100 flex items-center justify-center p-3 sm:p-6 lg:p-10 relative overflow-hidden font-sans select-none">
+        {/* Luces volumétricas atmosféricas de fondo */}
+        <div className="absolute top-[-15%] left-[-10%] w-[600px] h-[600px] bg-emerald-600/10 rounded-full blur-[140px] pointer-events-none"></div>
+        <div className="absolute bottom-[-15%] right-[-10%] w-[600px] h-[600px] bg-teal-500/10 rounded-full blur-[140px] pointer-events-none"></div>
 
         {invitationToken ? (
           /* Registro de Invitado */
@@ -281,110 +281,162 @@ function App() {
             )}
           </div>
         ) : (
-          /* Login Card Pro Adaptable (Desktop y Móvil) */
-          <div className="w-full max-w-[360px] sm:max-w-[420px] bg-[#111b21]/95 backdrop-blur-md rounded-3xl border border-white/10 p-6 sm:p-8 shadow-2xl shadow-black/70 z-10 transition-all duration-300">
+          /* =========================================================================
+             LOGIN CARD MASTERPIECE: 2 VISTAS ESPECIALIZADAS (PC VS MÓVIL)
+             ========================================================================= */
+          <div className="w-full max-w-sm md:max-w-4xl bg-[#111b21] rounded-3xl border border-white/10 shadow-2xl shadow-black/80 overflow-hidden z-10 transition-all duration-300">
             
-            {/* Cabecera con Logo Oficial ANCLA de Alto Contraste (Contorno Blanco Iluminado) */}
-            <div className="flex flex-col items-center text-center mb-6">
-              <div className="w-full flex items-center justify-center mb-3">
-                <img 
-                  src="/ancla_logo_outline.png" 
-                  alt="ANCLA Special Projects" 
-                  className="w-full max-w-[210px] sm:max-w-[250px] h-auto object-contain drop-shadow-md hover:scale-[1.02] transition-transform"
-                />
-              </div>
+            {/* GRID DUAL (En Desktop es Split 2 Columnas, en Móvil es 1 Sola Columna Compacta) */}
+            <div className="grid grid-cols-1 md:grid-cols-12">
+              
+              {/* LADO IZQUIERDO: HERO BRANDING MINIMALISTA (Solo visible en Desktop md+) */}
+              <div className="hidden md:flex md:col-span-5 bg-gradient-to-br from-slate-950 via-[#0c181f] to-[#052920] p-8 lg:p-10 flex-col justify-between relative overflow-hidden border-r border-white/10">
+                <div className="absolute -right-16 -top-16 w-56 h-56 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none"></div>
+                
+                <div>
+                  {/* Logo Oficial ANCLA con Contorno Blanco Puro Iluminado */}
+                  <div className="mb-6">
+                    <img 
+                      src="/ancla_logo_outline.png" 
+                      alt="ANCLA Special Projects" 
+                      className="w-full max-w-[240px] h-auto object-contain drop-shadow-xl"
+                    />
+                  </div>
 
-              <h1 className="text-lg sm:text-xl font-black text-white tracking-tight">
-                Iniciar Sesión
-              </h1>
-              <p className="text-[11px] sm:text-xs font-semibold text-slate-400 mt-0.5">
-                Portal Comercial & Proyectos Modulares
-              </p>
-            </div>
+                  <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-[10px] font-extrabold tracking-wider uppercase mb-3">
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>Portal Comercial</span>
+                  </span>
 
-            {error && (
-              <div className="mb-4 p-3 rounded-xl bg-rose-950/40 border border-rose-800/50 flex items-center space-x-2.5 text-rose-300 animate-shake">
-                <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
-                <span className="text-xs font-bold">{error}</span>
-              </div>
-            )}
+                  <h2 className="text-xl font-black text-white tracking-tight leading-snug">
+                    Gestión & Proyectos Modulares LATAM
+                  </h2>
+                  <p className="text-xs text-slate-400 mt-2 leading-relaxed">
+                    Plataforma privada de seguimiento comercial y atención de clientes.
+                  </p>
+                </div>
 
-            <form onSubmit={handleLoginSubmit} className="space-y-3.5 sm:space-y-4">
-              <div>
-                <label className="block text-[10.5px] font-black text-slate-300 uppercase tracking-wider mb-1">
-                  Usuario o Correo
-                </label>
-                <div className="relative">
-                  <User className="absolute left-3.5 top-3 w-4 h-4 text-slate-400" />
-                  <input
-                    type="text"
-                    placeholder="diarmale388, liliana, asesor o correo"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full bg-slate-900/90 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-xs sm:text-sm font-semibold text-white placeholder-slate-500 focus:bg-slate-950 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all"
-                    required
-                  />
+                {/* Base del Hero en Desktop */}
+                <div className="pt-6 border-t border-white/10 flex items-center justify-between text-[11px] text-slate-400">
+                  <span className="flex items-center space-x-1.5 font-medium">
+                    <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                    <span>Conexión Segura SSL</span>
+                  </span>
+                  <span className="font-mono text-[10px] text-slate-500">v2.5.0</span>
                 </div>
               </div>
 
-              <div>
-                <label className="block text-[10.5px] font-black text-slate-300 uppercase tracking-wider mb-1">
-                  Contraseña
-                </label>
-                <div className="relative">
-                  <Lock className="absolute left-3.5 top-3 w-4 h-4 text-slate-400" />
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full bg-slate-900/90 border border-white/10 rounded-xl pl-10 pr-10 py-2.5 text-xs sm:text-sm font-semibold text-white placeholder-slate-500 focus:bg-slate-950 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all"
-                    required
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-2.5 text-slate-400 hover:text-white cursor-pointer transition-colors p-0.5"
-                    title={showPassword ? "Ocultar contraseña" : "Ver contraseña"}
-                  >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
+              {/* LADO DERECHO (O VISTA ÚNICA EN MÓVIL): Formulario de Acceso Ergonómico */}
+              <div className="md:col-span-7 p-6 sm:p-8 lg:p-10 flex flex-col justify-center bg-[#111b21]">
+                <div className="w-full max-w-sm mx-auto">
+                  
+                  {/* Logo en Móvil (Visible SOLO en móviles < md) */}
+                  <div className="flex md:hidden flex-col items-center text-center mb-5">
+                    <img 
+                      src="/ancla_logo_outline.png" 
+                      alt="ANCLA Special Projects" 
+                      className="w-full max-w-[190px] h-auto object-contain mb-2 drop-shadow-lg"
+                    />
+                    <p className="text-[10.5px] font-semibold text-slate-400">Portal Comercial & Proyectos Modulares</p>
+                  </div>
+
+                  {/* Encabezado del Formulario */}
+                  <div className="mb-5 text-center md:text-left">
+                    <h1 className="text-lg sm:text-xl font-black text-white tracking-tight">
+                      Iniciar Sesión
+                    </h1>
+                    <p className="text-xs font-semibold text-slate-400 mt-0.5">
+                      Ingresa tus credenciales para acceder al CRM.
+                    </p>
+                  </div>
+
+                  {error && (
+                    <div className="mb-4 p-3 rounded-xl bg-rose-950/40 border border-rose-800/50 flex items-center space-x-2.5 text-rose-300 animate-shake">
+                      <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
+                      <span className="text-xs font-bold">{error}</span>
+                    </div>
+                  )}
+
+                  <form onSubmit={handleLoginSubmit} className="space-y-3.5">
+                    <div>
+                      <label className="block text-[10.5px] font-black text-slate-300 uppercase tracking-wider mb-1">
+                        Usuario o Correo
+                      </label>
+                      <div className="relative">
+                        <User className="absolute left-3.5 top-3 w-4 h-4 text-slate-400" />
+                        <input
+                          type="text"
+                          placeholder="diarmale388, liliana, asesor o correo"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          className="w-full bg-slate-900 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-xs sm:text-sm font-semibold text-white placeholder-slate-500 focus:bg-slate-950 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all"
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-[10.5px] font-black text-slate-300 uppercase tracking-wider mb-1">
+                        Contraseña
+                      </label>
+                      <div className="relative">
+                        <Lock className="absolute left-3.5 top-3 w-4 h-4 text-slate-400" />
+                        <input
+                          type={showPassword ? "text" : "password"}
+                          placeholder="••••••••"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          className="w-full bg-slate-900 border border-white/10 rounded-xl pl-10 pr-10 py-2.5 text-xs sm:text-sm font-semibold text-white placeholder-slate-500 focus:bg-slate-950 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all"
+                          required
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-3 top-2.5 text-slate-400 hover:text-white cursor-pointer transition-colors p-0.5"
+                          title={showPassword ? "Ocultar contraseña" : "Ver contraseña"}
+                        >
+                          {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        </button>
+                      </div>
+                    </div>
+
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className="w-full bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-black text-xs sm:text-sm py-3 px-4 rounded-xl shadow-lg shadow-emerald-500/20 active:scale-[0.98] transition-all flex items-center justify-center space-x-2 cursor-pointer mt-4"
+                    >
+                      {loading ? (
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      ) : (
+                        <>
+                          <Sparkles className="w-4 h-4" />
+                          <span>INGRESAR AL CRM</span>
+                        </>
+                      )}
+                    </button>
+                  </form>
+
+                  {/* Footer de Firma Ejecutiva León FX */}
+                  <div className="pt-4 mt-5 border-t border-white/5 flex items-center justify-between text-slate-400 text-[11px]">
+                    <span className="flex items-center space-x-1 font-medium text-slate-400">
+                      <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                      <span>Acceso Seguro</span>
+                    </span>
+                    <div className="flex items-center space-x-1.5">
+                      <span className="text-[10px] font-black tracking-wider uppercase text-slate-400">By:</span>
+                      <img 
+                        src="/leon_fx_logo.png" 
+                        alt="León FX" 
+                        className="w-4 h-4 object-contain"
+                      />
+                      <span className="text-xs font-black text-slate-200 tracking-tight">León FX</span>
+                    </div>
+                  </div>
+
                 </div>
               </div>
 
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-black text-xs sm:text-sm py-3 px-4 rounded-xl shadow-lg shadow-emerald-500/20 active:scale-[0.98] transition-all flex items-center justify-center space-x-2 cursor-pointer mt-3"
-              >
-                {loading ? (
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                ) : (
-                  <>
-                    <Sparkles className="w-4 h-4" />
-                    <span>INGRESAR AL CRM</span>
-                  </>
-                )}
-              </button>
-            </form>
-
-            {/* Footer de Firma Ejecutiva León FX */}
-            <div className="pt-4 mt-5 border-t border-white/5 flex items-center justify-between text-slate-400 text-[11px]">
-              <span className="flex items-center space-x-1 font-medium text-slate-400">
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Acceso Seguro</span>
-              </span>
-              <div className="flex items-center space-x-1.5">
-                <span className="text-[10px] font-black tracking-wider uppercase text-slate-400">By:</span>
-                <img 
-                  src="/leon_fx_logo.png" 
-                  alt="León FX" 
-                  className="w-4 h-4 object-contain"
-                />
-                <span className="text-xs font-black text-slate-200 tracking-tight">León FX</span>
-              </div>
             </div>
-
           </div>
         )}
       </div>
