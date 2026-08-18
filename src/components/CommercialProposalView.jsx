@@ -1,17 +1,103 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { CheckCircle2, MessageSquare, Send, Sparkles, X, Copy, Check, MessageCircle } from 'lucide-react';
 
 export const CommercialProposalView = () => {
   const [activeTab, setActiveTab] = useState('resumen');
-  const [units, setUnits] = useState(1);
+  const [showThankYouModal, setShowThankYouModal] = useState(false);
+  
+  // Estado para modal de comentarios por ítem
+  const [activeCommentItem, setActiveCommentItem] = useState(null);
+  const [commentText, setCommentText] = useState('');
+  const [authorName, setAuthorName] = useState('');
+  const [savingComment, setSavingComment] = useState(false);
+  const [commentSuccess, setCommentSuccess] = useState('');
+  const [savedComments, setSavedComments] = useState({});
+  const [copiedNotification, setCopiedNotification] = useState(false);
 
-  const avgPrice = 115000000;
-  const avgProfit = 40000000;
-  const investment = 8000000;
+  const API_URL = import.meta.env.VITE_API_URL || 'https://ancla-crm-backend-production.up.railway.app/api/v1';
 
-  const totalRev = units * avgPrice;
-  const totalProfit = units * avgProfit;
-  const netGain = totalProfit - investment;
-  const roi = Math.round((netGain / investment) * 100);
+  // Cargar comentarios guardados de localStorage al iniciar
+  useEffect(() => {
+    try {
+      const local = localStorage.getItem('ancla_proposal_comments');
+      if (local) {
+        setSavedComments(JSON.parse(local));
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }, []);
+
+  const openCommentModal = (itemKey, itemTitle) => {
+    setActiveCommentItem({ key: itemKey, title: itemTitle });
+    setCommentText(savedComments[itemKey]?.text || '');
+    setCommentSuccess('');
+  };
+
+  const handleSaveComment = async (e) => {
+    if (e) e.preventDefault();
+    if (!commentText.trim() || !activeCommentItem) return;
+
+    setSavingComment(true);
+    setCommentSuccess('');
+
+    const newComments = {
+      ...savedComments,
+      [activeCommentItem.key]: {
+        title: activeCommentItem.title,
+        text: commentText.trim(),
+        author: authorName.trim() || 'Equipo ANCLA',
+        date: new Date().toLocaleString('es-CO')
+      }
+    };
+
+    setSavedComments(newComments);
+    try {
+      localStorage.setItem('ancla_proposal_comments', JSON.stringify(newComments));
+    } catch (e) {}
+
+    // Enviar a la API del CRM
+    try {
+      await fetch(`${API_URL}/proposals/public/feedback`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          item_key: activeCommentItem.key,
+          item_title: activeCommentItem.title,
+          comment: commentText.trim(),
+          author: authorName.trim() || 'Equipo ANCLA'
+        })
+      });
+    } catch (err) {
+      console.log("Nota guardada localmente:", err);
+    }
+
+    setSavingComment(false);
+    setCommentSuccess('¡Observación guardada con éxito!');
+    setTimeout(() => {
+      setActiveCommentItem(null);
+      setCommentSuccess('');
+    }, 1200);
+  };
+
+  const handleSendAllCommentsViaWhatsApp = () => {
+    const keys = Object.keys(savedComments);
+    if (keys.length === 0) {
+      alert('Aún no has agregado ningún comentario u observación.');
+      return;
+    }
+
+    let text = `*OBSERVACIONES Y COMENTARIOS - PROPUESTA ANCLA*\n\n`;
+    keys.forEach((k, idx) => {
+      const item = savedComments[k];
+      text += `*${idx + 1}. ${item.title}:*\n"${item.text}"\n\n`;
+    });
+
+    const encoded = encodeURIComponent(text);
+    window.open(`https://wa.me/573105748805?text=${encoded}`, '_blank');
+  };
+
+  const totalCommentsCount = Object.keys(savedComments).length;
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 font-sans antialiased pb-16 selection:bg-emerald-500 selection:text-white">
@@ -64,6 +150,23 @@ export const CommercialProposalView = () => {
       {/* CONTENEDOR PRINCIPAL */}
       <main className="max-w-4xl mx-auto px-4 sm:px-6">
         
+        {/* BARRA FLOTANTE DE COMENTARIOS REGISTRADOS */}
+        {totalCommentsCount > 0 && (
+          <div className="my-4 p-3 bg-emerald-50 border border-emerald-200 rounded-2xl flex items-center justify-between shadow-sm">
+            <div className="flex items-center space-x-2 text-xs font-bold text-emerald-800">
+              <MessageSquare className="w-4 h-4 text-emerald-600" />
+              <span>Tienes {totalCommentsCount} observación(es) registrada(s) en la propuesta.</span>
+            </div>
+            <button
+              onClick={handleSendAllCommentsViaWhatsApp}
+              className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold py-1.5 px-3.5 rounded-xl shadow-xs transition-all flex items-center space-x-1.5 cursor-pointer"
+            >
+              <MessageCircle className="w-3.5 h-3.5" />
+              <span>Enviar observaciones por WhatsApp</span>
+            </button>
+          </div>
+        )}
+
         {/* TABS DE NAVEGACIÓN */}
         <div className="-mt-6 relative z-20 mb-8">
           <div className="bg-white p-2 rounded-2xl shadow-xl border border-slate-200 flex gap-2 overflow-x-auto no-scrollbar">
@@ -108,7 +211,7 @@ export const CommercialProposalView = () => {
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
             >
-              <span>💰 Inversión & ROI</span>
+              <span>💰 Inversión y Acuerdo</span>
             </button>
           </div>
         </div>
@@ -152,9 +255,7 @@ export const CommercialProposalView = () => {
               <div className="flex flex-wrap gap-2.5 items-center justify-center text-xs font-bold text-slate-700 text-center">
                 <span className="bg-white px-3 py-2 rounded-xl border border-slate-300 shadow-xs">📢 Anuncios Meta (Facebook/Insta)</span>
                 <span className="text-slate-400">➔</span>
-                <span className="bg-blue-50 text-blue-700 px-3 py-2 rounded-xl border border-blue-200 shadow-xs">🌐 Página Web Comercial (En Construcción)</span>
-                <span className="text-slate-400">➔</span>
-                <span className="bg-emerald-50 text-emerald-700 px-3 py-2 rounded-xl border border-emerald-200 shadow-xs">🤖 Sofi AI (Respuesta 24/7 y Audios)</span>
+                <span className="bg-emerald-50 text-emerald-800 px-3 py-2 rounded-xl border border-emerald-300 shadow-xs">🤖 CRM & Sofi AI 24/7 (Ó Web Comercial)</span>
                 <span className="text-slate-400">➔</span>
                 <span className="bg-white px-3 py-2 rounded-xl border border-slate-300 shadow-xs">🏭 Fábrica China / Asesores</span>
                 <span className="text-slate-400">➔</span>
@@ -167,172 +268,70 @@ export const CommercialProposalView = () => {
         {/* CONTENIDO TAB 2: SOLUCIONES DEL CRM Y WEB */}
         {activeTab === 'soluciones' && (
           <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-6 animate-fadeIn">
-            <div>
-              <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-                2. Necesidades Reales de ANCLA y Cómo las Resuelve el Ecosistema
-              </h2>
-              <p className="text-xs sm:text-sm text-slate-500 mt-1">
-                Cada aspecto operativo y comercial fue diseñado para darle control total a la gerencia y agilidad al equipo.
-              </p>
+            <div className="flex justify-between items-start">
+              <div>
+                <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+                  2. Necesidades Reales de ANCLA y Cómo las Resuelve el Ecosistema
+                </h2>
+                <p className="text-xs sm:text-sm text-slate-500 mt-1">
+                  Haz clic en el botón de comentario en cualquier ítem para dejar observaciones o sugerencias.
+                </p>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               
-              <div className="border border-slate-200 rounded-2xl p-4.5 hover:border-slate-300 transition-all bg-white">
-                <span className="inline-block bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full mb-2">
-                  ✅ Operativo en CRM
-                </span>
-                <h3 className="text-sm font-extrabold text-slate-900 mb-1">1. Centralización Total de Clientes</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Todos los prospectos y conversaciones de WhatsApp entran a un panel seguro y privado de ANCLA. Ningún contacto se pierde en el celular personal de los asesores.
-                </p>
-                <div className="mt-3 pt-2.5 border-t border-slate-100 text-[11px] font-bold text-emerald-700 flex items-center space-x-1.5">
-                  <span>🛡️ Control absoluto de la base de datos</span>
-                </div>
-              </div>
+              {/* Item Template Helper */}
+              {[
+                { key: 'sol-1', title: '1. Centralización Total de Clientes', status: '✅ Operativo en CRM', desc: 'Todos los prospectos y conversaciones de WhatsApp entran a un panel seguro y privado de ANCLA. Ningún contacto se pierde en el celular personal de los asesores.', benefit: '🛡️ Control absoluto de la base de datos' },
+                { key: 'sol-2', title: '2. Atención 24/7 con Sofi AI', status: '✅ Operativo en CRM', desc: 'Responde a cualquier hora de la noche, domingos o festivos en menos de 10 segundos, asegurando que el cliente reciba atención instantánea.', benefit: '⚡ Cero clientes perdidos por demora' },
+                { key: 'sol-3', title: '3. Filtro y Calificación de Compradores', status: '✅ Operativo en CRM', desc: 'Sofi AI indaga de forma natural la ciudad del proyecto, modelo de interés, si ya tiene lote y presupuesto. El asesor solo habla con clientes listos.', benefit: '🎯 Asesores enfocados solo en prospectos con dinero' },
+                { key: 'sol-4', title: '4. Escucha y Transcripción de Audios', status: '✅ Operativo en CRM', desc: 'El sistema escucha las notas de voz de WhatsApp que envían los clientes, las transcribe y las responde de forma inmediata, guardando el resumen en la ficha.', benefit: '🎙️ Comprensión total de notas de voz' },
+                { key: 'sol-5', title: '5. Ficha 360° y Repositorio de Documentos', status: '✅ Operativo en CRM', desc: 'Expediente digital por cliente para almacenar cédulas, RUT, planos arquitectónicos, escrituras, comprobantes de pago y especificaciones de acabados.', benefit: '📁 Toda la documentación organizada en 1 clic' },
+                { key: 'sol-6', title: '6. Módulo para Fábrica / Proveedores (China)', status: '✅ Operativo en CRM', desc: 'Permite ingresar las especificaciones técnicas del pedido para que la fábrica en China (con perfil especial) reciba la orden, procese el estado y responda en tiempo real.', benefit: '🏭 Comunicación fluida con fábrica sin correos perdidos' },
+                { key: 'sol-7', title: '7. Equipo Multi-Asesor con Roles Seguros', status: '✅ Operativo en CRM', desc: 'Capacidad de agregar nuevos asesores comerciales. La gerencia audita todas las conversaciones y solo los administradores pueden reasignar prospectos.', benefit: '🔒 Control gerencial y auditoría en vivo' },
+                { key: 'sol-8', title: '8. Envío Rápido de Fichas y Propuestas', status: '✅ Operativo en CRM', desc: 'Envío de catálogos oficiales, fotos de acabados y cotizaciones personalizadas en PDF directamente al WhatsApp del cliente.', benefit: '📄 Respuestas comerciales formales en segundos' },
+                { key: 'sol-9', title: '9. Tablero Visual Kanban de Ventas', status: '✅ Operativo en CRM', desc: 'Organización clara por etapas (Nuevo, En Asesoría, Cita, Propuesta Enviada, En Fabricación, Ganado) con vista en tiempo real.', benefit: '📊 Trazabilidad exacta de cada oportunidad' },
+                { key: 'sol-10', title: '10. Sincronización Automática con Meta Ads', status: '✅ Operativo en CRM', desc: 'Cada persona que llena un anuncio en Facebook/Instagram entra al CRM al instante. (Más de 530 clientes procesados desde julio con este canal).', benefit: '🚀 Cero descarga manual de archivos Excel' },
+                { key: 'sol-11', title: '11. Módulo de Citas y Calendario', status: '✅ Operativo en CRM', desc: 'Agenda citas virtuales o visitas a sala de ventas vinculadas a cada asesor, con fecha, hora y recordatorios para asegurar la asistencia.', benefit: '📅 Cero cruces de agenda o citas olvidadas' },
+                { key: 'sol-12', title: '12. Página Web Comercial con Sofi Integrada', status: '🌐 Próxima Entrega', desc: 'Vitrina digital de alta velocidad (<1.5s) con catálogo interactivo de casas modulares y asistente Sofi AI para atender tráfico web orgánico y de pauta.', benefit: '🌟 Autoridad de marca y nuevo canal de captación', isNext: true }
+              ].map((item) => {
+                const hasComment = savedComments[item.key];
+                return (
+                  <div key={item.key} className={`border rounded-2xl p-4.5 transition-all bg-white relative flex flex-col justify-between ${item.isNext ? 'border-blue-200 bg-blue-50/20' : 'border-slate-200 hover:border-slate-300'}`}>
+                    <div>
+                      <div className="flex justify-between items-center mb-2">
+                        <span className={`inline-block text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full border ${item.isNext ? 'bg-blue-100 border-blue-200 text-blue-800' : 'bg-emerald-50 border-emerald-200 text-emerald-700'}`}>
+                          {item.status}
+                        </span>
 
-              <div className="border border-slate-200 rounded-2xl p-4.5 hover:border-slate-300 transition-all bg-white">
-                <span className="inline-block bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full mb-2">
-                  ✅ Operativo en CRM
-                </span>
-                <h3 className="text-sm font-extrabold text-slate-900 mb-1">2. Atención 24/7 con Sofi AI</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Responde a cualquier hora de la noche, domingos o festivos en menos de 10 segundos, asegurando que el cliente reciba atención instantánea.
-                </p>
-                <div className="mt-3 pt-2.5 border-t border-slate-100 text-[11px] font-bold text-emerald-700 flex items-center space-x-1.5">
-                  <span>⚡ Cero clientes perdidos por demora</span>
-                </div>
-              </div>
+                        <button
+                          onClick={() => openCommentModal(item.key, item.title)}
+                          className={`text-[11px] font-bold px-2.5 py-1 rounded-lg border transition-all flex items-center space-x-1 cursor-pointer ${hasComment ? 'bg-amber-50 border-amber-300 text-amber-800' : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'}`}
+                          title="Dejar un comentario o sugerencia"
+                        >
+                          <MessageSquare className="w-3 h-3" />
+                          <span>{hasComment ? 'Nota guardada ✍️' : 'Comentar'}</span>
+                        </button>
+                      </div>
 
-              <div className="border border-slate-200 rounded-2xl p-4.5 hover:border-slate-300 transition-all bg-white">
-                <span className="inline-block bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full mb-2">
-                  ✅ Operativo en CRM
-                </span>
-                <h3 className="text-sm font-extrabold text-slate-900 mb-1">3. Filtro y Calificación de Compradores</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Sofi AI indaga de forma natural la ciudad del proyecto, modelo de interés, si ya tiene lote y presupuesto. El asesor solo habla con clientes listos.
-                </p>
-                <div className="mt-3 pt-2.5 border-t border-slate-100 text-[11px] font-bold text-emerald-700 flex items-center space-x-1.5">
-                  <span>🎯 Asesores enfocados solo en prospectos con dinero</span>
-                </div>
-              </div>
+                      <h3 className="text-sm font-extrabold text-slate-900 mb-1">{item.title}</h3>
+                      <p className="text-xs text-slate-600 leading-relaxed">{item.desc}</p>
+                    </div>
 
-              <div className="border border-slate-200 rounded-2xl p-4.5 hover:border-slate-300 transition-all bg-white">
-                <span className="inline-block bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full mb-2">
-                  ✅ Operativo en CRM
-                </span>
-                <h3 className="text-sm font-extrabold text-slate-900 mb-1">4. Escucha y Transcripción de Audios</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  El sistema escucha las notas de voz de WhatsApp que envían los clientes, las transcribe y las responde de forma inmediata, guardando el resumen en la ficha.
-                </p>
-                <div className="mt-3 pt-2.5 border-t border-slate-100 text-[11px] font-bold text-emerald-700 flex items-center space-x-1.5">
-                  <span>🎙️ Comprensión total de notas de voz</span>
-                </div>
-              </div>
-
-              <div className="border border-slate-200 rounded-2xl p-4.5 hover:border-slate-300 transition-all bg-white">
-                <span className="inline-block bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full mb-2">
-                  ✅ Operativo en CRM
-                </span>
-                <h3 className="text-sm font-extrabold text-slate-900 mb-1">5. Ficha 360° y Repositorio de Documentos</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Expediente digital por cliente para almacenar cédulas, RUT, planos arquitectónicos, escrituras, comprobantes de pago y especificaciones de acabados.
-                </p>
-                <div className="mt-3 pt-2.5 border-t border-slate-100 text-[11px] font-bold text-emerald-700 flex items-center space-x-1.5">
-                  <span>📁 Toda la documentación organizada en 1 clic</span>
-                </div>
-              </div>
-
-              <div className="border border-slate-200 rounded-2xl p-4.5 hover:border-slate-300 transition-all bg-white">
-                <span className="inline-block bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full mb-2">
-                  ✅ Operativo en CRM
-                </span>
-                <h3 className="text-sm font-extrabold text-slate-900 mb-1">6. Módulo para Fábrica / Proveedores (China)</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Permite ingresar las especificaciones técnicas del pedido para que la fábrica en China (con perfil especial) reciba la orden, procese el estado y responda en tiempo real.
-                </p>
-                <div className="mt-3 pt-2.5 border-t border-slate-100 text-[11px] font-bold text-emerald-700 flex items-center space-x-1.5">
-                  <span>🏭 Comunicación fluida con fábrica sin correos perdidos</span>
-                </div>
-              </div>
-
-              <div className="border border-slate-200 rounded-2xl p-4.5 hover:border-slate-300 transition-all bg-white">
-                <span className="inline-block bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full mb-2">
-                  ✅ Operativo en CRM
-                </span>
-                <h3 className="text-sm font-extrabold text-slate-900 mb-1">7. Equipo Multi-Asesor con Roles Seguros</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Capacidad de agregar nuevos asesores comerciales. La gerencia audita todas las conversaciones y solo los administradores pueden reasignar prospectos.
-                </p>
-                <div className="mt-3 pt-2.5 border-t border-slate-100 text-[11px] font-bold text-emerald-700 flex items-center space-x-1.5">
-                  <span>🔒 Control gerencial y auditoría en vivo</span>
-                </div>
-              </div>
-
-              <div className="border border-slate-200 rounded-2xl p-4.5 hover:border-slate-300 transition-all bg-white">
-                <span className="inline-block bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full mb-2">
-                  ✅ Operativo en CRM
-                </span>
-                <h3 className="text-sm font-extrabold text-slate-900 mb-1">8. Envío Rápido de Fichas y Propuestas</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Envío de catálogos oficiales, fotos de acabados y cotizaciones personalizadas en PDF directamente al WhatsApp del cliente.
-                </p>
-                <div className="mt-3 pt-2.5 border-t border-slate-100 text-[11px] font-bold text-emerald-700 flex items-center space-x-1.5">
-                  <span>📄 Respuestas comerciales formales en segundos</span>
-                </div>
-              </div>
-
-              <div className="border border-slate-200 rounded-2xl p-4.5 hover:border-slate-300 transition-all bg-white">
-                <span className="inline-block bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full mb-2">
-                  ✅ Operativo en CRM
-                </span>
-                <h3 className="text-sm font-extrabold text-slate-900 mb-1">9. Tablero Visual Kanban de Ventas</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Organización clara por etapas (Nuevo, En Asesoría, Cita, Propuesta Enviada, En Fabricación, Ganado) con vista en tiempo real.
-                </p>
-                <div className="mt-3 pt-2.5 border-t border-slate-100 text-[11px] font-bold text-emerald-700 flex items-center space-x-1.5">
-                  <span>📊 Trazabilidad exacta de cada oportunidad</span>
-                </div>
-              </div>
-
-              <div className="border border-slate-200 rounded-2xl p-4.5 hover:border-slate-300 transition-all bg-white">
-                <span className="inline-block bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full mb-2">
-                  ✅ Operativo en CRM
-                </span>
-                <h3 className="text-sm font-extrabold text-slate-900 mb-1">10. Sincronización Automática con Meta Ads</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Cada persona que llena un anuncio en Facebook/Instagram entra al CRM al instante. (Más de 530 clientes procesados desde julio con este canal).
-                </p>
-                <div className="mt-3 pt-2.5 border-t border-slate-100 text-[11px] font-bold text-emerald-700 flex items-center space-x-1.5">
-                  <span>🚀 Cero descarga manual de archivos Excel</span>
-                </div>
-              </div>
-
-              <div className="border border-slate-200 rounded-2xl p-4.5 hover:border-slate-300 transition-all bg-white">
-                <span className="inline-block bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full mb-2">
-                  ✅ Operativo en CRM
-                </span>
-                <h3 className="text-sm font-extrabold text-slate-900 mb-1">11. Módulo de Citas y Calendario</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Agenda citas virtuales o visitas a sala de ventas vinculadas a cada asesor, con fecha, hora y recordatorios para asegurar la asistencia.
-                </p>
-                <div className="mt-3 pt-2.5 border-t border-slate-100 text-[11px] font-bold text-emerald-700 flex items-center space-x-1.5">
-                  <span>📅 Cero cruces de agenda o citas olvidadas</span>
-                </div>
-              </div>
-
-              <div className="border border-blue-200 bg-blue-50/40 rounded-2xl p-4.5 hover:border-blue-300 transition-all">
-                <span className="inline-block bg-blue-100 border border-blue-200 text-blue-800 text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full mb-2">
-                  🌐 Próxima Entrega
-                </span>
-                <h3 className="text-sm font-extrabold text-slate-900 mb-1">12. Página Web Comercial con Sofi Integrada</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Vitrina digital de alta velocidad (&lt;1.5s) con catálogo interactivo de casas modulares y asistente Sofi AI para atender tráfico web orgánico y de pauta.
-                </p>
-                <div className="mt-3 pt-2.5 border-t border-blue-100 text-[11px] font-bold text-blue-700 flex items-center space-x-1.5">
-                  <span>🌟 Autoridad de marca y nuevo canal de captación</span>
-                </div>
-              </div>
+                    <div>
+                      {hasComment && (
+                        <div className="mt-2.5 p-2 bg-amber-50/80 border border-amber-200 rounded-xl text-[11px] text-amber-900 font-medium italic">
+                          "{hasComment.text}"
+                        </div>
+                      )}
+                      <div className={`mt-3 pt-2.5 border-t text-[11px] font-bold flex items-center space-x-1.5 ${item.isNext ? 'border-blue-100 text-blue-700' : 'border-slate-100 text-emerald-700'}`}>
+                        <span>{item.benefit}</span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
 
             </div>
           </div>
@@ -341,52 +340,61 @@ export const CommercialProposalView = () => {
         {/* CONTENIDO TAB 3: COSTOS FIJOS DE HERRAMIENTAS */}
         {activeTab === 'costos' && (
           <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-6 animate-fadeIn">
-            <div>
-              <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-                3. Tabla de Costos Fijos de Herramientas e Infraestructura
-              </h2>
-              <p className="text-xs sm:text-sm text-slate-500 mt-1">
-                Detalle de los servicios tecnológicos que mantienen el sistema activo 24/7.
-              </p>
+            <div className="flex justify-between items-start">
+              <div>
+                <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+                  3. Tabla de Costos Fijos de Herramientas e Infraestructura
+                </h2>
+                <p className="text-xs sm:text-sm text-slate-500 mt-1">
+                  Infraestructura Cloud dedicada y de alto rendimiento que mantiene el sistema activo 24/7.
+                </p>
+              </div>
+              <button
+                onClick={() => openCommentModal('costos-infra', 'Costos Fijos e Infraestructura')}
+                className="text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-xl border border-slate-200 flex items-center space-x-1.5 cursor-pointer"
+              >
+                <MessageSquare className="w-3.5 h-3.5" />
+                <span>Comentar sobre costos</span>
+              </button>
             </div>
 
             <div className="overflow-x-auto rounded-2xl border border-slate-200">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
                   <tr className="bg-slate-50 border-b border-slate-200 text-slate-700 uppercase font-black tracking-wider text-[11px]">
-                    <th className="p-3.5 sm:p-4">Herramienta / Proveedor</th>
+                    <th className="p-3.5 sm:p-4">Herramienta / Infraestructura</th>
                     <th className="p-3.5 sm:p-4">Función en el Ecosistema</th>
                     <th className="p-3.5 sm:p-4">Estado</th>
-                    <th className="p-3.5 sm:p-4">Costo Aproximado</th>
+                    <th className="p-3.5 sm:p-4">Costo Fijo Mensual</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                   <tr className="hover:bg-slate-50/60 transition-colors">
-                    <td className="p-3.5 sm:p-4 font-bold text-slate-900 flex items-center space-x-2">
-                      <span>☁️</span>
-                      <span>Railway Cloud</span>
+                    <td className="p-3.5 sm:p-4 font-bold text-slate-900">
+                      <div className="flex items-center space-x-2">
+                        <span>🖥️</span>
+                        <div>
+                          <span>Servidor VPS Cloud Dedicado (Hetzner CX33)</span>
+                          <span className="block text-[10px] text-slate-400 font-normal">4 vCPUs / 8 GB RAM / 80 GB NVMe + Coolify</span>
+                        </div>
+                      </div>
                     </td>
-                    <td className="p-3.5 sm:p-4 text-slate-600">Servidor backend de alta velocidad y Base de Datos PostgreSQL protegida.</td>
-                    <td className="p-3.5 sm:p-4"><span className="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-bold text-[10px] border border-emerald-200">Activo</span></td>
-                    <td className="p-3.5 sm:p-4 font-mono font-bold text-emerald-700 bg-emerald-50/50">~$35.000 COP / mes</td>
+                    <td className="p-3.5 sm:p-4 text-slate-600">Aloja el CRM, la Base de Datos PostgreSQL, Redis, CDN y la futura Página Web en contenedores aislados de máxima velocidad.</td>
+                    <td className="p-3.5 sm:p-4"><span className="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-bold text-[10px] border border-emerald-200">Recomendado</span></td>
+                    <td className="p-3.5 sm:p-4 font-mono font-bold text-emerald-700 bg-emerald-50/50">~€8.99 EUR (~$40.000 COP/mes)</td>
                   </tr>
 
                   <tr className="hover:bg-slate-50/60 transition-colors">
-                    <td className="p-3.5 sm:p-4 font-bold text-slate-900 flex items-center space-x-2">
-                      <span>🌐</span>
-                      <span>Hostinger LiteSpeed Cloud</span>
+                    <td className="p-3.5 sm:p-4 font-bold text-slate-900">
+                      <div className="flex items-center space-x-2">
+                        <span>🤖</span>
+                        <div>
+                          <span>Motores de Inteligencia Artificial</span>
+                          <span className="block text-[10px] text-slate-400 font-normal">OpenRouter / Gemini / Claude 3.5</span>
+                        </div>
+                      </div>
                     </td>
-                    <td className="p-3.5 sm:p-4 text-slate-600">Hosting de la aplicación web y PWA con CDN de alta velocidad para Colombia.</td>
-                    <td className="p-3.5 sm:p-4"><span className="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-bold text-[10px] border border-emerald-200">Activo</span></td>
-                    <td className="p-3.5 sm:p-4 font-mono font-bold text-emerald-700 bg-emerald-50/50">~$25.000 COP / mes</td>
-                  </tr>
-
-                  <tr className="hover:bg-slate-50/60 transition-colors">
-                    <td className="p-3.5 sm:p-4 font-bold text-slate-900 flex items-center space-x-2">
-                      <span>🤖</span>
-                      <span>OpenRouter / Gemini / OpenAI</span>
-                    </td>
-                    <td className="p-3.5 sm:p-4 text-slate-600">Motor de Inteligencia Artificial para Sofi AI 2.0 (comprensión, respuestas y audios).</td>
+                    <td className="p-3.5 sm:p-4 text-slate-600">Cerebro de Sofi AI 2.0 para atención, comprensión de lenguaje de construcción, respuesta y transcripción de audios.</td>
                     <td className="p-3.5 sm:p-4"><span className="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-bold text-[10px] border border-emerald-200">Activo</span></td>
                     <td className="p-3.5 sm:p-4 font-mono font-bold text-emerald-700 bg-emerald-50/50">~$80.000 COP / mes</td>
                   </tr>
@@ -394,9 +402,9 @@ export const CommercialProposalView = () => {
                   <tr className="hover:bg-slate-50/60 transition-colors">
                     <td className="p-3.5 sm:p-4 font-bold text-slate-900 flex items-center space-x-2">
                       <span>💬</span>
-                      <span>Meta Cloud API (WhatsApp)</span>
+                      <span>Meta Cloud API (WhatsApp Business)</span>
                     </td>
-                    <td className="p-3.5 sm:p-4 text-slate-600">Línea oficial de WhatsApp Business y sincronización automática de formularios de Meta.</td>
+                    <td className="p-3.5 sm:p-4 text-slate-600">Línea oficial de WhatsApp y webhook de sincronización de leads de Facebook e Instagram.</td>
                     <td className="p-3.5 sm:p-4"><span className="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-bold text-[10px] border border-emerald-200">Activo</span></td>
                     <td className="p-3.5 sm:p-4 font-mono font-bold text-slate-700">Según consumo Meta</td>
                   </tr>
@@ -404,9 +412,9 @@ export const CommercialProposalView = () => {
                   <tr className="hover:bg-slate-50/60 transition-colors">
                     <td className="p-3.5 sm:p-4 font-bold text-slate-900 flex items-center space-x-2">
                       <span>🔒</span>
-                      <span>Dominio & SSL anclaspecialprojects.com</span>
+                      <span>Dominio & SSL (anclaspecialprojects.com)</span>
                     </td>
-                    <td className="p-3.5 sm:p-4 text-slate-600">Dirección web oficial y certificados de seguridad bancaria SSL.</td>
+                    <td className="p-3.5 sm:p-4 text-slate-600">Nombre de dominio corporativo y certificados de seguridad web y API.</td>
                     <td className="p-3.5 sm:p-4"><span className="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-bold text-[10px] border border-emerald-200">Activo</span></td>
                     <td className="p-3.5 sm:p-4 font-mono font-bold text-slate-700">~$70.000 COP / año</td>
                   </tr>
@@ -414,9 +422,9 @@ export const CommercialProposalView = () => {
                   <tr className="hover:bg-slate-50/60 transition-colors">
                     <td className="p-3.5 sm:p-4 font-bold text-slate-900 flex items-center space-x-2">
                       <span>💾</span>
-                      <span>Google Drive Cloud Backup</span>
+                      <span>Google Drive Cloud Storage</span>
                     </td>
-                    <td className="p-3.5 sm:p-4 text-slate-600">Almacenamiento seguro de copias de seguridad de la base de datos y archivos.</td>
+                    <td className="p-3.5 sm:p-4 text-slate-600">Respaldos continuos de la base de datos del CRM y almacenamiento de archivos.</td>
                     <td className="p-3.5 sm:p-4"><span className="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-bold text-[10px] border border-emerald-200">Configurado</span></td>
                     <td className="p-3.5 sm:p-4 font-mono font-bold text-emerald-700">Incluido en Google</td>
                   </tr>
@@ -425,12 +433,18 @@ export const CommercialProposalView = () => {
             </div>
 
             <div className="p-4 bg-emerald-50 rounded-2xl border border-emerald-200 text-xs text-emerald-900 leading-relaxed">
-              💡 <strong>Nota de Eficiencia:</strong> Gracias a la arquitectura optimizada a la medida, el costo total de herramientas de ANCLA es inferior a <strong>~$150.000 COP mensuales</strong>, frente a plataformas de terceros (como HubSpot o Salesforce) que cobran más de $2.000.000 COP al mes por funcionalidades similares.
+              💡 <strong>Costo Total de Mantenimiento de Herramientas:</strong> El costo fijo de infraestructura para operar tanto el CRM como la Página Web Comercial es de apenas <strong>~$120.000 a $150.000 COP mensuales</strong>. En comparación, herramientas comerciales como HubSpot o Salesforce cuestan más de $2.000.000 COP al mes.
             </div>
+
+            {savedComments['costos-infra'] && (
+              <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-900">
+                <strong>Tu comentario sobre costos:</strong> "{savedComments['costos-infra'].text}"
+              </div>
+            )}
           </div>
         )}
 
-        {/* CONTENIDO TAB 4: PROPUESTA DE INVERSIÓN Y ROI */}
+        {/* CONTENIDO TAB 4: PROPUESTA DE INVERSIÓN */}
         {activeTab === 'propuesta' && (
           <div className="space-y-6 animate-fadeIn">
             
@@ -452,124 +466,207 @@ export const CommercialProposalView = () => {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
                 <div className="bg-white/5 border border-white/10 p-4 rounded-2xl">
-                  <h4 className="text-sm font-extrabold text-white mb-1.5 flex items-center space-x-2">
-                    <span>📱 1. CRM a la Medida + Sofi AI</span>
-                  </h4>
+                  <div className="flex justify-between items-center mb-1.5">
+                    <h4 className="text-sm font-extrabold text-white flex items-center space-x-2">
+                      <span>📱 1. CRM a la Medida + Sofi AI</span>
+                    </h4>
+                    <span className="text-[10px] font-bold text-emerald-400 bg-emerald-500/20 px-2 py-0.5 rounded-full">Entregado</span>
+                  </div>
                   <p className="text-xs text-slate-300 leading-relaxed">
                     Desarrollo completo del CRM, Kanban, módulo de citas, ficha 360°, módulo para fábrica/China y Sofi AI 2.0 (24/7 con soporte de audios).
                   </p>
                 </div>
 
                 <div className="bg-white/5 border border-white/10 p-4 rounded-2xl">
-                  <h4 className="text-sm font-extrabold text-white mb-1.5 flex items-center space-x-2">
-                    <span>🌐 2. Página Web Comercial</span>
-                  </h4>
+                  <div className="flex justify-between items-center mb-1.5">
+                    <h4 className="text-sm font-extrabold text-white flex items-center space-x-2">
+                      <span>🌐 2. Página Web Comercial</span>
+                    </h4>
+                    <span className="text-[10px] font-bold text-blue-400 bg-blue-500/20 px-2 py-0.5 rounded-full">En Desarrollo</span>
+                  </div>
                   <p className="text-xs text-slate-300 leading-relaxed">
                     Diseño y programación de la vitrina digital interactiva para ANCLA, con catálogo de modelos modulares y Sofi AI integrada.
                   </p>
                 </div>
 
                 <div className="bg-white/5 border border-white/10 p-4 rounded-2xl">
-                  <h4 className="text-sm font-extrabold text-white mb-1.5 flex items-center space-x-2">
-                    <span>📢 3. Manejo de Campañas Meta</span>
-                  </h4>
+                  <div className="flex justify-between items-center mb-1.5">
+                    <h4 className="text-sm font-extrabold text-white flex items-center space-x-2">
+                      <span>📢 3. Manejo de Campañas Meta</span>
+                    </h4>
+                    <span className="text-[10px] font-bold text-emerald-400 bg-emerald-500/20 px-2 py-0.5 rounded-full">Ejecutado</span>
+                  </div>
                   <p className="text-xs text-slate-300 leading-relaxed">
                     Estrategia, creación y optimización de pauta en Facebook e Instagram ejecutadas hasta el 15 de Agosto (más de 530 leads captados).
                   </p>
                 </div>
 
                 <div className="bg-white/5 border border-white/10 p-4 rounded-2xl">
-                  <h4 className="text-sm font-extrabold text-white mb-1.5 flex items-center space-x-2">
-                    <span>🎬 4. Edición de Videos</span>
-                  </h4>
+                  <div className="flex justify-between items-center mb-1.5">
+                    <h4 className="text-sm font-extrabold text-white flex items-center space-x-2">
+                      <span>🎬 4. Edición de Videos</span>
+                    </h4>
+                    <span className="text-[10px] font-bold text-emerald-400 bg-emerald-500/20 px-2 py-0.5 rounded-full">Ejecutado</span>
+                  </div>
                   <p className="text-xs text-slate-300 leading-relaxed">
                     Producción y edición de piezas audiovisuales comerciales de alta retención para redes sociales ejecutadas hasta el 15 de Agosto.
                   </p>
                 </div>
               </div>
 
-              <div className="bg-white/10 border border-white/15 p-4 rounded-2xl text-xs text-slate-200">
-                💳 <strong>Esquema de Pago:</strong> 50% al inicio ($4.000.000 COP) y 50% contra entrega de la página web comercial conectada al CRM ($4.000.000 COP).
-              </div>
-            </div>
-
-            {/* CALCULADORA INTERACTIVA DE ROI */}
-            <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-5">
-              <div>
-                <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-                  📈 Demostración Interactiva de Retorno (ROI)
-                </h2>
-                <p className="text-xs sm:text-sm text-slate-500 mt-1">
-                  Mueve la barra para ver el impacto financiero vendiendo proyectos modulares de ANCLA:
-                </p>
-              </div>
-
-              <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200">
-                <div className="flex justify-between items-center mb-3">
-                  <span className="text-xs sm:text-sm font-bold text-slate-700">Casas o Cápsulas Modulares Vendidas:</span>
-                  <span className="text-lg font-black text-emerald-600 bg-emerald-100 px-3 py-1 rounded-xl">
-                    {units} unidad(es)
-                  </span>
+              {/* ESQUEMA DE PAGO ACTUALIZADO */}
+              <div className="bg-white/10 border border-white/15 p-5 rounded-2xl text-xs text-slate-200 space-y-2">
+                <div className="font-extrabold text-white text-sm mb-1">💳 Esquema de Pago por Hitos de Entrega:</div>
+                <div className="flex items-start space-x-2">
+                  <span className="font-black text-emerald-400">• 50% ($4.000.000 COP):</span>
+                  <span>Por los <strong>activos ya entregados y en operación</strong>: CRM a la medida con Sofi AI 2.0, gestión de marketing/pauta en Meta Ads y edición de videos ejecutados hasta el 15 de Agosto.</span>
                 </div>
-
-                <input
-                  type="range"
-                  min="1"
-                  max="10"
-                  value={units}
-                  onChange={(e) => setUnits(Number(e.target.value))}
-                  className="w-full h-2.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-600"
-                />
-
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-5">
-                  <div className="bg-white p-4 rounded-2xl border border-slate-200 text-center">
-                    <span className="text-lg sm:text-xl font-black text-slate-900 block">
-                      ${totalRev.toLocaleString('es-CO')} COP
-                    </span>
-                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block mt-1">
-                      Facturación Generada
-                    </span>
-                  </div>
-
-                  <div className="bg-white p-4 rounded-2xl border border-slate-200 text-center">
-                    <span className="text-lg sm:text-xl font-black text-emerald-600 block">
-                      ${totalProfit.toLocaleString('es-CO')} COP
-                    </span>
-                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block mt-1">
-                      Margen de Ganancia Estimado
-                    </span>
-                  </div>
-
-                  <div className="bg-white p-4 rounded-2xl border border-slate-200 text-center">
-                    <span className="text-lg sm:text-xl font-black text-teal-600 block">
-                      +{roi}%
-                    </span>
-                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block mt-1">
-                      Retorno Inversión (ROI)
-                    </span>
-                  </div>
+                <div className="flex items-start space-x-2">
+                  <span className="font-black text-blue-400">• 50% ($4.000.000 COP):</span>
+                  <span><strong>Fase Final:</strong> Contra entrega, revisión y aprobación de la <strong>Página Web Comercial</strong> conectada al CRM.</span>
                 </div>
-
-                <p className="text-[11px] text-slate-400 text-center mt-3">
-                  *Cálculo basado en un valor promedio de $115.000.000 COP por proyecto modular con un margen promedio del 35%.
-                </p>
               </div>
 
-              <div className="text-center pt-2">
+              <div className="text-center pt-8">
                 <button 
-                  onClick={() => alert('¡Excelente decisión! Por favor confirma por WhatsApp o correo para iniciar de inmediato con la fase de la Página Web Comercial.')}
-                  className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold text-sm py-4 px-8 rounded-full shadow-lg shadow-emerald-600/25 transition-all transform hover:-translate-y-0.5 cursor-pointer"
+                  onClick={() => setShowThankYouModal(true)}
+                  className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-base py-4 px-10 rounded-full shadow-xl shadow-emerald-500/30 transition-all transform hover:-translate-y-0.5 cursor-pointer"
                 >
                   🤝 Aceptar Propuesta y Continuar
                 </button>
               </div>
-
             </div>
 
           </div>
         )}
 
       </main>
+
+      {/* MODAL DE COMENTARIOS / OBSERVACIONES */}
+      {activeCommentItem && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-fadeIn">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-2xl border border-slate-200">
+            <div className="flex justify-between items-center mb-4 pb-3 border-b border-slate-100">
+              <div>
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Observación sobre el ítem:</span>
+                <h3 className="text-base font-extrabold text-slate-900">{activeCommentItem.title}</h3>
+              </div>
+              <button 
+                onClick={() => setActiveCommentItem(null)}
+                className="text-slate-400 hover:text-slate-600 p-1.5 rounded-full hover:bg-slate-100 cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveComment} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">¿Quién escribe? (Opcional)</label>
+                <input
+                  type="text"
+                  placeholder="Ej. Liliana / Equipo ANCLA"
+                  value={authorName}
+                  onChange={(e) => setAuthorName(e.target.value)}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 placeholder-slate-400 focus:bg-white focus:border-emerald-500 focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Escribe tu observación o sugerencia:</label>
+                <textarea
+                  rows="4"
+                  placeholder="Escribe aquí cualquier ajuste, duda o comentario sobre este punto..."
+                  value={commentText}
+                  onChange={(e) => setCommentText(e.target.value)}
+                  required
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3.5 text-xs text-slate-800 placeholder-slate-400 focus:bg-white focus:border-emerald-500 focus:outline-none resize-none"
+                ></textarea>
+              </div>
+
+              {commentSuccess && (
+                <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold rounded-xl flex items-center space-x-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                  <span>{commentSuccess}</span>
+                </div>
+              )}
+
+              <div className="flex justify-end space-x-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setActiveCommentItem(null)}
+                  className="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl cursor-pointer"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  disabled={savingComment}
+                  className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow-md shadow-emerald-600/20 transition-all flex items-center space-x-1.5 cursor-pointer disabled:opacity-50"
+                >
+                  <Send className="w-3.5 h-3.5" />
+                  <span>{savingComment ? 'Guardando...' : 'Guardar Observación'}</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL PROFESIONAL DE AGRADECIMIENTO Y CONFIRMACIÓN */}
+      {showThankYouModal && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-fadeIn">
+          <div className="bg-gradient-to-br from-slate-950 via-[#071916] to-[#03231b] text-white rounded-3xl max-w-lg w-full p-7 sm:p-9 shadow-2xl border border-emerald-500/40 relative text-center">
+            
+            <button 
+              onClick={() => setShowThankYouModal(false)}
+              className="absolute top-4 right-4 text-slate-400 hover:text-white p-1.5 rounded-full hover:bg-white/10 cursor-pointer"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="w-16 h-16 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-emerald-500/10">
+              <Sparkles className="w-8 h-8" />
+            </div>
+
+            <h3 className="text-2xl font-black text-white tracking-tight mb-2">
+              ¡Muchas Gracias por su Confianza!
+            </h3>
+
+            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed mb-6">
+              Es un verdadero honor trabajar con el equipo de <strong>ANCLA Special Projects</strong> en el desarrollo de este ecosistema. 
+              <br /><br />
+              Con el CRM ya operativo y los más de 530 prospectos procesados, estamos listos para construir la <strong>Página Web Comercial</strong> y consolidar a ANCLA como el referente número uno en arquitectura modular de alta gama.
+            </p>
+
+            <div className="bg-white/5 border border-white/10 p-4 rounded-2xl text-left mb-6 space-y-1.5">
+              <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider block">Próximos Pasos Inmediatos:</span>
+              <p className="text-xs text-slate-200">1. Formalización del primer hito de entrega ($4.000.000 COP).</p>
+              <p className="text-xs text-slate-200">2. Entrega de fotos, renders y modelos para la nueva página web.</p>
+              <p className="text-xs text-slate-200">3. Lanzamiento y conexión final en producción.</p>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <a
+                href="https://wa.me/573105748805?text=Hola,%20hemos%20revisado%20la%20propuesta%20comercial%20de%20ANCLA%20y%20deseamos%20continuar%20con%20la%20fase%20de%20la%20P%C3%A1gina%20Web."
+                target="_blank"
+                rel="noreferrer"
+                className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs py-3.5 px-6 rounded-xl shadow-lg shadow-emerald-500/20 transition-all flex items-center justify-center space-x-2"
+              >
+                <MessageCircle className="w-4 h-4" />
+                <span>Confirmar por WhatsApp</span>
+              </a>
+
+              <button
+                onClick={() => setShowThankYouModal(false)}
+                className="bg-white/10 hover:bg-white/15 text-white font-bold text-xs py-3.5 px-5 rounded-xl transition-all cursor-pointer"
+              >
+                Cerrar
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
 
       <footer className="max-w-4xl mx-auto text-center px-4 mt-12 text-xs text-slate-400 border-t border-slate-200 pt-6">
         <p>Propuesta elaborada exclusivamente para <strong>ANCLA Special Projects</strong>.</p>
