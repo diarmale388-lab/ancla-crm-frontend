@@ -203,9 +203,29 @@
 
     .inv-price-badge { font-size: 38px; font-weight: 900; color: #34d399; line-height: 1; }
     .inv-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 25px; }
-    .inv-item { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); padding: 14px; border-radius: 16px; }
-    .inv-item h4 { font-size: 13.5px; font-weight: 800; color: #ffffff; margin-bottom: 4px; display: flex; justify-content: space-between; }
+    .inv-item { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); padding: 16px; border-radius: 16px; display: flex; flex-direction: column; justify-content: space-between; }
+    .inv-item h4 { font-size: 13.5px; font-weight: 800; color: #ffffff; margin-bottom: 4px; display: flex; justify-content: space-between; align-items: flex-start; }
     .inv-item p { font-size: 11.5px; color: #cbd5e1; line-height: 1.45; }
+
+    .price-pill {
+      font-size: 10px;
+      font-weight: 900;
+      padding: 2px 8px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .price-emerald {
+      color: #34d399;
+      background: rgba(16,185,129,0.2);
+      border: 1px solid rgba(16,185,129,0.3);
+    }
+
+    .price-blue {
+      color: #60a5fa;
+      background: rgba(59,130,246,0.2);
+      border: 1px solid rgba(59,130,246,0.3);
+    }
 
     .payment-schedule-box {
       background: rgba(255,255,255,0.08);
@@ -350,7 +370,7 @@
       </div>
     </div>
 
-    <!-- TAB 3: HERRAMIENTAS Y COSTOS FIJOS (SIMPLIFICADO Y CLARO) -->
+    <!-- TAB 3: HERRAMIENTAS Y COSTOS FIJOS -->
     <div id="tab-costos" class="tab-pane">
       <div class="card">
         <div class="section-head" style="display: flex; justify-content: space-between; align-items: flex-start;">
@@ -414,7 +434,7 @@
       </div>
     </div>
 
-    <!-- TAB 4: PROPUESTA DE INVERSIÓN -->
+    <!-- TAB 4: PROPUESTA DE INVERSIÓN (CON DESGLOSE DE PRECIOS EXACTOS) -->
     <div id="tab-propuesta" class="tab-pane">
       <div class="investment-box">
         <div class="inv-header">
@@ -433,36 +453,55 @@
         
         <div class="inv-grid">
           <div class="inv-item">
-            <h4>
-              <span>📱 1. CRM a la Medida + Sofi AI</span>
-              <span style="font-size: 9px; color: #34d399; background: rgba(16,185,129,0.2); padding: 2px 6px; border-radius: 6px;">Entregado</span>
-            </h4>
-            <p>Desarrollo completo del CRM, Kanban, módulo de citas, ficha 360°, módulo para fábrica/China y Sofi AI 2.0 (24/7 con soporte de audios).</p>
+            <div>
+              <h4>
+                <span>📱 1. CRM a la Medida + Sofi AI</span>
+                <span class="price-pill price-emerald">$4.500.000 COP</span>
+              </h4>
+              <span style="display:block; font-size:9.5px; font-weight:700; color:#34d399; margin-bottom:6px; text-transform:uppercase;">✅ Activo Entregado y Operativo</span>
+              <p>Desarrollo completo del CRM, Kanban, módulo de citas, ficha 360°, módulo para fábrica/China, Sofi AI 2.0 (24/7 con soporte de audios) y el tiempo dedicado a responder y operar los chats en los primeros días de lanzamiento.</p>
+            </div>
           </div>
+
           <div class="inv-item">
-            <h4>
-              <span>🌐 2. Página Web Comercial</span>
-              <span style="font-size: 9px; color: #60a5fa; background: rgba(59,130,246,0.2); padding: 2px 6px; border-radius: 6px;">En Desarrollo</span>
-            </h4>
-            <p>Diseño y programación de la vitrina digital interactiva para ANCLA, con catálogo de modelos modulares y Sofi AI integrada.</p>
+            <div>
+              <h4>
+                <span>🌐 2. Página Web Comercial</span>
+                <span class="price-pill price-blue">$1.000.000 COP</span>
+              </h4>
+              <span style="display:block; font-size:9.5px; font-weight:700; color:#60a5fa; margin-bottom:6px; text-transform:uppercase;">🌐 Fase en Desarrollo y Despliegue</span>
+              <p>Diseño y programación de la vitrina digital interactiva para ANCLA, con catálogo de modelos modulares y Sofi AI integrada.</p>
+            </div>
           </div>
+
           <div class="inv-item">
-            <h4>
-              <span>📢 3. Manejo de Campañas Meta</span>
-              <span style="font-size: 9px; color: #34d399; background: rgba(16,185,129,0.2); padding: 2px 6px; border-radius: 6px;">Ejecutado</span>
-            </h4>
-            <p>Estrategia, creación y optimización de pauta en Facebook e Instagram ejecutadas hasta el 15 de Agosto (más de 530 leads captados).</p>
+            <div>
+              <h4>
+                <span>📢 3. Manejo de Campañas Meta</span>
+                <span class="price-pill price-emerald">$1.500.000 COP</span>
+              </h4>
+              <span style="display:block; font-size:9.5px; font-weight:700; color:#34d399; margin-bottom:6px; text-transform:uppercase;">✅ Ejecutado hasta 15 de Agosto</span>
+              <p>Estrategia, creación y optimización de pauta en Facebook e Instagram ejecutadas hasta el 15 de Agosto (más de 530 leads captados).</p>
+            </div>
           </div>
+
           <div class="inv-item">
-            <h4>
-              <span>🎬 4. Edición de Videos</span>
-              <span style="font-size: 9px; color: #34d399; background: rgba(16,185,129,0.2); padding: 2px 6px; border-radius: 6px;">Ejecutado</span>
-            </h4>
-            <p>Producción y edición de piezas audiovisuales comerciales de alta retención para redes sociales ejecutadas hasta el 15 de Agosto.</p>
+            <div>
+              <h4>
+                <span>🎬 4. Edición de Videos</span>
+                <span class="price-pill price-emerald">$1.000.000 COP</span>
+              </h4>
+              <span style="display:block; font-size:9.5px; font-weight:700; color:#34d399; margin-bottom:6px; text-transform:uppercase;">✅ Ejecutado hasta 15 de Agosto</span>
+              <p>Producción y edición de piezas audiovisuales comerciales de alta retención para redes sociales ejecutadas hasta el 15 de Agosto.</p>
+            </div>
           </div>
         </div>
 
         <div class="payment-schedule-box">
+          <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom:8px; margin-bottom:10px; font-weight:700;">
+            <span>Desglose: CRM ($4.5M) + Web ($1.0M) + Pauta y Videos ($2.5M)</span>
+            <span style="color:#34d399; font-weight:900;">= $8.000.000 COP</span>
+          </div>
           <strong style="color: #ffffff; display: block; margin-bottom: 6px; font-size: 13px;">💳 Esquema de Pago por Hitos de Entrega:</strong>
           <p style="margin-bottom: 4px;">• <strong style="color: #34d399;">50% ($4.000.000 COP):</strong> Por los <strong>activos ya entregados y en operación</strong>: CRM a la medida con Sofi AI 2.0, gestión de marketing/pauta en Meta Ads y edición de videos ejecutados hasta el 15 de Agosto.</p>
           <p>• <strong style="color: #60a5fa;">50% ($4.000.000 COP):</strong> <strong>Fase Final:</strong> Contra entrega, revisión y aprobación de la <strong>Página Web Comercial</strong> conectada al CRM.</p>

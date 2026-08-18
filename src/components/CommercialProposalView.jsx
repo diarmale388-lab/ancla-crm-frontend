@@ -486,65 +486,92 @@ export const CommercialProposalView = () => {
               <h3 className="text-sm font-extrabold text-white mb-4">¿Qué incluye este valor de 8.000.000 COP?</h3>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-                <div className="bg-white/5 border border-white/10 p-4 rounded-2xl">
-                  <div className="flex justify-between items-center mb-1.5">
-                    <h4 className="text-sm font-extrabold text-white flex items-center space-x-2">
-                      <span>📱 1. CRM a la Medida + Sofi AI</span>
-                    </h4>
-                    <span className="text-[10px] font-bold text-emerald-400 bg-emerald-500/20 px-2 py-0.5 rounded-full">Entregado</span>
+                <div className="bg-white/5 border border-white/10 p-4 rounded-2xl flex flex-col justify-between">
+                  <div>
+                    <div className="flex justify-between items-start mb-1.5">
+                      <h4 className="text-sm font-extrabold text-white flex items-center space-x-2">
+                        <span>📱 1. CRM a la Medida + Sofi AI</span>
+                      </h4>
+                      <span className="text-[10px] font-black text-emerald-300 bg-emerald-500/20 border border-emerald-500/30 px-2.5 py-0.5 rounded-full">
+                        $4.500.000 COP
+                      </span>
+                    </div>
+                    <span className="inline-block text-[9.5px] font-bold text-emerald-400 mb-2 uppercase">✅ Activo Entregado y Operativo</span>
+                    <p className="text-xs text-slate-300 leading-relaxed">
+                      Desarrollo completo del CRM, Kanban, módulo de citas, ficha 360°, módulo para fábrica/China, Sofi AI 2.0 (24/7 con soporte de audios) y el tiempo dedicado a responder y operar los chats en los primeros días de lanzamiento.
+                    </p>
                   </div>
-                  <p className="text-xs text-slate-300 leading-relaxed">
-                    Desarrollo completo del CRM, Kanban, módulo de citas, ficha 360°, módulo para fábrica/China y Sofi AI 2.0 (24/7 con soporte de audios).
-                  </p>
                 </div>
 
-                <div className="bg-white/5 border border-white/10 p-4 rounded-2xl">
-                  <div className="flex justify-between items-center mb-1.5">
-                    <h4 className="text-sm font-extrabold text-white flex items-center space-x-2">
-                      <span>🌐 2. Página Web Comercial</span>
-                    </h4>
-                    <span className="text-[10px] font-bold text-blue-400 bg-blue-500/20 px-2 py-0.5 rounded-full">En Desarrollo</span>
+                <div className="bg-white/5 border border-white/10 p-4 rounded-2xl flex flex-col justify-between">
+                  <div>
+                    <div className="flex justify-between items-start mb-1.5">
+                      <h4 className="text-sm font-extrabold text-white flex items-center space-x-2">
+                        <span>🌐 2. Página Web Comercial</span>
+                      </h4>
+                      <span className="text-[10px] font-black text-blue-300 bg-blue-500/20 border border-blue-500/30 px-2.5 py-0.5 rounded-full">
+                        $1.000.000 COP
+                      </span>
+                    </div>
+                    <span className="inline-block text-[9.5px] font-bold text-blue-400 mb-2 uppercase">🌐 Fase en Desarrollo y Despliegue</span>
+                    <p className="text-xs text-slate-300 leading-relaxed">
+                      Diseño y programación de la vitrina digital interactiva para ANCLA, con catálogo de modelos modulares y Sofi AI integrada.
+                    </p>
                   </div>
-                  <p className="text-xs text-slate-300 leading-relaxed">
-                    Diseño y programación de la vitrina digital interactiva para ANCLA, con catálogo de modelos modulares y Sofi AI integrada.
-                  </p>
                 </div>
 
-                <div className="bg-white/5 border border-white/10 p-4 rounded-2xl">
-                  <div className="flex justify-between items-center mb-1.5">
-                    <h4 className="text-sm font-extrabold text-white flex items-center space-x-2">
-                      <span>📢 3. Manejo de Campañas Meta</span>
-                    </h4>
-                    <span className="text-[10px] font-bold text-emerald-400 bg-emerald-500/20 px-2 py-0.5 rounded-full">Ejecutado</span>
+                <div className="bg-white/5 border border-white/10 p-4 rounded-2xl flex flex-col justify-between">
+                  <div>
+                    <div className="flex justify-between items-start mb-1.5">
+                      <h4 className="text-sm font-extrabold text-white flex items-center space-x-2">
+                        <span>📢 3. Manejo de Campañas Meta</span>
+                      </h4>
+                      <span className="text-[10px] font-black text-emerald-300 bg-emerald-500/20 border border-emerald-500/30 px-2.5 py-0.5 rounded-full">
+                        $1.500.000 COP
+                      </span>
+                    </div>
+                    <span className="inline-block text-[9.5px] font-bold text-emerald-400 mb-2 uppercase">✅ Ejecutado hasta 15 de Agosto</span>
+                    <p className="text-xs text-slate-300 leading-relaxed">
+                      Estrategia, creación y optimización de pauta en Facebook e Instagram ejecutadas hasta el 15 de Agosto (más de 530 leads captados).
+                    </p>
                   </div>
-                  <p className="text-xs text-slate-300 leading-relaxed">
-                    Estrategia, creación y optimización de pauta en Facebook e Instagram ejecutadas hasta el 15 de Agosto (más de 530 leads captados).
-                  </p>
                 </div>
 
-                <div className="bg-white/5 border border-white/10 p-4 rounded-2xl">
-                  <div className="flex justify-between items-center mb-1.5">
-                    <h4 className="text-sm font-extrabold text-white flex items-center space-x-2">
-                      <span>🎬 4. Edición de Videos</span>
-                    </h4>
-                    <span className="text-[10px] font-bold text-emerald-400 bg-emerald-500/20 px-2 py-0.5 rounded-full">Ejecutado</span>
+                <div className="bg-white/5 border border-white/10 p-4 rounded-2xl flex flex-col justify-between">
+                  <div>
+                    <div className="flex justify-between items-start mb-1.5">
+                      <h4 className="text-sm font-extrabold text-white flex items-center space-x-2">
+                        <span>🎬 4. Edición de Videos</span>
+                      </h4>
+                      <span className="text-[10px] font-black text-emerald-300 bg-emerald-500/20 border border-emerald-500/30 px-2.5 py-0.5 rounded-full">
+                        $1.000.000 COP
+                      </span>
+                    </div>
+                    <span className="inline-block text-[9.5px] font-bold text-emerald-400 mb-2 uppercase">✅ Ejecutado hasta 15 de Agosto</span>
+                    <p className="text-xs text-slate-300 leading-relaxed">
+                      Producción y edición de piezas audiovisuales comerciales de alta retención para redes sociales ejecutadas hasta el 15 de Agosto.
+                    </p>
                   </div>
-                  <p className="text-xs text-slate-300 leading-relaxed">
-                    Producción y edición de piezas audiovisuales comerciales de alta retención para redes sociales ejecutadas hasta el 15 de Agosto.
-                  </p>
                 </div>
               </div>
 
-              {/* ESQUEMA DE PAGO */}
-              <div className="bg-white/10 border border-white/15 p-5 rounded-2xl text-xs text-slate-200 space-y-2">
-                <div className="font-extrabold text-white text-sm mb-1">💳 Esquema de Pago por Hitos de Entrega:</div>
-                <div className="flex items-start space-x-2">
-                  <span className="font-black text-emerald-400">• 50% ($4.000.000 COP):</span>
-                  <span>Por los <strong>activos ya entregados y en operación</strong>: CRM a la medida con Sofi AI 2.0, gestión de marketing/pauta en Meta Ads y edición de videos ejecutados hasta el 15 de Agosto.</span>
+              {/* RESUMEN DE VALORES Y ESQUEMA DE PAGO */}
+              <div className="bg-white/10 border border-white/15 p-5 rounded-2xl text-xs text-slate-200 space-y-3">
+                <div className="flex flex-wrap justify-between items-center pb-2.5 border-b border-white/10 text-xs font-bold text-slate-300">
+                  <span>Desglose: CRM ($4.5M) + Web ($1.0M) + Pauta y Videos ($2.5M)</span>
+                  <span className="text-emerald-400 font-extrabold text-sm">= $8.000.000 COP</span>
                 </div>
-                <div className="flex items-start space-x-2">
-                  <span className="font-black text-blue-400">• 50% ($4.000.000 COP):</span>
-                  <span><strong>Fase Final:</strong> Contra entrega, revisión y aprobación de la <strong>Página Web Comercial</strong> conectada al CRM.</span>
+
+                <div className="space-y-1.5">
+                  <div className="font-extrabold text-white text-xs mb-1">💳 Esquema de Pago por Hitos de Entrega:</div>
+                  <div className="flex items-start space-x-2">
+                    <span className="font-black text-emerald-400">• 50% ($4.000.000 COP):</span>
+                    <span>Por los <strong>activos ya entregados y en operación</strong>: CRM a la medida con Sofi AI 2.0, gestión de marketing/pauta en Meta Ads y edición de videos ejecutados hasta el 15 de Agosto.</span>
+                  </div>
+                  <div className="flex items-start space-x-2">
+                    <span className="font-black text-blue-400">• 50% ($4.000.000 COP):</span>
+                    <span><strong>Fase Final:</strong> Contra entrega, revisión y aprobación de la <strong>Página Web Comercial</strong> conectada al CRM.</span>
+                  </div>
                 </div>
               </div>
 
