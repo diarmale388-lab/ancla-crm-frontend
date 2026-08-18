@@ -13,6 +13,7 @@ import BroadcastView from './components/broadcast/BroadcastView';
 import { AuditLogsView } from './components/admin/AuditLogsView';
 import { ShowroomDashboard } from './components/showroom/ShowroomDashboard';
 import ProposalPortal from './components/dossier/ProposalPortal';
+import { CommercialProposalView } from './components/CommercialProposalView';
 import { Bot, Mail, Lock, AlertCircle, Sparkles, User, CheckCircle2, Copy, Check, Eye, EyeOff, ShieldCheck, Zap } from 'lucide-react';
 
 function App() {
@@ -182,27 +183,24 @@ function App() {
     return <ShowroomDashboard />;
   }
 
-  // Si la ruta es propuesta.html o /propuesta-comercial, abrir la Propuesta Comercial Interactiva
-  if (window.location.pathname.toLowerCase().includes('propuesta.html') || window.location.pathname.toLowerCase() === '/propuesta-comercial') {
-    return (
-      <iframe 
-        src="/propuesta.html" 
-        title="Propuesta Comercial ANCLA" 
-        className="w-screen h-screen border-0 fixed inset-0 z-50 bg-[#f8fafc]"
-      />
-    );
+  // Si la ruta contiene ref= o page=propuesta (Portal de cotizaciones de leads), mostrar ProposalPortal
+  const isLeadDossier = 
+    window.location.search.includes('ref=') || 
+    window.location.search.includes('page=propuesta') ||
+    window.location.hash.includes('ref=');
+
+  if (isLeadDossier) {
+    return <ProposalPortal />;
   }
 
-  const isPropuesta = 
-    window.location.pathname === '/propuesta' || 
-    window.location.search.includes('page=propuesta') || 
-    window.location.search.includes('ref=') ||
-    window.location.hash === '#/propuesta' || 
-    window.location.hash.startsWith('#propuesta') ||
-    window.location.hash.startsWith('#/propuesta');
+  // Si la ruta es propuesta, propuesta.html o /propuesta-comercial, renderizar la Propuesta Comercial Interactiva
+  const isCommercialProposal = 
+    window.location.pathname.toLowerCase().includes('propuesta') || 
+    window.location.hash.toLowerCase().includes('propuesta') ||
+    window.location.search.toLowerCase().includes('propuesta');
 
-  if (isPropuesta) {
-    return <ProposalPortal />;
+  if (isCommercialProposal) {
+    return <CommercialProposalView />;
   }
 
   if (!isAuthenticated) {
