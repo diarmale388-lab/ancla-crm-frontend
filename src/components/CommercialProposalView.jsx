@@ -524,10 +524,10 @@ export const CommercialProposalView = () => {
                   <div>
                     <div className="flex justify-between items-start mb-1.5">
                       <h4 className="text-sm font-extrabold text-white flex items-center space-x-2">
-                        <span>📢 3. Manejo de Campañas Meta</span>
+                        <span>📢 3. Manejo y Optimización de Campañas</span>
                       </h4>
                       <span className="text-[10px] font-black text-emerald-300 bg-emerald-500/20 border border-emerald-500/30 px-2.5 py-0.5 rounded-full">
-                        $1.500.000 COP
+                        $2.000.000 COP
                       </span>
                     </div>
                     <span className="inline-block text-[9.5px] font-bold text-emerald-400 mb-2 uppercase">✅ Ejecutado hasta 15 de Agosto</span>
@@ -544,7 +544,7 @@ export const CommercialProposalView = () => {
                         <span>🎬 4. Edición de Videos</span>
                       </h4>
                       <span className="text-[10px] font-black text-emerald-300 bg-emerald-500/20 border border-emerald-500/30 px-2.5 py-0.5 rounded-full">
-                        $1.000.000 COP
+                        $500.000 COP
                       </span>
                     </div>
                     <span className="inline-block text-[9.5px] font-bold text-emerald-400 mb-2 uppercase">✅ Ejecutado hasta 15 de Agosto</span>
@@ -558,7 +558,7 @@ export const CommercialProposalView = () => {
               {/* RESUMEN DE VALORES Y ESQUEMA DE PAGO */}
               <div className="bg-white/10 border border-white/15 p-5 rounded-2xl text-xs text-slate-200 space-y-3">
                 <div className="flex flex-wrap justify-between items-center pb-2.5 border-b border-white/10 text-xs font-bold text-slate-300">
-                  <span>Desglose: CRM ($4.5M) + Web ($1.0M) + Pauta y Videos ($2.5M)</span>
+                  <span>Desglose: CRM ($4.5M) + Web ($1.0M) + Campañas ($2.0M) + Videos ($500K)</span>
                   <span className="text-emerald-400 font-extrabold text-sm">= $8.000.000 COP</span>
                 </div>
 
