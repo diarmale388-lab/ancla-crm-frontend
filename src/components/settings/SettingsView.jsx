@@ -149,14 +149,37 @@ export const SettingsView = () => {
 
     // Comprobar parámetros de retorno de Google OAuth callback
     const params = new URLSearchParams(window.location.search);
-    if (params.get('google_auth') === 'success') {
+    const oauthCode = params.get('code');
+    const oauthState = params.get('state');
+
+    if (oauthCode && oauthState) {
+      setGoogleStatusMsg('Vinculando cuenta de Google...');
+      const apiUrl = import.meta.env.VITE_API_URL || 'https://ancla-crm-backend-production.up.railway.app/api/v1';
+      fetch(`${apiUrl}/google-auth/exchange-code?code=${encodeURIComponent(oauthCode)}&state=${encodeURIComponent(oauthState)}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.status === 'success') {
+            setGoogleStatusMsg('¡Cuenta de Google conectada exitosamente!');
+            fetchGoogleAuthStatus();
+          } else {
+            setGoogleStatusMsg(`Error al conectar: ${data.message || 'Fallo de autenticación'}`);
+          }
+          window.history.replaceState({}, document.title, '/settings');
+          setTimeout(() => setGoogleStatusMsg(''), 6000);
+        })
+        .catch(err => {
+          setGoogleStatusMsg('Error de comunicación con el servidor.');
+          window.history.replaceState({}, document.title, '/settings');
+          setTimeout(() => setGoogleStatusMsg(''), 6000);
+        });
+    } else if (params.get('google_auth') === 'success') {
       setGoogleStatusMsg('¡Cuenta de Google conectada exitosamente!');
-      window.history.replaceState({}, document.title, window.location.pathname);
+      window.history.replaceState({}, document.title, '/settings');
       setTimeout(() => setGoogleStatusMsg(''), 5000);
     } else if (params.get('google_auth') === 'error') {
       const err = params.get('error_msg') || 'Error desconocido';
       setGoogleStatusMsg(`Error al conectar con Google: ${err}`);
-      window.history.replaceState({}, document.title, window.location.pathname);
+      window.history.replaceState({}, document.title, '/settings');
       setTimeout(() => setGoogleStatusMsg(''), 7000);
     }
   }, []);
