@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CheckCircle2, MessageSquare, Send, Sparkles, X, Copy, Check, MessageCircle } from 'lucide-react';
+import { CheckCircle2, MessageSquare, Send, Sparkles, X, MessageCircle, Clock, User } from 'lucide-react';
 
 export const CommercialProposalView = () => {
   const [activeTab, setActiveTab] = useState('resumen');
@@ -11,15 +11,17 @@ export const CommercialProposalView = () => {
   const [authorName, setAuthorName] = useState('');
   const [savingComment, setSavingComment] = useState(false);
   const [commentSuccess, setCommentSuccess] = useState('');
+  
+  // savedComments es un objeto donde cada key tiene un ARRAY de comentarios acumulativos:
+  // { 'sol-1': [ { id, author, text, date }, ... ] }
   const [savedComments, setSavedComments] = useState({});
-  const [copiedNotification, setCopiedNotification] = useState(false);
 
   const API_URL = import.meta.env.VITE_API_URL || 'https://ancla-crm-backend-production.up.railway.app/api/v1';
 
-  // Cargar comentarios guardados de localStorage al iniciar
+  // Cargar comentarios acumulativos desde localStorage y servidor
   useEffect(() => {
     try {
-      const local = localStorage.getItem('ancla_proposal_comments');
+      const local = localStorage.getItem('ancla_proposal_comments_v2');
       if (local) {
         setSavedComments(JSON.parse(local));
       }
@@ -30,7 +32,7 @@ export const CommercialProposalView = () => {
 
   const openCommentModal = (itemKey, itemTitle) => {
     setActiveCommentItem({ key: itemKey, title: itemTitle });
-    setCommentText(savedComments[itemKey]?.text || '');
+    setCommentText('');
     setCommentSuccess('');
   };
 
@@ -41,19 +43,24 @@ export const CommercialProposalView = () => {
     setSavingComment(true);
     setCommentSuccess('');
 
-    const newComments = {
-      ...savedComments,
-      [activeCommentItem.key]: {
-        title: activeCommentItem.title,
-        text: commentText.trim(),
-        author: authorName.trim() || 'Equipo ANCLA',
-        date: new Date().toLocaleString('es-CO')
-      }
+    const newCommentObj = {
+      id: Date.now(),
+      author: authorName.trim() || 'Equipo ANCLA',
+      text: commentText.trim(),
+      date: new Date().toLocaleString('es-CO', { dateStyle: 'short', timeStyle: 'short' })
     };
 
-    setSavedComments(newComments);
+    const existingList = savedComments[activeCommentItem.key] || [];
+    const updatedList = [...existingList, newCommentObj];
+
+    const newCommentsState = {
+      ...savedComments,
+      [activeCommentItem.key]: updatedList
+    };
+
+    setSavedComments(newCommentsState);
     try {
-      localStorage.setItem('ancla_proposal_comments', JSON.stringify(newComments));
+      localStorage.setItem('ancla_proposal_comments_v2', JSON.stringify(newCommentsState));
     } catch (e) {}
 
     // Enviar a la API del CRM
@@ -73,11 +80,11 @@ export const CommercialProposalView = () => {
     }
 
     setSavingComment(false);
-    setCommentSuccess('¡Observación guardada con éxito!');
+    setCommentSuccess('¡Observación agregada exitosamente!');
+    setCommentText('');
     setTimeout(() => {
-      setActiveCommentItem(null);
       setCommentSuccess('');
-    }, 1200);
+    }, 1500);
   };
 
   const handleSendAllCommentsViaWhatsApp = () => {
@@ -88,16 +95,23 @@ export const CommercialProposalView = () => {
     }
 
     let text = `*OBSERVACIONES Y COMENTARIOS - PROPUESTA ANCLA*\n\n`;
-    keys.forEach((k, idx) => {
-      const item = savedComments[k];
-      text += `*${idx + 1}. ${item.title}:*\n"${item.text}"\n\n`;
+    let count = 1;
+    keys.forEach((k) => {
+      const list = savedComments[k];
+      if (list && list.length > 0) {
+        list.forEach((item) => {
+          text += `*${count}. ${item.author} (${item.date}):*\n"${item.text}"\n\n`;
+          count++;
+        });
+      }
     });
 
     const encoded = encodeURIComponent(text);
     window.open(`https://wa.me/573105748805?text=${encoded}`, '_blank');
   };
 
-  const totalCommentsCount = Object.keys(savedComments).length;
+  // Contar total de comentarios acumulados en todos los ítems
+  const totalCommentsCount = Object.values(savedComments).reduce((acc, list) => acc + (Array.isArray(list) ? list.length : 0), 0);
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 font-sans antialiased pb-16 selection:bg-emerald-500 selection:text-white">
@@ -150,12 +164,12 @@ export const CommercialProposalView = () => {
       {/* CONTENEDOR PRINCIPAL */}
       <main className="max-w-4xl mx-auto px-4 sm:px-6">
         
-        {/* BARRA FLOTANTE DE COMENTARIOS REGISTRADOS */}
+        {/* BARRA DE COMENTARIOS ACUMULADOS */}
         {totalCommentsCount > 0 && (
-          <div className="my-4 p-3 bg-emerald-50 border border-emerald-200 rounded-2xl flex items-center justify-between shadow-sm">
-            <div className="flex items-center space-x-2 text-xs font-bold text-emerald-800">
-              <MessageSquare className="w-4 h-4 text-emerald-600" />
-              <span>Tienes {totalCommentsCount} observación(es) registrada(s) en la propuesta.</span>
+          <div className="my-4 p-3.5 bg-emerald-50 border border-emerald-200 rounded-2xl flex flex-wrap gap-2 items-center justify-between shadow-xs">
+            <div className="flex items-center space-x-2 text-xs font-bold text-emerald-900">
+              <MessageSquare className="w-4 h-4 text-emerald-600 shrink-0" />
+              <span>Hay {totalCommentsCount} observación(es) registrada(s) en la propuesta.</span>
             </div>
             <button
               onClick={handleSendAllCommentsViaWhatsApp}
@@ -265,23 +279,20 @@ export const CommercialProposalView = () => {
           </div>
         )}
 
-        {/* CONTENIDO TAB 2: SOLUCIONES DEL CRM Y WEB */}
+        {/* CONTENIDO TAB 2: SOLUCIONES DEL CRM Y WEB (CON COMENTARIOS ACUMULATIVOS) */}
         {activeTab === 'soluciones' && (
           <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-6 animate-fadeIn">
-            <div className="flex justify-between items-start">
-              <div>
-                <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-                  2. Necesidades Reales de ANCLA y Cómo las Resuelve el Ecosistema
-                </h2>
-                <p className="text-xs sm:text-sm text-slate-500 mt-1">
-                  Haz clic en el botón de comentario en cualquier ítem para dejar observaciones o sugerencias.
-                </p>
-              </div>
+            <div>
+              <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+                2. Necesidades Reales de ANCLA y Cómo las Resuelve el Ecosistema
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-500 mt-1">
+                Puedes dejar observaciones en cualquier solución. Cada comentario se guarda con su autor y fecha.
+              </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               
-              {/* Item Template Helper */}
               {[
                 { key: 'sol-1', title: '1. Centralización Total de Clientes', status: '✅ Operativo en CRM', desc: 'Todos los prospectos y conversaciones de WhatsApp entran a un panel seguro y privado de ANCLA. Ningún contacto se pierde en el celular personal de los asesores.', benefit: '🛡️ Control absoluto de la base de datos' },
                 { key: 'sol-2', title: '2. Atención 24/7 con Sofi AI', status: '✅ Operativo en CRM', desc: 'Responde a cualquier hora de la noche, domingos o festivos en menos de 10 segundos, asegurando que el cliente reciba atención instantánea.', benefit: '⚡ Cero clientes perdidos por demora' },
@@ -296,7 +307,8 @@ export const CommercialProposalView = () => {
                 { key: 'sol-11', title: '11. Módulo de Citas y Calendario', status: '✅ Operativo en CRM', desc: 'Agenda citas virtuales o visitas a sala de ventas vinculadas a cada asesor, con fecha, hora y recordatorios para asegurar la asistencia.', benefit: '📅 Cero cruces de agenda o citas olvidadas' },
                 { key: 'sol-12', title: '12. Página Web Comercial con Sofi Integrada', status: '🌐 Próxima Entrega', desc: 'Vitrina digital de alta velocidad (<1.5s) con catálogo interactivo de casas modulares y asistente Sofi AI para atender tráfico web orgánico y de pauta.', benefit: '🌟 Autoridad de marca y nuevo canal de captación', isNext: true }
               ].map((item) => {
-                const hasComment = savedComments[item.key];
+                const commentList = savedComments[item.key] || [];
+                const hasComments = commentList.length > 0;
                 return (
                   <div key={item.key} className={`border rounded-2xl p-4.5 transition-all bg-white relative flex flex-col justify-between ${item.isNext ? 'border-blue-200 bg-blue-50/20' : 'border-slate-200 hover:border-slate-300'}`}>
                     <div>
@@ -307,11 +319,11 @@ export const CommercialProposalView = () => {
 
                         <button
                           onClick={() => openCommentModal(item.key, item.title)}
-                          className={`text-[11px] font-bold px-2.5 py-1 rounded-lg border transition-all flex items-center space-x-1 cursor-pointer ${hasComment ? 'bg-amber-50 border-amber-300 text-amber-800' : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'}`}
+                          className={`text-[11px] font-bold px-2.5 py-1 rounded-lg border transition-all flex items-center space-x-1 cursor-pointer ${hasComments ? 'bg-amber-50 border-amber-300 text-amber-900 font-extrabold' : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'}`}
                           title="Dejar un comentario o sugerencia"
                         >
                           <MessageSquare className="w-3 h-3" />
-                          <span>{hasComment ? 'Nota guardada ✍️' : 'Comentar'}</span>
+                          <span>{hasComments ? `Comentarios (${commentList.length}) ✍️` : 'Comentar'}</span>
                         </button>
                       </div>
 
@@ -320,11 +332,21 @@ export const CommercialProposalView = () => {
                     </div>
 
                     <div>
-                      {hasComment && (
-                        <div className="mt-2.5 p-2 bg-amber-50/80 border border-amber-200 rounded-xl text-[11px] text-amber-900 font-medium italic">
-                          "{hasComment.text}"
+                      {/* Lista de comentarios acumulativos */}
+                      {hasComments && (
+                        <div className="mt-3 space-y-1.5 border-t border-slate-100 pt-2.5">
+                          {commentList.map((comm) => (
+                            <div key={comm.id} className="p-2 bg-amber-50 border border-amber-200 rounded-xl text-[11px] text-amber-950 font-medium">
+                              <div className="flex justify-between items-center text-[9.5px] font-bold text-amber-800 mb-0.5">
+                                <span>👤 {comm.author}</span>
+                                <span>🕒 {comm.date}</span>
+                              </div>
+                              <p className="italic">"{comm.text}"</p>
+                            </div>
+                          ))}
                         </div>
                       )}
+
                       <div className={`mt-3 pt-2.5 border-t text-[11px] font-bold flex items-center space-x-1.5 ${item.isNext ? 'border-blue-100 text-blue-700' : 'border-slate-100 text-emerald-700'}`}>
                         <span>{item.benefit}</span>
                       </div>
@@ -337,7 +359,7 @@ export const CommercialProposalView = () => {
           </div>
         )}
 
-        {/* CONTENIDO TAB 3: COSTOS FIJOS DE HERRAMIENTAS */}
+        {/* CONTENIDO TAB 3: COSTOS FIJOS DE HERRAMIENTAS (SIMPLIFICADO Y CLARO) */}
         {activeTab === 'costos' && (
           <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-6 animate-fadeIn">
             <div className="flex justify-between items-start">
@@ -346,7 +368,7 @@ export const CommercialProposalView = () => {
                   3. Tabla de Costos Fijos de Herramientas e Infraestructura
                 </h2>
                 <p className="text-xs sm:text-sm text-slate-500 mt-1">
-                  Infraestructura Cloud dedicada y de alto rendimiento que mantiene el sistema activo 24/7.
+                  Servicios directos en la nube que mantienen el CRM y la Página Web activos 24/7.
                 </p>
               </div>
               <button
@@ -362,7 +384,7 @@ export const CommercialProposalView = () => {
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
                   <tr className="bg-slate-50 border-b border-slate-200 text-slate-700 uppercase font-black tracking-wider text-[11px]">
-                    <th className="p-3.5 sm:p-4">Herramienta / Infraestructura</th>
+                    <th className="p-3.5 sm:p-4">Servicio / Infraestructura</th>
                     <th className="p-3.5 sm:p-4">Función en el Ecosistema</th>
                     <th className="p-3.5 sm:p-4">Estado</th>
                     <th className="p-3.5 sm:p-4">Costo Fijo Mensual</th>
@@ -370,41 +392,31 @@ export const CommercialProposalView = () => {
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                   <tr className="hover:bg-slate-50/60 transition-colors">
-                    <td className="p-3.5 sm:p-4 font-bold text-slate-900">
-                      <div className="flex items-center space-x-2">
-                        <span>🖥️</span>
-                        <div>
-                          <span>Servidor VPS Cloud Dedicado (Hetzner CX33)</span>
-                          <span className="block text-[10px] text-slate-400 font-normal">4 vCPUs / 8 GB RAM / 80 GB NVMe + Coolify</span>
-                        </div>
-                      </div>
+                    <td className="p-3.5 sm:p-4 font-bold text-slate-900 flex items-center space-x-2">
+                      <span>🖥️</span>
+                      <span>Servidor Cloud de Alta Velocidad (VPS)</span>
                     </td>
-                    <td className="p-3.5 sm:p-4 text-slate-600">Aloja el CRM, la Base de Datos PostgreSQL, Redis, CDN y la futura Página Web en contenedores aislados de máxima velocidad.</td>
-                    <td className="p-3.5 sm:p-4"><span className="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-bold text-[10px] border border-emerald-200">Recomendado</span></td>
-                    <td className="p-3.5 sm:p-4 font-mono font-bold text-emerald-700 bg-emerald-50/50">~€8.99 EUR (~$40.000 COP/mes)</td>
+                    <td className="p-3.5 sm:p-4 text-slate-600">Aloja el CRM, la base de datos segura y la futura Página Web con respuesta en milisegundos.</td>
+                    <td className="p-3.5 sm:p-4"><span className="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-bold text-[10px] border border-emerald-200">Activo</span></td>
+                    <td className="p-3.5 sm:p-4 font-mono font-bold text-emerald-700 bg-emerald-50/50">~$40.000 COP / mes</td>
                   </tr>
 
                   <tr className="hover:bg-slate-50/60 transition-colors">
-                    <td className="p-3.5 sm:p-4 font-bold text-slate-900">
-                      <div className="flex items-center space-x-2">
-                        <span>🤖</span>
-                        <div>
-                          <span>Motores de Inteligencia Artificial</span>
-                          <span className="block text-[10px] text-slate-400 font-normal">OpenRouter / Gemini / Claude 3.5</span>
-                        </div>
-                      </div>
+                    <td className="p-3.5 sm:p-4 font-bold text-slate-900 flex items-center space-x-2">
+                      <span>🤖</span>
+                      <span>Motor de Inteligencia Artificial (Sofi AI 2.0)</span>
                     </td>
-                    <td className="p-3.5 sm:p-4 text-slate-600">Cerebro de Sofi AI 2.0 para atención, comprensión de lenguaje de construcción, respuesta y transcripción de audios.</td>
+                    <td className="p-3.5 sm:p-4 text-slate-600">Atención 24/7, respuestas sobre arquitectura modular y transcripción de notas de voz.</td>
                     <td className="p-3.5 sm:p-4"><span className="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-bold text-[10px] border border-emerald-200">Activo</span></td>
-                    <td className="p-3.5 sm:p-4 font-mono font-bold text-emerald-700 bg-emerald-50/50">~$80.000 COP / mes</td>
+                    <td className="p-3.5 sm:p-4 font-mono font-bold text-emerald-700 bg-emerald-50/50">~$100.000 COP / mes</td>
                   </tr>
 
                   <tr className="hover:bg-slate-50/60 transition-colors">
                     <td className="p-3.5 sm:p-4 font-bold text-slate-900 flex items-center space-x-2">
                       <span>💬</span>
-                      <span>Meta Cloud API (WhatsApp Business)</span>
+                      <span>Línea Oficial WhatsApp Business (Meta API)</span>
                     </td>
-                    <td className="p-3.5 sm:p-4 text-slate-600">Línea oficial de WhatsApp y webhook de sincronización de leads de Facebook e Instagram.</td>
+                    <td className="p-3.5 sm:p-4 text-slate-600">Recepción y envío de mensajes oficiales y sincronización de clientes potenciales de anuncios.</td>
                     <td className="p-3.5 sm:p-4"><span className="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-bold text-[10px] border border-emerald-200">Activo</span></td>
                     <td className="p-3.5 sm:p-4 font-mono font-bold text-slate-700">Según consumo Meta</td>
                   </tr>
@@ -412,9 +424,9 @@ export const CommercialProposalView = () => {
                   <tr className="hover:bg-slate-50/60 transition-colors">
                     <td className="p-3.5 sm:p-4 font-bold text-slate-900 flex items-center space-x-2">
                       <span>🔒</span>
-                      <span>Dominio & SSL (anclaspecialprojects.com)</span>
+                      <span>Dominio & Seguridad SSL (anclaspecialprojects.com)</span>
                     </td>
-                    <td className="p-3.5 sm:p-4 text-slate-600">Nombre de dominio corporativo y certificados de seguridad web y API.</td>
+                    <td className="p-3.5 sm:p-4 text-slate-600">Dirección web oficial y certificados de seguridad web cifrada.</td>
                     <td className="p-3.5 sm:p-4"><span className="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-bold text-[10px] border border-emerald-200">Activo</span></td>
                     <td className="p-3.5 sm:p-4 font-mono font-bold text-slate-700">~$70.000 COP / año</td>
                   </tr>
@@ -422,9 +434,9 @@ export const CommercialProposalView = () => {
                   <tr className="hover:bg-slate-50/60 transition-colors">
                     <td className="p-3.5 sm:p-4 font-bold text-slate-900 flex items-center space-x-2">
                       <span>💾</span>
-                      <span>Google Drive Cloud Storage</span>
+                      <span>Copias de Seguridad en la Nube (Google Drive)</span>
                     </td>
-                    <td className="p-3.5 sm:p-4 text-slate-600">Respaldos continuos de la base de datos del CRM y almacenamiento de archivos.</td>
+                    <td className="p-3.5 sm:p-4 text-slate-600">Respaldos automáticos y continuos de toda la información comercial de ANCLA.</td>
                     <td className="p-3.5 sm:p-4"><span className="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-bold text-[10px] border border-emerald-200">Configurado</span></td>
                     <td className="p-3.5 sm:p-4 font-mono font-bold text-emerald-700">Incluido en Google</td>
                   </tr>
@@ -433,12 +445,21 @@ export const CommercialProposalView = () => {
             </div>
 
             <div className="p-4 bg-emerald-50 rounded-2xl border border-emerald-200 text-xs text-emerald-900 leading-relaxed">
-              💡 <strong>Costo Total de Mantenimiento de Herramientas:</strong> El costo fijo de infraestructura para operar tanto el CRM como la Página Web Comercial es de apenas <strong>~$120.000 a $150.000 COP mensuales</strong>. En comparación, herramientas comerciales como HubSpot o Salesforce cuestan más de $2.000.000 COP al mes.
+              💡 <strong>Eficiencia de Costos:</strong> Al contar con un sistema desarrollado 100% a la medida, ANCLA solo asume los costos directos de consumo de servidores e inteligencia artificial (<strong>~$140.000 COP mensuales</strong>), sin pagar licencias costosas por usuario ni mensualidades a intermediarios.
             </div>
 
-            {savedComments['costos-infra'] && (
-              <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-900">
-                <strong>Tu comentario sobre costos:</strong> "{savedComments['costos-infra'].text}"
+            {savedComments['costos-infra'] && savedComments['costos-infra'].length > 0 && (
+              <div className="space-y-2">
+                <span className="text-xs font-bold text-slate-700 block">Observaciones registradas en Costos:</span>
+                {savedComments['costos-infra'].map((comm) => (
+                  <div key={comm.id} className="p-2.5 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-950">
+                    <div className="flex justify-between text-[10px] font-bold text-amber-800 mb-0.5">
+                      <span>👤 {comm.author}</span>
+                      <span>🕒 {comm.date}</span>
+                    </div>
+                    <p className="italic">"{comm.text}"</p>
+                  </div>
+                ))}
               </div>
             )}
           </div>
@@ -514,7 +535,7 @@ export const CommercialProposalView = () => {
                 </div>
               </div>
 
-              {/* ESQUEMA DE PAGO ACTUALIZADO */}
+              {/* ESQUEMA DE PAGO */}
               <div className="bg-white/10 border border-white/15 p-5 rounded-2xl text-xs text-slate-200 space-y-2">
                 <div className="font-extrabold text-white text-sm mb-1">💳 Esquema de Pago por Hitos de Entrega:</div>
                 <div className="flex items-start space-x-2">
@@ -542,13 +563,13 @@ export const CommercialProposalView = () => {
 
       </main>
 
-      {/* MODAL DE COMENTARIOS / OBSERVACIONES */}
+      {/* MODAL DE COMENTARIOS / OBSERVACIONES ACUMULATIVAS */}
       {activeCommentItem && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-fadeIn">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-2xl border border-slate-200">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-4 pb-3 border-b border-slate-100">
               <div>
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Observación sobre el ítem:</span>
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Observación sobre:</span>
                 <h3 className="text-base font-extrabold text-slate-900">{activeCommentItem.title}</h3>
               </div>
               <button 
@@ -558,6 +579,22 @@ export const CommercialProposalView = () => {
                 <X className="w-5 h-5" />
               </button>
             </div>
+
+            {/* Historial de comentarios previos en este ítem */}
+            {savedComments[activeCommentItem.key] && savedComments[activeCommentItem.key].length > 0 && (
+              <div className="mb-4 space-y-2">
+                <span className="text-[11px] font-bold text-slate-500 block">Comentarios agregados ({savedComments[activeCommentItem.key].length}):</span>
+                {savedComments[activeCommentItem.key].map((c) => (
+                  <div key={c.id} className="p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800">
+                    <div className="flex justify-between items-center text-[10px] font-bold text-slate-500 mb-0.5">
+                      <span>👤 {c.author}</span>
+                      <span>🕒 {c.date}</span>
+                    </div>
+                    <p>{c.text}</p>
+                  </div>
+                ))}
+              </div>
+            )}
 
             <form onSubmit={handleSaveComment} className="space-y-4">
               <div>
@@ -572,9 +609,9 @@ export const CommercialProposalView = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Escribe tu observación o sugerencia:</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Escribe tu nueva observación o sugerencia:</label>
                 <textarea
-                  rows="4"
+                  rows="3"
                   placeholder="Escribe aquí cualquier ajuste, duda o comentario sobre este punto..."
                   value={commentText}
                   onChange={(e) => setCommentText(e.target.value)}
@@ -596,7 +633,7 @@ export const CommercialProposalView = () => {
                   onClick={() => setActiveCommentItem(null)}
                   className="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl cursor-pointer"
                 >
-                  Cancelar
+                  Cerrar
                 </button>
                 <button
                   type="submit"
@@ -604,7 +641,7 @@ export const CommercialProposalView = () => {
                   className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow-md shadow-emerald-600/20 transition-all flex items-center space-x-1.5 cursor-pointer disabled:opacity-50"
                 >
                   <Send className="w-3.5 h-3.5" />
-                  <span>{savingComment ? 'Guardando...' : 'Guardar Observación'}</span>
+                  <span>{savingComment ? 'Guardando...' : 'Agregar Observación'}</span>
                 </button>
               </div>
             </form>

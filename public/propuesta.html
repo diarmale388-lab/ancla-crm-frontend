@@ -12,9 +12,7 @@
       --primary: #059669;
       --primary-dark: #047857;
       --primary-light: #10b981;
-      --accent: #14b8a6;
       --slate-900: #0f172a;
-      --slate-950: #020617;
       --slate-800: #1e293b;
       --slate-700: #334155;
       --slate-600: #475569;
@@ -23,29 +21,11 @@
       --slate-50: #f8fafc;
       --white: #ffffff;
       --radius-xl: 28px;
-      --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    }
-
-    body {
-      background-color: #f8fafc;
-      color: #1e293b;
-      line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
-      overflow-x: hidden;
-    }
-
-    .container {
-      max-width: 1040px;
-      margin: 0 auto;
-      padding: 0 20px;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { background-color: #f8fafc; color: #1e293b; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+    .container { max-width: 1040px; margin: 0 auto; padding: 0 20px; }
 
     .hero-header {
       background: linear-gradient(145deg, #020617 0%, #07171d 50%, #042921 100%);
@@ -55,18 +35,6 @@
       position: relative;
       overflow: hidden;
       box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-    }
-
-    .hero-header::before {
-      content: '';
-      position: absolute;
-      top: -100px;
-      right: -100px;
-      width: 350px;
-      height: 350px;
-      background: radial-gradient(circle, rgba(16, 185, 129, 0.18) 0%, rgba(0,0,0,0) 70%);
-      border-radius: 50%;
-      pointer-events: none;
     }
 
     .header-content {
@@ -83,7 +51,6 @@
     .brand-pill {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
       background: rgba(16, 185, 129, 0.12);
       border: 1px solid rgba(16, 185, 129, 0.35);
       color: #34d399;
@@ -96,34 +63,10 @@
       margin-bottom: 16px;
     }
 
-    .hero-logo-box {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 12px;
-    }
-
-    .hero-logo-img {
-      width: 52px;
-      height: 52px;
-      object-fit: contain;
-      filter: drop-shadow(0 6px 12px rgba(0,0,0,0.4));
-    }
-
-    .hero-title {
-      font-size: 36px;
-      font-weight: 900;
-      letter-spacing: -0.5px;
-      color: #ffffff;
-    }
-
-    .hero-subtitle {
-      font-size: 14px;
-      color: #cbd5e1;
-      max-width: 650px;
-      font-weight: 500;
-      margin-bottom: 25px;
-    }
+    .hero-logo-box { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
+    .hero-logo-img { width: 52px; height: 52px; object-fit: contain; }
+    .hero-title { font-size: 36px; font-weight: 900; letter-spacing: -0.5px; color: #ffffff; }
+    .hero-subtitle { font-size: 14px; color: #cbd5e1; max-width: 650px; font-weight: 500; margin-bottom: 25px; }
 
     .hero-meta-grid {
       display: grid;
@@ -136,34 +79,15 @@
     .hero-meta-card {
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(10px);
       padding: 12px 16px;
       border-radius: 16px;
       text-align: left;
     }
 
-    .hero-meta-label {
-      font-size: 10px;
-      color: #94a3b8;
-      text-transform: uppercase;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-    }
+    .hero-meta-label { font-size: 10px; color: #94a3b8; text-transform: uppercase; font-weight: 700; }
+    .hero-meta-value { font-size: 13.5px; color: #ffffff; font-weight: 700; margin-top: 2px; }
 
-    .hero-meta-value {
-      font-size: 13.5px;
-      color: #ffffff;
-      font-weight: 700;
-      margin-top: 2px;
-    }
-
-    .nav-tabs-wrapper {
-      margin-top: -24px;
-      position: relative;
-      z-index: 10;
-      margin-bottom: 30px;
-    }
-
+    .nav-tabs-wrapper { margin-top: -24px; position: relative; z-index: 10; margin-bottom: 30px; }
     .nav-tabs {
       background: #ffffff;
       padding: 8px;
@@ -173,11 +97,6 @@
       gap: 6px;
       overflow-x: auto;
       border: 1px solid #e2e8f0;
-      scrollbar-width: none;
-    }
-
-    .nav-tabs::-webkit-scrollbar {
-      display: none;
     }
 
     .tab-btn {
@@ -199,108 +118,37 @@
       white-space: nowrap;
     }
 
-    .tab-btn:hover {
-      color: #0f172a;
-      background: #f1f5f9;
-    }
-
+    .tab-btn:hover { color: #0f172a; background: #f1f5f9; }
     .tab-btn.active {
       background: linear-gradient(135deg, #059669 0%, #0d9488 100%);
       color: #ffffff;
       box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25);
     }
 
-    .tab-pane {
-      display: none;
-      animation: fadeIn 0.35s ease;
-    }
+    .tab-pane { display: none; animation: fadeIn 0.35s ease; }
+    .tab-pane.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-    .tab-pane.active {
-      display: block;
-    }
+    .card { background: #ffffff; border-radius: var(--radius-xl); border: 1px solid #e2e8f0; padding: 32px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+    .section-head { margin-bottom: 20px; }
+    .section-head h2 { font-size: 20px; font-weight: 900; color: #0f172a; letter-spacing: -0.3px; }
+    .section-head p { font-size: 13px; color: #64748b; margin-top: 4px; }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .card {
-      background: #ffffff;
-      border-radius: var(--radius-xl);
-      border: 1px solid #e2e8f0;
-      padding: 32px;
-      margin-bottom: 24px;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .section-head {
-      margin-bottom: 20px;
-    }
-
-    .section-head h2 {
-      font-size: 20px;
-      font-weight: 900;
-      color: #0f172a;
-      letter-spacing: -0.3px;
-    }
-
-    .section-head p {
-      font-size: 13px;
-      color: #64748b;
-      margin-top: 4px;
-    }
-
-    .need-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
-      gap: 16px;
-    }
-
+    .need-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 16px; }
     .need-card {
       background: #ffffff;
       border: 1px solid #e2e8f0;
       border-radius: 18px;
       padding: 18px;
-      transition: all 0.25s ease;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
     }
 
-    .need-card:hover {
-      border-color: #cbd5e1;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-    }
-
-    .need-card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-
-    .need-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 10px;
-      font-weight: 800;
-      text-transform: uppercase;
-      padding: 3px 8px;
-      border-radius: 999px;
-    }
-
-    .badge-done {
-      background: #ecfdf5;
-      color: #059669;
-      border: 1px solid #a7f3d0;
-    }
-
-    .badge-next {
-      background: #eff6ff;
-      color: #2563eb;
-      border: 1px solid #bfdbfe;
-    }
+    .need-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .need-badge { display: inline-flex; align-items: center; font-size: 10px; font-weight: 800; text-transform: uppercase; padding: 3px 8px; border-radius: 999px; }
+    .badge-done { background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; }
+    .badge-next { background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; }
 
     .comment-trigger-btn {
       background: #f8fafc;
@@ -308,96 +156,36 @@
       color: #64748b;
       font-size: 11px;
       font-weight: 700;
-      padding: 3px 8px;
+      padding: 4px 10px;
       border-radius: 8px;
       cursor: pointer;
-      transition: all 0.2s ease;
     }
+    .comment-trigger-btn.has-comment { background: #fef3c7; border-color: #fde68a; color: #92400e; font-weight: 800; }
 
-    .comment-trigger-btn:hover {
-      background: #f1f5f9;
-      color: #0f172a;
-    }
-
-    .comment-trigger-btn.has-comment {
-      background: #fef3c7;
-      border-color: #fde68a;
-      color: #92400e;
-    }
-
-    .saved-comment-box {
-      margin-top: 8px;
-      padding: 8px;
+    .saved-comment-item {
+      margin-top: 6px;
+      padding: 6px 10px;
       background: #fffbeb;
       border: 1px solid #fef3c7;
       border-radius: 10px;
       font-size: 11px;
       color: #78350f;
-      font-style: italic;
     }
 
-    .need-card h3 {
-      font-size: 14px;
-      font-weight: 800;
-      color: #0f172a;
-      margin-bottom: 6px;
-    }
+    .need-card h3 { font-size: 14px; font-weight: 800; color: #0f172a; margin-bottom: 6px; }
+    .need-desc { font-size: 12px; color: #475569; line-height: 1.5; }
+    .need-benefit { margin-top: 10px; padding-top: 8px; border-top: 1px dashed #e2e8f0; font-size: 11px; font-weight: 700; color: #059669; }
 
-    .need-desc {
-      font-size: 12px;
-      color: #475569;
-      line-height: 1.5;
-    }
-
-    .need-benefit {
-      margin-top: 10px;
-      padding-top: 8px;
-      border-top: 1px dashed #e2e8f0;
-      font-size: 11px;
-      font-weight: 700;
-      color: #059669;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .table-container {
-      overflow-x: auto;
-      border-radius: 16px;
-      border: 1px solid #e2e8f0;
-      margin-top: 15px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-      font-size: 12.5px;
-    }
-
-    th {
-      background: #f8fafc;
-      padding: 12px 16px;
-      font-weight: 800;
-      color: #334155;
-      text-transform: uppercase;
-      font-size: 10.5px;
-      border-bottom: 1px solid #e2e8f0;
-    }
-
-    td {
-      padding: 12px 16px;
-      border-bottom: 1px solid #f1f5f9;
-      color: #334155;
-    }
+    .table-container { overflow-x: auto; border-radius: 16px; border: 1px solid #e2e8f0; margin-top: 15px; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 12.5px; }
+    th { background: #f8fafc; padding: 12px 16px; font-weight: 800; color: #334155; text-transform: uppercase; font-size: 10.5px; border-bottom: 1px solid #e2e8f0; }
+    td { padding: 12px 16px; border-bottom: 1px solid #f1f5f9; color: #334155; }
 
     .investment-box {
       background: linear-gradient(145deg, #020617 0%, #061e1b 100%);
       color: #ffffff;
       border-radius: 28px;
       padding: 35px;
-      position: relative;
-      overflow: hidden;
       box-shadow: 0 20px 40px rgba(0,0,0,0.2);
       border: 1px solid rgba(16, 185, 129, 0.25);
     }
@@ -413,42 +201,11 @@
       margin-bottom: 25px;
     }
 
-    .inv-price-badge {
-      font-size: 38px;
-      font-weight: 900;
-      color: #34d399;
-      line-height: 1;
-    }
-
-    .inv-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 16px;
-      margin-bottom: 25px;
-    }
-
-    .inv-item {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.06);
-      padding: 14px;
-      border-radius: 16px;
-    }
-
-    .inv-item h4 {
-      font-size: 13.5px;
-      font-weight: 800;
-      color: #ffffff;
-      margin-bottom: 4px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .inv-item p {
-      font-size: 11.5px;
-      color: #cbd5e1;
-      line-height: 1.45;
-    }
+    .inv-price-badge { font-size: 38px; font-weight: 900; color: #34d399; line-height: 1; }
+    .inv-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 25px; }
+    .inv-item { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); padding: 14px; border-radius: 16px; }
+    .inv-item h4 { font-size: 13.5px; font-weight: 800; color: #ffffff; margin-bottom: 4px; display: flex; justify-content: space-between; }
+    .inv-item p { font-size: 11.5px; color: #cbd5e1; line-height: 1.45; }
 
     .payment-schedule-box {
       background: rgba(255,255,255,0.08);
@@ -476,12 +233,6 @@
       gap: 10px;
     }
 
-    .btn-approve:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 15px 30px rgba(16, 185, 129, 0.45);
-    }
-
-    /* MODAL */
     .modal-backdrop {
       display: none;
       position: fixed;
@@ -494,27 +245,9 @@
       padding: 20px;
     }
 
-    .modal-backdrop.active {
-      display: flex;
-    }
-
-    .modal-box {
-      background: #ffffff;
-      border-radius: 24px;
-      max-width: 500px;
-      width: 100%;
-      padding: 28px;
-      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
-    }
-
-    .footer {
-      text-align: center;
-      padding: 30px 20px 40px;
-      font-size: 12px;
-      color: #94a3b8;
-      border-top: 1px solid #e2e8f0;
-      margin-top: 40px;
-    }
+    .modal-backdrop.active { display: flex; }
+    .modal-box { background: #ffffff; border-radius: 24px; max-width: 500px; width: 100%; padding: 28px; }
+    .footer { text-align: center; padding: 30px 20px 40px; font-size: 12px; color: #94a3b8; border-top: 1px solid #e2e8f0; margin-top: 40px; }
   </style>
 </head>
 <body>
@@ -557,7 +290,6 @@
   <!-- CONTENIDO PRINCIPAL CON PESTAÑAS -->
   <main class="container">
     
-    <!-- BARRA DE PESTAÑAS INTERACTIVAS -->
     <div class="nav-tabs-wrapper">
       <div class="nav-tabs">
         <button class="tab-btn active" onclick="switchTab('resumen')">📊 Resumen Ejecutivo</button>
@@ -606,27 +338,25 @@
       </div>
     </div>
 
-    <!-- TAB 2: SOLUCIONES DEL CRM Y WEB (1 A 1 CON COMENTARIOS) -->
+    <!-- TAB 2: SOLUCIONES DEL CRM Y WEB -->
     <div id="tab-soluciones" class="tab-pane">
       <div class="card">
         <div class="section-head">
           <h2>2. Necesidades Reales de ANCLA y Cómo las Resuelve el Ecosistema</h2>
-          <p>Puedes hacer clic en "Comentar" en cualquier solución para dejar notas u observaciones.</p>
+          <p>Puedes dejar observaciones en cualquier solución. Cada comentario se guarda con su autor y fecha.</p>
         </div>
 
-        <div class="need-grid" id="soluciones-container">
-          <!-- Renderizado dinámicamente con JS para permitir notas interactivas -->
-        </div>
+        <div class="need-grid" id="soluciones-container"></div>
       </div>
     </div>
 
-    <!-- TAB 3: HERRAMIENTAS Y COSTOS FIJOS -->
+    <!-- TAB 3: HERRAMIENTAS Y COSTOS FIJOS (SIMPLIFICADO Y CLARO) -->
     <div id="tab-costos" class="tab-pane">
       <div class="card">
         <div class="section-head" style="display: flex; justify-content: space-between; align-items: flex-start;">
           <div>
             <h2>3. Tabla de Costos Fijos de Herramientas e Infraestructura</h2>
-            <p>Infraestructura Cloud dedicada y de alto rendimiento que mantiene el sistema activo 24/7.</p>
+            <p>Servicios directos en la nube que mantienen el CRM y la Página Web activos 24/7.</p>
           </div>
           <button class="comment-trigger-btn" onclick="openCommentModal('costos-infra', 'Costos de Herramientas')">💬 Comentar</button>
         </div>
@@ -635,7 +365,7 @@
           <table>
             <thead>
               <tr>
-                <th>Herramienta / Infraestructura</th>
+                <th>Servicio / Infraestructura</th>
                 <th>Función en el Ecosistema</th>
                 <th>Estado</th>
                 <th>Costo Fijo Mensual</th>
@@ -643,44 +373,32 @@
             </thead>
             <tbody>
               <tr>
-                <td>
-                  <strong>🖥️ Servidor VPS Cloud Dedicado (Hetzner CX33)</strong><br>
-                  <small style="color: #64748b;">4 vCPUs / 8 GB RAM / 80 GB NVMe + Coolify</small>
-                </td>
-                <td>Aloja el CRM, la Base de Datos PostgreSQL, Redis, CDN y la futura Página Web en contenedores aislados de máxima velocidad.</td>
-                <td><span class="need-badge badge-done">Recomendado</span></td>
-                <td><strong style="color: #059669;">~€8.99 EUR (~$40.000 COP/mes)</strong></td>
-              </tr>
-              <tr>
-                <td>
-                  <strong>🤖 Motores de Inteligencia Artificial</strong><br>
-                  <small style="color: #64748b;">OpenRouter / Gemini / Claude 3.5</small>
-                </td>
-                <td>Cerebro de Sofi AI 2.0 para atención, comprensión de lenguaje de construcción, respuesta y transcripción de audios.</td>
+                <td><strong>🖥️ Servidor Cloud de Alta Velocidad (VPS)</strong></td>
+                <td>Aloja el CRM, la base de datos segura y la futura Página Web con respuesta en milisegundos.</td>
                 <td><span class="need-badge badge-done">Activo</span></td>
-                <td><strong style="color: #059669;">~$80.000 COP / mes</strong></td>
+                <td><strong style="color: #059669;">~$40.000 COP / mes</strong></td>
               </tr>
               <tr>
-                <td>
-                  <strong>💬 Meta Cloud API (WhatsApp Business)</strong>
-                </td>
-                <td>Línea oficial de WhatsApp y webhook de sincronización de leads de Facebook e Instagram.</td>
+                <td><strong>🤖 Motor de Inteligencia Artificial (Sofi AI 2.0)</strong></td>
+                <td>Atención 24/7, respuestas sobre arquitectura modular y transcripción de notas de voz.</td>
+                <td><span class="need-badge badge-done">Activo</span></td>
+                <td><strong style="color: #059669;">~$100.000 COP / mes</strong></td>
+              </tr>
+              <tr>
+                <td><strong>💬 Línea Oficial WhatsApp Business (Meta API)</strong></td>
+                <td>Recepción y envío de mensajes oficiales y sincronización de clientes potenciales de anuncios.</td>
                 <td><span class="need-badge badge-done">Activo</span></td>
                 <td>Según consumo Meta</td>
               </tr>
               <tr>
-                <td>
-                  <strong>🔒 Dominio & SSL (anclaspecialprojects.com)</strong>
-                </td>
-                <td>Nombre de dominio corporativo y certificados de seguridad bancaria SSL.</td>
+                <td><strong>🔒 Dominio & Seguridad SSL (anclaspecialprojects.com)</strong></td>
+                <td>Dirección web oficial y certificados de seguridad web cifrada.</td>
                 <td><span class="need-badge badge-done">Activo</span></td>
                 <td>~$70.000 COP / año</td>
               </tr>
               <tr>
-                <td>
-                  <strong>💾 Google Drive Cloud Storage</strong>
-                </td>
-                <td>Respaldos continuos de la base de datos del CRM y almacenamiento de archivos.</td>
+                <td><strong>💾 Copias de Seguridad en la Nube (Google Drive)</strong></td>
+                <td>Respaldos automáticos y continuos de toda la información comercial de ANCLA.</td>
                 <td><span class="need-badge badge-done">Configurado</span></td>
                 <td>Incluido en Google</td>
               </tr>
@@ -689,8 +407,10 @@
         </div>
 
         <div style="margin-top: 15px; padding: 14px; background: #f0fdf4; border-radius: 14px; border: 1px solid #bbf7d0; font-size: 12.5px; color: #166534;">
-          💡 <strong>Costo Total de Mantenimiento de Herramientas:</strong> El costo fijo de infraestructura para operar tanto el CRM como la Página Web Comercial es de apenas <strong>~$120.000 a $150.000 COP mensuales</strong>. En comparación, herramientas comerciales como HubSpot o Salesforce cuestan más de $2.000.000 COP al mes.
+          💡 <strong>Eficiencia de Costos:</strong> Al contar con un sistema desarrollado 100% a la medida, ANCLA solo asume los costos directos de consumo de servidores e inteligencia artificial (<strong>~$140.000 COP mensuales</strong>), sin pagar licencias costosas por usuario ni mensualidades a intermediarios.
         </div>
+
+        <div id="costos-comments-list" style="margin-top: 15px;"></div>
       </div>
     </div>
 
@@ -788,7 +508,7 @@
     </div>
   </div>
 
-  <!-- MODAL DE COMENTARIOS -->
+  <!-- MODAL DE COMENTARIOS ACUMULATIVOS -->
   <div class="modal-backdrop" id="comment-modal">
     <div class="modal-box">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #f1f5f9;">
@@ -801,19 +521,21 @@
 
       <input type="hidden" id="comment-item-key">
       
+      <div id="comment-history-modal" style="margin-bottom: 15px; max-height: 120px; overflow-y: auto;"></div>
+
       <div style="margin-bottom: 12px;">
         <label style="font-size: 11.5px; font-weight: 700; color: #475569; display: block; margin-bottom: 4px;">¿Quién escribe? (Opcional):</label>
         <input type="text" id="comment-author" placeholder="Ej. Liliana / Equipo ANCLA" style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #e2e8f0; font-size: 12px; outline: none;">
       </div>
 
       <div style="margin-bottom: 16px;">
-        <label style="font-size: 11.5px; font-weight: 700; color: #475569; display: block; margin-bottom: 4px;">Escribe tu comentario o ajuste:</label>
-        <textarea id="comment-text" rows="4" placeholder="Escribe aquí cualquier observación sobre este punto..." style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #e2e8f0; font-size: 12px; outline: none; resize: none;"></textarea>
+        <label style="font-size: 11.5px; font-weight: 700; color: #475569; display: block; margin-bottom: 4px;">Escribe tu nueva observación:</label>
+        <textarea id="comment-text" rows="3" placeholder="Escribe aquí cualquier ajuste o comentario..." style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #e2e8f0; font-size: 12px; outline: none; resize: none;"></textarea>
       </div>
 
       <div style="display: flex; justify-content: flex-end; gap: 8px;">
         <button onclick="closeCommentModal()" style="padding: 8px 16px; border-radius: 10px; border: none; background: #f1f5f9; color: #475569; font-weight: 700; font-size: 12px; cursor: pointer;">Cancelar</button>
-        <button onclick="saveComment()" style="padding: 8px 18px; border-radius: 10px; border: none; background: #059669; color: #ffffff; font-weight: 700; font-size: 12px; cursor: pointer;">Guardar Observación</button>
+        <button onclick="saveComment()" style="padding: 8px 18px; border-radius: 10px; border: none; background: #059669; color: #ffffff; font-weight: 700; font-size: 12px; cursor: pointer;">Agregar Observación</button>
       </div>
     </div>
   </div>
@@ -841,7 +563,7 @@
 
     let comments = {};
     try {
-      const stored = localStorage.getItem('ancla_proposal_comments');
+      const stored = localStorage.getItem('ancla_proposal_comments_v2');
       if (stored) comments = JSON.parse(stored);
     } catch(e){}
 
@@ -850,21 +572,34 @@
       if (!container) return;
       
       container.innerHTML = soluciones.map(s => {
-        const hasComm = comments[s.key];
+        const list = comments[s.key] || [];
+        const hasComm = list.length > 0;
         return `
           <div class="need-card" style="${s.isNext ? 'background: rgba(239, 246, 255, 0.5); border-color: #bfdbfe;' : ''}">
             <div>
               <div class="need-card-header">
                 <span class="need-badge ${s.isNext ? 'badge-next' : 'badge-done'}">${s.status}</span>
                 <button class="comment-trigger-btn ${hasComm ? 'has-comment' : ''}" onclick="openCommentModal('${s.key}', '${s.title}')">
-                  ${hasComm ? 'Nota guardada ✍️' : '💬 Comentar'}
+                  ${hasComm ? `Comentarios (${list.length}) ✍️` : '💬 Comentar'}
                 </button>
               </div>
               <h3>${s.title}</h3>
               <p class="need-desc">${s.desc}</p>
             </div>
             <div>
-              ${hasComm ? `<div class="saved-comment-box">"${hasComm.text}"</div>` : ''}
+              ${hasComm ? `
+                <div style="margin-top: 8px; display: flex; flex-direction: column; gap: 4px;">
+                  ${list.map(c => `
+                    <div class="saved-comment-item">
+                      <div style="display:flex; justify-content:space-between; font-size:9.5px; font-weight:700; color:#92400e;">
+                        <span>👤 ${c.author}</span>
+                        <span>🕒 ${c.date}</span>
+                      </div>
+                      <p style="margin-top:2px;">"${c.text}"</p>
+                    </div>
+                  `).join('')}
+                </div>
+              ` : ''}
               <div class="need-benefit" style="${s.isNext ? 'color: #2563eb;' : ''}">${s.benefit}</div>
             </div>
           </div>
@@ -888,7 +623,27 @@
     function openCommentModal(key, title) {
       document.getElementById('comment-item-key').value = key;
       document.getElementById('comment-modal-title').innerText = title;
-      document.getElementById('comment-text').value = comments[key]?.text || '';
+      document.getElementById('comment-text').value = '';
+      
+      const list = comments[key] || [];
+      const hist = document.getElementById('comment-history-modal');
+      if (list.length > 0) {
+        hist.innerHTML = `
+          <span style="font-size:10.5px; font-weight:700; color:#64748b; display:block; margin-bottom:4px;">Historial de comentarios (${list.length}):</span>
+          ${list.map(c => `
+            <div style="background:#f8fafc; border:1px solid #e2e8f0; padding:6px 10px; border-radius:8px; font-size:11px; margin-bottom:4px;">
+              <div style="display:flex; justify-content:space-between; font-size:9.5px; font-weight:700; color:#64748b;">
+                <span>${c.author}</span>
+                <span>${c.date}</span>
+              </div>
+              <p style="color:#334155; margin-top:2px;">${c.text}</p>
+            </div>
+          `).join('')}
+        `;
+      } else {
+        hist.innerHTML = '';
+      }
+
       document.getElementById('comment-modal').classList.add('active');
     }
 
@@ -904,12 +659,20 @@
 
       if (!text) return;
 
-      comments[key] = { title, text, author, date: new Date().toLocaleString('es-CO') };
+      const newObj = {
+        id: Date.now(),
+        author,
+        text,
+        date: new Date().toLocaleString('es-CO', { dateStyle: 'short', timeStyle: 'short' })
+      };
+
+      const existing = comments[key] || [];
+      comments[key] = [...existing, newObj];
+
       try {
-        localStorage.setItem('ancla_proposal_comments', JSON.stringify(comments));
+        localStorage.setItem('ancla_proposal_comments_v2', JSON.stringify(comments));
       } catch(e){}
 
-      // Enviar a la API si está disponible
       fetch('https://ancla-crm-backend-production.up.railway.app/api/v1/proposals/public/feedback', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
