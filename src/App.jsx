@@ -182,6 +182,17 @@ function App() {
     return <ShowroomDashboard />;
   }
 
+  // Si la ruta es propuesta.html o /propuesta-comercial, abrir la Propuesta Comercial Interactiva
+  if (window.location.pathname.toLowerCase().includes('propuesta.html') || window.location.pathname.toLowerCase() === '/propuesta-comercial') {
+    return (
+      <iframe 
+        src="/propuesta.html" 
+        title="Propuesta Comercial ANCLA" 
+        className="w-screen h-screen border-0 fixed inset-0 z-50 bg-[#f8fafc]"
+      />
+    );
+  }
+
   const isPropuesta = 
     window.location.pathname === '/propuesta' || 
     window.location.search.includes('page=propuesta') || 
