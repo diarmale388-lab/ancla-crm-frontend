@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CheckCircle2, MessageSquare, Send, Sparkles, X, MessageCircle, Clock, User } from 'lucide-react';
+import { CheckCircle2, MessageSquare, Send, Sparkles, X, MessageCircle, Clock, User, ChevronRight, Check } from 'lucide-react';
 
 export const CommercialProposalView = () => {
   const [activeTab, setActiveTab] = useState('resumen');
@@ -12,13 +12,12 @@ export const CommercialProposalView = () => {
   const [savingComment, setSavingComment] = useState(false);
   const [commentSuccess, setCommentSuccess] = useState('');
   
-  // savedComments es un objeto donde cada key tiene un ARRAY de comentarios acumulativos:
-  // { 'sol-1': [ { id, author, text, date }, ... ] }
+  // savedComments es un objeto con arrays acumulativos
   const [savedComments, setSavedComments] = useState({});
 
   const API_URL = import.meta.env.VITE_API_URL || 'https://ancla-crm-backend-production.up.railway.app/api/v1';
 
-  // Cargar comentarios acumulativos desde localStorage y servidor
+  // Cargar comentarios acumulativos desde localStorage
   useEffect(() => {
     try {
       const local = localStorage.getItem('ancla_proposal_comments_v2');
@@ -110,131 +109,131 @@ export const CommercialProposalView = () => {
     window.open(`https://wa.me/573105748805?text=${encoded}`, '_blank');
   };
 
-  // Contar total de comentarios acumulados en todos los ítems
   const totalCommentsCount = Object.values(savedComments).reduce((acc, list) => acc + (Array.isArray(list) ? list.length : 0), 0);
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 font-sans antialiased pb-16 selection:bg-emerald-500 selection:text-white">
+    <div className="min-h-screen bg-slate-50 text-slate-800 font-sans antialiased pb-20 selection:bg-emerald-500 selection:text-white">
       
-      {/* HEADER HERO */}
-      <header className="bg-gradient-to-br from-slate-950 via-[#07171d] to-[#042921] text-white px-5 pt-12 pb-16 rounded-b-[36px] shadow-2xl relative overflow-hidden">
-        <div className="absolute -top-24 -right-24 w-96 h-96 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none"></div>
+      {/* HEADER HERO ULTRA RESPONSIVE */}
+      <header className="bg-gradient-to-br from-slate-950 via-[#07171d] to-[#042921] text-white px-4 sm:px-6 pt-10 sm:pt-14 pb-14 sm:pb-16 rounded-b-[28px] sm:rounded-b-[40px] shadow-2xl relative overflow-hidden">
+        <div className="absolute -top-24 -right-24 w-80 sm:w-96 h-80 sm:h-96 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none"></div>
         
         <div className="max-w-4xl mx-auto flex flex-col items-center text-center relative z-10">
-          <div className="inline-flex items-center space-x-2 bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 px-4 py-1.5 rounded-full text-xs font-black tracking-widest uppercase mb-5">
+          
+          <div className="inline-flex items-center space-x-2 bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 px-3.5 sm:px-4 py-1.5 rounded-full text-[10px] sm:text-xs font-black tracking-wider sm:tracking-widest uppercase mb-4 sm:mb-5">
             <span>✨ PROPUESTA COMERCIAL & SOLUCIÓN INTEGRAL</span>
           </div>
 
-          <div className="flex items-center space-x-4 mb-3">
+          <div className="flex items-center space-x-3 sm:space-x-4 mb-3">
             <img 
               src="/ancla_icon_only.png" 
               alt="ANCLA" 
-              className="w-14 h-14 object-contain drop-shadow-xl" 
+              className="w-10 h-10 sm:w-14 sm:h-14 object-contain drop-shadow-xl shrink-0" 
             />
-            <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-white">
+            <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-white">
               ANCLA Special Projects
             </h1>
           </div>
 
-          <p className="text-sm sm:text-base text-slate-300 max-w-2xl font-medium mb-6 leading-relaxed">
+          <p className="text-xs sm:text-sm md:text-base text-slate-300 max-w-2xl font-medium mb-6 leading-relaxed px-1">
             Implementación del Ecosistema Integral de Ventas: <strong>CRM a la Medida + Inteligencia Artificial Sofi 2.0 + Página Web Comercial + Pauta y Contenido</strong>
           </p>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full max-w-3xl text-left">
-            <div className="bg-white/5 border border-white/10 backdrop-blur-md p-3.5 rounded-2xl">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Cliente</span>
-              <span className="text-xs sm:text-sm font-bold text-white mt-0.5 block">ANCLA Special Projects</span>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3.5 w-full max-w-3xl text-left">
+            <div className="bg-white/5 border border-white/10 backdrop-blur-md p-3 sm:p-3.5 rounded-xl sm:rounded-2xl">
+              <span className="text-[9.5px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Cliente</span>
+              <span className="text-xs sm:text-sm font-bold text-white mt-0.5 block truncate">ANCLA Special Projects</span>
             </div>
-            <div className="bg-white/5 border border-white/10 backdrop-blur-md p-3.5 rounded-2xl">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Inversión Paquete</span>
+            <div className="bg-white/5 border border-white/10 backdrop-blur-md p-3 sm:p-3.5 rounded-xl sm:rounded-2xl">
+              <span className="text-[9.5px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Inversión Paquete</span>
               <span className="text-xs sm:text-sm font-black text-emerald-400 mt-0.5 block">8.000.000 COP</span>
             </div>
-            <div className="bg-white/5 border border-white/10 backdrop-blur-md p-3.5 rounded-2xl">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Periodo Pauta/Video</span>
-              <span className="text-xs sm:text-sm font-bold text-white mt-0.5 block">Hasta 30 Agosto 2026</span>
+            <div className="bg-white/5 border border-white/10 backdrop-blur-md p-3 sm:p-3.5 rounded-xl sm:rounded-2xl">
+              <span className="text-[9.5px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Periodo Pauta/Video</span>
+              <span className="text-xs sm:text-sm font-bold text-white mt-0.5 block truncate">Hasta 30 Ago 2026</span>
             </div>
-            <div className="bg-white/5 border border-white/10 backdrop-blur-md p-3.5 rounded-2xl">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Vigencia Oferta</span>
-              <span className="text-xs sm:text-sm font-bold text-white mt-0.5 block">14 Días Calendario</span>
+            <div className="bg-white/5 border border-white/10 backdrop-blur-md p-3 sm:p-3.5 rounded-xl sm:rounded-2xl">
+              <span className="text-[9.5px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Vigencia Oferta</span>
+              <span className="text-xs sm:text-sm font-bold text-white mt-0.5 block">14 Días</span>
             </div>
           </div>
         </div>
       </header>
 
       {/* CONTENEDOR PRINCIPAL */}
-      <main className="max-w-4xl mx-auto px-4 sm:px-6">
+      <main className="max-w-4xl mx-auto px-3.5 sm:px-6">
         
         {/* BARRA DE COMENTARIOS ACUMULADOS */}
         {totalCommentsCount > 0 && (
-          <div className="my-4 p-3.5 bg-emerald-50 border border-emerald-200 rounded-2xl flex flex-wrap gap-2 items-center justify-between shadow-xs">
-            <div className="flex items-center space-x-2 text-xs font-bold text-emerald-900">
+          <div className="my-4 p-3 sm:p-3.5 bg-emerald-50 border border-emerald-200 rounded-2xl flex flex-col sm:flex-row gap-2.5 sm:gap-2 items-start sm:items-center justify-between shadow-xs">
+            <div className="flex items-center space-x-2 text-xs font-bold text-emerald-950">
               <MessageSquare className="w-4 h-4 text-emerald-600 shrink-0" />
               <span>Hay {totalCommentsCount} observación(es) registrada(s) en la propuesta.</span>
             </div>
             <button
               onClick={handleSendAllCommentsViaWhatsApp}
-              className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold py-1.5 px-3.5 rounded-xl shadow-xs transition-all flex items-center space-x-1.5 cursor-pointer"
+              className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold py-2 sm:py-1.5 px-4 rounded-xl shadow-xs transition-all flex items-center justify-center space-x-1.5 cursor-pointer"
             >
-              <MessageCircle className="w-3.5 h-3.5" />
+              <MessageCircle className="w-3.5 h-3.5 shrink-0" />
               <span>Enviar observaciones por WhatsApp</span>
             </button>
           </div>
         )}
 
-        {/* TABS DE NAVEGACIÓN */}
-        <div className="-mt-6 relative z-20 mb-8">
-          <div className="bg-white p-2 rounded-2xl shadow-xl border border-slate-200 flex gap-2 overflow-x-auto no-scrollbar">
+        {/* TABS DE NAVEGACIÓN TOUCH-FRIENDLY & RESPONSIVE */}
+        <div className="-mt-6 sm:-mt-7 relative z-20 mb-6 sm:mb-8">
+          <div className="bg-white p-1.5 sm:p-2 rounded-2xl shadow-xl border border-slate-200 flex gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar scroll-smooth">
             <button
               onClick={() => setActiveTab('resumen')}
-              className={`flex-1 min-w-[140px] py-3 px-4 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center space-x-2 ${
+              className={`flex-1 min-w-[130px] sm:min-w-[145px] py-2.5 sm:py-3 px-3 sm:px-4 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center space-x-1.5 sm:space-x-2 whitespace-nowrap cursor-pointer ${
                 activeTab === 'resumen'
                   ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md shadow-emerald-600/20'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
             >
-              <span>📊 Resumen Ejecutivo</span>
+              <span>📊 Resumen</span>
             </button>
 
             <button
               onClick={() => setActiveTab('soluciones')}
-              className={`flex-1 min-w-[140px] py-3 px-4 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center space-x-2 ${
+              className={`flex-1 min-w-[130px] sm:min-w-[145px] py-2.5 sm:py-3 px-3 sm:px-4 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center space-x-1.5 sm:space-x-2 whitespace-nowrap cursor-pointer ${
                 activeTab === 'soluciones'
                   ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md shadow-emerald-600/20'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
             >
-              <span>🧩 Soluciones del CRM</span>
+              <span>🧩 Soluciones CRM</span>
             </button>
 
             <button
               onClick={() => setActiveTab('costos')}
-              className={`flex-1 min-w-[140px] py-3 px-4 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center space-x-2 ${
+              className={`flex-1 min-w-[130px] sm:min-w-[145px] py-2.5 sm:py-3 px-3 sm:px-4 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center space-x-1.5 sm:space-x-2 whitespace-nowrap cursor-pointer ${
                 activeTab === 'costos'
                   ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md shadow-emerald-600/20'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
             >
-              <span>🛠️ Herramientas & Costos</span>
+              <span>🛠️ Costos Fijos</span>
             </button>
 
             <button
               onClick={() => setActiveTab('propuesta')}
-              className={`flex-1 min-w-[140px] py-3 px-4 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center space-x-2 ${
+              className={`flex-1 min-w-[130px] sm:min-w-[145px] py-2.5 sm:py-3 px-3 sm:px-4 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center space-x-1.5 sm:space-x-2 whitespace-nowrap cursor-pointer ${
                 activeTab === 'propuesta'
                   ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md shadow-emerald-600/20'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
             >
-              <span>💰 Inversión y Acuerdo</span>
+              <span>💰 Inversión</span>
             </button>
           </div>
         </div>
 
         {/* CONTENIDO TAB 1: RESUMEN EJECUTIVO */}
         {activeTab === 'resumen' && (
-          <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-6 animate-fadeIn">
+          <div className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200 p-5 sm:p-8 shadow-sm space-y-5 sm:space-y-6 animate-fadeIn">
             <div>
-              <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+              <h2 className="text-lg sm:text-2xl font-black text-slate-900 tracking-tight">
                 1. El Contexto de Negocio de ANCLA
               </h2>
               <p className="text-xs sm:text-sm text-slate-500 mt-1">
@@ -242,9 +241,9 @@ export const CommercialProposalView = () => {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-rose-50 border border-rose-200 p-5 rounded-2xl">
-                <h4 className="text-rose-700 font-extrabold text-sm mb-2 flex items-center space-x-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-4">
+              <div className="bg-rose-50 border border-rose-200 p-4 sm:p-5 rounded-2xl">
+                <h4 className="text-rose-700 font-extrabold text-xs sm:text-sm mb-1.5 flex items-center space-x-2">
                   <span>⚠️ El Riesgo de Perder 1 Solo Cliente</span>
                 </h4>
                 <p className="text-xs text-slate-600 leading-relaxed">
@@ -252,8 +251,8 @@ export const CommercialProposalView = () => {
                 </p>
               </div>
 
-              <div className="bg-emerald-50 border border-emerald-200 p-5 rounded-2xl">
-                <h4 className="text-emerald-800 font-extrabold text-sm mb-2 flex items-center space-x-2">
+              <div className="bg-emerald-50 border border-emerald-200 p-4 sm:p-5 rounded-2xl">
+                <h4 className="text-emerald-800 font-extrabold text-xs sm:text-sm mb-1.5 flex items-center space-x-2">
                   <span>✅ El Ahorro Frente a Personal Externo</span>
                 </h4>
                 <p className="text-xs text-slate-600 leading-relaxed">
@@ -262,28 +261,31 @@ export const CommercialProposalView = () => {
               </div>
             </div>
 
-            <div className="bg-slate-50 border border-slate-200 p-5 rounded-2xl">
-              <h3 className="text-sm font-black text-slate-900 mb-3">
+            <div className="bg-slate-50 border border-slate-200 p-4 sm:p-5 rounded-2xl">
+              <h3 className="text-xs sm:text-sm font-black text-slate-900 mb-3 text-center sm:text-left">
                 Flujo de Ventas Automatizado de ANCLA:
               </h3>
-              <div className="flex flex-wrap gap-2.5 items-center justify-center text-xs font-bold text-slate-700 text-center">
-                <span className="bg-white px-3 py-2 rounded-xl border border-slate-300 shadow-xs">📢 Anuncios Meta (Facebook/Insta)</span>
-                <span className="text-slate-400">➔</span>
-                <span className="bg-emerald-50 text-emerald-800 px-3 py-2 rounded-xl border border-emerald-300 shadow-xs">🤖 CRM & Sofi AI 24/7 (Ó Web Comercial)</span>
-                <span className="text-slate-400">➔</span>
-                <span className="bg-white px-3 py-2 rounded-xl border border-slate-300 shadow-xs">🏭 Fábrica China / Asesores</span>
-                <span className="text-slate-400">➔</span>
-                <span className="bg-amber-50 text-amber-800 px-3 py-2 rounded-xl border border-amber-200 shadow-xs">🏆 Venta de 80 a 150M</span>
+              <div className="flex flex-col sm:flex-row flex-wrap gap-2 items-center justify-center text-xs font-bold text-slate-700 text-center">
+                <span className="w-full sm:w-auto bg-white px-3 py-2 rounded-xl border border-slate-300 shadow-xs">📢 Anuncios Meta</span>
+                <span className="text-slate-400 hidden sm:inline">➔</span>
+                <span className="text-slate-400 sm:hidden">↓</span>
+                <span className="w-full sm:w-auto bg-emerald-50 text-emerald-800 px-3 py-2 rounded-xl border border-emerald-300 shadow-xs">🤖 CRM & Sofi AI 24/7</span>
+                <span className="text-slate-400 hidden sm:inline">➔</span>
+                <span className="text-slate-400 sm:hidden">↓</span>
+                <span className="w-full sm:w-auto bg-white px-3 py-2 rounded-xl border border-slate-300 shadow-xs">🏭 Fábrica China / Asesores</span>
+                <span className="text-slate-400 hidden sm:inline">➔</span>
+                <span className="text-slate-400 sm:hidden">↓</span>
+                <span className="w-full sm:w-auto bg-amber-50 text-amber-800 px-3 py-2 rounded-xl border border-amber-200 shadow-xs">🏆 Venta de 80 a 150M</span>
               </div>
             </div>
           </div>
         )}
 
-        {/* CONTENIDO TAB 2: SOLUCIONES DEL CRM Y WEB (CON COMENTARIOS ACUMULATIVOS) */}
+        {/* CONTENIDO TAB 2: SOLUCIONES DEL CRM Y WEB (RESPONSIVE GRID) */}
         {activeTab === 'soluciones' && (
-          <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-6 animate-fadeIn">
+          <div className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200 p-5 sm:p-8 shadow-sm space-y-5 sm:space-y-6 animate-fadeIn">
             <div>
-              <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+              <h2 className="text-lg sm:text-2xl font-black text-slate-900 tracking-tight">
                 2. Necesidades Reales de ANCLA y Cómo las Resuelve el Ecosistema
               </h2>
               <p className="text-xs sm:text-sm text-slate-500 mt-1">
@@ -291,7 +293,7 @@ export const CommercialProposalView = () => {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-4">
               
               {[
                 { key: 'sol-1', title: '1. Centralización Total de Clientes', status: '✅ Operativo en CRM', desc: 'Todos los prospectos y conversaciones de WhatsApp entran a un panel seguro y privado de ANCLA. Ningún contacto se pierde en el celular personal de los asesores.', benefit: '🛡️ Control absoluto de la base de datos' },
@@ -310,34 +312,34 @@ export const CommercialProposalView = () => {
                 const commentList = savedComments[item.key] || [];
                 const hasComments = commentList.length > 0;
                 return (
-                  <div key={item.key} className={`border rounded-2xl p-4.5 transition-all bg-white relative flex flex-col justify-between ${item.isNext ? 'border-blue-200 bg-blue-50/20' : 'border-slate-200 hover:border-slate-300'}`}>
+                  <div key={item.key} className={`border rounded-2xl p-4 sm:p-4.5 transition-all bg-white relative flex flex-col justify-between ${item.isNext ? 'border-blue-200 bg-blue-50/20' : 'border-slate-200 hover:border-slate-300'}`}>
                     <div>
-                      <div className="flex justify-between items-center mb-2">
-                        <span className={`inline-block text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full border ${item.isNext ? 'bg-blue-100 border-blue-200 text-blue-800' : 'bg-emerald-50 border-emerald-200 text-emerald-700'}`}>
+                      <div className="flex flex-wrap justify-between items-center gap-1.5 mb-2">
+                        <span className={`inline-block text-[9.5px] sm:text-[10px] font-black uppercase px-2 sm:px-2.5 py-0.5 rounded-full border ${item.isNext ? 'bg-blue-100 border-blue-200 text-blue-800' : 'bg-emerald-50 border-emerald-200 text-emerald-700'}`}>
                           {item.status}
                         </span>
 
                         <button
                           onClick={() => openCommentModal(item.key, item.title)}
-                          className={`text-[11px] font-bold px-2.5 py-1 rounded-lg border transition-all flex items-center space-x-1 cursor-pointer ${hasComments ? 'bg-amber-50 border-amber-300 text-amber-900 font-extrabold' : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'}`}
+                          className={`text-[10.5px] sm:text-[11px] font-bold px-2 sm:px-2.5 py-1 rounded-lg border transition-all flex items-center space-x-1 cursor-pointer ${hasComments ? 'bg-amber-50 border-amber-300 text-amber-900 font-extrabold' : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'}`}
                           title="Dejar un comentario o sugerencia"
                         >
-                          <MessageSquare className="w-3 h-3" />
-                          <span>{hasComments ? `Comentarios (${commentList.length}) ✍️` : 'Comentar'}</span>
+                          <MessageSquare className="w-3 h-3 shrink-0" />
+                          <span>{hasComments ? `Notas (${commentList.length}) ✍️` : 'Comentar'}</span>
                         </button>
                       </div>
 
-                      <h3 className="text-sm font-extrabold text-slate-900 mb-1">{item.title}</h3>
+                      <h3 className="text-xs sm:text-sm font-extrabold text-slate-900 mb-1">{item.title}</h3>
                       <p className="text-xs text-slate-600 leading-relaxed">{item.desc}</p>
                     </div>
 
                     <div>
                       {/* Lista de comentarios acumulativos */}
                       {hasComments && (
-                        <div className="mt-3 space-y-1.5 border-t border-slate-100 pt-2.5">
+                        <div className="mt-2.5 space-y-1.5 border-t border-slate-100 pt-2">
                           {commentList.map((comm) => (
-                            <div key={comm.id} className="p-2 bg-amber-50 border border-amber-200 rounded-xl text-[11px] text-amber-950 font-medium">
-                              <div className="flex justify-between items-center text-[9.5px] font-bold text-amber-800 mb-0.5">
+                            <div key={comm.id} className="p-2 bg-amber-50 border border-amber-200 rounded-xl text-[10.5px] sm:text-[11px] text-amber-950 font-medium break-words">
+                              <div className="flex justify-between items-center text-[9px] sm:text-[9.5px] font-bold text-amber-800 mb-0.5">
                                 <span>👤 {comm.author}</span>
                                 <span>🕒 {comm.date}</span>
                               </div>
@@ -347,7 +349,7 @@ export const CommercialProposalView = () => {
                         </div>
                       )}
 
-                      <div className={`mt-3 pt-2.5 border-t text-[11px] font-bold flex items-center space-x-1.5 ${item.isNext ? 'border-blue-100 text-blue-700' : 'border-slate-100 text-emerald-700'}`}>
+                      <div className={`mt-2.5 pt-2 border-t text-[10.5px] sm:text-[11px] font-bold flex items-center space-x-1.5 ${item.isNext ? 'border-blue-100 text-blue-700' : 'border-slate-100 text-emerald-700'}`}>
                         <span>{item.benefit}</span>
                       </div>
                     </div>
@@ -359,12 +361,12 @@ export const CommercialProposalView = () => {
           </div>
         )}
 
-        {/* CONTENIDO TAB 3: COSTOS FIJOS DE HERRAMIENTAS (SIMPLIFICADO Y CLARO) */}
+        {/* CONTENIDO TAB 3: COSTOS FIJOS DE HERRAMIENTAS (RESPONSIVE TABLE / CARDS) */}
         {activeTab === 'costos' && (
-          <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-6 animate-fadeIn">
-            <div className="flex justify-between items-start">
+          <div className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200 p-5 sm:p-8 shadow-sm space-y-5 sm:space-y-6 animate-fadeIn">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
               <div>
-                <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+                <h2 className="text-lg sm:text-2xl font-black text-slate-900 tracking-tight">
                   3. Tabla de Costos Fijos de Herramientas e Infraestructura
                 </h2>
                 <p className="text-xs sm:text-sm text-slate-500 mt-1">
@@ -373,72 +375,83 @@ export const CommercialProposalView = () => {
               </div>
               <button
                 onClick={() => openCommentModal('costos-infra', 'Costos Fijos e Infraestructura')}
-                className="text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-xl border border-slate-200 flex items-center space-x-1.5 cursor-pointer"
+                className="w-full sm:w-auto text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 px-3.5 py-2 rounded-xl border border-slate-200 flex items-center justify-center space-x-1.5 cursor-pointer shrink-0"
               >
-                <MessageSquare className="w-3.5 h-3.5" />
+                <MessageSquare className="w-3.5 h-3.5 shrink-0" />
                 <span>Comentar sobre costos</span>
               </button>
             </div>
 
-            <div className="overflow-x-auto rounded-2xl border border-slate-200">
-              <table className="w-full text-left text-xs border-collapse">
+            {/* TABLA EN DESKTOP / SCROLL SUAVE EN MOBILE */}
+            <div className="overflow-x-auto rounded-2xl border border-slate-200 scroll-smooth">
+              <table className="w-full text-left text-xs border-collapse min-w-[540px]">
                 <thead>
-                  <tr className="bg-slate-50 border-b border-slate-200 text-slate-700 uppercase font-black tracking-wider text-[11px]">
-                    <th className="p-3.5 sm:p-4">Servicio / Infraestructura</th>
-                    <th className="p-3.5 sm:p-4">Función en el Ecosistema</th>
-                    <th className="p-3.5 sm:p-4">Estado</th>
-                    <th className="p-3.5 sm:p-4">Costo Fijo Mensual</th>
+                  <tr className="bg-slate-50 border-b border-slate-200 text-slate-700 uppercase font-black tracking-wider text-[10px] sm:text-[11px]">
+                    <th className="p-3 sm:p-4">Servicio / Infraestructura</th>
+                    <th className="p-3 sm:p-4">Función en el Ecosistema</th>
+                    <th className="p-3 sm:p-4">Estado</th>
+                    <th className="p-3 sm:p-4">Costo Fijo Mensual</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                   <tr className="hover:bg-slate-50/60 transition-colors">
-                    <td className="p-3.5 sm:p-4 font-bold text-slate-900 flex items-center space-x-2">
-                      <span>🖥️</span>
-                      <span>Servidor Cloud de Alta Velocidad (VPS)</span>
+                    <td className="p-3 sm:p-4 font-bold text-slate-900">
+                      <div className="flex items-center space-x-2">
+                        <span>🖥️</span>
+                        <span>Servidor Cloud VPS</span>
+                      </div>
                     </td>
-                    <td className="p-3.5 sm:p-4 text-slate-600">Aloja el CRM, la base de datos segura y la futura Página Web con respuesta en milisegundos.</td>
-                    <td className="p-3.5 sm:p-4"><span className="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-bold text-[10px] border border-emerald-200">Activo</span></td>
-                    <td className="p-3.5 sm:p-4 font-mono font-bold text-emerald-700 bg-emerald-50/50">~$40.000 COP / mes</td>
+                    <td className="p-3 sm:p-4 text-slate-600">Aloja el CRM, la base de datos segura y la futura Página Web con respuesta en milisegundos.</td>
+                    <td className="p-3 sm:p-4"><span className="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-bold text-[9.5px] border border-emerald-200">Activo</span></td>
+                    <td className="p-3 sm:p-4 font-mono font-bold text-emerald-700 bg-emerald-50/50">~$40.000 COP/mes</td>
                   </tr>
 
                   <tr className="hover:bg-slate-50/60 transition-colors">
-                    <td className="p-3.5 sm:p-4 font-bold text-slate-900 flex items-center space-x-2">
-                      <span>🤖</span>
-                      <span>Motor de Inteligencia Artificial (Sofi AI 2.0)</span>
+                    <td className="p-3 sm:p-4 font-bold text-slate-900">
+                      <div className="flex items-center space-x-2">
+                        <span>🤖</span>
+                        <span>Sofi AI 2.0 (Inteligencia Artificial)</span>
+                      </div>
                     </td>
-                    <td className="p-3.5 sm:p-4 text-slate-600">Atención 24/7, respuestas sobre arquitectura modular y transcripción de notas de voz.</td>
-                    <td className="p-3.5 sm:p-4"><span className="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-bold text-[10px] border border-emerald-200">Activo</span></td>
-                    <td className="p-3.5 sm:p-4 font-mono font-bold text-emerald-700 bg-emerald-50/50">~$100.000 COP / mes</td>
+                    <td className="p-3 sm:p-4 text-slate-600">Atención 24/7, respuestas sobre arquitectura modular y transcripción de notas de voz.</td>
+                    <td className="p-3 sm:p-4"><span className="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-bold text-[9.5px] border border-emerald-200">Activo</span></td>
+                    <td className="p-3 sm:p-4 font-mono font-bold text-emerald-700 bg-emerald-50/50">~$100.000 COP/mes</td>
                   </tr>
 
                   <tr className="hover:bg-slate-50/60 transition-colors">
-                    <td className="p-3.5 sm:p-4 font-bold text-slate-900 flex items-center space-x-2">
-                      <span>💬</span>
-                      <span>Línea Oficial WhatsApp Business (Meta API)</span>
+                    <td className="p-3 sm:p-4 font-bold text-slate-900">
+                      <div className="flex items-center space-x-2">
+                        <span>💬</span>
+                        <span>WhatsApp Business (Meta API)</span>
+                      </div>
                     </td>
-                    <td className="p-3.5 sm:p-4 text-slate-600">Recepción y envío de mensajes oficiales y sincronización de clientes potenciales de anuncios.</td>
-                    <td className="p-3.5 sm:p-4"><span className="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-bold text-[10px] border border-emerald-200">Activo</span></td>
-                    <td className="p-3.5 sm:p-4 font-mono font-bold text-slate-700">Según consumo Meta</td>
+                    <td className="p-3 sm:p-4 text-slate-600">Recepción y envío de mensajes oficiales y sincronización de clientes potenciales de anuncios.</td>
+                    <td className="p-3 sm:p-4"><span className="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-bold text-[9.5px] border border-emerald-200">Activo</span></td>
+                    <td className="p-3 sm:p-4 font-mono font-bold text-slate-700">Según consumo Meta</td>
                   </tr>
 
                   <tr className="hover:bg-slate-50/60 transition-colors">
-                    <td className="p-3.5 sm:p-4 font-bold text-slate-900 flex items-center space-x-2">
-                      <span>🔒</span>
-                      <span>Dominio & Seguridad SSL (anclaspecialprojects.com)</span>
+                    <td className="p-3 sm:p-4 font-bold text-slate-900">
+                      <div className="flex items-center space-x-2">
+                        <span>🔒</span>
+                        <span>Dominio & Seguridad SSL</span>
+                      </div>
                     </td>
-                    <td className="p-3.5 sm:p-4 text-slate-600">Dirección web oficial y certificados de seguridad web cifrada.</td>
-                    <td className="p-3.5 sm:p-4"><span className="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-bold text-[10px] border border-emerald-200">Activo</span></td>
-                    <td className="p-3.5 sm:p-4 font-mono font-bold text-slate-700">~$70.000 COP / año</td>
+                    <td className="p-3 sm:p-4 text-slate-600">Dirección web oficial y certificados de seguridad web cifrada.</td>
+                    <td className="p-3 sm:p-4"><span className="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-bold text-[9.5px] border border-emerald-200">Activo</span></td>
+                    <td className="p-3 sm:p-4 font-mono font-bold text-slate-700">~$70.000 COP/año</td>
                   </tr>
 
                   <tr className="hover:bg-slate-50/60 transition-colors">
-                    <td className="p-3.5 sm:p-4 font-bold text-slate-900 flex items-center space-x-2">
-                      <span>💾</span>
-                      <span>Copias de Seguridad en la Nube (Google Drive)</span>
+                    <td className="p-3 sm:p-4 font-bold text-slate-900">
+                      <div className="flex items-center space-x-2">
+                        <span>💾</span>
+                        <span>Copias de Seguridad (Drive)</span>
+                      </div>
                     </td>
-                    <td className="p-3.5 sm:p-4 text-slate-600">Respaldos automáticos y continuos de toda la información comercial de ANCLA.</td>
-                    <td className="p-3.5 sm:p-4"><span className="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-bold text-[10px] border border-emerald-200">Configurado</span></td>
-                    <td className="p-3.5 sm:p-4 font-mono font-bold text-emerald-700">Incluido en Google</td>
+                    <td className="p-3 sm:p-4 text-slate-600">Respaldos automáticos y continuos de toda la información comercial de ANCLA.</td>
+                    <td className="p-3 sm:p-4"><span className="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-bold text-[9.5px] border border-emerald-200">Configurado</span></td>
+                    <td className="p-3 sm:p-4 font-mono font-bold text-emerald-700">Incluido en Google</td>
                   </tr>
                 </tbody>
               </table>
@@ -452,8 +465,8 @@ export const CommercialProposalView = () => {
               <div className="space-y-2">
                 <span className="text-xs font-bold text-slate-700 block">Observaciones registradas en Costos:</span>
                 {savedComments['costos-infra'].map((comm) => (
-                  <div key={comm.id} className="p-2.5 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-950">
-                    <div className="flex justify-between text-[10px] font-bold text-amber-800 mb-0.5">
+                  <div key={comm.id} className="p-2.5 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-950 break-words">
+                    <div className="flex justify-between text-[9.5px] font-bold text-amber-800 mb-0.5">
                       <span>👤 {comm.author}</span>
                       <span>🕒 {comm.date}</span>
                     </div>
@@ -465,38 +478,40 @@ export const CommercialProposalView = () => {
           </div>
         )}
 
-        {/* CONTENIDO TAB 4: PROPUESTA DE INVERSIÓN */}
+        {/* CONTENIDO TAB 4: PROPUESTA DE INVERSIÓN (ULTRA RESPONSIVE) */}
         {activeTab === 'propuesta' && (
           <div className="space-y-6 animate-fadeIn">
             
             {/* CAJA DE INVERSIÓN */}
-            <div className="bg-gradient-to-br from-slate-950 via-[#041d1a] to-[#02271d] text-white rounded-3xl p-6 sm:p-10 shadow-2xl border border-emerald-500/30 relative overflow-hidden">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-6 border-b border-white/10 mb-6">
+            <div className="bg-gradient-to-br from-slate-950 via-[#041d1a] to-[#02271d] text-white rounded-2xl sm:rounded-3xl p-5 sm:p-10 shadow-2xl border border-emerald-500/30 relative overflow-hidden">
+              
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 pb-5 sm:pb-6 border-b border-white/10 mb-5 sm:mb-6">
                 <div>
-                  <span className="text-xs font-black text-emerald-400 uppercase tracking-widest block">Propuesta Comercial de Valor</span>
-                  <h2 className="text-2xl sm:text-3xl font-black text-white mt-1">Ecosistema Integral ANCLA</h2>
+                  <span className="text-[10px] sm:text-xs font-black text-emerald-400 uppercase tracking-widest block">Propuesta Comercial de Valor</span>
+                  <h2 className="text-xl sm:text-3xl font-black text-white mt-1">Ecosistema Integral ANCLA</h2>
                   <p className="text-xs sm:text-sm text-slate-300 mt-1">Solución tecnológica completa y gestión publicitaria especializada.</p>
                 </div>
                 <div className="sm:text-right">
-                  <div className="text-3xl sm:text-4xl font-black text-emerald-400 tracking-tight">8.000.000 COP</div>
-                  <span className="text-xs text-slate-400 font-bold block mt-1">Inversión Total del Paquete</span>
+                  <div className="text-2xl sm:text-4xl font-black text-emerald-400 tracking-tight">8.000.000 COP</div>
+                  <span className="text-[10px] sm:text-xs text-slate-400 font-bold block mt-0.5">Inversión Total del Paquete</span>
                 </div>
               </div>
 
-              <h3 className="text-sm font-extrabold text-white mb-4">¿Qué incluye este valor de 8.000.000 COP?</h3>
+              <h3 className="text-xs sm:text-sm font-extrabold text-white mb-3 sm:mb-4">¿Qué incluye este valor de 8.000.000 COP?</h3>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4 mb-5 sm:mb-6">
+                
                 <div className="bg-white/5 border border-white/10 p-4 rounded-2xl flex flex-col justify-between">
                   <div>
-                    <div className="flex justify-between items-start mb-1.5">
-                      <h4 className="text-sm font-extrabold text-white flex items-center space-x-2">
+                    <div className="flex flex-wrap justify-between items-start gap-1.5 mb-1.5">
+                      <h4 className="text-xs sm:text-sm font-extrabold text-white flex items-center space-x-1.5">
                         <span>📱 1. CRM a la Medida + Sofi AI</span>
                       </h4>
-                      <span className="text-[10px] font-black text-emerald-300 bg-emerald-500/20 border border-emerald-500/30 px-2.5 py-0.5 rounded-full">
+                      <span className="text-[10px] font-black text-emerald-300 bg-emerald-500/20 border border-emerald-500/30 px-2 py-0.5 rounded-full">
                         $4.500.000 COP
                       </span>
                     </div>
-                    <span className="inline-block text-[9.5px] font-bold text-emerald-400 mb-2 uppercase">✅ Activo Entregado y Operativo</span>
+                    <span className="inline-block text-[9px] sm:text-[9.5px] font-bold text-emerald-400 mb-1.5 uppercase">✅ Activo Entregado y Operativo</span>
                     <p className="text-xs text-slate-300 leading-relaxed">
                       Desarrollo completo del CRM, Kanban, módulo de citas, ficha 360°, módulo para fábrica/China, Sofi AI 2.0 (24/7 con soporte de audios) y el tiempo dedicado a responder y operar los chats en los primeros días de lanzamiento.
                     </p>
@@ -505,15 +520,15 @@ export const CommercialProposalView = () => {
 
                 <div className="bg-white/5 border border-white/10 p-4 rounded-2xl flex flex-col justify-between">
                   <div>
-                    <div className="flex justify-between items-start mb-1.5">
-                      <h4 className="text-sm font-extrabold text-white flex items-center space-x-2">
+                    <div className="flex flex-wrap justify-between items-start gap-1.5 mb-1.5">
+                      <h4 className="text-xs sm:text-sm font-extrabold text-white flex items-center space-x-1.5">
                         <span>🌐 2. Página Web Comercial</span>
                       </h4>
-                      <span className="text-[10px] font-black text-blue-300 bg-blue-500/20 border border-blue-500/30 px-2.5 py-0.5 rounded-full">
+                      <span className="text-[10px] font-black text-blue-300 bg-blue-500/20 border border-blue-500/30 px-2 py-0.5 rounded-full">
                         $1.000.000 COP
                       </span>
                     </div>
-                    <span className="inline-block text-[9.5px] font-bold text-blue-400 mb-2 uppercase">🌐 Fase en Desarrollo y Despliegue</span>
+                    <span className="inline-block text-[9px] sm:text-[9.5px] font-bold text-blue-400 mb-1.5 uppercase">🌐 Fase en Desarrollo y Despliegue</span>
                     <p className="text-xs text-slate-300 leading-relaxed">
                       Diseño y programación de la vitrina digital interactiva para ANCLA, con catálogo de modelos modulares y Sofi AI integrada.
                     </p>
@@ -522,15 +537,15 @@ export const CommercialProposalView = () => {
 
                 <div className="bg-white/5 border border-white/10 p-4 rounded-2xl flex flex-col justify-between">
                   <div>
-                    <div className="flex justify-between items-start mb-1.5">
-                      <h4 className="text-sm font-extrabold text-white flex items-center space-x-2">
+                    <div className="flex flex-wrap justify-between items-start gap-1.5 mb-1.5">
+                      <h4 className="text-xs sm:text-sm font-extrabold text-white flex items-center space-x-1.5">
                         <span>📢 3. Manejo y Optimización de Campañas</span>
                       </h4>
-                      <span className="text-[10px] font-black text-emerald-300 bg-emerald-500/20 border border-emerald-500/30 px-2.5 py-0.5 rounded-full">
+                      <span className="text-[10px] font-black text-emerald-300 bg-emerald-500/20 border border-emerald-500/30 px-2 py-0.5 rounded-full">
                         $2.000.000 COP
                       </span>
                     </div>
-                    <span className="inline-block text-[9.5px] font-bold text-emerald-400 mb-2 uppercase">✅ Incluye hasta el 30 de Agosto</span>
+                    <span className="inline-block text-[9px] sm:text-[9.5px] font-bold text-emerald-400 mb-1.5 uppercase">✅ Incluye hasta el 30 de Agosto</span>
                     <p className="text-xs text-slate-300 leading-relaxed">
                       Estrategia, creación y optimización continua de pauta en Facebook e Instagram cubriendo todo el periodo hasta el 30 de Agosto (más de 530 leads captados).
                     </p>
@@ -539,48 +554,50 @@ export const CommercialProposalView = () => {
 
                 <div className="bg-white/5 border border-white/10 p-4 rounded-2xl flex flex-col justify-between">
                   <div>
-                    <div className="flex justify-between items-start mb-1.5">
-                      <h4 className="text-sm font-extrabold text-white flex items-center space-x-2">
+                    <div className="flex flex-wrap justify-between items-start gap-1.5 mb-1.5">
+                      <h4 className="text-xs sm:text-sm font-extrabold text-white flex items-center space-x-1.5">
                         <span>🎬 4. Edición de Videos</span>
                       </h4>
-                      <span className="text-[10px] font-black text-emerald-300 bg-emerald-500/20 border border-emerald-500/30 px-2.5 py-0.5 rounded-full">
+                      <span className="text-[10px] font-black text-emerald-300 bg-emerald-500/20 border border-emerald-500/30 px-2 py-0.5 rounded-full">
                         $500.000 COP
                       </span>
                     </div>
-                    <span className="inline-block text-[9.5px] font-bold text-emerald-400 mb-2 uppercase">✅ Incluye hasta el 30 de Agosto</span>
+                    <span className="inline-block text-[9px] sm:text-[9.5px] font-bold text-emerald-400 mb-1.5 uppercase">✅ Incluye hasta el 30 de Agosto</span>
                     <p className="text-xs text-slate-300 leading-relaxed">
                       Producción y edición de piezas audiovisuales comerciales de alta retención para redes sociales cubriendo todo el periodo hasta el 30 de Agosto.
                     </p>
                   </div>
                 </div>
+
               </div>
 
               {/* RESUMEN DE VALORES Y FORMA DE PAGO CONCERTADA */}
-              <div className="bg-white/10 border border-white/15 p-5 rounded-2xl text-xs text-slate-200 space-y-3">
-                <div className="flex flex-wrap justify-between items-center pb-2.5 border-b border-white/10 text-xs font-bold text-slate-300">
+              <div className="bg-white/10 border border-white/15 p-4 sm:p-5 rounded-2xl text-xs text-slate-200 space-y-2.5 sm:space-y-3">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1 sm:gap-2 pb-2.5 border-b border-white/10 text-xs font-bold text-slate-300">
                   <span>Desglose: CRM ($4.5M) + Web ($1.0M) + Campañas ($2.0M) + Videos ($500K)</span>
                   <span className="text-emerald-400 font-extrabold text-sm">= $8.000.000 COP</span>
                 </div>
 
-                <div className="space-y-1.5">
+                <div className="space-y-1">
                   <div className="font-extrabold text-white text-xs mb-1 flex items-center space-x-2">
                     <span>🤝 Forma de Pago y Desembolsos:</span>
-                    <span className="text-[10px] font-black text-emerald-400 bg-emerald-500/20 px-2 py-0.5 rounded-full">A Mutuo Acuerdo</span>
+                    <span className="text-[9.5px] font-black text-emerald-400 bg-emerald-500/20 px-2 py-0.5 rounded-full">A Mutuo Acuerdo</span>
                   </div>
-                  <p className="text-slate-300 leading-relaxed">
+                  <p className="text-slate-300 leading-relaxed text-[11.5px] sm:text-xs">
                     La distribución de los pagos y fechas de desembolso se concertarán de común acuerdo con la gerencia de <strong>ANCLA Special Projects</strong> para adaptarse a los flujos y tiempos de entrega de la fase final de la Página Web.
                   </p>
                 </div>
               </div>
 
-              <div className="text-center pt-8">
+              <div className="text-center pt-6 sm:pt-8">
                 <button 
                   onClick={() => setShowThankYouModal(true)}
-                  className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-base py-4 px-10 rounded-full shadow-xl shadow-emerald-500/30 transition-all transform hover:-translate-y-0.5 cursor-pointer"
+                  className="w-full sm:w-auto bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-sm sm:text-base py-3.5 sm:py-4 px-6 sm:px-10 rounded-full shadow-xl shadow-emerald-500/30 transition-all transform hover:-translate-y-0.5 cursor-pointer flex items-center justify-center space-x-2 mx-auto"
                 >
-                  🤝 Aceptar Propuesta y Continuar
+                  <span>🤝 Aceptar Propuesta y Continuar</span>
                 </button>
               </div>
+
             </div>
 
           </div>
@@ -588,30 +605,31 @@ export const CommercialProposalView = () => {
 
       </main>
 
-      {/* MODAL DE COMENTARIOS / OBSERVACIONES ACUMULATIVAS */}
+      {/* MODAL DE COMENTARIOS / OBSERVACIONES ACUMULATIVAS (RESPONSIVE) */}
       {activeCommentItem && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-fadeIn">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto">
-            <div className="flex justify-between items-center mb-4 pb-3 border-b border-slate-100">
+        <div className="fixed inset-0 bg-black/65 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 z-50 animate-fadeIn">
+          <div className="bg-white rounded-2xl sm:rounded-3xl max-w-lg w-full p-5 sm:p-7 shadow-2xl border border-slate-200 max-h-[92vh] overflow-y-auto">
+            
+            <div className="flex justify-between items-center mb-3 sm:mb-4 pb-2.5 sm:pb-3 border-b border-slate-100">
               <div>
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Observación sobre:</span>
-                <h3 className="text-base font-extrabold text-slate-900">{activeCommentItem.title}</h3>
+                <span className="text-[9.5px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Observación sobre:</span>
+                <h3 className="text-sm sm:text-base font-extrabold text-slate-900">{activeCommentItem.title}</h3>
               </div>
               <button 
                 onClick={() => setActiveCommentItem(null)}
-                className="text-slate-400 hover:text-slate-600 p-1.5 rounded-full hover:bg-slate-100 cursor-pointer"
+                className="text-slate-400 hover:text-slate-600 p-1.5 rounded-full hover:bg-slate-100 cursor-pointer shrink-0"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            {/* Historial de comentarios previos en este ítem */}
+            {/* Historial de comentarios previos */}
             {savedComments[activeCommentItem.key] && savedComments[activeCommentItem.key].length > 0 && (
-              <div className="mb-4 space-y-2">
-                <span className="text-[11px] font-bold text-slate-500 block">Comentarios agregados ({savedComments[activeCommentItem.key].length}):</span>
+              <div className="mb-3.5 space-y-1.5">
+                <span className="text-[10.5px] sm:text-[11px] font-bold text-slate-500 block">Comentarios agregados ({savedComments[activeCommentItem.key].length}):</span>
                 {savedComments[activeCommentItem.key].map((c) => (
-                  <div key={c.id} className="p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800">
-                    <div className="flex justify-between items-center text-[10px] font-bold text-slate-500 mb-0.5">
+                  <div key={c.id} className="p-2 sm:p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 break-words">
+                    <div className="flex justify-between items-center text-[9.5px] sm:text-[10px] font-bold text-slate-500 mb-0.5">
                       <span>👤 {c.author}</span>
                       <span>🕒 {c.date}</span>
                     </div>
@@ -621,7 +639,7 @@ export const CommercialProposalView = () => {
               </div>
             )}
 
-            <form onSubmit={handleSaveComment} className="space-y-4">
+            <form onSubmit={handleSaveComment} className="space-y-3 sm:space-y-4">
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1">¿Quién escribe? (Opcional)</label>
                 <input
@@ -629,43 +647,43 @@ export const CommercialProposalView = () => {
                   placeholder="Ej. Liliana / Equipo ANCLA"
                   value={authorName}
                   onChange={(e) => setAuthorName(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 placeholder-slate-400 focus:bg-white focus:border-emerald-500 focus:outline-none"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 sm:py-2.5 text-xs text-slate-800 placeholder-slate-400 focus:bg-white focus:border-emerald-500 focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Escribe tu nueva observación o sugerencia:</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Escribe tu nueva observación:</label>
                 <textarea
                   rows="3"
                   placeholder="Escribe aquí cualquier ajuste, duda o comentario sobre este punto..."
                   value={commentText}
                   onChange={(e) => setCommentText(e.target.value)}
                   required
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3.5 text-xs text-slate-800 placeholder-slate-400 focus:bg-white focus:border-emerald-500 focus:outline-none resize-none"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 sm:p-3.5 text-xs text-slate-800 placeholder-slate-400 focus:bg-white focus:border-emerald-500 focus:outline-none resize-none"
                 ></textarea>
               </div>
 
               {commentSuccess && (
-                <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold rounded-xl flex items-center space-x-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                <div className="p-2.5 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold rounded-xl flex items-center space-x-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                   <span>{commentSuccess}</span>
                 </div>
               )}
 
-              <div className="flex justify-end space-x-2 pt-2">
+              <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 pt-1">
                 <button
                   type="button"
                   onClick={() => setActiveCommentItem(null)}
-                  className="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl cursor-pointer"
+                  className="w-full sm:w-auto px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl cursor-pointer text-center"
                 >
                   Cerrar
                 </button>
                 <button
                   type="submit"
                   disabled={savingComment}
-                  className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow-md shadow-emerald-600/20 transition-all flex items-center space-x-1.5 cursor-pointer disabled:opacity-50"
+                  className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow-md shadow-emerald-600/20 transition-all flex items-center justify-center space-x-1.5 cursor-pointer disabled:opacity-50"
                 >
-                  <Send className="w-3.5 h-3.5" />
+                  <Send className="w-3.5 h-3.5 shrink-0" />
                   <span>{savingComment ? 'Guardando...' : 'Agregar Observación'}</span>
                 </button>
               </div>
@@ -674,53 +692,53 @@ export const CommercialProposalView = () => {
         </div>
       )}
 
-      {/* MODAL PROFESIONAL DE AGRADECIMIENTO Y CONFIRMACIÓN */}
+      {/* MODAL DE AGRADECIMIENTO (RESPONSIVE) */}
       {showThankYouModal && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-fadeIn">
-          <div className="bg-gradient-to-br from-slate-950 via-[#071916] to-[#03231b] text-white rounded-3xl max-w-lg w-full p-7 sm:p-9 shadow-2xl border border-emerald-500/40 relative text-center">
+        <div className="fixed inset-0 bg-black/75 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 z-50 animate-fadeIn">
+          <div className="bg-gradient-to-br from-slate-950 via-[#071916] to-[#03231b] text-white rounded-2xl sm:rounded-3xl max-w-lg w-full p-6 sm:p-9 shadow-2xl border border-emerald-500/40 relative text-center max-h-[92vh] overflow-y-auto">
             
             <button 
               onClick={() => setShowThankYouModal(false)}
-              className="absolute top-4 right-4 text-slate-400 hover:text-white p-1.5 rounded-full hover:bg-white/10 cursor-pointer"
+              className="absolute top-4 right-4 text-slate-400 hover:text-white p-1.5 rounded-full hover:bg-white/10 cursor-pointer shrink-0"
             >
               <X className="w-5 h-5" />
             </button>
 
-            <div className="w-16 h-16 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-emerald-500/10">
-              <Sparkles className="w-8 h-8" />
+            <div className="w-12 h-12 sm:w-16 sm:h-16 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 shadow-lg shadow-emerald-500/10 shrink-0">
+              <Sparkles className="w-6 h-6 sm:w-8 sm:h-8" />
             </div>
 
-            <h3 className="text-2xl font-black text-white tracking-tight mb-2">
+            <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight mb-2">
               ¡Muchas Gracias por su Confianza!
             </h3>
 
-            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed mb-6">
+            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed mb-5 sm:mb-6">
               Es un verdadero honor trabajar con el equipo de <strong>ANCLA Special Projects</strong> en el desarrollo de este ecosistema. 
               <br /><br />
               Con el CRM ya operativo y los más de 530 prospectos procesados, estamos listos para construir la <strong>Página Web Comercial</strong> y consolidar a ANCLA como el referente número uno en arquitectura modular de alta gama.
             </p>
 
-            <div className="bg-white/5 border border-white/10 p-4 rounded-2xl text-left mb-6 space-y-1.5">
+            <div className="bg-white/5 border border-white/10 p-3.5 sm:p-4 rounded-2xl text-left mb-5 sm:mb-6 space-y-1.5">
               <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider block">Próximos Pasos Inmediatos:</span>
-              <p className="text-xs text-slate-200">1. Formalización del primer hito de entrega ($4.000.000 COP).</p>
+              <p className="text-xs text-slate-200">1. Coordinación de la forma de desembolso acordada.</p>
               <p className="text-xs text-slate-200">2. Entrega de fotos, renders y modelos para la nueva página web.</p>
               <p className="text-xs text-slate-200">3. Lanzamiento y conexión final en producción.</p>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-3 justify-center">
               <a
                 href="https://wa.me/573105748805?text=Hola,%20hemos%20revisado%20la%20propuesta%20comercial%20de%20ANCLA%20y%20deseamos%20continuar%20con%20la%20fase%20de%20la%20P%C3%A1gina%20Web."
                 target="_blank"
                 rel="noreferrer"
-                className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs py-3.5 px-6 rounded-xl shadow-lg shadow-emerald-500/20 transition-all flex items-center justify-center space-x-2"
+                className="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs py-3.5 px-6 rounded-xl shadow-lg shadow-emerald-500/20 transition-all flex items-center justify-center space-x-2"
               >
-                <MessageCircle className="w-4 h-4" />
+                <MessageCircle className="w-4 h-4 shrink-0" />
                 <span>Confirmar por WhatsApp</span>
               </a>
 
               <button
                 onClick={() => setShowThankYouModal(false)}
-                className="bg-white/10 hover:bg-white/15 text-white font-bold text-xs py-3.5 px-5 rounded-xl transition-all cursor-pointer"
+                className="w-full sm:w-auto bg-white/10 hover:bg-white/15 text-white font-bold text-xs py-3.5 px-5 rounded-xl transition-all cursor-pointer"
               >
                 Cerrar
               </button>
@@ -730,7 +748,7 @@ export const CommercialProposalView = () => {
         </div>
       )}
 
-      <footer className="max-w-4xl mx-auto text-center px-4 mt-12 text-xs text-slate-400 border-t border-slate-200 pt-6">
+      <footer className="max-w-4xl mx-auto text-center px-4 mt-10 sm:mt-12 text-xs text-slate-400 border-t border-slate-200 pt-6">
         <p>Propuesta elaborada exclusivamente para <strong>ANCLA Special Projects</strong>.</p>
         <p className="mt-1">Todos los derechos reservados © 2026 • León FX</p>
       </footer>
