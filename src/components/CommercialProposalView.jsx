@@ -151,7 +151,7 @@ export const CommercialProposalView = () => {
             </div>
             <div className="bg-white/5 border border-white/10 backdrop-blur-md p-3.5 rounded-2xl">
               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Periodo Pauta/Video</span>
-              <span className="text-xs sm:text-sm font-bold text-white mt-0.5 block">Hasta 15 Agosto 2026</span>
+              <span className="text-xs sm:text-sm font-bold text-white mt-0.5 block">Hasta 30 Agosto 2026</span>
             </div>
             <div className="bg-white/5 border border-white/10 backdrop-blur-md p-3.5 rounded-2xl">
               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Vigencia Oferta</span>
@@ -530,9 +530,9 @@ export const CommercialProposalView = () => {
                         $2.000.000 COP
                       </span>
                     </div>
-                    <span className="inline-block text-[9.5px] font-bold text-emerald-400 mb-2 uppercase">✅ Ejecutado hasta 15 de Agosto</span>
+                    <span className="inline-block text-[9.5px] font-bold text-emerald-400 mb-2 uppercase">✅ Incluye hasta el 30 de Agosto</span>
                     <p className="text-xs text-slate-300 leading-relaxed">
-                      Estrategia, creación y optimización de pauta en Facebook e Instagram ejecutadas hasta el 15 de Agosto (más de 530 leads captados).
+                      Estrategia, creación y optimización continua de pauta en Facebook e Instagram cubriendo todo el periodo hasta el 30 de Agosto (más de 530 leads captados).
                     </p>
                   </div>
                 </div>
@@ -547,15 +547,15 @@ export const CommercialProposalView = () => {
                         $500.000 COP
                       </span>
                     </div>
-                    <span className="inline-block text-[9.5px] font-bold text-emerald-400 mb-2 uppercase">✅ Ejecutado hasta 15 de Agosto</span>
+                    <span className="inline-block text-[9.5px] font-bold text-emerald-400 mb-2 uppercase">✅ Incluye hasta el 30 de Agosto</span>
                     <p className="text-xs text-slate-300 leading-relaxed">
-                      Producción y edición de piezas audiovisuales comerciales de alta retención para redes sociales ejecutadas hasta el 15 de Agosto.
+                      Producción y edición de piezas audiovisuales comerciales de alta retención para redes sociales cubriendo todo el periodo hasta el 30 de Agosto.
                     </p>
                   </div>
                 </div>
               </div>
 
-              {/* RESUMEN DE VALORES Y ESQUEMA DE PAGO */}
+              {/* RESUMEN DE VALORES Y FORMA DE PAGO CONCERTADA */}
               <div className="bg-white/10 border border-white/15 p-5 rounded-2xl text-xs text-slate-200 space-y-3">
                 <div className="flex flex-wrap justify-between items-center pb-2.5 border-b border-white/10 text-xs font-bold text-slate-300">
                   <span>Desglose: CRM ($4.5M) + Web ($1.0M) + Campañas ($2.0M) + Videos ($500K)</span>
@@ -563,15 +563,13 @@ export const CommercialProposalView = () => {
                 </div>
 
                 <div className="space-y-1.5">
-                  <div className="font-extrabold text-white text-xs mb-1">💳 Esquema de Pago por Hitos de Entrega:</div>
-                  <div className="flex items-start space-x-2">
-                    <span className="font-black text-emerald-400">• 50% ($4.000.000 COP):</span>
-                    <span>Por los <strong>activos ya entregados y en operación</strong>: CRM a la medida con Sofi AI 2.0, gestión de marketing/pauta en Meta Ads y edición de videos ejecutados hasta el 15 de Agosto.</span>
+                  <div className="font-extrabold text-white text-xs mb-1 flex items-center space-x-2">
+                    <span>🤝 Forma de Pago y Desembolsos:</span>
+                    <span className="text-[10px] font-black text-emerald-400 bg-emerald-500/20 px-2 py-0.5 rounded-full">A Mutuo Acuerdo</span>
                   </div>
-                  <div className="flex items-start space-x-2">
-                    <span className="font-black text-blue-400">• 50% ($4.000.000 COP):</span>
-                    <span><strong>Fase Final:</strong> Contra entrega, revisión y aprobación de la <strong>Página Web Comercial</strong> conectada al CRM.</span>
-                  </div>
+                  <p className="text-slate-300 leading-relaxed">
+                    La distribución de los pagos y fechas de desembolso se concertarán de común acuerdo con la gerencia de <strong>ANCLA Special Projects</strong> para adaptarse a los flujos y tiempos de entrega de la fase final de la Página Web.
+                  </p>
                 </div>
               </div>
 
