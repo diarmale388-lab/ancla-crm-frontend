@@ -159,7 +159,14 @@ export const useCalendarStore = create((set, get) => ({
     }
   },
 
-  availability: [],
+  availability: (() => {
+    try {
+      const saved = localStorage.getItem('ancla_availability_config');
+      return saved ? JSON.parse(saved) : null;
+    } catch (e) {
+      return null;
+    }
+  })(),
   fetchAvailability: async () => {
     const token = useAuthStore.getState().token;
     if (!token) return;
@@ -172,6 +179,9 @@ export const useCalendarStore = create((set, get) => ({
       });
       if (!response.ok) throw new Error('Error al obtener disponibilidad');
       const data = await response.json();
+      try {
+        localStorage.setItem('ancla_availability_config', JSON.stringify(data));
+      } catch (e) {}
       set({ availability: data });
     } catch (err) {
       console.error(err);

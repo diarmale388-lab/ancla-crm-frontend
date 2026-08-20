@@ -113,6 +113,20 @@ export const CalendarView = () => {
 
   const DAYS_OF_WEEK_NAMES = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
 
+  const normalizeTimeTo24h = (val) => {
+    if (!val) return '09:00';
+    const str = String(val).toLowerCase().trim();
+    const isPM = str.includes('p. m.') || str.includes('pm') || str.includes('p.m.');
+    const isAM = str.includes('a. m.') || str.includes('am') || str.includes('a.m.');
+    const clean = str.replace(/[^0-9:]/g, '').trim();
+    const parts = clean.split(':');
+    let h = parseInt(parts[0] || '9', 10);
+    let m = parseInt(parts[1] || '0', 10);
+    if (isPM && h < 12) h += 12;
+    if (isAM && h === 12) h = 0;
+    return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+  };
+
   // Inicializar configuración local de disponibilidad para ambas modalidades
   useEffect(() => {
     if (showConfigModal && availability) {
@@ -125,7 +139,10 @@ export const CalendarView = () => {
               day_of_week: index,
               name,
               enabled: true,
-              intervals: foundDay.intervals
+              intervals: foundDay.intervals.map(i => ({
+                start_time: normalizeTimeTo24h(i.start_time),
+                end_time: normalizeTimeTo24h(i.end_time)
+              }))
             };
           }
           if (foundDay && foundDay.intervals && foundDay.intervals.length === 0) {
@@ -170,13 +187,13 @@ export const CalendarView = () => {
 
       setPresencialConfig({
         days: buildDays(pres, '09:30', '17:00', '13:00'),
-        slot_duration: pres.slot_duration || 60,
+        slot_duration: Number(pres.slot_duration) || 60,
         buffer_time: 0
       });
 
       setVirtualConfig({
         days: buildDays(virt, '10:00', '17:00', '12:00'),
-        slot_duration: virt.slot_duration || 30,
+        slot_duration: Number(virt.slot_duration) || 30,
         buffer_time: 0
       });
     }
@@ -291,18 +308,28 @@ export const CalendarView = () => {
       presencial: {
         days: presencialConfig.days.map(d => ({
           day_of_week: d.day_of_week,
-          intervals: d.enabled ? d.intervals : []
+          intervals: d.enabled 
+            ? (d.intervals || []).map(i => ({
+                start_time: normalizeTimeTo24h(i.start_time),
+                end_time: normalizeTimeTo24h(i.end_time)
+              }))
+            : []
         })),
-        slot_duration: presencialConfig.slot_duration,
-        buffer_time: presencialConfig.buffer_time
+        slot_duration: Number(presencialConfig.slot_duration) || 60,
+        buffer_time: 0
       },
       virtual: {
         days: virtualConfig.days.map(d => ({
           day_of_week: d.day_of_week,
-          intervals: d.enabled ? d.intervals : []
+          intervals: d.enabled 
+            ? (d.intervals || []).map(i => ({
+                start_time: normalizeTimeTo24h(i.start_time),
+                end_time: normalizeTimeTo24h(i.end_time)
+              }))
+            : []
         })),
-        slot_duration: virtualConfig.slot_duration,
-        buffer_time: virtualConfig.buffer_time
+        slot_duration: Number(virtualConfig.slot_duration) || 30,
+        buffer_time: 0
       }
     };
 
