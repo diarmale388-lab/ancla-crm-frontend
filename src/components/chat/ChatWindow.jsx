@@ -7,6 +7,7 @@ import { useAuthStore } from '../../store/useAuthStore';
 import LeadFichaModal360 from '../common/LeadFichaModal360';
 import EmailPreviewModal from '../common/EmailPreviewModal';
 import AnclaTechnicalDossier from '../common/AnclaTechnicalDossier';
+import SpecialAppointmentBanner from './SpecialAppointmentBanner';
 import { MessageBubble } from './MessageBubble';
 import { Send, Bot, WifiOff, MessageCircle, Sparkles, User, Phone, Mail, Calendar, Check, ChevronDown, BookOpen, Clock, Lock, Trash2, ShieldAlert, ArrowLeft, CornerUpLeft, Forward, Pencil, X, Download, Smile, Paperclip, Upload, Search, DollarSign, MoreVertical, Bold, Italic, Strikethrough, Code, Copy, Scissors, Clipboard, Video, CheckSquare, Wrench } from 'lucide-react';
 
@@ -1140,6 +1141,14 @@ export const ChatWindow = () => {
               Cerrar
             </button>
           </div>
+        )}
+
+        {/* Banner de Autorización VIP para Citas Extraordinarias (Liliana León / Dirección Comercial) */}
+        {activeContact && (
+          <SpecialAppointmentBanner 
+            contact={activeContact} 
+            onActionSuccess={(toastMsg) => showToast(toastMsg)} 
+          />
         )}
 
         {/* Mensajes del Chat con Focus Dimming suave al interactuar con el panel lateral */}
