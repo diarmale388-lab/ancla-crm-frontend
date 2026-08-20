@@ -58,6 +58,12 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
   if (!contact) return null;
 
   const token = useAuthStore(state => state.token);
+  const agents = useChatStore(state => state.agents);
+  const fetchAgents = useChatStore(state => state.fetchAgents);
+
+  useEffect(() => {
+    if (fetchAgents) fetchAgents();
+  }, []);
 
   // Pestaña Activa: 'perfil', 'resumen_ia', 'documentacion'
   const [activeTab, setActiveTab] = useState('perfil');
@@ -328,8 +334,16 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
   return (
     <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-0 sm:p-5 overflow-hidden animate-fade-in font-sans">
       
+      {/* Toast Flotante Central de Guardado Exitoso */}
+      {savedSuccess && (
+        <div className="fixed top-8 left-1/2 -translate-x-1/2 z-[9999] bg-emerald-600 dark:bg-emerald-500 text-white px-7 py-3.5 rounded-2xl shadow-2xl flex items-center space-x-3 text-sm font-black animate-fade-in border-2 border-white/20 backdrop-blur-md">
+          <CheckCircle2 className="w-5 h-5 text-white animate-pulse" />
+          <span>🎉 ¡Ficha Técnica 360° y Asesor Guardados con Éxito!</span>
+        </div>
+      )}
+
       {/* Contenedor Principal con Dual Theme: #f8fafc en Claro / #0b0f19 en Oscuro */}
-      <div className="bg-[#f8fafc] dark:bg-[#0b0f19] border-0 sm:border border-[#e2e8f0] dark:border-[#334155] rounded-none sm:rounded-3xl w-full max-w-5xl h-full sm:h-[92vh] max-h-[100dvh] sm:max-h-[880px] flex flex-col shadow-2xl overflow-hidden text-[#0f172a] dark:text-[#f8fafc] transition-colors">
+      <div className="bg-[#f8fafc] dark:bg-[#0b0f19] border-0 sm:border border-[#e2e8f0] dark:border-[#334155] rounded-none sm:rounded-3xl w-full max-w-5xl h-full sm:h-[92vh] max-h-[100dvh] sm:max-h-[880px] flex flex-col shadow-2xl overflow-hidden text-[#0f172a] dark:text-[#f8fafc] transition-colors relative">
         
         {/* 1. HEADER COMPACTO TIPO APP PWA NATIVA (2 FILAS MÁXIMO) */}
         <div className="px-3.5 sm:px-6 py-2.5 sm:py-3 border-b border-[#e2e8f0] dark:border-[#334155] bg-[#f1f5f9] dark:bg-[#0f172a] flex flex-col gap-2 shrink-0">
@@ -394,20 +408,28 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
 
             {/* Asesor Selector Pill */}
             <div 
-              className={`flex items-center space-x-1.5 bg-slate-200/80 dark:bg-slate-800 border border-slate-300/50 dark:border-slate-700 rounded-lg px-2.5 py-1 shrink-0 ${!isAdmin ? 'opacity-80' : ''}`}
-              title={!isAdmin ? "Solo los administradores pueden reasignar prospectos" : "Reasignar Asesor"}
+              className="flex items-center space-x-1.5 bg-slate-200/80 dark:bg-slate-800 border border-slate-300/50 dark:border-slate-700 rounded-lg px-2.5 py-1 shrink-0"
+              title="Asignar Asesor Comercial (Disponible para todos los perfiles)"
             >
               <span className="text-xs font-bold text-slate-600 dark:text-slate-400">👤 Asesor:</span>
               <select
-                disabled={!isAdmin}
                 value={assignedUserId || ''}
                 onChange={(e) => setAssignedUserId(e.target.value ? parseInt(e.target.value, 10) : null)}
-                className={`bg-transparent text-xs font-bold text-slate-800 dark:text-white focus:outline-none max-w-[120px] truncate ${!isAdmin ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                className="bg-transparent text-xs font-bold text-slate-800 dark:text-white focus:outline-none max-w-[150px] truncate cursor-pointer"
               >
                 <option value="" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white">Sin Asignar (Liliana / Admin)</option>
-                <option value="4" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white">Asesor Comercial ANCLA</option>
-                <option value="3" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white">Liliana León (Directora)</option>
-                <option value="5" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white">Super Admin (diarmale388)</option>
+                {agents && agents.length > 0 ? (
+                  agents.map((ag) => (
+                    <option key={ag.id} value={ag.id} className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white">
+                      {ag.full_name || ag.email} {ag.role ? `(${ag.role})` : ''}
+                    </option>
+                  ))
+                ) : (
+                  <>
+                    <option value="3" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white">Liliana León (Directora)</option>
+                    <option value="4" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white">Asesor Comercial ANCLA</option>
+                  </>
+                )}
               </select>
             </div>
 
