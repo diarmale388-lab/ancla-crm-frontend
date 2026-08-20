@@ -8,7 +8,7 @@ import LeadFichaModal360 from '../common/LeadFichaModal360';
 import EmailPreviewModal from '../common/EmailPreviewModal';
 import AnclaTechnicalDossier from '../common/AnclaTechnicalDossier';
 import { MessageBubble } from './MessageBubble';
-import { Send, Bot, WifiOff, MessageCircle, Sparkles, User, Phone, Mail, Calendar, Check, ChevronDown, BookOpen, Clock, Lock, Trash2, ShieldAlert, ArrowLeft, CornerUpLeft, Forward, Pencil, X, Download, Smile, Paperclip, Upload, Search, DollarSign, MoreVertical } from 'lucide-react';
+import { Send, Bot, WifiOff, MessageCircle, Sparkles, User, Phone, Mail, Calendar, Check, ChevronDown, BookOpen, Clock, Lock, Trash2, ShieldAlert, ArrowLeft, CornerUpLeft, Forward, Pencil, X, Download, Smile, Paperclip, Upload, Search, DollarSign, MoreVertical, Bold, Italic, Strikethrough, Code, Copy, Scissors, Clipboard, Video, CheckSquare, Wrench } from 'lucide-react';
 
 const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
 const API_URL = import.meta.env.VITE_API_URL || (isLocal ? 'http://localhost:8001/api/v1' : 'https://ancla-crm-backend-production.up.railway.app/api/v1');
@@ -88,6 +88,14 @@ export const ChatWindow = () => {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef(null);
+  const textareaRef = useRef(null);
+  const [showToolbox, setShowToolbox] = useState(true);
+  const [toastFeedback, setToastFeedback] = useState('');
+
+  const showToast = (msg) => {
+    setToastFeedback(msg);
+    setTimeout(() => setToastFeedback(''), 2500);
+  };
 
   const handleAttachmentClick = () => {
     if (fileInputRef.current) {
@@ -454,6 +462,7 @@ export const ChatWindow = () => {
       await editMessage(editingMessage.id, finalContent);
       setEditingMessage(null);
       setInputMessage('');
+      if (textareaRef.current) textareaRef.current.style.height = 'auto';
       return;
     }
 
@@ -477,6 +486,9 @@ export const ChatWindow = () => {
 
     sendMessage(selectedContactId, finalContent, isInternalNote);
     setInputMessage('');
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+    }
     setAiSuggestion('');
     setShowTemplates(false);
     setIsInternalNote(false);
@@ -511,6 +523,13 @@ export const ChatWindow = () => {
     if (aiSuggestion) {
       setInputMessage(aiSuggestion);
       setAiSuggestion('');
+      setTimeout(() => {
+        if (textareaRef.current) {
+          textareaRef.current.style.height = 'auto';
+          textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 180)}px`;
+          textareaRef.current.focus();
+        }
+      }, 30);
     }
   };
 
@@ -527,6 +546,121 @@ export const ChatWindow = () => {
     }
   };
 
+  // 🛠️ CAJA DE HERRAMIENTAS WHATSAPP: Pegar, Copiar, Cortar, Seleccionar Todo, Limpiar y Formato
+  const handlePasteFromClipboard = async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      if (text) {
+        setInputMessage((prev) => (prev ? `${prev}\n${text}` : text));
+        showToast('📋 ¡Texto pegado con saltos de línea intactos!');
+        setTimeout(() => {
+          if (textareaRef.current) {
+            textareaRef.current.style.height = 'auto';
+            textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 180)}px`;
+            textareaRef.current.focus();
+          }
+        }, 30);
+      } else {
+        showToast('⚠️ Portapapeles vacío');
+      }
+    } catch (err) {
+      showToast('⚠️ No se pudo leer el portapapeles directamente. Usa Ctrl+V / Mantén presionado');
+    }
+  };
+
+  const handleCopyText = () => {
+    if (!inputMessage) {
+      showToast('⚠️ No hay texto para copiar');
+      return;
+    }
+    navigator.clipboard.writeText(inputMessage);
+    showToast('📄 ¡Texto copiado al portapapeles!');
+  };
+
+  const handleCutText = () => {
+    if (!textareaRef.current || !inputMessage) return;
+    const { selectionStart, selectionEnd, value } = textareaRef.current;
+    if (selectionStart !== selectionEnd) {
+      const selected = value.substring(selectionStart, selectionEnd);
+      navigator.clipboard.writeText(selected);
+      const newText = value.substring(0, selectionStart) + value.substring(selectionEnd);
+      setInputMessage(newText);
+    } else {
+      navigator.clipboard.writeText(value);
+      setInputMessage('');
+    }
+    showToast('✂️ ¡Texto cortado!');
+    setTimeout(() => {
+      if (textareaRef.current) {
+        textareaRef.current.style.height = 'auto';
+        textareaRef.current.focus();
+      }
+    }, 20);
+  };
+
+  const handleSelectAll = () => {
+    if (textareaRef.current) {
+      textareaRef.current.focus();
+      textareaRef.current.select();
+      showToast('🔲 ¡Todo seleccionado!');
+    }
+  };
+
+  const handleClearText = () => {
+    setInputMessage('');
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.focus();
+    }
+    showToast('🧹 ¡Texto borrado!');
+  };
+
+  const handleFormatText = (prefix, suffix = prefix) => {
+    if (!textareaRef.current) return;
+    const { selectionStart, selectionEnd, value } = textareaRef.current;
+    if (selectionStart !== selectionEnd) {
+      const selected = value.substring(selectionStart, selectionEnd);
+      const formatted = `${prefix}${selected}${suffix}`;
+      const newText = value.substring(0, selectionStart) + formatted + value.substring(selectionEnd);
+      setInputMessage(newText);
+      setTimeout(() => {
+        if (textareaRef.current) {
+          textareaRef.current.selectionStart = selectionStart + prefix.length;
+          textareaRef.current.selectionEnd = selectionEnd + prefix.length;
+          textareaRef.current.focus();
+        }
+      }, 10);
+    } else {
+      const newText = value.substring(0, selectionStart) + `${prefix}${suffix}` + value.substring(selectionEnd);
+      setInputMessage(newText);
+      setTimeout(() => {
+        if (textareaRef.current) {
+          textareaRef.current.selectionStart = selectionStart + prefix.length;
+          textareaRef.current.selectionEnd = selectionStart + prefix.length;
+          textareaRef.current.focus();
+        }
+      }, 10);
+    }
+  };
+
+  const handleInsertMeetTemplate = () => {
+    const clientName = activeContact?.first_name ? activeContact.first_name.trim() : 'Sra. Olga';
+    const advisorName = currentUser?.full_name || 'Liliana León, Directora Líder';
+    const defaultMeetUrl = 'https://meet.google.com/niv-fvrr-ryh';
+    
+    const template = `Buenos días, ${clientName}.\n\nLe habla ${advisorName} de ANCLA Special Projects.\n\nCon mucho gusto, le comparto por este medio el link de acceso a la videollamada para nuestra asesoría programada.\n\nLink de la reunión:\nPresentación Ancla\nInformación para unirse a la reunión de Google Meet:\n${defaultMeetUrl}\n\nQuedo atenta a su conexión. Será un gusto atenderle y brindarle toda la información sobre nuestros proyectos y soluciones.\n\n${advisorName}\nANCLA Special Projects`;
+    
+    setInputMessage(template);
+    showToast('📹 ¡Plantilla Google Meet insertada con párrafos limpios!');
+    setTimeout(() => {
+      if (textareaRef.current) {
+        textareaRef.current.style.height = 'auto';
+        textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 180)}px`;
+        textareaRef.current.focus();
+      }
+    }, 30);
+  };
+
   // Reemplazo de Variables Inteligentes en Respuestas Rápidas
   const handleQuickReplySelect = (text) => {
     let replacedText = text;
@@ -540,6 +674,13 @@ export const ChatWindow = () => {
     }
     setInputMessage(replacedText);
     setShowTemplates(false);
+    setTimeout(() => {
+      if (textareaRef.current) {
+        textareaRef.current.style.height = 'auto';
+        textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 180)}px`;
+        textareaRef.current.focus();
+      }
+    }, 30);
   };
 
   const MONTH_NAMES = [
@@ -1219,33 +1360,168 @@ export const ChatWindow = () => {
             </div>
           )}
 
-          {/* Selector de modo de mensaje (Enviar WhatsApp vs Nota Interna) */}
-          <div className="flex items-center space-x-1.5 mb-3 bg-slate-100 dark:bg-slate-900/60 p-1 rounded-xl w-max border border-slate-200 dark:border-white/5">
+          {/* Toast flotante de retroalimentación (Copiado, Pegado, Cortado) */}
+          {toastFeedback && (
+            <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-slate-900/90 dark:bg-emerald-950/90 text-white text-xs font-bold px-3.5 py-1.5 rounded-full shadow-lg border border-white/10 z-30 animate-fade-in flex items-center space-x-1.5 backdrop-blur-sm">
+              <span>{toastFeedback}</span>
+            </div>
+          )}
+
+          {/* Selector de modo y Botón de Caja de Herramientas WhatsApp */}
+          <div className="flex items-center justify-between mb-2.5">
+            <div className="flex items-center space-x-1.5 bg-slate-100 dark:bg-slate-900/60 p-1 rounded-xl border border-slate-200 dark:border-white/5">
+              <button
+                type="button"
+                onClick={() => setIsInternalNote(false)}
+                className={`px-3 py-1.5 rounded-lg text-[10px] font-bold flex items-center space-x-1.5 transition-all cursor-pointer ${
+                  !isInternalNote
+                    ? 'bg-white dark:bg-slate-800 text-slate-800 dark:text-white shadow-sm border border-slate-200 dark:border-white/5'
+                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-750 dark:hover:text-slate-200'
+                }`}
+              >
+                <Send className="w-3.5 h-3.5 text-emerald-500" />
+                <span>Enviar WhatsApp</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setIsInternalNote(true)}
+                className={`px-3 py-1.5 rounded-lg text-[10px] font-bold flex items-center space-x-1.5 transition-all cursor-pointer ${
+                  isInternalNote
+                    ? 'bg-amber-500 text-white shadow-sm border border-amber-400/30'
+                    : 'text-slate-500 dark:text-slate-400 hover:text-amber-500 dark:hover:text-amber-400'
+                }`}
+              >
+                <Lock className="w-3.5 h-3.5" />
+                <span>Nota Interna (Privada)</span>
+              </button>
+            </div>
+
+            {/* Switch para Mostrar/Ocultar Caja de Herramientas */}
             <button
               type="button"
-              onClick={() => setIsInternalNote(false)}
-              className={`px-3 py-1.5 rounded-lg text-[10px] font-bold flex items-center space-x-1.5 transition-all ${
-                !isInternalNote
-                  ? 'bg-white dark:bg-slate-800 text-slate-800 dark:text-white shadow-sm border border-slate-200 dark:border-white/5'
-                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-750 dark:hover:text-slate-200'
+              onClick={() => setShowToolbox(!showToolbox)}
+              className={`p-1.5 px-2.5 rounded-xl text-[10.5px] font-bold flex items-center space-x-1 border transition-all cursor-pointer ${
+                showToolbox
+                  ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400 shadow-xs'
+                  : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-white/5 text-slate-500 hover:text-slate-800 dark:hover:text-white'
               }`}
+              title="Herramientas de Texto y Portapapeles"
             >
-              <Send className="w-3.5 h-3.5 text-emerald-500" />
-              <span>Enviar WhatsApp</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setIsInternalNote(true)}
-              className={`px-3 py-1.5 rounded-lg text-[10px] font-bold flex items-center space-x-1.5 transition-all ${
-                isInternalNote
-                  ? 'bg-amber-500 text-white shadow-sm border border-amber-400/30'
-                  : 'text-slate-500 dark:text-slate-400 hover:text-amber-500 dark:hover:text-amber-400'
-              }`}
-            >
-              <Lock className="w-3.5 h-3.5" />
-              <span>Nota Interna (Privada)</span>
+              <Wrench className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Caja de Herramientas</span>
             </button>
           </div>
+
+          {/* 🧰 CAJA DE HERRAMIENTAS WHATSAPP (Pegar, Cortar, Copiar, Seleccionar Todo, Formato y Google Meet) */}
+          {showToolbox && (
+            <div className="mb-2.5 p-2 bg-slate-50/90 dark:bg-slate-900/80 border border-slate-200 dark:border-white/5 rounded-2xl flex items-center justify-between gap-1 overflow-x-auto no-scrollbar shadow-xs animate-fade-in">
+              {/* Acciones de Portapapeles */}
+              <div className="flex items-center space-x-1 shrink-0">
+                <button
+                  type="button"
+                  onClick={handlePasteFromClipboard}
+                  className="px-2 py-1 rounded-lg bg-white dark:bg-slate-800 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-white/5 text-[11px] font-bold flex items-center space-x-1 transition-all active:scale-95 cursor-pointer shadow-2xs"
+                  title="Pegar texto con saltos de línea intactos desde el portapapeles"
+                >
+                  <Clipboard className="w-3.5 h-3.5 text-emerald-500" />
+                  <span>Pegar</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleCopyText}
+                  className="px-2 py-1 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-white/5 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-white/5 text-[11px] font-bold flex items-center space-x-1 transition-all active:scale-95 cursor-pointer shadow-2xs"
+                  title="Copiar texto redactado al portapapeles"
+                >
+                  <Copy className="w-3.5 h-3.5 text-blue-500" />
+                  <span className="hidden sm:inline">Copiar</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleCutText}
+                  className="px-2 py-1 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-white/5 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-white/5 text-[11px] font-bold flex items-center space-x-1 transition-all active:scale-95 cursor-pointer shadow-2xs"
+                  title="Cortar texto"
+                >
+                  <Scissors className="w-3.5 h-3.5 text-amber-500" />
+                  <span className="hidden sm:inline">Cortar</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleSelectAll}
+                  className="px-2 py-1 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-white/5 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-white/5 text-[11px] font-bold flex items-center space-x-1 transition-all active:scale-95 cursor-pointer shadow-2xs"
+                  title="Seleccionar todo el texto"
+                >
+                  <CheckSquare className="w-3.5 h-3.5 text-indigo-500" />
+                  <span className="hidden sm:inline">Todo</span>
+                </button>
+              </div>
+
+              {/* Formatos de Texto WhatsApp */}
+              <div className="flex items-center space-x-1 border-l border-slate-200 dark:border-white/10 pl-2 shrink-0">
+                <button
+                  type="button"
+                  onClick={() => handleFormatText('*')}
+                  className="w-7 h-7 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-white/5 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-white/5 text-xs font-black flex items-center justify-center transition-all active:scale-95 cursor-pointer shadow-2xs"
+                  title="Negrita (*texto*)"
+                >
+                  <Bold className="w-3.5 h-3.5" />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleFormatText('_')}
+                  className="w-7 h-7 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-white/5 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-white/5 text-xs font-serif italic flex items-center justify-center transition-all active:scale-95 cursor-pointer shadow-2xs"
+                  title="Cursiva (_texto_)"
+                >
+                  <Italic className="w-3.5 h-3.5" />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleFormatText('~')}
+                  className="w-7 h-7 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-white/5 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-white/5 text-xs line-through flex items-center justify-center transition-all active:scale-95 cursor-pointer shadow-2xs"
+                  title="Tachado (~texto~)"
+                >
+                  <Strikethrough className="w-3.5 h-3.5" />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleFormatText('```')}
+                  className="w-7 h-7 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-white/5 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-white/5 text-xs font-mono flex items-center justify-center transition-all active:scale-95 cursor-pointer shadow-2xs"
+                  title="Monoespaciado (```texto```)"
+                >
+                  <Code className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
+              {/* Botón de Enlace Google Meet Rápido & Limpiar */}
+              <div className="flex items-center space-x-1 border-l border-slate-200 dark:border-white/10 pl-2 shrink-0">
+                <button
+                  type="button"
+                  onClick={handleInsertMeetTemplate}
+                  className="px-2.5 py-1 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-[11px] font-bold flex items-center space-x-1.5 transition-all active:scale-95 cursor-pointer shadow-xs"
+                  title="Insertar invitación estructurada a videollamada Google Meet"
+                >
+                  <Video className="w-3.5 h-3.5" />
+                  <span>Google Meet</span>
+                </button>
+
+                {inputMessage && (
+                  <button
+                    type="button"
+                    onClick={handleClearText}
+                    className="p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-500/20 text-xs transition-all active:scale-95 cursor-pointer"
+                    title="Limpiar mensaje"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* Card premium interactivo de Nota Interna */}
           {isInternalNote && (
@@ -1274,7 +1550,7 @@ export const ChatWindow = () => {
                       key={cat.id}
                       type="button"
                       onClick={() => setNoteCategory(cat.id)}
-                      className={`px-3 py-1.5 rounded-xl text-[10px] font-bold border transition-all active:scale-[0.97] ${
+                      className={`px-3 py-1.5 rounded-xl text-[10px] font-bold border transition-all active:scale-[0.97] cursor-pointer ${
                         noteCategory === cat.id
                           ? cat.id === 'urgente' ? 'bg-red-500 text-white border-red-500 shadow-sm shadow-red-550/20' :
                             cat.id === 'comercial' ? 'bg-blue-600 text-white border-blue-600 shadow-sm shadow-blue-650/20' :
@@ -1291,13 +1567,14 @@ export const ChatWindow = () => {
             </div>
           )}
 
-          <form onSubmit={handleSend} className="flex items-center space-x-2">
+          {/* Formulario Principal de Redacción Multilínea con Auto-Expansión */}
+          <form onSubmit={handleSend} className="flex items-end space-x-2">
             
             {/* Botón de Plantillas (Desktop/Tablet) */}
             <button
               type="button"
               onClick={() => setShowTemplates(!showTemplates)}
-              className={`hidden sm:flex p-2.5 rounded-xl border transition-all shrink-0 ${
+              className={`hidden sm:flex p-2.5 rounded-xl border transition-all shrink-0 cursor-pointer ${
                 showTemplates 
                   ? 'bg-blue-600 border-blue-600 text-white shadow-md'
                   : 'bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/5 text-slate-500 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/10'
@@ -1312,7 +1589,7 @@ export const ChatWindow = () => {
               <button
                 type="button"
                 onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                className={`hidden sm:flex p-2.5 rounded-xl border transition-all shrink-0 ${
+                className={`hidden sm:flex p-2.5 rounded-xl border transition-all shrink-0 cursor-pointer ${
                   showEmojiPicker 
                     ? 'bg-amber-500 border-amber-550 text-white shadow-md animate-pulse'
                     : 'bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/5 text-slate-500 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/10'
@@ -1340,18 +1617,40 @@ export const ChatWindow = () => {
               accept="image/*,audio/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain"
             />
 
-            {/* Campo de Texto Principal (Flex-1) */}
-            <input
-              type="text"
-              placeholder={isInternalNote ? "Nota interna privada..." : "Escribe un mensaje de WhatsApp..."}
-              value={inputMessage}
-              onChange={(e) => setInputMessage(e.target.value)}
-              className={`flex-1 min-w-0 border rounded-xl px-3.5 py-2.5 text-sm focus:outline-none transition-all ${
-                isInternalNote 
-                  ? 'bg-amber-500/5 border-amber-300 focus:border-amber-500 text-slate-800 dark:text-amber-100'
-                  : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-white/5 text-slate-855 dark:text-white focus:border-emerald-500/50'
-              }`}
-            />
+            {/* Campo Multilínea de Texto Expandible (Textarea con soporte de saltos de línea reales) */}
+            <div className="flex-1 min-w-0 relative">
+              <textarea
+                ref={textareaRef}
+                rows={1}
+                placeholder={
+                  isInternalNote 
+                    ? "Nota interna privada... (Shift+Enter para nueva línea)" 
+                    : "Escribe o pega un mensaje de WhatsApp... (Shift+Enter para salto de línea)"
+                }
+                value={inputMessage}
+                onChange={(e) => {
+                  setInputMessage(e.target.value);
+                  if (textareaRef.current) {
+                    textareaRef.current.style.height = 'auto';
+                    textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 180)}px`;
+                  }
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey && !e.ctrlKey) {
+                    // En desktop, Enter despacha el mensaje como WhatsApp Web. En móvil permite escribir párrafos.
+                    if (window.innerWidth >= 768) {
+                      e.preventDefault();
+                      handleSend();
+                    }
+                  }
+                }}
+                className={`w-full min-h-[44px] max-h-[180px] border rounded-xl px-3.5 py-2.5 text-sm leading-relaxed focus:outline-none transition-all resize-none overflow-y-auto ${
+                  isInternalNote 
+                    ? 'bg-amber-500/5 border-amber-300 focus:border-amber-500 text-slate-800 dark:text-amber-100'
+                    : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-white/5 text-slate-855 dark:text-white focus:border-emerald-500/50'
+                }`}
+              />
+            </div>
 
             {/* Copiloto disparador (Desktop/Tablet) */}
             {!isInternalNote && (
@@ -1359,7 +1658,7 @@ export const ChatWindow = () => {
                 type="button"
                 onClick={triggerAiSuggestion}
                 disabled={aiLoading}
-                className="hidden sm:flex p-2.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/5 text-slate-500 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/10 shrink-0"
+                className="hidden sm:flex p-2.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/5 text-slate-500 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/10 shrink-0 cursor-pointer"
                 title="Copiloto de IA"
               >
                 <Bot className={`w-4 h-4 ${aiLoading ? 'animate-spin text-emerald-500' : ''}`} />
@@ -1369,12 +1668,12 @@ export const ChatWindow = () => {
             {/* Botón de Enviar Mensaje (SIEMPRE VISIBLE Y HIGHLIGHTED) */}
             <button
               type="submit"
-              className={`p-2.5 sm:p-3 rounded-xl text-white shadow-md transition-all shrink-0 active:scale-95 cursor-pointer min-w-[42px] flex items-center justify-center ${
+              className={`p-2.5 sm:p-3 rounded-xl text-white shadow-md transition-all shrink-0 active:scale-95 cursor-pointer min-w-[44px] min-h-[44px] flex items-center justify-center ${
                 isInternalNote 
                   ? 'bg-amber-600 hover:bg-amber-500'
                   : 'bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400'
               }`}
-              title="Enviar Mensaje"
+              title="Enviar Mensaje (Enter)"
             >
               <Send className="w-4 h-4" />
             </button>
