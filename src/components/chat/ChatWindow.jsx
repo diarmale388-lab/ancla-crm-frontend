@@ -677,17 +677,25 @@ export const ChatWindow = () => {
     }, 30);
   };
 
-  // Reemplazo de Variables Inteligentes en Respuestas Rápidas
+  // Reemplazo de Variables Inteligentes en Respuestas Rápidas (Adaptable por Género)
   const handleQuickReplySelect = (text) => {
     let replacedText = text;
-    if (activeContact) {
-      const clientName = activeContact.first_name || 'cliente';
-      replacedText = replacedText.replace(/\{\{\s*cliente\s*\}\}/gi, clientName);
-    }
-    if (currentUser) {
-      const agentName = currentUser.full_name || 'asesor';
-      replacedText = replacedText.replace(/\{\{\s*vendedor\s*\}\}/gi, agentName);
-    }
+    const clientName = activeContact?.first_name ? activeContact.first_name.trim() : 'Estimado(a)';
+    const advisorFullName = currentUser?.full_name || 'Liliana León';
+    
+    // Detección inteligente de género del asesor
+    const firstAdvisorWord = advisorFullName.trim().split(' ')[0].toLowerCase();
+    const isFemaleAdvisor = firstAdvisorWord.endsWith('a') || ['liliana', 'olga', 'maria', 'carolina', 'diana', 'patricia', 'sandra', 'martha', 'laura', 'daniela', 'paula', 'sofia', 'claudia', 'valeria'].includes(firstAdvisorWord);
+    
+    const atentoAtenta = isFemaleAdvisor ? 'atenta' : 'atento';
+    const defaultMeetUrl = 'https://meet.google.com/niv-fvrr-ryh';
+
+    replacedText = replacedText
+      .replace(/\{\{\s*(cliente|nombre)\s*\}\}/gi, clientName)
+      .replace(/\{\{\s*(asesor|vendedor)\s*\}\}/gi, advisorFullName)
+      .replace(/\{\{\s*(atento_atenta|genero_asesor|atenta_atento)\s*\}\}/gi, atentoAtenta)
+      .replace(/\{\{\s*(link_meet|meet|enlace_meet)\s*\}\}/gi, defaultMeetUrl);
+
     setInputMessage(replacedText);
     setShowTemplates(false);
     setTimeout(() => {
@@ -1208,6 +1216,29 @@ export const ChatWindow = () => {
 
           {[
             {
+              id: 'meet_direct',
+              label: '📹 Link Google Meet',
+              isDynamic: true,
+              action: () => {
+                const clientName = activeContact?.first_name ? activeContact.first_name.trim() : 'Estimado(a)';
+                const advisorFullName = currentUser?.full_name || 'Liliana León';
+                const firstAdvisorWord = advisorFullName.trim().split(' ')[0].toLowerCase();
+                const isFemaleAdvisor = firstAdvisorWord.endsWith('a') || ['liliana', 'olga', 'maria', 'carolina', 'diana', 'patricia', 'sandra', 'martha', 'laura', 'daniela', 'paula', 'sofia', 'claudia', 'valeria'].includes(firstAdvisorWord);
+                const atentoAtenta = isFemaleAdvisor ? 'atenta' : 'atento';
+
+                const text = `Hola ${clientName}, con mucho gusto te comparto el link de acceso a la videollamada para nuestra asesoría programada:\n\n🔗 https://meet.google.com/niv-fvrr-ryh\n\nSolo dale clic para conectarte. ¡Quedo muy ${atentoAtenta} a tu conexión!\n\n${advisorFullName}\nANCLA Special Projects`;
+                
+                setInputMessage(text);
+                setTimeout(() => {
+                  if (textareaRef.current) {
+                    textareaRef.current.style.height = 'auto';
+                    textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 180)}px`;
+                    textareaRef.current.focus();
+                  }
+                }, 30);
+              }
+            },
+            {
               id: 'cl13',
               label: '🏕️ Cápsula CL-13 ($78M)',
               text: 'La Cápsula Living CL-13 (13m² | 5.80m x 2.23m) tiene un valor oficial de $78.000.000 COP. Incluye baño tipo hotel de lujo, ventanería panorámica curva 270° y domótica integrada.'
@@ -1247,7 +1278,18 @@ export const ChatWindow = () => {
               key={pill.id}
               type="button"
               onClick={() => {
-                setInputMessage(pill.text);
+                if (pill.action) {
+                  pill.action();
+                } else {
+                  setInputMessage(pill.text);
+                  setTimeout(() => {
+                    if (textareaRef.current) {
+                      textareaRef.current.style.height = 'auto';
+                      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 180)}px`;
+                      textareaRef.current.focus();
+                    }
+                  }, 30);
+                }
               }}
               className="px-2.5 py-1 rounded-xl bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-white/10 hover:border-emerald-500/50 hover:bg-emerald-50 dark:hover:bg-emerald-950/50 text-[#0f172a] dark:text-[#f8fafc] text-[11px] font-bold shrink-0 transition-all active:scale-95 shadow-xs cursor-pointer flex items-center space-x-1"
               title="Insertar respuesta técnica pre-redactada"
@@ -1279,34 +1321,61 @@ export const ChatWindow = () => {
         {/* Input y Panel de Respuestas Rápidas */}
         <div className="p-4 border-t border-slate-200 dark:border-white/5 bg-white dark:bg-dark-900 relative">
           
-          {/* Popover de Respuestas Rápidas */}
+          {/* Popover de Respuestas Rápidas (Adaptable por Género y Variables Inteligentes) */}
           {showTemplates && (
-            <div className="absolute bottom-full left-4 right-4 mb-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-2xl shadow-xl z-20 p-3 space-y-2 animate-fade-in max-h-48 overflow-y-auto">
+            <div className="absolute bottom-full left-4 right-4 mb-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-2xl shadow-xl z-20 p-3 space-y-2 animate-fade-in max-h-56 overflow-y-auto">
               <div className="flex items-center justify-between border-b border-slate-100 dark:border-white/5 pb-1 mb-1">
                 <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center space-x-1.5">
                   <BookOpen className="w-3.5 h-3.5 text-blue-500" />
-                  <span>Plantillas con Etiquetas Inteligentes</span>
+                  <span>Plantillas Inteligentes (Hombre / Mujer)</span>
                 </h4>
                 <span className="text-[8px] text-slate-400 bg-slate-50 dark:bg-white/5 px-1.5 py-0.5 rounded-md">
-                  Autocompleta: {"{{cliente}}"} y {"{{vendedor}}"}
+                  Autoadapta: {"{{cliente}}"}, {"{{asesor}}"} y {"{{atento_atenta}}"}
                 </span>
               </div>
-              {quickReplies.length === 0 ? (
-                <p className="text-xs text-slate-400 italic p-1">No hay plantillas configuradas en Ajustes.</p>
-              ) : (
-                <div className="grid gap-1.5">
-                  {quickReplies.map((reply) => (
-                    <button
-                      key={reply.id}
-                      onClick={() => handleQuickReplySelect(reply.content)}
-                      className="w-full text-left p-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 text-xs text-slate-770 dark:text-slate-300 border border-slate-100 dark:border-white/5 transition-all"
-                    >
-                      <span className="font-bold text-blue-600 dark:text-sky-400 block mb-0.5">{reply.title}</span>
-                      <span className="truncate block opacity-85">{reply.content}</span>
-                    </button>
-                  ))}
-                </div>
-              )}
+              <div className="grid gap-1.5">
+                {(quickReplies && quickReplies.length > 0 ? quickReplies : [
+                  {
+                    id: 'd1',
+                    title: '📹 Invitación Google Meet (Directa)',
+                    content: 'Hola {{cliente}}, con mucho gusto te comparto el link de acceso a la videollamada para nuestra asesoría programada:\n\n🔗 {{link_meet}}\n\nSolo dale clic para conectarte. ¡Quedo muy {{atento_atenta}} a tu conexión!\n\n{{asesor}}\nANCLA Special Projects'
+                  },
+                  {
+                    id: 'd2',
+                    title: '📹 Invitación Google Meet (Formal)',
+                    content: 'Buenos días, {{cliente}}. Le habla {{asesor}} de ANCLA Special Projects.\n\nCon mucho gusto le comparto el link de acceso a la videollamada para nuestra asesoría programada:\n\n🔗 {{link_meet}}\n\nSolo dele clic para ingresar. Quedo muy {{atento_atenta}} a su conexión. ¡Será un gusto atenderle!\n\n{{asesor}}\nANCLA Special Projects'
+                  },
+                  {
+                    id: 'd3',
+                    title: '⚡ Recordatorio Rápido (Enlace Meet)',
+                    content: '¡Hola {{cliente}}! Ya estamos listos para nuestra asesoría virtual.\n\nAquí tienes el enlace directo para ingresar a la sala:\n🔗 {{link_meet}}\n\n¡Te espero en la sala!'
+                  },
+                  {
+                    id: 'd4',
+                    title: '🏠 Flex Home 36m² ($118.8M)',
+                    content: 'El modelo Flex Home EXP-36 (36m² | 5.90m x 6.30m) tiene un valor oficial de $118.800.000 COP. Cuenta con estructura de acero galvanizado Q350, 2 habitaciones, 1 baño completo, cocina y aislamiento termoacústico de 75mm.'
+                  },
+                  {
+                    id: 'd5',
+                    title: '🏡 Flex Home 56m² (Personalizada)',
+                    content: 'La Casa Expandible FLEX HOME (56 m² | 11.80m x 6.30m) cuenta con 3 habitaciones, 2 baños, sala-comedor y sistema de doble expansión hidráulica (Cotización personalizada en showroom).'
+                  },
+                  {
+                    id: 'd6',
+                    title: '📍 Ubicación Showroom Armenia',
+                    content: 'Nuestra sala de ventas y showroom de exhibición está ubicada en Armenia, Quindío, sobre la Avenida Centenario, frente a Pan y Miel.\n• Waze: https://waze.com/ul?q=Avenida+Centenario+Armenia+Quindio\n• Google Maps: https://maps.google.com/?q=4.5616751,-75.6455612'
+                  }
+                ]).map((reply) => (
+                  <button
+                    key={reply.id}
+                    onClick={() => handleQuickReplySelect(reply.content)}
+                    className="w-full text-left p-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 text-xs text-slate-770 dark:text-slate-300 border border-slate-100 dark:border-white/5 transition-all cursor-pointer"
+                  >
+                    <span className="font-bold text-blue-600 dark:text-sky-400 block mb-0.5">{reply.title}</span>
+                    <span className="truncate block opacity-85 text-[11px] whitespace-pre-wrap line-clamp-2">{reply.content}</span>
+                  </button>
+                ))}
+              </div>
             </div>
           )}
 
@@ -1451,21 +1520,21 @@ export const ChatWindow = () => {
           {/* Formulario Principal de Redacción Multilínea (Igual a WhatsApp) */}
           <form onSubmit={handleSend} className="flex items-end space-x-2">
             
-            {/* Botón de Plantillas (Desktop/Tablet) */}
+            {/* Botón de Plantillas Inteligentes (Todas las Vistas: Móvil y Desktop) */}
             <button
               type="button"
               onClick={() => setShowTemplates(!showTemplates)}
-              className={`hidden sm:flex p-2.5 rounded-xl border transition-all shrink-0 cursor-pointer ${
+              className={`p-2.5 rounded-xl border transition-all shrink-0 cursor-pointer flex items-center justify-center ${
                 showTemplates 
                   ? 'bg-blue-600 border-blue-600 text-white shadow-md'
                   : 'bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/5 text-slate-500 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/10'
               }`}
-              title="Respuestas Rápidas"
+              title="Plantillas y Respuestas Rápidas"
             >
               <Sparkles className="w-4 h-4" />
             </button>
 
-            {/* Botón de Emojis (Desktop/Tablet) */}
+            {/* Botón de Emojis (Todas las Vistas) */}
             {!isInternalNote && (
               <button
                 type="button"
