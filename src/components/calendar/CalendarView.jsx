@@ -4,7 +4,7 @@ import { useKanbanStore } from '../../store/useKanbanStore';
 import { useChatStore } from '../../store/useChatStore';
 import { useAuthStore } from '../../store/useAuthStore';
 import LeadFichaModal360 from '../common/LeadFichaModal360';
-import { Calendar as CalendarIcon, Clock, User, Plus, Check, AlertCircle, X, Settings, Trash2, ChevronLeft, ChevronRight, Download, MessageCircle, MapPin, DollarSign, Building, Phone, Mail, ExternalLink, ShieldCheck, Sparkles, PhoneCall, Video, Building2, CheckCircle2, Save, FileText } from 'lucide-react';
+import { Calendar as CalendarIcon, Clock, User, Plus, Check, AlertCircle, X, Settings, Trash2, ChevronLeft, ChevronRight, Download, MessageCircle, MapPin, DollarSign, Building, Phone, Mail, ExternalLink, ShieldCheck, Sparkles, PhoneCall, Video, Building2, CheckCircle2, Save, FileText, Coffee } from 'lucide-react';
 
 const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
 const API_URL = import.meta.env.VITE_API_URL || (isLocal ? 'http://localhost:8001/api/v1' : 'https://ancla-crm-backend-production.up.railway.app/api/v1');
@@ -98,174 +98,167 @@ export const CalendarView = () => {
     }
   }, [showAddModal]);
 
-  // Estado local para intervalos múltiples
-  const [localAvailability, setLocalAvailability] = useState([]);
+  // Estado local para configuración separada de Presencial y Virtual
+  const [configModality, setConfigModality] = useState('PRESENCIAL'); // 'PRESENCIAL' | 'VIRTUAL'
+  const [presencialConfig, setPresencialConfig] = useState({
+    days: [],
+    slot_duration: 60,
+    buffer_time: 15
+  });
+  const [virtualConfig, setVirtualConfig] = useState({
+    days: [],
+    slot_duration: 30,
+    buffer_time: 10
+  });
 
-  useEffect(() => {
-    fetchAppointments();
-    fetchLeads();
-    fetchAvailability();
-  }, []);
+  const DAYS_OF_WEEK_NAMES = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
 
-  // Inicializar configuración local de disponibilidad (intervalos múltiples)
+  // Inicializar configuración local de disponibilidad para ambas modalidades
   useEffect(() => {
     if (showConfigModal && availability) {
-      const daysOfWeek = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
-      const config = daysOfWeek.map((name, index) => {
-        const foundDay = availability.find(a => a.day_of_week === index);
-        
-        return {
-          day_of_week: index,
-          name,
-          enabled: foundDay ? foundDay.intervals.length > 0 : false,
-          intervals: foundDay && foundDay.intervals.length > 0 
-            ? foundDay.intervals 
-            : [{ start_time: '09:00', end_time: '17:00' }]
-        };
+      const buildDays = (modalityData, defaultStart, defaultEnd, defaultSatEnd) => {
+        const rawDays = modalityData?.days || (Array.isArray(modalityData) ? modalityData : []);
+        return DAYS_OF_WEEK_NAMES.map((name, index) => {
+          const foundDay = rawDays.find(a => a.day_of_week === index);
+          if (foundDay && foundDay.intervals && foundDay.intervals.length > 0) {
+            return {
+              day_of_week: index,
+              name,
+              enabled: true,
+              intervals: foundDay.intervals
+            };
+          }
+          if (foundDay && foundDay.intervals && foundDay.intervals.length === 0) {
+            return {
+              day_of_week: index,
+              name,
+              enabled: false,
+              intervals: [{ start_time: defaultStart, end_time: defaultEnd }]
+            };
+          }
+          // Fallback inteligente inicial
+          if (index < 5) {
+            return {
+              day_of_week: index,
+              name,
+              enabled: true,
+              intervals: [
+                { start_time: defaultStart, end_time: '12:30' },
+                { start_time: '14:00', end_time: defaultEnd }
+              ]
+            };
+          }
+          if (index === 5) {
+            return {
+              day_of_week: 5,
+              name: 'Sábado',
+              enabled: true,
+              intervals: [{ start_time: defaultStart, end_time: defaultSatEnd }]
+            };
+          }
+          return {
+            day_of_week: 6,
+            name: 'Domingo',
+            enabled: false,
+            intervals: [{ start_time: '09:00', end_time: '13:00' }]
+          };
+        });
+      };
+
+      const pres = availability.presencial || {};
+      const virt = availability.virtual || {};
+
+      setPresencialConfig({
+        days: buildDays(pres, '09:30', '17:00', '13:00'),
+        slot_duration: pres.slot_duration || 60,
+        buffer_time: pres.buffer_time !== undefined ? pres.buffer_time : 15
       });
-      setLocalAvailability(config);
+
+      setVirtualConfig({
+        days: buildDays(virt, '10:00', '17:00', '12:00'),
+        slot_duration: virt.slot_duration || 30,
+        buffer_time: virt.buffer_time !== undefined ? virt.buffer_time : 10
+      });
     }
   }, [showConfigModal, availability]);
 
-  // Cargar slots libres cuando cambia el lead seleccionado
-  useEffect(() => {
-    if (selectedLeadId) {
-      fetchSlots(selectedLeadId);
-      setSelectedSlot('');
-    }
-  }, [selectedLeadId]);
-
-  // Cargar disponibilidad de horario excepcional/festivo para la fecha seleccionada
-  useEffect(() => {
-    if (selectedDate) {
-      const year = selectedDate.getFullYear();
-      const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
-      const day = String(selectedDate.getDate()).padStart(2, '0');
-      const dateStr = `${year}-${month}-${day}`;
-      const token = useAuthStore.getState().token;
-      
-      fetch(`${API_URL}/appointments/holiday-override/${dateStr}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      })
-        .then(res => res.json())
-        .then(data => setHolidaySlots(data.slots || ''))
-        .catch(() => setHolidaySlots(''));
-    }
-  }, [selectedDate, showHolidayModal]);
-
-  const handleSaveHolidayOverride = async (slotsToSave) => {
-    const year = selectedDate.getFullYear();
-    const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
-    const day = String(selectedDate.getDate()).padStart(2, '0');
-    const dateStr = `${year}-${month}-${day}`;
-    const token = useAuthStore.getState().token;
-
-    try {
-      const res = await fetch(`${API_URL}/appointments/holiday-override/${dateStr}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({ slots: slotsToSave })
-      });
-      if (res.ok) {
-        setHolidayMsg('¡Horario excepcional guardado con éxito!');
-        setTimeout(() => {
-          setHolidayMsg('');
-          setShowHolidayModal(false);
-        }, 1200);
-      }
-    } catch (err) {
-      console.error('Error guardando horario excepcional:', err);
+  const getCurrentModalityConfig = () => configModality === 'PRESENCIAL' ? presencialConfig : virtualConfig;
+  
+  const updateCurrentModality = (callback) => {
+    if (configModality === 'PRESENCIAL') {
+      setPresencialConfig(callback);
+    } else {
+      setVirtualConfig(callback);
     }
   };
 
-  const handleBookSubmit = async (e) => {
-    e.preventDefault();
-    if (!selectedLeadId || !selectedSlot) return;
-
-    const success = await bookAppointment(
-      parseInt(selectedLeadId, 10),
-      selectedSlot,
-      notes,
-      appointmentType
-    );
-
-    if (success) {
-      setSuccessMsg('¡Cita agendada con éxito!');
-      setTimeout(() => {
-        setSuccessMsg('');
-        setShowAddModal(false);
-        setSelectedLeadId('');
-        setSelectedSlot('');
-        setAppointmentType('PRESENCIAL');
-        setNotes('');
-        fetchAppointments(); // Recargar citas
-      }, 1500);
-    }
-  };
-
-  const handleConfigSubmit = async (e) => {
-    e.preventDefault();
-    
-    const daysPayload = localAvailability.map(d => ({
-      day_of_week: d.day_of_week,
-      intervals: d.enabled ? d.intervals : []
+  const toggleDayLocal = (dayIndex) => {
+    updateCurrentModality(prev => ({
+      ...prev,
+      days: prev.days.map(d => d.day_of_week === dayIndex ? { ...d, enabled: !d.enabled } : d)
     }));
-
-    const success = await saveAvailability(daysPayload);
-    if (success) {
-      setSuccessMsg('¡Horarios guardados con éxito!');
-      setTimeout(() => {
-        setSuccessMsg('');
-        setShowConfigModal(false);
-      }, 1500);
-    }
-  };
-
-  const toggleDayLocal = (index) => {
-    setLocalAvailability(prev => 
-      prev.map(d => d.day_of_week === index ? { ...d, enabled: !d.enabled } : d)
-    );
   };
 
   const addIntervalLocal = (dayIndex) => {
-    setLocalAvailability(prev => 
-      prev.map(d => {
+    updateCurrentModality(prev => ({
+      ...prev,
+      days: prev.days.map(d => {
         if (d.day_of_week === dayIndex) {
           const lastInterval = d.intervals[d.intervals.length - 1];
           const newStart = lastInterval ? lastInterval.end_time : '14:00';
           const newEnd = lastInterval ? '17:00' : '18:00';
           return {
             ...d,
+            enabled: true,
             intervals: [...d.intervals, { start_time: newStart, end_time: newEnd }]
           };
         }
         return d;
       })
-    );
+    }));
+  };
+
+  const applyLunchBreakLocal = (dayIndex) => {
+    updateCurrentModality(prev => ({
+      ...prev,
+      days: prev.days.map(d => {
+        if (d.day_of_week === dayIndex) {
+          const isPres = configModality === 'PRESENCIAL';
+          return {
+            ...d,
+            enabled: true,
+            intervals: [
+              { start_time: isPres ? '09:30' : '10:00', end_time: '12:30' },
+              { start_time: '14:00', end_time: '17:00' }
+            ]
+          };
+        }
+        return d;
+      })
+    }));
   };
 
   const removeIntervalLocal = (dayIndex, intervalIndex) => {
-    setLocalAvailability(prev => 
-      prev.map(d => {
+    updateCurrentModality(prev => ({
+      ...prev,
+      days: prev.days.map(d => {
         if (d.day_of_week === dayIndex) {
           const filtered = d.intervals.filter((_, idx) => idx !== intervalIndex);
           return {
             ...d,
-            enabled: filtered.length > 0 ? d.enabled : false,
+            enabled: filtered.length > 0,
             intervals: filtered.length > 0 ? filtered : [{ start_time: '09:00', end_time: '17:00' }]
           };
         }
         return d;
       })
-    );
+    }));
   };
 
   const updateIntervalTimeLocal = (dayIndex, intervalIndex, field, value) => {
-    setLocalAvailability(prev => 
-      prev.map(d => {
+    updateCurrentModality(prev => ({
+      ...prev,
+      days: prev.days.map(d => {
         if (d.day_of_week === dayIndex) {
           const updated = d.intervals.map((item, idx) => 
             idx === intervalIndex ? { ...item, [field]: value } : item
@@ -274,7 +267,53 @@ export const CalendarView = () => {
         }
         return d;
       })
-    );
+    }));
+  };
+
+  const setSlotDuration = (duration) => {
+    updateCurrentModality(prev => ({ ...prev, slot_duration: duration }));
+  };
+
+  const setBufferTime = (buffer) => {
+    updateCurrentModality(prev => ({ ...prev, buffer_time: buffer }));
+  };
+
+  useEffect(() => {
+    fetchAppointments();
+    fetchLeads();
+    fetchAvailability();
+  }, []);
+
+  const handleConfigSubmit = async (e) => {
+    e.preventDefault();
+    
+    const payload = {
+      presencial: {
+        days: presencialConfig.days.map(d => ({
+          day_of_week: d.day_of_week,
+          intervals: d.enabled ? d.intervals : []
+        })),
+        slot_duration: presencialConfig.slot_duration,
+        buffer_time: presencialConfig.buffer_time
+      },
+      virtual: {
+        days: virtualConfig.days.map(d => ({
+          day_of_week: d.day_of_week,
+          intervals: d.enabled ? d.intervals : []
+        })),
+        slot_duration: virtualConfig.slot_duration,
+        buffer_time: virtualConfig.buffer_time
+      }
+    };
+
+    const success = await saveAvailability(payload);
+    if (success) {
+      setSuccessMsg('¡Horarios de Presencial y Virtual guardados con éxito!');
+      setTimeout(() => {
+        setSuccessMsg('');
+        setShowConfigModal(false);
+      }, 1500);
+    }
   };
 
   const getLeadName = (leadId) => {
@@ -1320,72 +1359,226 @@ export const CalendarView = () => {
         </div>
       )}
 
-      {/* Modal de Configuración de Horarios / Disponibilidad (Múltiples Intervalos) */}
+      {/* Modal de Configuración de Horarios de Disponibilidad (Separado por Presencial y Virtual) */}
       {showConfigModal && (
-        <div className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
-          <div className="w-full max-w-2xl bg-white dark:bg-dark-900 border border-slate-200 dark:border-white/5 rounded-3xl p-6 shadow-2xl transition-all duration-300">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-bold text-slate-800 dark:text-white flex items-center space-x-2">
-                <Settings className="w-5 h-5 text-emerald-500" />
-                <span>Configurar Horarios de Disponibilidad</span>
-              </h3>
+        <div className="fixed inset-0 bg-slate-950/70 backdrop-blur-md flex items-center justify-center z-50 p-3 sm:p-4 animate-fade-in">
+          <div className="w-full max-w-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-3xl shadow-2xl transition-all duration-300 flex flex-col max-h-[92vh] overflow-hidden">
+            
+            {/* Header del Modal */}
+            <div className="p-5 sm:p-6 border-b border-slate-150 dark:border-white/5 bg-slate-50/50 dark:bg-slate-900/50 flex items-center justify-between shrink-0">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shadow-xs">
+                  <Settings className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-base sm:text-lg font-black text-slate-850 dark:text-white tracking-tight">
+                    Configurar Horarios de Disponibilidad
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+                    Horarios independientes para Visitas Showroom y Asesorías Virtuales / Llamadas
+                  </p>
+                </div>
+              </div>
               <button
+                type="button"
                 onClick={() => setShowConfigModal(false)}
-                className="p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-white/5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-all"
+                className="p-2 rounded-xl hover:bg-slate-200/60 dark:hover:bg-white/10 text-slate-400 hover:text-slate-700 dark:hover:text-white transition-all cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             {successMsg ? (
-              <div className="flex flex-col items-center justify-center py-12 text-center">
-                <div className="w-12 h-12 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center mb-3 animate-bounce">
-                  <Check className="w-6 h-6" />
+              <div className="flex flex-col items-center justify-center py-20 px-4 text-center">
+                <div className="w-14 h-14 rounded-full bg-emerald-500/15 text-emerald-500 flex items-center justify-center mb-3.5 animate-bounce">
+                  <Check className="w-7 h-7" />
                 </div>
-                <p className="text-sm font-semibold text-slate-800 dark:text-white">{successMsg}</p>
+                <h4 className="text-base font-bold text-slate-800 dark:text-white mb-1">¡Horarios Actualizados!</h4>
+                <p className="text-xs text-slate-500 dark:text-slate-400">{successMsg}</p>
               </div>
             ) : (
-              <form onSubmit={handleConfigSubmit} className="space-y-4">
-                <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
-                  Activa los días laborables. Puedes agregar múltiples intervalos de horas por día para excluir tus horas de almuerzo y descansos.
-                </p>
-
-                <div className="space-y-4 max-h-[380px] overflow-y-auto pr-1">
-                  {localAvailability.map((d) => (
-                    <div 
-                      key={d.day_of_week} 
-                      className="p-4 rounded-2xl border border-slate-150 dark:border-white/5 bg-slate-50 dark:bg-dark-950/40 space-y-3"
+              <form onSubmit={handleConfigSubmit} className="flex flex-col flex-1 min-h-0">
+                
+                {/* Selector de Pestañas de Modalidad */}
+                <div className="p-4 sm:p-5 border-b border-slate-150 dark:border-white/5 bg-slate-100/50 dark:bg-slate-950/40 shrink-0">
+                  <div className="grid grid-cols-2 gap-2 p-1 bg-slate-200/60 dark:bg-slate-800/80 rounded-2xl">
+                    <button
+                      type="button"
+                      onClick={() => setConfigModality('PRESENCIAL')}
+                      className={`flex items-center justify-center space-x-2 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+                        configModality === 'PRESENCIAL'
+                          ? 'bg-white dark:bg-emerald-600 text-emerald-700 dark:text-white shadow-md'
+                          : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
+                      }`}
                     >
+                      <Building2 className="w-4 h-4 text-emerald-500 dark:text-emerald-200" />
+                      <span>🏢 Showroom Armenia (Presencial)</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setConfigModality('VIRTUAL')}
+                      className={`flex items-center justify-center space-x-2 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+                        configModality === 'VIRTUAL'
+                          ? 'bg-white dark:bg-blue-600 text-blue-700 dark:text-white shadow-md'
+                          : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
+                      }`}
+                    >
+                      <Video className="w-4 h-4 text-blue-500 dark:text-blue-200" />
+                      <span>💻 Virtual & Llamadas (Liliana)</span>
+                    </button>
+                  </div>
+
+                  {/* Banner Explicativo de la Modalidad */}
+                  <div className={`mt-3 p-3 rounded-2xl border text-xs flex items-start space-x-2.5 ${
+                    configModality === 'PRESENCIAL'
+                      ? 'bg-emerald-50/70 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800/30 text-emerald-800 dark:text-emerald-300'
+                      : 'bg-blue-50/70 dark:bg-blue-950/20 border-blue-200 dark:border-blue-800/30 text-blue-800 dark:text-blue-300'
+                  }`}>
+                    <Sparkles className="w-4 h-4 shrink-0 mt-0.5" />
+                    <div>
+                      <span className="font-bold block mb-0.5">
+                        {configModality === 'PRESENCIAL' ? 'Atención en Showroom Armenia (Encargado Presencial)' : 'Atención Virtual / Google Meet & Llamadas (Liliana León)'}
+                      </span>
+                      <p className="opacity-90 leading-relaxed text-[11px]">
+                        {configModality === 'PRESENCIAL'
+                          ? 'Sofi AI consultará estos horarios exclusivamente cuando el cliente elija visitar la sala de ventas física en Armenia.'
+                          : 'Sofi AI consultará estos horarios cuando el cliente solicite una videollamada por Google Meet o una llamada telefónica comercial.'}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Controles de Duración y Buffer / Descanso entre citas */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3 pt-3 border-t border-slate-200 dark:border-white/5">
+                    {/* Duración de cada cita */}
+                    <div className="bg-white dark:bg-slate-800/80 p-2.5 rounded-xl border border-slate-200 dark:border-white/5">
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex items-center space-x-1">
+                          <Clock className="w-3.5 h-3.5 text-emerald-500" />
+                          <span>Duración por cita:</span>
+                        </span>
+                        <span className="text-xs font-black text-emerald-600 dark:text-emerald-400">
+                          {getCurrentModalityConfig().slot_duration || 30} min
+                        </span>
+                      </div>
+                      <div className="flex items-center space-x-1.5">
+                        {[15, 30, 45, 60, 90].map((dur) => (
+                          <button
+                            key={dur}
+                            type="button"
+                            onClick={() => setSlotDuration(dur)}
+                            className={`flex-1 py-1 rounded-lg text-[10px] font-bold transition-all cursor-pointer ${
+                              getCurrentModalityConfig().slot_duration === dur
+                                ? 'bg-emerald-600 text-white shadow-xs'
+                                : 'bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-white/10'
+                            }`}
+                          >
+                            {dur}m
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Descanso entre citas (Buffer) */}
+                    <div className="bg-white dark:bg-slate-800/80 p-2.5 rounded-xl border border-slate-200 dark:border-white/5">
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex items-center space-x-1">
+                          <Coffee className="w-3.5 h-3.5 text-amber-500" />
+                          <span>Descanso entre citas (Buffer):</span>
+                        </span>
+                        <span className="text-xs font-black text-amber-600 dark:text-amber-400">
+                          {getCurrentModalityConfig().buffer_time || 0} min
+                        </span>
+                      </div>
+                      <div className="flex items-center space-x-1.5">
+                        {[0, 5, 10, 15, 30].map((buf) => (
+                          <button
+                            key={buf}
+                            type="button"
+                            onClick={() => setBufferTime(buf)}
+                            className={`flex-1 py-1 rounded-lg text-[10px] font-bold transition-all cursor-pointer ${
+                              getCurrentModalityConfig().buffer_time === buf
+                                ? 'bg-amber-500 text-white shadow-xs'
+                                : 'bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-white/10'
+                            }`}
+                          >
+                            {buf}m
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Lista de Días e Intervalos (Scrollable) */}
+                <div className="p-4 sm:p-5 space-y-3 overflow-y-auto flex-1">
+                  {(getCurrentModalityConfig().days || []).map((d) => (
+                    <div
+                      key={d.day_of_week}
+                      className={`p-3.5 rounded-2xl border transition-all ${
+                        d.enabled
+                          ? 'bg-white dark:bg-slate-800/60 border-slate-200 dark:border-white/10 shadow-xs'
+                          : 'bg-slate-50 dark:bg-slate-900/40 border-slate-200/60 dark:border-white/5 opacity-75'
+                      }`}
+                    >
+                      {/* Cabecera del Día */}
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-3">
                           <input
                             type="checkbox"
+                            id={`day_check_${configModality}_${d.day_of_week}`}
                             checked={d.enabled}
                             onChange={() => toggleDayLocal(d.day_of_week)}
-                            className="w-4.5 h-4.5 rounded border-slate-350 text-emerald-600 focus:ring-emerald-500"
+                            className="w-4.5 h-4.5 rounded-md border-slate-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
                           />
-                          <span className="text-sm font-bold text-slate-700 dark:text-slate-200">
-                            {d.name}
-                          </span>
-                        </div>
-                        
-                        {d.enabled && (
-                          <button
-                            type="button"
-                            onClick={() => addIntervalLocal(d.day_of_week)}
-                            className="text-xs text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 font-semibold flex items-center space-x-1"
+                          <label
+                            htmlFor={`day_check_${configModality}_${d.day_of_week}`}
+                            className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200 cursor-pointer flex items-center space-x-2"
                           >
-                            <Plus className="w-3.5 h-3.5" />
-                            <span>Añadir bloque</span>
-                          </button>
+                            <span>{d.name}</span>
+                            <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider ${
+                              d.enabled 
+                                ? 'bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400' 
+                                : 'bg-slate-200 dark:bg-white/5 text-slate-500'
+                            }`}>
+                              {d.enabled ? 'Laborable' : 'Cerrado'}
+                            </span>
+                          </label>
+                        </div>
+
+                        {d.enabled && (
+                          <div className="flex items-center space-x-2">
+                            {/* Botón Rápido de Almuerzo */}
+                            <button
+                              type="button"
+                              onClick={() => applyLunchBreakLocal(d.day_of_week)}
+                              className="text-[11px] bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-700/30 text-amber-700 dark:text-amber-300 hover:bg-amber-100 font-bold px-2.5 py-1 rounded-xl transition-all flex items-center space-x-1 cursor-pointer"
+                              title="Configura automáticamente turno mañana y turno tarde excluyendo el almuerzo"
+                            >
+                              <span>🥪 + Almuerzo</span>
+                            </button>
+
+                            {/* Botón Añadir Bloque Manual */}
+                            <button
+                              type="button"
+                              onClick={() => addIntervalLocal(d.day_of_week)}
+                              className="text-[11px] bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-emerald-600 dark:text-emerald-400 font-bold px-2.5 py-1 rounded-xl transition-all flex items-center space-x-1 cursor-pointer"
+                            >
+                              <Plus className="w-3.5 h-3.5" />
+                              <span>Bloque</span>
+                            </button>
+                          </div>
                         )}
                       </div>
 
+                      {/* Bloques de Horas */}
                       {d.enabled ? (
-                        <div className="space-y-2 pl-7">
+                        <div className="mt-3 pl-7 space-y-2">
                           {(d.intervals || []).map((interval, idx) => (
                             <div key={idx} className="flex items-center space-x-2 animate-fade-in">
-                               <input
+                              <span className="text-[10px] font-bold text-slate-400 uppercase w-12">
+                                Bloque {idx + 1}:
+                              </span>
+                              <input
                                 type="time"
                                 value={(() => {
                                   const val = interval.start_time || '09:00';
@@ -1402,9 +1595,9 @@ export const CalendarView = () => {
                                   return val;
                                 })()}
                                 onChange={(e) => updateIntervalTimeLocal(d.day_of_week, idx, 'start_time', e.target.value)}
-                                className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl px-3 py-2 text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-1 focus:ring-emerald-500 font-mono font-bold"
+                                className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-1.5 text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 font-mono font-bold"
                               />
-                              <span className="text-xs text-slate-400">a</span>
+                              <span className="text-xs text-slate-400 font-bold">a</span>
                               <input
                                 type="time"
                                 value={(() => {
@@ -1422,15 +1615,15 @@ export const CalendarView = () => {
                                   return val;
                                 })()}
                                 onChange={(e) => updateIntervalTimeLocal(d.day_of_week, idx, 'end_time', e.target.value)}
-                                className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl px-3 py-2 text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-1 focus:ring-emerald-500 font-mono font-bold"
+                                className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-1.5 text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 font-mono font-bold"
                               />
                               
                               {(d.intervals || []).length > 1 && (
                                 <button
                                   type="button"
                                   onClick={() => removeIntervalLocal(d.day_of_week, idx)}
-                                  className="p-2 rounded-lg text-slate-400 hover:text-red-500 hover:bg-slate-100 dark:hover:bg-white/5 transition-all"
-                                  title="Eliminar bloque"
+                                  className="p-1.5 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all cursor-pointer"
+                                  title="Eliminar este bloque"
                                 >
                                   <Trash2 className="w-3.5 h-3.5" />
                                 </button>
@@ -1439,18 +1632,31 @@ export const CalendarView = () => {
                           ))}
                         </div>
                       ) : (
-                        <div className="pl-7 text-xs text-slate-400 italic">No disponible</div>
+                        <div className="pl-7 mt-1.5 text-xs text-slate-400 italic">No disponible para agendamiento</div>
                       )}
                     </div>
                   ))}
                 </div>
 
-                <button
-                  type="submit"
-                  className="w-full bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-semibold py-3.5 px-4 rounded-xl shadow-md active:scale-[0.98] transition-all mt-4"
-                >
-                  Guardar Horarios
-                </button>
+                {/* Footer Fijo con Botón Guardar */}
+                <div className="p-4 sm:p-5 border-t border-slate-150 dark:border-white/5 bg-slate-50 dark:bg-slate-900 flex items-center justify-between shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => setShowConfigModal(false)}
+                    className="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 transition-all cursor-pointer"
+                  >
+                    Cancelar
+                  </button>
+
+                  <button
+                    type="submit"
+                    className="bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold py-2.5 px-6 rounded-xl shadow-lg shadow-emerald-600/20 active:scale-[0.98] transition-all text-xs sm:text-sm flex items-center space-x-2 cursor-pointer"
+                  >
+                    <Save className="w-4 h-4" />
+                    <span>Guardar Horarios de Ambas Modalidades</span>
+                  </button>
+                </div>
+
               </form>
             )}
           </div>

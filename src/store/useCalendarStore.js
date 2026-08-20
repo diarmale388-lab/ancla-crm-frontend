@@ -178,13 +178,13 @@ export const useCalendarStore = create((set, get) => ({
     }
   },
 
-  saveAvailability: async (days) => {
+  saveAvailability: async (payload) => {
     // 1. Persistencia local inmediata en localStorage
     try {
-      localStorage.setItem('ancla_availability_config', JSON.stringify(days));
+      localStorage.setItem('ancla_availability_config', JSON.stringify(payload));
     } catch (e) {}
 
-    set({ availability: days });
+    set({ availability: payload });
 
     const token = useAuthStore.getState().token;
     if (!token) return true;
@@ -196,7 +196,7 @@ export const useCalendarStore = create((set, get) => ({
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ days }),
+        body: JSON.stringify(payload),
       });
       if (response.ok) {
         await get().fetchAvailability();
