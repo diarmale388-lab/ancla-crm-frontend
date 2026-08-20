@@ -456,7 +456,23 @@ export const ChatWindow = () => {
     if (e) e.preventDefault();
     if (!inputMessage.trim()) return;
     
-    let finalContent = inputMessage.trim();
+    let finalContent = inputMessage.trim()
+      .replace(/\r\n/g, '\n')
+      .replace(/\r/g, '\n')
+      .replace(/[\u202f\u00a0]/g, ' ');
+
+    if (!finalContent.includes('\n') || finalContent.split('\n').length <= 2) {
+      finalContent = finalContent.replace(/([.!?])\s{2,}/g, '$1\n\n');
+      finalContent = finalContent.replace(/\s*(Link de la reunión:?)\s*/gi, '\n\n*Link de la reunión:*\n');
+      finalContent = finalContent.replace(/\s*(Información para unirse a la reunión[^\n]*)\s*/gi, '\n\n$1\n');
+      finalContent = finalContent.replace(/\s*(Vínculo a la videollamada:?)\s*/gi, '\n*Vínculo a la videollamada:* ');
+      finalContent = finalContent.replace(/\s*(O marca:?)\s*/gi, '\n*O marca:* ');
+      finalContent = finalContent.replace(/\s*(Más números de teléfono:?)\s*/gi, '\n*Más números de teléfono:* ');
+      finalContent = finalContent.replace(/\s*(Quedo atent[ao]\s+a\s+su\s+conexi[oó]n[^\n.]*\.?)\s*/gi, '\n\n$1\n\n');
+      finalContent = finalContent.replace(/\s*(Liliana León[^\n]*)\s*/gi, '\n\n$1\n');
+      finalContent = finalContent.replace(/\s*(ANCLA Special Projects)\s*$/gi, '\n$1');
+      finalContent = finalContent.replace(/\n{3,}/g, '\n\n').trim();
+    }
 
     if (editingMessage) {
       await editMessage(editingMessage.id, finalContent);
@@ -1360,168 +1376,33 @@ export const ChatWindow = () => {
             </div>
           )}
 
-          {/* Toast flotante de retroalimentación (Copiado, Pegado, Cortado) */}
-          {toastFeedback && (
-            <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-slate-900/90 dark:bg-emerald-950/90 text-white text-xs font-bold px-3.5 py-1.5 rounded-full shadow-lg border border-white/10 z-30 animate-fade-in flex items-center space-x-1.5 backdrop-blur-sm">
-              <span>{toastFeedback}</span>
-            </div>
-          )}
-
-          {/* Selector de modo y Botón de Caja de Herramientas WhatsApp */}
-          <div className="flex items-center justify-between mb-2.5">
-            <div className="flex items-center space-x-1.5 bg-slate-100 dark:bg-slate-900/60 p-1 rounded-xl border border-slate-200 dark:border-white/5">
-              <button
-                type="button"
-                onClick={() => setIsInternalNote(false)}
-                className={`px-3 py-1.5 rounded-lg text-[10px] font-bold flex items-center space-x-1.5 transition-all cursor-pointer ${
-                  !isInternalNote
-                    ? 'bg-white dark:bg-slate-800 text-slate-800 dark:text-white shadow-sm border border-slate-200 dark:border-white/5'
-                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-750 dark:hover:text-slate-200'
-                }`}
-              >
-                <Send className="w-3.5 h-3.5 text-emerald-500" />
-                <span>Enviar WhatsApp</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setIsInternalNote(true)}
-                className={`px-3 py-1.5 rounded-lg text-[10px] font-bold flex items-center space-x-1.5 transition-all cursor-pointer ${
-                  isInternalNote
-                    ? 'bg-amber-500 text-white shadow-sm border border-amber-400/30'
-                    : 'text-slate-500 dark:text-slate-400 hover:text-amber-500 dark:hover:text-amber-400'
-                }`}
-              >
-                <Lock className="w-3.5 h-3.5" />
-                <span>Nota Interna (Privada)</span>
-              </button>
-            </div>
-
-            {/* Switch para Mostrar/Ocultar Caja de Herramientas */}
+          {/* Selector de modo de mensaje (Enviar WhatsApp vs Nota Interna) */}
+          <div className="flex items-center space-x-1.5 mb-2.5 bg-slate-100 dark:bg-slate-900/60 p-1 rounded-xl w-max border border-slate-200 dark:border-white/5">
             <button
               type="button"
-              onClick={() => setShowToolbox(!showToolbox)}
-              className={`p-1.5 px-2.5 rounded-xl text-[10.5px] font-bold flex items-center space-x-1 border transition-all cursor-pointer ${
-                showToolbox
-                  ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400 shadow-xs'
-                  : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-white/5 text-slate-500 hover:text-slate-800 dark:hover:text-white'
+              onClick={() => setIsInternalNote(false)}
+              className={`px-3 py-1.5 rounded-lg text-[10px] font-bold flex items-center space-x-1.5 transition-all cursor-pointer ${
+                !isInternalNote
+                  ? 'bg-white dark:bg-slate-800 text-slate-800 dark:text-white shadow-sm border border-slate-200 dark:border-white/5'
+                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-750 dark:hover:text-slate-200'
               }`}
-              title="Herramientas de Texto y Portapapeles"
             >
-              <Wrench className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Caja de Herramientas</span>
+              <Send className="w-3.5 h-3.5 text-emerald-500" />
+              <span>Enviar WhatsApp</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setIsInternalNote(true)}
+              className={`px-3 py-1.5 rounded-lg text-[10px] font-bold flex items-center space-x-1.5 transition-all cursor-pointer ${
+                isInternalNote
+                  ? 'bg-amber-500 text-white shadow-sm border border-amber-400/30'
+                  : 'text-slate-500 dark:text-slate-400 hover:text-amber-500 dark:hover:text-amber-400'
+              }`}
+            >
+              <Lock className="w-3.5 h-3.5" />
+              <span>Nota Interna (Privada)</span>
             </button>
           </div>
-
-          {/* 🧰 CAJA DE HERRAMIENTAS WHATSAPP (Pegar, Cortar, Copiar, Seleccionar Todo, Formato y Google Meet) */}
-          {showToolbox && (
-            <div className="mb-2.5 p-2 bg-slate-50/90 dark:bg-slate-900/80 border border-slate-200 dark:border-white/5 rounded-2xl flex items-center justify-between gap-1 overflow-x-auto no-scrollbar shadow-xs animate-fade-in">
-              {/* Acciones de Portapapeles */}
-              <div className="flex items-center space-x-1 shrink-0">
-                <button
-                  type="button"
-                  onClick={handlePasteFromClipboard}
-                  className="px-2 py-1 rounded-lg bg-white dark:bg-slate-800 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-white/5 text-[11px] font-bold flex items-center space-x-1 transition-all active:scale-95 cursor-pointer shadow-2xs"
-                  title="Pegar texto con saltos de línea intactos desde el portapapeles"
-                >
-                  <Clipboard className="w-3.5 h-3.5 text-emerald-500" />
-                  <span>Pegar</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={handleCopyText}
-                  className="px-2 py-1 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-white/5 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-white/5 text-[11px] font-bold flex items-center space-x-1 transition-all active:scale-95 cursor-pointer shadow-2xs"
-                  title="Copiar texto redactado al portapapeles"
-                >
-                  <Copy className="w-3.5 h-3.5 text-blue-500" />
-                  <span className="hidden sm:inline">Copiar</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={handleCutText}
-                  className="px-2 py-1 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-white/5 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-white/5 text-[11px] font-bold flex items-center space-x-1 transition-all active:scale-95 cursor-pointer shadow-2xs"
-                  title="Cortar texto"
-                >
-                  <Scissors className="w-3.5 h-3.5 text-amber-500" />
-                  <span className="hidden sm:inline">Cortar</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={handleSelectAll}
-                  className="px-2 py-1 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-white/5 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-white/5 text-[11px] font-bold flex items-center space-x-1 transition-all active:scale-95 cursor-pointer shadow-2xs"
-                  title="Seleccionar todo el texto"
-                >
-                  <CheckSquare className="w-3.5 h-3.5 text-indigo-500" />
-                  <span className="hidden sm:inline">Todo</span>
-                </button>
-              </div>
-
-              {/* Formatos de Texto WhatsApp */}
-              <div className="flex items-center space-x-1 border-l border-slate-200 dark:border-white/10 pl-2 shrink-0">
-                <button
-                  type="button"
-                  onClick={() => handleFormatText('*')}
-                  className="w-7 h-7 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-white/5 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-white/5 text-xs font-black flex items-center justify-center transition-all active:scale-95 cursor-pointer shadow-2xs"
-                  title="Negrita (*texto*)"
-                >
-                  <Bold className="w-3.5 h-3.5" />
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => handleFormatText('_')}
-                  className="w-7 h-7 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-white/5 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-white/5 text-xs font-serif italic flex items-center justify-center transition-all active:scale-95 cursor-pointer shadow-2xs"
-                  title="Cursiva (_texto_)"
-                >
-                  <Italic className="w-3.5 h-3.5" />
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => handleFormatText('~')}
-                  className="w-7 h-7 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-white/5 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-white/5 text-xs line-through flex items-center justify-center transition-all active:scale-95 cursor-pointer shadow-2xs"
-                  title="Tachado (~texto~)"
-                >
-                  <Strikethrough className="w-3.5 h-3.5" />
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => handleFormatText('```')}
-                  className="w-7 h-7 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-white/5 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-white/5 text-xs font-mono flex items-center justify-center transition-all active:scale-95 cursor-pointer shadow-2xs"
-                  title="Monoespaciado (```texto```)"
-                >
-                  <Code className="w-3.5 h-3.5" />
-                </button>
-              </div>
-
-              {/* Botón de Enlace Google Meet Rápido & Limpiar */}
-              <div className="flex items-center space-x-1 border-l border-slate-200 dark:border-white/10 pl-2 shrink-0">
-                <button
-                  type="button"
-                  onClick={handleInsertMeetTemplate}
-                  className="px-2.5 py-1 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-[11px] font-bold flex items-center space-x-1.5 transition-all active:scale-95 cursor-pointer shadow-xs"
-                  title="Insertar invitación estructurada a videollamada Google Meet"
-                >
-                  <Video className="w-3.5 h-3.5" />
-                  <span>Google Meet</span>
-                </button>
-
-                {inputMessage && (
-                  <button
-                    type="button"
-                    onClick={handleClearText}
-                    className="p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-500/20 text-xs transition-all active:scale-95 cursor-pointer"
-                    title="Limpiar mensaje"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </button>
-                )}
-              </div>
-            </div>
-          )}
 
           {/* Card premium interactivo de Nota Interna */}
           {isInternalNote && (
@@ -1567,7 +1448,7 @@ export const ChatWindow = () => {
             </div>
           )}
 
-          {/* Formulario Principal de Redacción Multilínea con Auto-Expansión */}
+          {/* Formulario Principal de Redacción Multilínea (Igual a WhatsApp) */}
           <form onSubmit={handleSend} className="flex items-end space-x-2">
             
             {/* Botón de Plantillas (Desktop/Tablet) */}
@@ -1617,15 +1498,15 @@ export const ChatWindow = () => {
               accept="image/*,audio/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain"
             />
 
-            {/* Campo Multilínea de Texto Expandible (Textarea con soporte de saltos de línea reales) */}
+            {/* Campo Multilínea de Texto Expandible (Textarea con autoformato en pegado) */}
             <div className="flex-1 min-w-0 relative">
               <textarea
                 ref={textareaRef}
                 rows={1}
                 placeholder={
                   isInternalNote 
-                    ? "Nota interna privada... (Shift+Enter para nueva línea)" 
-                    : "Escribe o pega un mensaje de WhatsApp... (Shift+Enter para salto de línea)"
+                    ? "Nota interna privada..." 
+                    : "Escribe un mensaje de WhatsApp..."
                 }
                 value={inputMessage}
                 onChange={(e) => {
@@ -1635,9 +1516,49 @@ export const ChatWindow = () => {
                     textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 180)}px`;
                   }
                 }}
+                onPaste={(e) => {
+                  const pasted = (e.clipboardData || window.clipboardData)?.getData('text');
+                  if (!pasted) return;
+
+                  let text = pasted
+                    .replace(/\r\n/g, '\n')
+                    .replace(/\r/g, '\n')
+                    .replace(/[\u202f\u00a0]/g, ' ');
+
+                  if (!text.includes('\n') || text.split('\n').length <= 2) {
+                    text = text.replace(/([.!?])\s{2,}/g, '$1\n\n');
+                    text = text.replace(/\s*(Link de la reunión:?)\s*/gi, '\n\n*Link de la reunión:*\n');
+                    text = text.replace(/\s*(Información para unirse a la reunión[^\n]*)\s*/gi, '\n\n$1\n');
+                    text = text.replace(/\s*(Vínculo a la videollamada:?)\s*/gi, '\n*Vínculo a la videollamada:* ');
+                    text = text.replace(/\s*(O marca:?)\s*/gi, '\n*O marca:* ');
+                    text = text.replace(/\s*(Más números de teléfono:?)\s*/gi, '\n*Más números de teléfono:* ');
+                    text = text.replace(/\s*(Quedo atent[ao]\s+a\s+su\s+conexi[oó]n[^\n.]*\.?)\s*/gi, '\n\n$1\n\n');
+                    text = text.replace(/\s*(Liliana León[^\n]*)\s*/gi, '\n\n$1\n');
+                    text = text.replace(/\s*(ANCLA Special Projects)\s*$/gi, '\n$1');
+                    text = text.replace(/\n{3,}/g, '\n\n').trim();
+                  }
+
+                  e.preventDefault();
+                  const textarea = textareaRef.current;
+                  if (textarea) {
+                    const start = textarea.selectionStart;
+                    const end = textarea.selectionEnd;
+                    const current = inputMessage;
+                    const newContent = current.substring(0, start) + text + current.substring(end);
+                    setInputMessage(newContent);
+
+                    setTimeout(() => {
+                      textarea.selectionStart = textarea.selectionEnd = start + text.length;
+                      textarea.style.height = 'auto';
+                      textarea.style.height = `${Math.min(textarea.scrollHeight, 180)}px`;
+                      textarea.focus();
+                    }, 20);
+                  } else {
+                    setInputMessage(text);
+                  }
+                }}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && !e.shiftKey && !e.ctrlKey) {
-                    // En desktop, Enter despacha el mensaje como WhatsApp Web. En móvil permite escribir párrafos.
                     if (window.innerWidth >= 768) {
                       e.preventDefault();
                       handleSend();
