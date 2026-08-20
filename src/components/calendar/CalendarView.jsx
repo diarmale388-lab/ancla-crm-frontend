@@ -103,12 +103,12 @@ export const CalendarView = () => {
   const [presencialConfig, setPresencialConfig] = useState({
     days: [],
     slot_duration: 60,
-    buffer_time: 15
+    buffer_time: 0
   });
   const [virtualConfig, setVirtualConfig] = useState({
     days: [],
     slot_duration: 30,
-    buffer_time: 10
+    buffer_time: 0
   });
 
   const DAYS_OF_WEEK_NAMES = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
@@ -171,13 +171,13 @@ export const CalendarView = () => {
       setPresencialConfig({
         days: buildDays(pres, '09:30', '17:00', '13:00'),
         slot_duration: pres.slot_duration || 60,
-        buffer_time: pres.buffer_time !== undefined ? pres.buffer_time : 15
+        buffer_time: 0
       });
 
       setVirtualConfig({
         days: buildDays(virt, '10:00', '17:00', '12:00'),
         slot_duration: virt.slot_duration || 30,
-        buffer_time: virt.buffer_time !== undefined ? virt.buffer_time : 10
+        buffer_time: 0
       });
     }
   }, [showConfigModal, availability]);
@@ -1338,61 +1338,33 @@ export const CalendarView = () => {
                     </div>
                   </div>
 
-                  {/* Controles de Duración y Buffer / Descanso entre citas */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3 pt-3 border-t border-slate-200 dark:border-white/5">
-                    {/* Duración de cada cita */}
-                    <div className="bg-white dark:bg-slate-800/80 p-2.5 rounded-xl border border-slate-200 dark:border-white/5">
-                      <div className="flex items-center justify-between mb-1.5">
-                        <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex items-center space-x-1">
-                          <Clock className="w-3.5 h-3.5 text-emerald-500" />
-                          <span>Duración por cita:</span>
-                        </span>
-                        <span className="text-xs font-black text-emerald-600 dark:text-emerald-400">
-                          {getCurrentModalityConfig().slot_duration || 30} min
-                        </span>
+                  {/* Control de Duración de Cita */}
+                  <div className="mt-3 pt-3 border-t border-slate-200 dark:border-white/5">
+                    <div className="bg-white dark:bg-slate-800/80 p-3 rounded-xl border border-slate-200 dark:border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                      <div className="flex items-center space-x-2">
+                        <Clock className="w-4 h-4 text-emerald-500" />
+                        <div>
+                          <span className="text-xs font-bold text-slate-700 dark:text-slate-200 block">
+                            Duración por cita:
+                          </span>
+                          <span className="text-[10px] text-slate-400">
+                            Espaciado exacto entre cada cita disponible
+                          </span>
+                        </div>
                       </div>
-                      <div className="flex items-center space-x-1.5">
+                      <div className="flex items-center space-x-1.5 shrink-0">
                         {[15, 30, 45, 60, 90].map((dur) => (
                           <button
                             key={dur}
                             type="button"
                             onClick={() => setSlotDuration(dur)}
-                            className={`flex-1 py-1 rounded-lg text-[10px] font-bold transition-all cursor-pointer ${
+                            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                               getCurrentModalityConfig().slot_duration === dur
                                 ? 'bg-emerald-600 text-white shadow-xs'
                                 : 'bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-white/10'
                             }`}
                           >
-                            {dur}m
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Descanso entre citas (Buffer) */}
-                    <div className="bg-white dark:bg-slate-800/80 p-2.5 rounded-xl border border-slate-200 dark:border-white/5">
-                      <div className="flex items-center justify-between mb-1.5">
-                        <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex items-center space-x-1">
-                          <Coffee className="w-3.5 h-3.5 text-amber-500" />
-                          <span>Descanso entre citas (Buffer):</span>
-                        </span>
-                        <span className="text-xs font-black text-amber-600 dark:text-amber-400">
-                          {getCurrentModalityConfig().buffer_time || 0} min
-                        </span>
-                      </div>
-                      <div className="flex items-center space-x-1.5">
-                        {[0, 5, 10, 15, 30].map((buf) => (
-                          <button
-                            key={buf}
-                            type="button"
-                            onClick={() => setBufferTime(buf)}
-                            className={`flex-1 py-1 rounded-lg text-[10px] font-bold transition-all cursor-pointer ${
-                              getCurrentModalityConfig().buffer_time === buf
-                                ? 'bg-amber-500 text-white shadow-xs'
-                                : 'bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-white/10'
-                            }`}
-                          >
-                            {buf}m
+                            {dur} min
                           </button>
                         ))}
                       </div>
