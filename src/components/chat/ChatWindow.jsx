@@ -1031,19 +1031,21 @@ export const ChatWindow = () => {
                     <span>Ver Detalles & Propuestas</span>
                   </button>
 
-                  <button
-                    type="button"
-                    onClick={async () => {
-                      setShowMobileHeaderMenu(false);
-                      if (window.confirm(`¿Borrar el chat de ${activeContact.first_name || activeContact.phone}?`)) {
-                        await deleteContact(activeContact.id);
-                      }
-                    }}
-                    className="w-full text-left px-3 py-2 rounded-xl hover:bg-rose-500/10 text-rose-600 dark:text-rose-400 flex items-center space-x-2.5 border-t border-slate-100 dark:border-white/5 pt-2 mt-1"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                    <span>Eliminar Conversación</span>
-                  </button>
+                  {isAdmin && (
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        setShowMobileHeaderMenu(false);
+                        if (window.confirm(`¿Borrar el chat de ${activeContact.first_name || activeContact.phone}?`)) {
+                          await deleteContact(activeContact.id);
+                        }
+                      }}
+                      className="w-full text-left px-3 py-2 rounded-xl hover:bg-rose-500/10 text-rose-600 dark:text-rose-400 flex items-center space-x-2.5 border-t border-slate-100 dark:border-white/5 pt-2 mt-1"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                      <span>Eliminar Conversación</span>
+                    </button>
+                  )}
                 </div>
               )}
             </div>
@@ -1051,13 +1053,15 @@ export const ChatWindow = () => {
             {/* BOTONES DESPLEGADOS EN ESCRITORIO (Solo en Pantallas Desktop md+) */}
             <div className="hidden md:flex items-center space-x-1.5 lg:space-x-2 shrink-0">
               <div 
-                className="flex items-center space-x-1 bg-slate-50 dark:bg-white/5 px-2 py-1.5 rounded-xl border border-slate-200 dark:border-white/5 max-w-[140px] lg:max-w-[180px]"
-                title="Asignar Asesor Comercial"
+                className={`flex items-center space-x-1 bg-slate-50 dark:bg-white/5 px-2 py-1.5 rounded-xl border border-slate-200 dark:border-white/5 max-w-[140px] lg:max-w-[180px] ${!isAdmin ? 'opacity-70 cursor-not-allowed' : ''}`}
+                title={!isAdmin ? "Asignación exclusiva de la Dirección Comercial (Liliana León)" : "Asignar Asesor Comercial"}
               >
                 <User className="w-3.5 h-3.5 text-blue-500 shrink-0" />
                 <select
                   value={activeContact.assigned_user_id || ''}
+                  disabled={!isAdmin}
                   onChange={async (e) => {
+                    if (!isAdmin) return;
                     const val = e.target.value;
                     const success = await assignContact(activeContact.id, val);
                     if (success) {
@@ -1066,7 +1070,7 @@ export const ChatWindow = () => {
                       showToast(`✅ Contacto asignado a: ${name}`);
                     }
                   }}
-                  className="bg-transparent border-none text-[10px] font-bold text-slate-700 dark:text-slate-200 focus:outline-none truncate appearance-none w-full cursor-pointer"
+                  className={`bg-transparent border-none text-[10px] font-bold text-slate-700 dark:text-slate-200 focus:outline-none truncate appearance-none w-full ${!isAdmin ? 'cursor-not-allowed' : 'cursor-pointer'}`}
                 >
                   <option value="">Sin Asignar</option>
                   {agents.map((agent) => (
