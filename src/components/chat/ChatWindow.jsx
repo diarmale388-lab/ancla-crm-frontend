@@ -397,9 +397,12 @@ export const ChatWindow = () => {
     (app) => app.contact_id === selectedContactId && app.status === 'CONFIRMED'
   );
 
-  // Auto-scroll robusto e inmediato: desplaza automáticamente al fondo al recibir o enviar mensajes
+  // Auto-scroll Inteligente: no interrumpe al asesor si está leyendo mensajes arriba
   const chatContainerRef = useRef(null);
   const prevContactIdRef = useRef(null);
+  const prevMsgLengthRef = useRef(messages?.length || 0);
+  const [showScrollBottomBtn, setShowScrollBottomBtn] = useState(false);
+  const [unreadBelowCount, setUnreadBelowCount] = useState(0);
 
   const scrollToBottom = (behavior = 'smooth') => {
     if (messagesEndRef.current) {
@@ -407,6 +410,20 @@ export const ChatWindow = () => {
     }
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+    setShowScrollBottomBtn(false);
+    setUnreadBelowCount(0);
+  };
+
+  const handleChatScroll = () => {
+    if (!chatContainerRef.current) return;
+    const { scrollTop, scrollHeight, clientHeight } = chatContainerRef.current;
+    const distanceToBottom = scrollHeight - scrollTop - clientHeight;
+    if (distanceToBottom < 120) {
+      setShowScrollBottomBtn(false);
+      setUnreadBelowCount(0);
+    } else {
+      setShowScrollBottomBtn(true);
     }
   };
 
@@ -416,13 +433,27 @@ export const ChatWindow = () => {
 
     if (isNewContact) {
       scrollToBottom('auto');
-    } else {
-      scrollToBottom('auto');
-      const timer = setTimeout(() => {
-        scrollToBottom('smooth');
-      }, 60);
-      return () => clearTimeout(timer);
+      setShowScrollBottomBtn(false);
+      setUnreadBelowCount(0);
+      prevMsgLengthRef.current = messages?.length || 0;
+      return;
     }
+
+    if (!chatContainerRef.current) return;
+    const { scrollTop, scrollHeight, clientHeight } = chatContainerRef.current;
+    const isNearBottom = scrollHeight - scrollTop - clientHeight < 150;
+    const lastMsg = messages?.[messages?.length - 1];
+    const isMe = lastMsg?.sender_type === 'user' || lastMsg?.sender_type === 'USER' || lastMsg?.sender_type === 'ai';
+
+    if (isNearBottom || isMe) {
+      scrollToBottom('smooth');
+    } else {
+      if (messages?.length > prevMsgLengthRef.current) {
+        setUnreadBelowCount(prev => prev + 1);
+      }
+      setShowScrollBottomBtn(true);
+    }
+    prevMsgLengthRef.current = messages?.length || 0;
   }, [messages?.length, messages?.[messages?.length - 1]?.id, isTyping, selectedContactId]);
 
   // Cargar información lateral y plantillas
@@ -1154,7 +1185,8 @@ export const ChatWindow = () => {
         {/* Mensajes del Chat con Focus Dimming suave al interactuar con el panel lateral */}
         <div 
           ref={chatContainerRef} 
-          className={`flex-1 overflow-y-auto p-4 space-y-4 bg-[#efeae2] dark:bg-[#0b141a] bg-opacity-95 bg-[radial-gradient(#e5ddd5_1px,transparent_1px)] dark:bg-[radial-gradient(#1f2c34_1px,transparent_1px)] [background-size:16px_16px] transition-opacity duration-300 ${
+          onScroll={handleChatScroll}
+          className={`flex-1 overflow-y-auto p-4 space-y-4 bg-[#efeae2] dark:bg-[#0b141a] bg-opacity-95 bg-[radial-gradient(#e5ddd5_1px,transparent_1px)] dark:bg-[radial-gradient(#1f2c34_1px,transparent_1px)] [background-size:16px_16px] transition-opacity duration-300 relative ${
             showRightSidebar ? 'lg:opacity-100 opacity-60' : 'opacity-100'
           }`}
         >
@@ -1221,6 +1253,19 @@ export const ChatWindow = () => {
           )}
 
           <div ref={messagesEndRef} />
+
+          {/* Botón Flotante Inteligente "↓ Mensajes nuevos / Ir al final" */}
+          {showScrollBottomBtn && (
+            <button
+              type="button"
+              onClick={() => scrollToBottom('smooth')}
+              className="sticky bottom-3 ml-auto mr-1 px-3.5 py-1.5 rounded-full bg-emerald-600/95 hover:bg-emerald-500 text-white text-[11px] font-black shadow-xl flex items-center space-x-1.5 transition-all animate-bounce cursor-pointer border border-emerald-400/50 z-30 backdrop-blur-md"
+              title="Desplazar al último mensaje"
+            >
+              <ChevronDown className="w-3.5 h-3.5" />
+              <span>{unreadBelowCount > 0 ? `↓ ${unreadBelowCount} mensaje${unreadBelowCount > 1 ? 's' : ''} nuevo${unreadBelowCount > 1 ? 's' : ''}` : '↓ Ir al final'}</span>
+            </button>
+          )}
         </div>
 
         {/* BARRA FLOTANTE 'SOFI COPILOTO' CON RESPUESTAS TÉCNICAS 1-CLIC */}

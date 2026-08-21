@@ -1,5 +1,5 @@
 import React from 'react';
-import { Check, CheckCheck, AlertCircle, Bot, Lock, CornerUpLeft, Forward, Pencil, Trash2 } from 'lucide-react';
+import { Check, CheckCheck, AlertCircle, Bot, Lock, CornerUpLeft, Forward, Pencil, Trash2, FileText, Download, FileSpreadsheet } from 'lucide-react';
 import { useChatStore } from '../../store/useChatStore';
 
 export const MessageBubble = ({ message, onImageClick, onReply, onForward, onEdit, onDelete }) => {
@@ -180,15 +180,40 @@ export const MessageBubble = ({ message, onImageClick, onReply, onForward, onEdi
               );
             }
             if (msgTypeLower === 'document') {
+              let docName = 'Documento Adjunto';
+              try {
+                if (cleanDisplayText && !cleanDisplayText.startsWith('http') && !cleanDisplayText.startsWith('[')) {
+                  docName = cleanDisplayText;
+                } else if (mediaUrl) {
+                  const urlParts = mediaUrl.split('?')[0].split('/');
+                  const rawName = urlParts[urlParts.length - 1];
+                  if (rawName) docName = decodeURIComponent(rawName);
+                }
+              } catch (e) {}
+
+              const isPdf = docName.toLowerCase().endsWith('.pdf') || (mediaUrl && mediaUrl.toLowerCase().includes('.pdf'));
+              const isExcel = docName.toLowerCase().endsWith('.xlsx') || docName.toLowerCase().endsWith('.xls');
+
               return (
-                <div className="mt-1">
+                <div className="mt-1 max-w-[280px]">
                   <a 
                     href={mediaUrl} 
                     target="_blank" 
                     rel="noreferrer" 
-                    className="flex items-center space-x-2 bg-black/5 dark:bg-white/5 px-3 py-2 rounded-lg text-xs font-semibold hover:bg-black/10 transition-colors w-max"
+                    className="flex items-center space-x-3 bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/15 p-2.5 rounded-xl border border-black/10 dark:border-white/10 transition-all group/doc"
                   >
-                    <span>📄 Descargar Documento</span>
+                    <div className="w-9 h-9 rounded-lg bg-rose-500/10 dark:bg-rose-500/20 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0">
+                      {isPdf ? <FileText className="w-5 h-5" /> : isExcel ? <FileSpreadsheet className="w-5 h-5 text-emerald-600" /> : <FileText className="w-5 h-5 text-blue-600" />}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <span className="text-xs font-bold text-slate-800 dark:text-slate-100 truncate block group-hover/doc:text-emerald-600 transition-colors">
+                        {docName}
+                      </span>
+                      <span className="text-[10px] text-slate-400 dark:text-slate-400 font-medium block">
+                        {isPdf ? 'Documento PDF' : isExcel ? 'Hoja de Cálculo' : 'Archivo adjunto'} • Clic para ver
+                      </span>
+                    </div>
+                    <Download className="w-4 h-4 text-slate-400 group-hover/doc:text-emerald-500 shrink-0" />
                   </a>
                 </div>
               );
