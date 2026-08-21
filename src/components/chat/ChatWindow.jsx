@@ -1203,8 +1203,8 @@ export const ChatWindow = () => {
               return (
                 <React.Fragment key={msg.id || index}>
                   {showDateDivider && (
-                    <div className="flex justify-center my-3.5 sticky top-2 z-10 select-none">
-                      <span className="bg-white/90 dark:bg-[#182229]/90 backdrop-blur-md text-[#54656f] dark:text-[#8696a0] text-[10.5px] font-black tracking-wider uppercase px-3 py-1 rounded-lg shadow-2xs border border-slate-200/60 dark:border-white/5">
+                    <div className="flex justify-center my-3.5 relative z-1 select-none pointer-events-none">
+                      <span className="bg-white/95 dark:bg-[#182229]/95 backdrop-blur-md text-[#54656f] dark:text-[#8696a0] text-[10.5px] font-black tracking-wider uppercase px-3 py-1 rounded-lg shadow-xs border border-slate-200/80 dark:border-white/10">
                         {currentDateHeader}
                       </span>
                     </div>
