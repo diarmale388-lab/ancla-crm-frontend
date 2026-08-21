@@ -80,9 +80,9 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
   const [email, setEmail] = useState(contact.email || '');
   const [phone, setPhone] = useState(contact.phone || '');
   const [lotCity, setLotCity] = useState(contact.lot_city || '');
-  const [lotStatus, setLotStatus] = useState(contact.lot_status || 'Sí, ya tengo');
-  const [interestProduct, setInterestProduct] = useState(contact.interest_product || 'Flex Home EXP-36');
-  const [clientType, setClientType] = useState(contact.client_type || 'Persona Natural');
+  const [lotStatus, setLotStatus] = useState(contact.lot_status || 'Por definir');
+  const [interestProduct, setInterestProduct] = useState(contact.interest_product || 'Por definir');
+  const [clientType, setClientType] = useState(contact.client_type || 'Por definir');
   const [preferredMethod, setPreferredMethod] = useState(contact.preferred_contact_method || 'Llamada telefónica');
   const [estimatedBudget, setEstimatedBudget] = useState(contact.estimated_budget || '');
   const [qualificationLevel, setQualificationLevel] = useState(contact.qualification_level || 'WARM');
@@ -566,17 +566,22 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                   <div>
                     <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">🏗️ 3. Modelo Arquitectónico de Interés</label>
                     <select
-                      value={interestProduct}
+                      value={interestProduct || 'Por definir'}
                       onChange={(e) => setInterestProduct(e.target.value)}
                       className="w-full bg-slate-50 dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-black text-[#0f172a] dark:text-[#f8fafc] cursor-pointer focus:border-emerald-500"
                     >
-                      <option value="Cápsula Living CL-13">🏕️ Cápsula Living CL-13 (13m² - $78.000.000 COP)</option>
-                      <option value="Cápsula Living CL-26">🚀 Cápsula Living CL-26 (26m² - $148.800.000 COP)</option>
+                      <option value="Por definir">❓ Por definir / En evaluación</option>
                       <option value="Flex Home EXP-36">🏠 Flex Home EXP-36 (36m² - $118.800.000 COP)</option>
                       <option value="Flex Home EXP-56">🏡 Flex Home EXP-56 (56m² - A Medida / $188.000.000 COP)</option>
-                      <option value="Glamping & Turismo">🌿 Glamping & Proyecto Turístico Modular</option>
+                      <option value="Flex Home (Vivienda Modular)">🏡 Flex Home (Vivienda Propia o Campestre)</option>
+                      <option value="Cápsula Living CL-13">🏕️ Cápsula Living CL-13 (13m² - $78.000.000 COP)</option>
+                      <option value="Cápsula Living CL-26">🚀 Cápsula Living CL-26 (26m² - $148.800.000 COP)</option>
+                      <option value="Glamping & Turismo">🌿 Glamping, Hotelería o Turismo Modular</option>
                       <option value="Bodega Industrial">🏢 Bodega Industrial / Estructura Acero</option>
                       <option value="Llave en Mano">🔑 Proyecto Especial Llave en Mano</option>
+                      {interestProduct && !["Por definir", "Flex Home EXP-36", "Flex Home EXP-56", "Flex Home (Vivienda Modular)", "Cápsula Living CL-13", "Cápsula Living CL-26", "Glamping & Turismo", "Bodega Industrial", "Llave en Mano"].includes(interestProduct) && (
+                        <option value={interestProduct}>📌 {interestProduct}</option>
+                      )}
                     </select>
                   </div>
 
@@ -584,10 +589,11 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                   <div>
                     <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">💼 4. Perfil del Cliente / Comprador</label>
                     <select
-                      value={clientType}
+                      value={clientType || 'Por definir'}
                       onChange={(e) => setClientType(e.target.value)}
                       className="w-full bg-slate-50 dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-black text-[#0f172a] dark:text-[#f8fafc] cursor-pointer focus:border-emerald-500"
                     >
+                      <option value="Por definir">❓ Por definir</option>
                       <option value="Persona Natural">🏠 Persona Natural (Vivienda Propia / Campestre)</option>
                       <option value="Empresario">🏢 Empresario / Uso Corporativo / Sede</option>
                       <option value="Inversionista">💼 Inversionista / Desarrollador Turístico</option>

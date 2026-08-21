@@ -900,10 +900,10 @@ export const KanbanBoard = () => {
                           {/* Modelo + Presupuesto Tabular */}
                           <div className="flex items-center justify-between pl-1 pt-1 border-t border-slate-100 dark:border-white/5 text-[11px]">
                             <span className="font-medium text-slate-600 dark:text-slate-300 truncate max-w-[140px]">
-                              🏗️ {lead.interest_product || 'Flex Home EXP-36'}
+                              🏗️ {lead.interest_product || 'Por definir'}
                             </span>
                             <span className="font-mono tabular-nums font-bold text-emerald-600 dark:text-emerald-400 shrink-0">
-                              {lead.estimated_budget ? formatCOP(lead.estimated_budget) : '$18,500 USD'}
+                              {lead.estimated_budget ? formatCOP(lead.estimated_budget) : 'Por cotizar'}
                             </span>
                           </div>
 
@@ -1077,7 +1077,7 @@ export const KanbanBoard = () => {
                           {/* Modelo & Lote */}
                           <td className="p-3.5 text-[11px]">
                             <span className="font-semibold text-slate-700 dark:text-slate-300 block truncate max-w-[150px]">
-                              {lead.interest_product || 'Flex Home EXP-36'}
+                              {lead.interest_product || 'Por definir'}
                             </span>
                             <span className="text-[10px] text-slate-400 truncate block">
                               📍 {lead.lot_city || 'Sin ciudad'} ({lead.lot_status || 'Por definir'})

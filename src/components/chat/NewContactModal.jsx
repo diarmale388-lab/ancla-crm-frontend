@@ -17,10 +17,10 @@ export default function NewContactModal({ isOpen, onClose }) {
   const [lastName, setLastName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
-  const [lotStatus, setLotStatus] = useState('Sí, ya tengo');
+  const [lotStatus, setLotStatus] = useState('Por definir');
   const [lotCity, setLotCity] = useState('');
-  const [interestProduct, setInterestProduct] = useState('Flex Home EXP-56');
-  const [clientType, setClientType] = useState('Persona Natural');
+  const [interestProduct, setInterestProduct] = useState('Por definir');
+  const [clientType, setClientType] = useState('Por definir');
   const [assignedUserId, setAssignedUserId] = useState(currentUser?.id || 4);
   const [saving, setSaving] = useState(false);
 
@@ -185,10 +185,11 @@ export default function NewContactModal({ isOpen, onClose }) {
                   onChange={(e) => setInterestProduct(e.target.value)}
                   className="w-full bg-white dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-1.5 text-xs font-bold cursor-pointer"
                 >
-                  <option value="Cápsula Living CL-13">Cápsula CL-13 ($78M)</option>
-                  <option value="Cápsula Living CL-26">Cápsula CL-26 ($148.8M)</option>
+                  <option value="Por definir">❓ Por definir</option>
                   <option value="Flex Home EXP-36">Flex Home EXP-36 ($118.8M)</option>
                   <option value="Flex Home EXP-56">Flex Home EXP-56 ($188M)</option>
+                  <option value="Cápsula Living CL-13">Cápsula CL-13 ($78M)</option>
+                  <option value="Cápsula Living CL-26">Cápsula CL-26 ($148.8M)</option>
                   <option value="Glamping & Turismo">Glamping & Turismo</option>
                 </select>
               </div>
@@ -199,6 +200,7 @@ export default function NewContactModal({ isOpen, onClose }) {
                   onChange={(e) => setClientType(e.target.value)}
                   className="w-full bg-white dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-1.5 text-xs font-bold cursor-pointer"
                 >
+                  <option value="Por definir">❓ Por definir</option>
                   <option value="Persona Natural">🏠 Persona Natural</option>
                   <option value="Empresario">🏢 Empresario</option>
                   <option value="Inversionista">💼 Inversionista</option>
