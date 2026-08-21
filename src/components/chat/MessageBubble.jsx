@@ -146,15 +146,15 @@ export const MessageBubble = ({ message, onImageClick, onReply, onForward, onEdi
             
             if (msgTypeLower === 'image') {
               return (
-                <div className="relative rounded-lg overflow-hidden max-w-[320px]">
+                <div className="relative rounded-xl overflow-hidden max-w-[260px] sm:max-w-[300px] max-h-[320px] bg-black/5 dark:bg-white/5 flex items-center justify-center">
                   <img 
                     src={mediaUrl} 
-                    className="max-w-full rounded-lg shadow-sm border border-black/5 cursor-zoom-in hover:brightness-95 transition-all" 
+                    className="w-full h-auto max-h-[320px] object-cover rounded-xl shadow-xs cursor-zoom-in hover:brightness-95 hover:scale-[1.01] transition-all duration-200" 
                     alt="Archivo recibido" 
                     onClick={() => onImageClick ? onImageClick(mediaUrl) : window.open(mediaUrl, '_blank')}
                   />
                   {/* Overlay Timestamp for WhatsApp image bubble */}
-                  <div className="absolute bottom-1.5 right-1.5 bg-black/40 text-white rounded-full px-2 py-0.5 text-[9px] flex items-center space-x-1 backdrop-blur-sm select-none">
+                  <div className="absolute bottom-1.5 right-1.5 bg-black/50 text-white rounded-full px-2 py-0.5 text-[9px] font-medium flex items-center space-x-1 backdrop-blur-md select-none pointer-events-none shadow-xs">
                     <span>{formatTime(message.created_at)}</span>
                     {isMe && getStatusIcon(message.status)}
                   </div>

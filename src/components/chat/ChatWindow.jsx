@@ -9,6 +9,7 @@ import EmailPreviewModal from '../common/EmailPreviewModal';
 import AnclaTechnicalDossier from '../common/AnclaTechnicalDossier';
 import SpecialAppointmentBanner from './SpecialAppointmentBanner';
 import { MessageBubble } from './MessageBubble';
+import { ImageViewerModal } from './ImageViewerModal';
 import { Send, Bot, WifiOff, MessageCircle, Sparkles, User, Phone, Mail, Calendar, Check, ChevronDown, BookOpen, Clock, Lock, Trash2, ShieldAlert, ArrowLeft, CornerUpLeft, Forward, Pencil, X, Download, Smile, Paperclip, Upload, Search, DollarSign, MoreVertical, Bold, Italic, Strikethrough, Code, Copy, Scissors, Clipboard, Video, CheckSquare, Wrench } from 'lucide-react';
 
 const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
@@ -180,13 +181,14 @@ export const ChatWindow = () => {
 
   // Lista ordenada de imágenes en el chat actual para navegación del visor (lightbox)
   const chatImages = (messages || [])
-    .filter(msg => {
-      const typeLower = (msg.message_type || '').toLowerCase();
-      return typeLower === 'image' && msg.content.includes('[Media ID:');
-    })
+    .filter(msg => (msg.message_type || '').toLowerCase() === 'image')
     .map(msg => {
-      const match = msg.content.match(/\[Media ID:\s*([^\]]+)\]/);
-      return match ? `${API_URL}/chats/media/${match[1]}` : null;
+      const match = (msg.content || '').match(/\[Media ID:\s*([^\]]+)\]/);
+      if (match) {
+        return `${API_URL}/chats/media/${match[1]}`;
+      }
+      if ((msg.content || '').startsWith('http')) return msg.content;
+      return null;
     })
     .filter(Boolean);
 
@@ -2420,7 +2422,7 @@ export const ChatWindow = () => {
                 <button
                   type="button"
                   onClick={() => setShowCalendarModal(false)}
-                  className="py-2.5 px-4 bg-slate-100 hover:bg-slate-205 dark:bg-white/5 dark:hover:bg-white/10 text-slate-550 dark:text-slate-450 font-bold rounded-xl text-xs cursor-pointer transition-all active:scale-[0.98]"
+                  className="py-2.5 px-4 bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-500 dark:text-slate-400 font-bold rounded-xl text-xs cursor-pointer transition-all active:scale-[0.98]"
                 >
                   Cancelar
                 </button>
@@ -2431,97 +2433,14 @@ export const ChatWindow = () => {
         </div>
       )}
 
-      {/* Visor de imágenes (Lightbox) estilo WhatsApp */}
+      {/* Visor de imágenes profesional (Zoom, Pan, Rotate, Navegación y Centrado 100%) */}
       {lightboxUrl && (
-        <div className="fixed inset-0 bg-black/95 z-50 flex flex-col justify-between select-none animate-fade-in">
-          {/* Header */}
-          <div className="flex items-center justify-between p-4 text-white bg-black/40">
-            <span className="text-xs font-bold text-slate-350">Visualizador de Archivos</span>
-            <div className="flex items-center space-x-3">
-              <a 
-                href={lightboxUrl} 
-                download 
-                target="_blank" 
-                rel="noreferrer" 
-                className="p-2 rounded-xl hover:bg-white/10 text-white transition-colors cursor-pointer"
-                title="Descargar imagen"
-              >
-                <Download className="w-5 h-5" />
-              </a>
-              <button 
-                onClick={() => setLightboxUrl(null)} 
-                className="p-2 rounded-xl hover:bg-white/10 text-white transition-colors cursor-pointer"
-                title="Cerrar"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-          </div>
-
-          {/* Cuerpo principal con controles de navegación */}
-          <div className="flex-1 flex items-center justify-between px-4 sm:px-10 relative">
-            {/* Flecha Izquierda */}
-            {chatImages.length > 1 && (
-              <button 
-                onClick={() => {
-                  const idx = chatImages.indexOf(lightboxUrl);
-                  const prevIdx = idx > 0 ? idx - 1 : chatImages.length - 1;
-                  setLightboxUrl(chatImages[prevIdx]);
-                }}
-                className="p-3.5 rounded-full bg-white/5 hover:bg-white/15 text-white cursor-pointer active:scale-95 transition-all"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-                </svg>
-              </button>
-            )}
-
-            {/* Imagen Principal */}
-            <div className="max-w-[85%] max-h-[80vh] flex items-center justify-center">
-              <img 
-                src={lightboxUrl} 
-                className="max-w-full max-h-[75vh] object-contain rounded-lg shadow-2xl animate-zoom-in" 
-                alt="Vista previa" 
-              />
-            </div>
-
-            {/* Flecha Derecha */}
-            {chatImages.length > 1 && (
-              <button 
-                onClick={() => {
-                  const idx = chatImages.indexOf(lightboxUrl);
-                  const nextIdx = idx < chatImages.length - 1 ? idx + 1 : 0;
-                  setLightboxUrl(chatImages[nextIdx]);
-                }}
-                className="p-3.5 rounded-full bg-white/5 hover:bg-white/15 text-white cursor-pointer active:scale-95 transition-all"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
-            )}
-          </div>
-
-          {/* Carrusel de Miniaturas en el Bottom */}
-          {chatImages.length > 1 && (
-            <div className="flex items-center justify-center p-4 bg-black/60 border-t border-white/5 space-x-2 overflow-x-auto">
-              {chatImages.map((imgUrl, i) => {
-                const isActive = imgUrl === lightboxUrl;
-                return (
-                  <img 
-                    key={i}
-                    src={imgUrl} 
-                    onClick={() => setLightboxUrl(imgUrl)}
-                    className={`w-12 h-12 object-cover rounded-md cursor-pointer transition-all border-2 ${
-                      isActive ? 'border-emerald-500 scale-105' : 'border-transparent opacity-50 hover:opacity-85'
-                    }`}
-                    alt="Miniatura"
-                  />
-                );
-              })}
-            </div>
-          )}
-        </div>
+        <ImageViewerModal
+          currentUrl={lightboxUrl}
+          images={chatImages}
+          onClose={() => setLightboxUrl(null)}
+          onNavigate={(newUrl) => setLightboxUrl(newUrl)}
+        />
       )}
 
       {/* Modal para Reenviar Mensaje */}
