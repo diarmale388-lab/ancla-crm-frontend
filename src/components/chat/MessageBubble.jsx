@@ -146,15 +146,19 @@ export const MessageBubble = ({ message, onImageClick, onReply, onForward, onEdi
             
             if (msgTypeLower === 'image') {
               return (
-                <div className="relative rounded-xl overflow-hidden max-w-[260px] sm:max-w-[300px] max-h-[320px] bg-black/5 dark:bg-white/5 flex items-center justify-center">
+                <div className="relative rounded-lg overflow-hidden w-[220px] h-[220px] sm:w-[240px] sm:h-[240px] bg-slate-900/10 flex items-center justify-center select-none group/img">
                   <img 
                     src={mediaUrl} 
-                    className="w-full h-auto max-h-[320px] object-cover rounded-xl shadow-xs cursor-zoom-in hover:brightness-95 hover:scale-[1.01] transition-all duration-200" 
-                    alt="Archivo recibido" 
+                    className="w-full h-full object-cover rounded-lg cursor-zoom-in hover:scale-105 transition-transform duration-300 ease-out" 
+                    alt="Foto de WhatsApp" 
+                    loading="lazy"
                     onClick={() => onImageClick ? onImageClick(mediaUrl) : window.open(mediaUrl, '_blank')}
                   />
+                  {/* Sombreado inferior sutil para legibilidad de hora estilo WhatsApp */}
+                  <div className="absolute inset-x-0 bottom-0 h-9 bg-gradient-to-t from-black/70 via-black/30 to-transparent pointer-events-none rounded-b-lg" />
+                  
                   {/* Overlay Timestamp for WhatsApp image bubble */}
-                  <div className="absolute bottom-1.5 right-1.5 bg-black/50 text-white rounded-full px-2 py-0.5 text-[9px] font-medium flex items-center space-x-1 backdrop-blur-md select-none pointer-events-none shadow-xs">
+                  <div className="absolute bottom-1.5 right-2 text-white text-[10px] font-semibold flex items-center space-x-1 select-none pointer-events-none drop-shadow-md">
                     <span>{formatTime(message.created_at)}</span>
                     {isMe && getStatusIcon(message.status)}
                   </div>
