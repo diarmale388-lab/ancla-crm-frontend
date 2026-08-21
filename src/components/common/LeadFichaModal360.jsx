@@ -579,8 +579,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                       <option value="Cápsula Living CL-26">🚀 Cápsula Living CL-26 (26m² - $148.800.000 COP)</option>
                       <option value="Glamping & Turismo">🌿 Glamping, Hotelería o Turismo Modular</option>
                       <option value="Bodega Industrial">🏢 Bodega Industrial / Estructura Acero</option>
-                      <option value="Llave en Mano">🔑 Proyecto Especial Llave en Mano</option>
-                      {interestProduct && !["Por definir", "Flex Home EXP-36", "Flex Home EXP-56", "Flex Home (Vivienda Modular)", "Cápsula Living CL-13", "Cápsula Living CL-26", "Glamping & Turismo", "Bodega Industrial", "Llave en Mano"].includes(interestProduct) && (
+                      {interestProduct && !["Por definir", "Flex Home EXP-36", "Flex Home EXP-56", "Flex Home (Vivienda Modular)", "Cápsula Living CL-13", "Cápsula Living CL-26", "Glamping & Turismo", "Bodega Industrial"].includes(interestProduct) && (
                         <option value={interestProduct}>📌 {interestProduct}</option>
                       )}
                     </select>

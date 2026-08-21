@@ -683,7 +683,6 @@ export const KanbanBoard = () => {
                 <option value="ALL">🏗️ Proyecto</option>
                 <option value="Flex Home">Flex Home</option>
                 <option value="Living">Cápsulas Living</option>
-                <option value="Llave en Mano">Llave en Mano</option>
                 <option value="Glamping">Glamping</option>
                 <option value="Bodega">Bodegas</option>
               </select>

@@ -61,7 +61,7 @@ export const PRODUCT_DATA = {
     base_price_cop: 78000000,
     bedrooms: 1,
     bathrooms: 1,
-    description: 'Suite modular futurista para proyectos de glamping, ecoturismo y hotelería boutique. Llave en mano con baño de lujo y ventanería curva.',
+    description: 'Suite modular futurista para proyectos de glamping, ecoturismo y hotelería boutique. Totalmente equipada con baño de lujo y ventanería curva.',
     container_capacity: '2 unidades por Contenedor 40HC',
     specs_zh: {
       structure: '航空级铝合金外壳 + 镀锌钢底盘一体成型',

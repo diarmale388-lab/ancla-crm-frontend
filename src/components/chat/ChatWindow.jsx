@@ -2080,7 +2080,6 @@ export const ChatWindow = () => {
                       else if (val.includes('CL-26') || val.includes('26m²')) setProposalBasePrice(148800000);
                       else if (val.includes('EXP-36') || val.includes('36m²')) setProposalBasePrice(118800000);
                       else if (val.includes('EXP-56') || val.includes('56m²')) setProposalBasePrice(188000000);
-                      else if (val.includes('Llave en Mano')) setProposalBasePrice(165000000);
                       else if (val.includes('Glamping')) setProposalBasePrice(85000000);
                     }}
                     className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs font-bold text-[#0f172a] dark:text-[#f8fafc] cursor-pointer"
@@ -2089,7 +2088,6 @@ export const ChatWindow = () => {
                     <option value="Cápsula Living CL-26">Cápsula Living CL-26 (26m² - $148.800.000 COP)</option>
                     <option value="Flex Home EXP-36">Flex Home EXP-36 (36m² - $118.800.000 COP)</option>
                     <option value="Flex Home EXP-56">Flex Home EXP-56 (56m² - A Medida / $188.000.000 COP)</option>
-                    <option value="Llave en Mano">Llave en Mano (Proyecto Integral)</option>
                     <option value="Glamping & Turismo">Glamping & Turismo Modular</option>
                   </select>
                 </div>

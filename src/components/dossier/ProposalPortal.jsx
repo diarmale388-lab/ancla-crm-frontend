@@ -64,7 +64,7 @@ export const PRODUCT_DATA = {
     base_price_cop: 78000000,
     bedrooms: 1,
     bathrooms: 1,
-    description: 'Suite modular futurista para proyectos de glamping, ecoturismo y hotelería boutique. Llave en mano con baño de lujo y ventanería curva 270°.',
+    description: 'Suite modular futurista para proyectos de glamping, ecoturismo y hotelería boutique. Totalmente equipada con baño de lujo y ventanería curva 270°.',
     specs_highlights: [
       'Carcasa exterior en aluminio aeronáutico ultrarresistente',
       'Ventanales curvos panorámicos 270° con vidrio Low-E',
@@ -542,7 +542,7 @@ Me gustaría agendar una cita para revisar la viabilidad en mi terreno y procede
                   Configurador Comercial
                 </span>
                 <h3 className="text-xl font-black">{model.name}</h3>
-                <p className="text-xs text-slate-400">Inversión Llave en Mano Personalizable</p>
+                <p className="text-xs text-slate-400">Inversión Estimada Personalizable</p>
               </div>
 
               {/* Opciones Configurables */}
