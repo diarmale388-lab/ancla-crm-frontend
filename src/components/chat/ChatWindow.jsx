@@ -1193,23 +1193,43 @@ export const ChatWindow = () => {
           {(() => {
             const list = msgSearchTerm.trim() 
               ? messages.filter(m => (m.content || '').toLowerCase().includes(msgSearchTerm.trim().toLowerCase()))
-              : messages;
+              : (messages || []);
 
-            return list.map((msg, index) => {
-              const currentDateHeader = getMessageDateHeader(msg.created_at);
-              const prevDateHeader = index > 0 ? getMessageDateHeader(list[index - 1].created_at) : null;
-              const showDateDivider = currentDateHeader && currentDateHeader !== prevDateHeader;
+            // Agrupar mensajes por fecha para sticky header suave estilo WhatsApp Web
+            const dateGroups = [];
+            let currentHeader = null;
+            let currentGroupMsgs = [];
 
-              return (
-                <React.Fragment key={msg.id || index}>
-                  {showDateDivider && (
-                    <div className="flex justify-center my-3.5 relative z-1 select-none pointer-events-none">
-                      <span className="bg-white/95 dark:bg-[#182229]/95 backdrop-blur-md text-[#54656f] dark:text-[#8696a0] text-[10.5px] font-black tracking-wider uppercase px-3 py-1 rounded-lg shadow-xs border border-slate-200/80 dark:border-white/10">
-                        {currentDateHeader}
-                      </span>
-                    </div>
-                  )}
+            list.forEach((msg) => {
+              const header = getMessageDateHeader(msg.created_at) || 'HOY';
+              if (header !== currentHeader) {
+                if (currentHeader !== null && currentGroupMsgs.length > 0) {
+                  dateGroups.push({ header: currentHeader, msgs: currentGroupMsgs });
+                }
+                currentHeader = header;
+                currentGroupMsgs = [msg];
+              } else {
+                currentGroupMsgs.push(msg);
+              }
+            });
+
+            if (currentHeader !== null && currentGroupMsgs.length > 0) {
+              dateGroups.push({ header: currentHeader, msgs: currentGroupMsgs });
+            }
+
+            return dateGroups.map((group, gIdx) => (
+              <div key={group.header + '_' + gIdx} className="space-y-3 relative">
+                {/* Cabecera de Fecha Flotante Estilo WhatsApp (Sticky por sección: nunca colisiona) */}
+                <div className="sticky top-2 z-10 flex justify-center py-1 select-none pointer-events-none">
+                  <span className="bg-white/95 dark:bg-[#182229]/95 backdrop-blur-md text-[#54656f] dark:text-[#8696a0] text-[10.5px] font-black tracking-wider uppercase px-3 py-1 rounded-lg shadow-sm border border-slate-200/80 dark:border-white/10">
+                    {group.header}
+                  </span>
+                </div>
+
+                {/* Lista de Mensajes del Día */}
+                {group.msgs.map((msg) => (
                   <MessageBubble 
+                    key={msg.id} 
                     message={msg} 
                     onImageClick={setLightboxUrl}
                     onReply={setReplyingTo}
@@ -1220,9 +1240,9 @@ export const ChatWindow = () => {
                     }}
                     onDelete={deleteMessage}
                   />
-                </React.Fragment>
-              );
-            });
+                ))}
+              </div>
+            ));
           })()}
 
           {msgSearchTerm.trim() && messages.filter(m => (m.content || '').toLowerCase().includes(msgSearchTerm.trim().toLowerCase())).length === 0 && (
