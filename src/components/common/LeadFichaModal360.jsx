@@ -539,10 +539,11 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                   <div>
                     <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">🏞️ 1. ¿Tiene Terreno / Lote Propio?</label>
                     <select
-                      value={lotStatus}
+                      value={lotStatus || 'Por definir'}
                       onChange={(e) => setLotStatus(e.target.value)}
                       className="w-full bg-slate-50 dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-black text-[#0f172a] dark:text-[#f8fafc] cursor-pointer focus:border-emerald-500"
                     >
+                      <option value="Por definir">❓ Por definir / Sin especificar</option>
                       <option value="Sí, ya tengo">✅ Sí, ya tiene lote propio listo</option>
                       <option value="Buscando Lote">🟡 Buscando lote / terreno en la zona</option>
                       <option value="En Negociación">⏳ En trámite de compra / promesa</option>
