@@ -12,6 +12,7 @@ import AnalyticsView from './components/analytics/AnalyticsView';
 import BroadcastView from './components/broadcast/BroadcastView';
 import { AuditLogsView } from './components/admin/AuditLogsView';
 import { ShowroomDashboard } from './components/showroom/ShowroomDashboard';
+import { AIApprovalInboxView } from './components/admin/AIApprovalInboxView';
 import ProposalPortal from './components/dossier/ProposalPortal';
 import { CommercialProposalView } from './components/CommercialProposalView';
 import { Bot, Mail, Lock, AlertCircle, Sparkles, User, CheckCircle2, Copy, Check, Eye, EyeOff, ShieldCheck, Zap } from 'lucide-react';
@@ -529,6 +530,10 @@ function App() {
 
         {activeTab === 'settings' && (
           <SettingsView />
+        )}
+
+        {activeTab === 'ai_approvals' && (
+          <AIApprovalInboxView />
         )}
 
         {activeTab === 'showroom' && (

@@ -226,6 +226,28 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
 
       {/* Sección Inferior (Ajustes, Perfil y Cerrar Sesión) */}
       <div className="flex flex-col items-center space-y-4 w-full">
+        {/* Botón de Bandeja de Aprobación Sofi AI (Solo Admin Diego / Liliana) */}
+        {(user?.role === 'admin' || user?.role === 'ADMIN') && (
+          <div className="relative w-full flex justify-center group">
+            {activeTab === 'ai_approvals' && (
+              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-[32px] bg-amber-500 dark:bg-amber-400 rounded-r-md"></div>
+            )}
+            <button
+              onClick={() => {
+                setActiveTab('ai_approvals');
+              }}
+              className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all cursor-pointer relative ${
+                activeTab === 'ai_approvals'
+                  ? 'bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30'
+                  : 'text-[#54656f] dark:text-[#8696a0] hover:bg-[#e9edef] hover:text-[#111b21] dark:hover:bg-[#202c33] dark:hover:text-white'
+              }`}
+              title="Bandeja de Aprobación Sofi AI (Candado 1 & 2)"
+            >
+              <ShieldCheck className="w-5 h-5" />
+            </button>
+          </div>
+        )}
+
         {/* Botón de Ajustes (Solo Admin) */}
         {(user?.role === 'admin' || user?.role === 'ADMIN') && (
           <div className="relative w-full flex justify-center group">
