@@ -91,14 +91,14 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
   return (
     <>
       {/* Desktop Vertical Sidebar (>= md) */}
-      <div className="desktop-sidebar w-[64px] h-full bg-[#f0f2f5] dark:bg-[#111b21] border-r border-slate-200 dark:border-[#202c33] hidden md:flex flex-col justify-between items-center py-4 flex-shrink-0 z-35 select-none transition-colors duration-300">
+      <div className="desktop-sidebar w-[64px] h-full bg-slate-100 dark:bg-navy-900 border-r border-slate-200 dark:border-navy-700 hidden md:flex flex-col justify-between items-center py-4 flex-shrink-0 z-35 select-none transition-colors duration-300">
       
       {/* Sección Superior de Iconos */}
       <div className="flex flex-col items-center space-y-5 w-full">
         {/* Botón de Chats */}
         <div className="relative w-full flex justify-center group">
           {activeTab === 'chats' && (
-            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-[32px] bg-[#008069] dark:bg-[#00a884] rounded-r-md"></div>
+            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-[32px] bg-gold-500 rounded-r-md"></div>
           )}
           <button
             onClick={() => {
@@ -106,14 +106,14 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
             }}
             className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all cursor-pointer relative ${
               activeTab === 'chats'
-                ? 'bg-[#e9edef] dark:bg-[#2a3942] text-[#008069] dark:text-[#00a884]'
-                : 'text-[#54656f] dark:text-[#8696a0] hover:bg-[#e9edef] hover:text-[#111b21] dark:hover:bg-[#202c33] dark:hover:text-white'
+                ? 'bg-gold-500/10 border border-gold-500/20 text-gold-600 dark:text-gold-400'
+                : 'text-slate-500 dark:text-slate-400 hover:bg-slate-200 hover:text-navy-900 dark:hover:bg-navy-800 dark:hover:text-white'
             }`}
             title="Chats"
           >
             <MessageSquare className="w-5 h-5" />
-            {/* Green Badge for Chats Count */}
-            <span className="absolute -top-1 -right-1 bg-[#008069] dark:bg-[#00a884] text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full scale-90 border border-[#f0f2f5] dark:border-[#111b21]">
+            {/* Badge contador de Chats */}
+            <span className="absolute -top-1 -right-1 bg-gold-500 text-navy-950 text-[9px] font-bold px-1.5 py-0.5 rounded-full scale-90 border border-slate-100 dark:border-navy-900">
               22
             </span>
           </button>
@@ -122,7 +122,7 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
         {/* Botón de Kanban Board */}
         <div className="relative w-full flex justify-center group">
           {activeTab === 'kanban' && (
-            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-[32px] bg-[#008069] dark:bg-[#00a884] rounded-r-md"></div>
+            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-[32px] bg-gold-500 rounded-r-md"></div>
           )}
           <button
             onClick={() => {
@@ -130,8 +130,8 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
             }}
             className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all cursor-pointer relative ${
               activeTab === 'kanban'
-                ? 'bg-[#e9edef] dark:bg-[#2a3942] text-[#008069] dark:text-[#00a884]'
-                : 'text-[#54656f] dark:text-[#8696a0] hover:bg-[#e9edef] hover:text-[#111b21] dark:hover:bg-[#202c33] dark:hover:text-white'
+                ? 'bg-gold-500/10 border border-gold-500/20 text-gold-600 dark:text-gold-400'
+                : 'text-slate-500 dark:text-slate-400 hover:bg-slate-200 hover:text-navy-900 dark:hover:bg-navy-800 dark:hover:text-white'
             }`}
             title="Kanban Pipeline"
           >
@@ -142,7 +142,7 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
         {/* Botón de Agenda & Citas */}
         <div className="relative w-full flex justify-center group">
           {activeTab === 'agenda' && (
-            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-[32px] bg-[#008069] dark:bg-[#00a884] rounded-r-md"></div>
+            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-[32px] bg-gold-500 rounded-r-md"></div>
           )}
           <button
             onClick={() => {
@@ -150,8 +150,8 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
             }}
             className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all cursor-pointer relative ${
               activeTab === 'agenda'
-                ? 'bg-[#e9edef] dark:bg-[#2a3942] text-[#008069] dark:text-[#00a884]'
-                : 'text-[#54656f] dark:text-[#8696a0] hover:bg-[#e9edef] hover:text-[#111b21] dark:hover:bg-[#202c33] dark:hover:text-white'
+                ? 'bg-gold-500/10 border border-gold-500/20 text-gold-600 dark:text-gold-400'
+                : 'text-slate-500 dark:text-slate-400 hover:bg-slate-200 hover:text-navy-900 dark:hover:bg-navy-800 dark:hover:text-white'
             }`}
             title="Agenda & Citas"
           >
@@ -163,7 +163,7 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
         {(user?.role === 'admin' || user?.role === 'ADMIN') && (
           <div className="relative w-full flex justify-center group">
             {activeTab === 'analytics' && (
-              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-[32px] bg-[#008069] dark:bg-[#00a884] rounded-r-md"></div>
+              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-[32px] bg-gold-500 rounded-r-md"></div>
             )}
             <button
               onClick={() => {
@@ -171,8 +171,8 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
               }}
               className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all cursor-pointer relative ${
                 activeTab === 'analytics'
-                  ? 'bg-[#e9edef] dark:bg-[#2a3942] text-[#008069] dark:text-[#00a884]'
-                  : 'text-[#54656f] dark:text-[#8696a0] hover:bg-[#e9edef] hover:text-[#111b21] dark:hover:bg-[#202c33] dark:hover:text-white'
+                  ? 'bg-gold-500/10 border border-gold-500/20 text-gold-600 dark:text-gold-400'
+                  : 'text-slate-500 dark:text-slate-400 hover:bg-slate-200 hover:text-navy-900 dark:hover:bg-navy-800 dark:hover:text-white'
               }`}
               title="Métricas & Informes"
             >
@@ -185,7 +185,7 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
         {(user?.role === 'admin' || user?.role === 'ADMIN') && (
           <div className="relative w-full flex justify-center group">
             {activeTab === 'broadcasts' && (
-              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-[32px] bg-[#008069] dark:bg-[#00a884] rounded-r-md"></div>
+              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-[32px] bg-gold-500 rounded-r-md"></div>
             )}
             <button
               onClick={() => {
@@ -193,8 +193,8 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
               }}
               className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all cursor-pointer relative ${
                 activeTab === 'broadcasts'
-                  ? 'bg-[#e9edef] dark:bg-[#2a3942] text-[#008069] dark:text-[#00a884]'
-                  : 'text-[#54656f] dark:text-[#8696a0] hover:bg-[#e9edef] hover:text-[#111b21] dark:hover:bg-[#202c33] dark:hover:text-white'
+                  ? 'bg-gold-500/10 border border-gold-500/20 text-gold-600 dark:text-gold-400'
+                  : 'text-slate-500 dark:text-slate-400 hover:bg-slate-200 hover:text-navy-900 dark:hover:bg-navy-800 dark:hover:text-white'
               }`}
               title="Envíos Masivos (Broadcasts)"
             >
@@ -206,7 +206,7 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
         {/* Botón de Showroom Armenia */}
         <div className="relative w-full flex justify-center group">
           {activeTab === 'showroom' && (
-            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-[32px] bg-[#008069] dark:bg-[#00a884] rounded-r-md"></div>
+            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-[32px] bg-gold-500 rounded-r-md"></div>
           )}
           <button
             onClick={() => {
@@ -214,8 +214,8 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
             }}
             className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all cursor-pointer relative ${
               activeTab === 'showroom'
-                ? 'bg-[#e9edef] dark:bg-[#2a3942] text-[#008069] dark:text-[#00a884]'
-                : 'text-[#54656f] dark:text-[#8696a0] hover:bg-[#e9edef] hover:text-[#111b21] dark:hover:bg-[#202c33] dark:hover:text-white'
+                ? 'bg-gold-500/10 border border-gold-500/20 text-gold-600 dark:text-gold-400'
+                : 'text-slate-500 dark:text-slate-400 hover:bg-slate-200 hover:text-navy-900 dark:hover:bg-navy-800 dark:hover:text-white'
             }`}
             title="Showroom Armenia"
           >
@@ -239,7 +239,7 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
               className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all cursor-pointer relative ${
                 activeTab === 'ai_approvals'
                   ? 'bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30'
-                  : 'text-[#54656f] dark:text-[#8696a0] hover:bg-[#e9edef] hover:text-[#111b21] dark:hover:bg-[#202c33] dark:hover:text-white'
+                  : 'text-slate-500 dark:text-slate-400 hover:bg-slate-200 hover:text-navy-900 dark:hover:bg-navy-800 dark:hover:text-white'
               }`}
               title="Bandeja de Aprobación Sofi AI (Candado 1 & 2)"
             >
@@ -252,7 +252,7 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
         {(user?.role === 'admin' || user?.role === 'ADMIN') && (
           <div className="relative w-full flex justify-center group">
             {activeTab === 'settings' && (
-              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-[32px] bg-[#008069] dark:bg-[#00a884] rounded-r-md"></div>
+              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-[32px] bg-gold-500 rounded-r-md"></div>
             )}
             <button
               onClick={() => {
@@ -260,8 +260,8 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
               }}
               className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all cursor-pointer relative ${
                 activeTab === 'settings'
-                  ? 'bg-[#e9edef] dark:bg-[#2a3942] text-[#008069] dark:text-[#00a884]'
-                  : 'text-[#54656f] dark:text-[#8696a0] hover:bg-[#e9edef] hover:text-[#111b21] dark:hover:bg-[#202c33] dark:hover:text-white'
+                  ? 'bg-gold-500/10 border border-gold-500/20 text-gold-600 dark:text-gold-400'
+                  : 'text-slate-500 dark:text-slate-400 hover:bg-slate-200 hover:text-navy-900 dark:hover:bg-navy-800 dark:hover:text-white'
               }`}
               title="Ajustes"
             >
@@ -274,11 +274,11 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
         {isInstallable && !window.matchMedia('(display-mode: standalone)').matches && (
           <button
             onClick={handleInstallClick}
-            className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white flex items-center justify-center transition-all shadow-md active:scale-95 cursor-pointer relative group"
+            className="w-10 h-10 rounded-xl bg-gradient-to-tr from-gold-600 to-gold-500 hover:from-gold-500 hover:to-gold-400 text-navy-950 flex items-center justify-center transition-all shadow-md active:scale-95 cursor-pointer relative group"
             title="Instalar ANCLA CRM en Mac, iPad, iPhone, Windows o Android"
           >
             <Download className="w-5 h-5 animate-pulse" />
-            <div className="absolute left-14 bottom-0 bg-[#111b27] border border-emerald-500/40 text-emerald-300 text-[10px] py-1.5 px-3 rounded-lg opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 shadow-xl font-bold">
+            <div className="absolute left-14 bottom-0 bg-navy-900 border border-gold-500/40 text-gold-300 text-[10px] py-1.5 px-3 rounded-lg opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 shadow-xl font-bold">
               Instalar App (Mac / iPad / Móvil)
             </div>
           </button>
@@ -290,7 +290,7 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
           className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all cursor-pointer relative ${
             pushPermission === 'granted'
               ? 'text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/10'
-              : 'text-amber-500 hover:bg-amber-500/10 animate-pulse'
+              : 'text-gold-500 hover:bg-gold-500/10 animate-pulse'
           }`}
           title={
             pushPermission === 'granted'
@@ -300,32 +300,32 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
         >
           <Bell className="w-5 h-5" />
           <span className={`absolute top-2 right-2 w-2 h-2 rounded-full ${
-            pushPermission === 'granted' ? 'bg-emerald-500' : 'bg-amber-500 animate-ping'
+            pushPermission === 'granted' ? 'bg-emerald-500' : 'bg-gold-500 animate-ping'
           }`} />
         </button>
 
         {/* Botón Toggler Día/Noche */}
         <button
           onClick={toggleTheme}
-          className="w-10 h-10 rounded-xl flex items-center justify-center text-[#54656f] dark:text-[#8696a0] hover:bg-[#e9edef] hover:text-[#111b21] dark:hover:bg-[#202c33] dark:hover:text-white transition-all cursor-pointer"
+          className="w-10 h-10 rounded-xl flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-slate-200 hover:text-navy-900 dark:hover:bg-navy-800 dark:hover:text-white transition-all cursor-pointer"
           title={theme === 'dark' ? 'Modo Día' : 'Modo Noche'}
         >
-          {theme === 'dark' ? <Sun className="w-5 h-5 text-amber-500" /> : <Moon className="w-5 h-5 text-indigo-500 dark:text-indigo-300" />}
+          {theme === 'dark' ? <Sun className="w-5 h-5 text-gold-500" /> : <Moon className="w-5 h-5 text-navy-700 dark:text-slate-300" />}
         </button>
 
         {/* Botón de Cerrar Sesión */}
         <button
           onClick={handleLogout}
-          className="w-10 h-10 rounded-xl flex items-center justify-center text-[#54656f] dark:text-[#8696a0] hover:bg-red-500/10 hover:text-red-500 transition-all cursor-pointer"
+          className="w-10 h-10 rounded-xl flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-red-500/10 hover:text-red-500 transition-all cursor-pointer"
           title="Cerrar Sesión"
         >
           <LogOut className="w-5 h-5" />
         </button>
 
         {/* Foto de Perfil / Info de Asesor */}
-        <div className="w-9 h-9 rounded-full bg-[#e9edef] dark:bg-[#2a3942] border border-slate-200 dark:border-[#202c33] flex items-center justify-center text-slate-800 dark:text-white text-xs font-bold uppercase shadow-sm relative group cursor-help transition-colors">
+        <div className="w-9 h-9 rounded-full bg-navy-800 border border-gold-500/30 flex items-center justify-center text-gold-400 text-xs font-bold uppercase shadow-sm relative group cursor-help transition-colors">
           {user ? user.full_name[0] : 'A'}
-          <div className="absolute left-14 bottom-0 bg-[#e9edef] dark:bg-[#202c33] border border-slate-200 dark:border-[#222e35] text-slate-800 dark:text-white text-[10px] py-1.5 px-3 rounded-lg opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 shadow-lg">
+          <div className="absolute left-14 bottom-0 bg-white dark:bg-navy-800 border border-slate-200 dark:border-navy-700 text-slate-800 dark:text-white text-[10px] py-1.5 px-3 rounded-lg opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 shadow-lg">
             <span className="font-bold block">{user ? user.full_name : 'Asesor'}</span>
             <span className="opacity-60 block capitalize">{user ? user.role : 'Rol'}</span>
           </div>
@@ -335,10 +335,10 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
       {/* Modal Gestor y Diagnóstico de Notificaciones Push en Celulares */}
       {showPushModal && (
         <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in font-sans">
-          <div className="bg-[#111b27] border border-white/10 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4 text-white">
+          <div className="bg-navy-900 border border-navy-700 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4 text-white">
             <div className="flex justify-between items-center border-b border-white/10 pb-3">
               <div className="flex items-center space-x-2.5">
-                <Radio className="w-5 h-5 text-emerald-400 animate-pulse" />
+                <Radio className="w-5 h-5 text-gold-400 animate-pulse" />
                 <h3 className="text-sm font-black uppercase tracking-wider">Centro de Notificaciones Push</h3>
               </div>
               <button onClick={() => { setShowPushModal(false); setTestPushStatus(null); }} className="text-slate-400 hover:text-white cursor-pointer">
@@ -409,7 +409,7 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
                 className={`w-full py-2.5 font-black rounded-xl text-xs transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer ${
                   pushPermission === 'granted'
                     ? 'bg-white/10 hover:bg-white/20 text-white border border-white/10'
-                    : 'bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white shadow-emerald-500/20'
+                    : 'bg-gradient-to-r from-gold-600 to-gold-500 hover:from-gold-500 hover:to-gold-400 text-navy-950 shadow-gold-500/20'
                 }`}
               >
                 {isPushLoading ? (
@@ -439,7 +439,7 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
                     setTestPushStatus(res);
                   }
                 }}
-                className="w-full py-2.5 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white font-black rounded-xl text-xs transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer shadow-indigo-500/20"
+                className="w-full py-2.5 bg-navy-800 hover:bg-navy-700 border border-navy-700 text-white font-black rounded-xl text-xs transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
               >
                 {isTestingPush ? (
                   <>
@@ -459,10 +459,10 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
       {/* Modal Guía Multi-Plataforma para Instalar App PWA (Mac, iPad, iPhone, Android) */}
       {showIosPrompt && (
         <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in font-sans">
-          <div className="bg-[#111b27] border border-white/10 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4 text-white text-center">
+          <div className="bg-navy-900 border border-navy-700 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4 text-white text-center">
             <div className="flex justify-between items-center border-b border-white/10 pb-3">
               <div className="flex items-center space-x-2">
-                <Smartphone className="w-5 h-5 text-emerald-400" />
+                <Smartphone className="w-5 h-5 text-gold-400" />
                 <h3 className="text-xs font-black uppercase tracking-wider">Instalar ANCLA CRM como App</h3>
               </div>
               <button onClick={() => setShowIosPrompt(false)} className="text-slate-400 hover:text-white cursor-pointer">
@@ -477,7 +477,7 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
             <div className="p-3.5 bg-black/40 rounded-2xl border border-white/5 space-y-3 text-left text-xs max-h-72 overflow-y-auto custom-scrollbar">
               {/* Opción 1: Mac Chrome */}
               <div className="space-y-1">
-                <span className="font-bold text-emerald-400 block">🖥️ En Mac (Google Chrome):</span>
+                <span className="font-bold text-gold-400 block">🖥️ En Mac (Google Chrome):</span>
                 <p className="text-slate-300 text-[11px] leading-relaxed">
                   Haz clic en el ícono <strong>Instalar</strong> en la barra de direcciones de Chrome (al lado de la estrella de favoritos) o en el menú <strong>(⋮) ➔ Guardar y compartir ➔ Instalar ANCLA CRM</strong>. Se añadirá directamente a tu <strong>Dock de macOS</strong> y <strong>Launchpad</strong>.
                 </p>
@@ -485,7 +485,7 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
 
               {/* Opción 2: iPad / iPhone (Safari) */}
               <div className="border-t border-white/5 pt-2.5 space-y-1">
-                <span className="font-bold text-emerald-400 block">📱 En iPad / iPhone (Safari):</span>
+                <span className="font-bold text-gold-400 block">📱 En iPad / iPhone (Safari):</span>
                 <p className="text-slate-300 text-[11px] leading-relaxed">
                   Toca el botón <Share className="w-3.5 h-3.5 inline text-blue-400 mx-1" /> <strong>Compartir</strong> en Safari y selecciona <strong>"Agregar al inicio"</strong>.
                 </p>
@@ -493,7 +493,7 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
 
               {/* Opción 3: iPad / iPhone (Chrome) */}
               <div className="border-t border-white/5 pt-2.5 space-y-1">
-                <span className="font-bold text-emerald-400 block">🌐 En iPad / iPhone (Google Chrome):</span>
+                <span className="font-bold text-gold-400 block">🌐 En iPad / iPhone (Google Chrome):</span>
                 <p className="text-slate-300 text-[11px] leading-relaxed">
                   Toca el botón <Share className="w-3.5 h-3.5 inline text-blue-400 mx-1" /> <strong>Compartir</strong> o los 3 puntos <strong>(...)</strong> y elige <strong>"Agregar a la pantalla principal"</strong>.
                 </p>
@@ -503,7 +503,7 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
             <button
               type="button"
               onClick={() => setShowIosPrompt(false)}
-              className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-black rounded-xl text-xs transition-all shadow-md cursor-pointer"
+              className="w-full py-2.5 bg-gold-500 hover:bg-gold-600 text-navy-950 font-black rounded-xl text-xs transition-all shadow-md cursor-pointer"
             >
               Entendido
             </button>
@@ -512,21 +512,21 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
       )}
       </div>
 
-      {/* Barra de Navegación Inferior Móvil (Mobile BottomNav WhatsApp-Style) */}
-      <div className={`mobile-bottom-nav md:hidden fixed bottom-0 left-0 right-0 h-16 bg-[#ffffff] dark:bg-[#111b21] border-t border-slate-200 dark:border-[#202c33] z-40 items-center justify-around px-2 shadow-2xl transition-all duration-200 select-none ${
+      {/* Barra de Navegación Inferior Móvil */}
+      <div className={`mobile-bottom-nav md:hidden fixed bottom-0 left-0 right-0 h-16 bg-white dark:bg-navy-900 border-t border-slate-200 dark:border-navy-700 z-40 items-center justify-around px-2 shadow-2xl transition-all duration-200 select-none ${
         activeTab === 'chats' && selectedContactId ? 'hidden' : 'flex'
       }`}>
         {/* Pestaña 1: 💬 Chats */}
         <button
           type="button"
           onClick={() => setActiveTab('chats')}
-          className={`flex flex-col items-center justify-center flex-1 py-1.5 transition-all cursor-pointer relative ${
-            activeTab === 'chats' ? 'text-[#008069] dark:text-[#00a884] font-black' : 'text-slate-500 dark:text-slate-400 font-medium'
+          className={`flex flex-col items-center justify-center flex-1 min-h-[44px] py-1.5 transition-all cursor-pointer relative ${
+            activeTab === 'chats' ? 'text-gold-600 dark:text-gold-400 font-black' : 'text-slate-500 dark:text-slate-400 font-medium'
           }`}
         >
           <div className="relative">
             <MessageSquare className="w-5 h-5" />
-            <span className="absolute -top-1 -right-2 bg-[#008069] dark:bg-[#00a884] text-white text-[8.5px] font-bold px-1.5 py-0.2 rounded-full scale-90">
+            <span className="absolute -top-1 -right-2 bg-gold-500 text-navy-950 text-[8.5px] font-bold px-1.5 py-0.2 rounded-full scale-90">
               22
             </span>
           </div>
@@ -537,8 +537,8 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
         <button
           type="button"
           onClick={() => setActiveTab('kanban')}
-          className={`flex flex-col items-center justify-center flex-1 py-1.5 transition-all cursor-pointer ${
-            activeTab === 'kanban' ? 'text-[#008069] dark:text-[#00a884] font-black' : 'text-slate-500 dark:text-slate-400 font-medium'
+          className={`flex flex-col items-center justify-center flex-1 min-h-[44px] py-1.5 transition-all cursor-pointer ${
+            activeTab === 'kanban' ? 'text-gold-600 dark:text-gold-400 font-black' : 'text-slate-500 dark:text-slate-400 font-medium'
           }`}
         >
           <KanbanSquare className="w-5 h-5" />
@@ -549,8 +549,8 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
         <button
           type="button"
           onClick={() => setActiveTab('agenda')}
-          className={`flex flex-col items-center justify-center flex-1 py-1.5 transition-all cursor-pointer ${
-            activeTab === 'agenda' ? 'text-[#008069] dark:text-[#00a884] font-black' : 'text-slate-500 dark:text-slate-400 font-medium'
+          className={`flex flex-col items-center justify-center flex-1 min-h-[44px] py-1.5 transition-all cursor-pointer ${
+            activeTab === 'agenda' ? 'text-gold-600 dark:text-gold-400 font-black' : 'text-slate-500 dark:text-slate-400 font-medium'
           }`}
         >
           <CalendarIcon className="w-5 h-5" />
@@ -561,8 +561,8 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
         <button
           type="button"
           onClick={() => setActiveTab('showroom')}
-          className={`flex flex-col items-center justify-center flex-1 py-1.5 transition-all cursor-pointer ${
-            activeTab === 'showroom' ? 'text-[#008069] dark:text-[#00a884] font-black' : 'text-slate-500 dark:text-slate-400 font-medium'
+          className={`flex flex-col items-center justify-center flex-1 min-h-[44px] py-1.5 transition-all cursor-pointer ${
+            activeTab === 'showroom' ? 'text-gold-600 dark:text-gold-400 font-black' : 'text-slate-500 dark:text-slate-400 font-medium'
           }`}
         >
           <Building className="w-5 h-5" />
@@ -574,8 +574,8 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
           <button
             type="button"
             onClick={() => setActiveTab('settings')}
-            className={`flex flex-col items-center justify-center flex-1 py-1.5 transition-all cursor-pointer ${
-              activeTab === 'settings' ? 'text-[#008069] dark:text-[#00a884] font-black' : 'text-slate-500 dark:text-slate-400 font-medium'
+            className={`flex flex-col items-center justify-center flex-1 min-h-[44px] py-1.5 transition-all cursor-pointer ${
+              activeTab === 'settings' ? 'text-gold-600 dark:text-gold-400 font-black' : 'text-slate-500 dark:text-slate-400 font-medium'
             }`}
           >
             <Settings className="w-5 h-5" />

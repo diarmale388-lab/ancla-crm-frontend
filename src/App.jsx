@@ -206,10 +206,10 @@ function App() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-slate-900 text-slate-100 flex items-center justify-center p-3 sm:p-6 lg:p-10 relative overflow-hidden font-sans select-none">
+      <div className="min-h-screen bg-navy-950 text-slate-100 flex items-center justify-center p-3 sm:p-6 lg:p-10 relative overflow-hidden font-sans select-none">
         {/* Luces volumétricas decorativas de fondo */}
-        <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-emerald-600/15 rounded-full blur-[120px] pointer-events-none"></div>
-        <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-teal-500/15 rounded-full blur-[120px] pointer-events-none"></div>
+        <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-gold-500/10 rounded-full blur-[120px] pointer-events-none"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-navy-700/30 rounded-full blur-[120px] pointer-events-none"></div>
 
         {invitationToken ? (
           /* Registro de Invitado */
@@ -297,8 +297,8 @@ function App() {
           <div className="w-full max-w-sm md:max-w-4xl bg-white rounded-[28px] md:rounded-[36px] border border-slate-200/90 shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-12 z-10 transition-all duration-300">
             
             {/* LADO IZQUIERDO: HERO BRANDING ARQUITECTÓNICO (En Desktop md+) */}
-            <div className="hidden md:flex md:col-span-5 bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950 p-8 lg:p-10 flex-col justify-between relative overflow-hidden text-white border-r border-white/10">
-              <div className="absolute -right-20 -top-20 w-64 h-64 bg-emerald-500/20 rounded-full blur-3xl pointer-events-none"></div>
+            <div className="hidden md:flex md:col-span-5 bg-gradient-to-br from-navy-950 via-navy-900 to-navy-800 p-8 lg:p-10 flex-col justify-between relative overflow-hidden text-white border-r border-white/10">
+              <div className="absolute -right-20 -top-20 w-64 h-64 bg-gold-500/15 rounded-full blur-3xl pointer-events-none"></div>
               
               <div>
                 {/* Logotipo Vectorial de Alta Definición y Gran Escala para Fondo Oscuro */}
@@ -318,7 +318,7 @@ function App() {
                   </div>
                 </div>
 
-                <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-[10.5px] font-extrabold tracking-wider uppercase mb-3.5">
+                <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-gold-500/15 border border-gold-500/30 text-gold-400 text-[10.5px] font-extrabold tracking-wider uppercase mb-3.5">
                   <Sparkles className="w-3.5 h-3.5" />
                   <span>Gestión Comercial Inteligente</span>
                 </span>
@@ -334,7 +334,7 @@ function App() {
               {/* Badges de Valor en Desktop */}
               <div className="flex flex-col space-y-2.5 my-5">
                 <div className="flex items-center space-x-3 p-2.5 rounded-xl bg-white/5 border border-white/5 backdrop-blur-xs">
-                  <div className="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xs shrink-0">
+                  <div className="w-7 h-7 rounded-lg bg-gold-500/15 text-gold-400 flex items-center justify-center font-bold text-xs shrink-0">
                     <Zap className="w-3.5 h-3.5" />
                   </div>
                   <div>
@@ -344,7 +344,7 @@ function App() {
                 </div>
 
                 <div className="flex items-center space-x-3 p-2.5 rounded-xl bg-white/5 border border-white/5 backdrop-blur-xs">
-                  <div className="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xs shrink-0">
+                  <div className="w-7 h-7 rounded-lg bg-gold-500/15 text-gold-400 flex items-center justify-center font-bold text-xs shrink-0">
                     <Bot className="w-3.5 h-3.5" />
                   </div>
                   <div>
@@ -357,7 +357,7 @@ function App() {
               {/* Base del Hero */}
               <div className="pt-4 border-t border-white/10 flex items-center justify-between text-[11px] text-slate-400">
                 <span className="flex items-center space-x-1 font-medium">
-                  <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                  <ShieldCheck className="w-4 h-4 text-gold-400" />
                   <span>Acceso Seguro SSL</span>
                 </span>
                 <span className="font-mono text-[10px] text-slate-500">v2.5.0</span>
@@ -419,7 +419,7 @@ function App() {
                           placeholder="diarmale388, liliana, asesor o correo"
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
-                          className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-10 pr-4 py-3 text-xs sm:text-sm font-semibold text-slate-900 placeholder-slate-400 focus:bg-white focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all"
+                          className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-10 pr-4 py-3 text-base sm:text-sm font-semibold text-slate-900 placeholder-slate-400 focus:bg-white focus:border-gold-500 focus:ring-2 focus:ring-gold-500/20 transition-all"
                           required
                         />
                       </div>
@@ -436,7 +436,7 @@ function App() {
                           placeholder="••••••••"
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
-                          className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-10 pr-10 py-3 text-xs sm:text-sm font-semibold text-slate-900 placeholder-slate-400 focus:bg-white focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all"
+                          className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-10 pr-10 py-3 text-base sm:text-sm font-semibold text-slate-900 placeholder-slate-400 focus:bg-white focus:border-gold-500 focus:ring-2 focus:ring-gold-500/20 transition-all"
                           required
                         />
                         <button
@@ -453,7 +453,7 @@ function App() {
                     <button
                       type="submit"
                       disabled={loading}
-                      className="w-full bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-black text-xs sm:text-sm py-3.5 px-4 rounded-xl shadow-lg shadow-emerald-500/25 active:scale-[0.98] transition-all flex items-center justify-center space-x-2 cursor-pointer mt-4"
+                      className="w-full bg-gradient-to-r from-gold-600 to-gold-500 hover:from-gold-500 hover:to-gold-400 text-navy-950 font-black text-xs sm:text-sm py-3.5 px-4 rounded-xl shadow-lg shadow-gold-500/25 active:scale-[0.98] transition-all flex items-center justify-center space-x-2 cursor-pointer mt-4"
                     >
                       {loading ? (
                         <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
