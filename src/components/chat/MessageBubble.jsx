@@ -1,5 +1,5 @@
-﻿import React from 'react';
-import { Check, CheckCheck, AlertCircle, Bot, Lock, CornerUpLeft, Forward, Pencil, Trash2, FileText, Download, FileSpreadsheet } from 'lucide-react';
+﻿import React, { useState } from 'react';
+import { Check, CheckCheck, AlertCircle, Bot, Lock, CornerUpLeft, Forward, Pencil, Trash2, FileText, Download, FileSpreadsheet, MoreHorizontal } from 'lucide-react';
 import { useChatStore } from '../../store/useChatStore';
 import { buildAuthenticatedMediaUrl } from '../../utils/media';
 
@@ -76,6 +76,19 @@ export const MessageBubble = ({ message, onImageClick, onReply, onForward, onEdi
 
   const isReaction = (message.content || '').includes('[Mensaje de tipo: reaction]');
   const isImage = (message.message_type || '').toLowerCase() === 'image';
+  const [showMobileActions, setShowMobileActions] = useState(false);
+
+  const mobileActionBtn = (onClick, icon, title, className = '') => (
+    <button
+      type="button"
+      onClick={(e) => { e.stopPropagation(); onClick(); setShowMobileActions(false); }}
+      className={`p-1.5 rounded-md text-slate-400 hover:text-gold-600 hover:bg-slate-100 dark:hover:bg-navy-700 transition-colors cursor-pointer ${className}`}
+      title={title}
+      aria-label={title}
+    >
+      {icon}
+    </button>
+  );
 
   if (isReaction) {
     return (
@@ -91,8 +104,8 @@ export const MessageBubble = ({ message, onImageClick, onReply, onForward, onEdi
   return (
     <div className={`flex w-full mb-3.5 ${isInternalNote ? 'justify-center' : isMe ? 'justify-end' : 'justify-start'}`}>
       <div 
-        className={`max-w-[70%] rounded-2xl shadow-sm relative group transition-all duration-200 ${
-          isImage ? 'p-1' : 'px-4 py-2.5'
+        className={`max-w-[88%] md:max-w-[70%] rounded-2xl shadow-sm relative group transition-all duration-200 ${
+          isImage ? 'p-1' : 'px-3.5 py-2 md:px-4 md:py-2.5'
         } ${
           isInternalNote
             ? 'bg-amber-50 dark:bg-amber-500/10 border border-amber-300 dark:border-amber-500/30 text-amber-800 dark:text-amber-400 w-full text-center'
@@ -101,6 +114,30 @@ export const MessageBubble = ({ message, onImageClick, onReply, onForward, onEdi
               : 'bg-white border border-slate-200/80 text-slate-800 dark:bg-navy-900 dark:text-slate-200 dark:border-navy-700/60'
         }`}
       >
+        {/* Menú contextual móvil (discreto, dentro de la burbuja) */}
+        {!isInternalNote && (
+          <div className="md:hidden absolute top-1 right-1 z-10">
+            <button
+              type="button"
+              onClick={(e) => { e.stopPropagation(); setShowMobileActions((v) => !v); }}
+              className="p-1 rounded-md text-slate-400 hover:text-slate-600 hover:bg-slate-100/90 dark:hover:bg-navy-700/80 transition-colors cursor-pointer"
+              title="Acciones del mensaje"
+              aria-label="Acciones del mensaje"
+            >
+              <MoreHorizontal className="w-3.5 h-3.5" />
+            </button>
+            {showMobileActions && (
+              <div className="absolute top-full right-0 mt-0.5 flex items-center gap-0.5 bg-white/95 dark:bg-navy-800 border border-slate-200 dark:border-navy-700 rounded-lg p-0.5 shadow-md backdrop-blur-sm">
+                {mobileActionBtn(() => onReply(message), <CornerUpLeft className="w-3.5 h-3.5" />, 'Responder')}
+                {mobileActionBtn(() => onForward(message), <Forward className="w-3.5 h-3.5" />, 'Reenviar')}
+                {isMe && (message.message_type || '').toLowerCase() === 'text' &&
+                  mobileActionBtn(() => onEdit(message), <Pencil className="w-3.5 h-3.5" />, 'Editar')}
+                {mobileActionBtn(() => onDelete(message.id), <Trash2 className="w-3.5 h-3.5" />, 'Eliminar', 'hover:text-red-500 hover:bg-red-500/10')}
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Etiqueta de Nota Interna */}
         {isInternalNote && (
           <div className="flex flex-col items-center justify-center mb-2 space-y-1">
@@ -238,11 +275,11 @@ export const MessageBubble = ({ message, onImageClick, onReply, onForward, onEdi
           </div>
         )}
 
-        {/* Panel de Acciones Rápidas en Hover */}
+        {/* Panel de Acciones Rápidas en Hover (solo desktop) */}
         {!isInternalNote && (
-          <div className={`opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-200 absolute ${
+          <div className={`hidden md:flex opacity-0 md:group-hover:opacity-100 transition-opacity duration-200 absolute ${
             isMe ? 'right-full mr-2' : 'left-full ml-2'
-          } top-2 flex items-center space-x-1 bg-white dark:bg-navy-800 border border-navy-700 rounded-xl p-1.5 shadow-lg z-10 select-none`}>
+          } top-2 items-center space-x-1 bg-white dark:bg-navy-800 border border-navy-700 rounded-xl p-1.5 shadow-lg z-10 select-none`}>
             {/* Responder */}
             <button 
               onClick={() => onReply(message)} 

@@ -57,6 +57,16 @@
   }
 }
 
+@layer utilities {
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 /* Glassmorphism Classes Adaptativos */
 .glass {
   background: rgba(255, 255, 255, 0.7);
