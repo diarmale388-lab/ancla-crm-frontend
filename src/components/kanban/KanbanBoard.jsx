@@ -583,7 +583,7 @@ export const KanbanBoard = () => {
           
           {/* Fila 2: Barra de KPIs en Tiempo Real */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-3">
-            <div className="bg-white dark:bg-navy-800 border border-navy-700/30 dark:border-navy-700 p-2.5 sm:p-3 rounded-2xl flex items-center space-x-2.5 sm:space-x-3 shadow-xs">
+            <div className="bg-white dark:bg-navy-800 border border-slate-200 dark:border-navy-700 p-2.5 sm:p-3 rounded-2xl flex items-center space-x-2.5 sm:space-x-3 shadow-sm">
               <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gold-500/10 text-gold-500 dark:text-gold-400 flex items-center justify-center shrink-0">
                 <User className="w-4 h-4" />
               </div>
@@ -593,7 +593,7 @@ export const KanbanBoard = () => {
               </div>
             </div>
 
-            <div className="bg-white dark:bg-navy-800 border border-navy-700/30 dark:border-navy-700 p-2.5 sm:p-3 rounded-2xl flex items-center space-x-2.5 sm:space-x-3 shadow-xs">
+            <div className="bg-white dark:bg-navy-800 border border-slate-200 dark:border-navy-700 p-2.5 sm:p-3 rounded-2xl flex items-center space-x-2.5 sm:space-x-3 shadow-sm">
               <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gold-500/10 text-gold-500 dark:text-gold-400 flex items-center justify-center shrink-0">
                 <DollarSign className="w-4 h-4" />
               </div>
@@ -603,7 +603,7 @@ export const KanbanBoard = () => {
               </div>
             </div>
 
-            <div className="bg-white dark:bg-navy-800 border border-navy-700/30 dark:border-navy-700 p-2.5 sm:p-3 rounded-2xl flex items-center space-x-2.5 sm:space-x-3 shadow-xs">
+            <div className="bg-white dark:bg-navy-800 border border-slate-200 dark:border-navy-700 p-2.5 sm:p-3 rounded-2xl flex items-center space-x-2.5 sm:space-x-3 shadow-sm">
               <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gold-500/10 text-gold-400 flex items-center justify-center shrink-0">
                 <Calendar className="w-4 h-4" />
               </div>
@@ -613,7 +613,7 @@ export const KanbanBoard = () => {
               </div>
             </div>
 
-            <div className="bg-white dark:bg-navy-800 border border-navy-700/30 dark:border-navy-700 p-2.5 sm:p-3 rounded-2xl flex items-center space-x-2.5 sm:space-x-3 shadow-xs">
+            <div className="bg-white dark:bg-navy-800 border border-slate-200 dark:border-navy-700 p-2.5 sm:p-3 rounded-2xl flex items-center space-x-2.5 sm:space-x-3 shadow-sm">
               <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gold-500/10 text-gold-500 dark:text-gold-400 flex items-center justify-center shrink-0">
                 <Award className="w-4 h-4" />
               </div>
@@ -785,11 +785,11 @@ export const KanbanBoard = () => {
                 } ${
                   dragOverStageId === stage.id
                     ? 'border-gold-500 ring-2 ring-gold-500/50 shadow-xl shadow-gold-500/20 bg-gold-500/10 dark:bg-navy-800 scale-[1.01]'
-                    : 'border-navy-700/30 dark:border-navy-700 shadow-2xs'
+                    : 'border-slate-200 dark:border-navy-700 shadow-sm'
                 }`}
               >
                 {/* MÓDULO 3: CABECERA DE COLUMNA COMO MINI-DASHBOARD */}
-                <div className="p-3 bg-white dark:bg-navy-800 rounded-2xl border border-navy-700/30 dark:border-navy-700 space-y-2 mb-3 shadow-xs">
+                <div className="p-3 bg-white dark:bg-navy-800 rounded-2xl border border-slate-200 dark:border-navy-700 space-y-2 mb-3 shadow-sm">
                   <div className="flex items-center justify-between">
                     <h3 className="text-xs font-black text-navy-900 dark:text-white uppercase tracking-wider truncate">
                       {stage.name}
@@ -800,7 +800,7 @@ export const KanbanBoard = () => {
                   </div>
 
                   {/* Valor Total + Probabilidad Implícita */}
-                  <div className="flex items-center justify-between text-[10px] font-mono tabular-nums">
+                  <div className="flex items-center justify-between text-[11px] font-mono tabular-nums text-slate-500 dark:text-slate-400">
                     <span className="font-bold text-slate-500 dark:text-slate-400">
                       {formatCOP(stageTotalValue)}
                     </span>
@@ -817,7 +817,7 @@ export const KanbanBoard = () => {
                         style={{ width: `${Math.min(100, occupancyPct)}%` }}
                       />
                     </div>
-                    <div className="flex justify-between text-[9px] font-mono text-slate-400">
+                    <div className="flex justify-between text-[11px] font-mono tabular-nums text-slate-500 dark:text-slate-400">
                       <span>Ponderado: {formatCOP(weightedValue)}</span>
                       <span>{occupancyPct}% vol</span>
                     </div>
@@ -844,7 +844,7 @@ export const KanbanBoard = () => {
                           onDragStart={(e) => handleDragStart(e, lead.id)}
                           onDragEnd={handleDragEnd}
                           onClick={() => setSelectedLeadForModal(lead)}
-                          className="bg-white dark:bg-navy-800 border border-navy-700/30 dark:border-navy-700 hover:border-gold-500/40 dark:hover:border-gold-500/30 p-3 rounded-2xl shadow-xs hover:shadow-md transition-all duration-200 cursor-pointer group space-y-2 relative overflow-hidden"
+                          className="bg-white dark:bg-navy-800 border border-slate-200 dark:border-navy-700 hover:border-gold-500/40 dark:hover:border-gold-500/30 p-3 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer group space-y-2 relative overflow-hidden"
                         >
                           {/* MÓDULO 1: RADAR SLA EN ESQUINA DE TARJETA */}
                           <div className="flex items-start justify-between pl-1">
@@ -862,7 +862,7 @@ export const KanbanBoard = () => {
 
                             {/* Badge SLA con Semáforo */}
                             <div className="flex items-center space-x-1 shrink-0">
-                              <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-md border flex items-center space-x-1 ${sla.color}`}>
+                              <span className={`text-[11px] font-semibold tracking-wide tabular-nums px-1.5 py-0.5 rounded-md border flex items-center space-x-1 ${sla.color}`}>
                                 {sla.isUrgent && (
                                   <span className="relative flex h-2 w-2 mr-0.5">
                                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
@@ -876,11 +876,11 @@ export const KanbanBoard = () => {
 
                           {/* Badges de Campaña y Calificación */}
                           <div className="flex flex-wrap items-center gap-1.5 pl-1">
-                            <span className="text-[9.5px] font-bold px-2 py-0.5 rounded-md bg-navy-800/10 text-navy-800 dark:text-slate-300 border border-navy-700/30 truncate max-w-[130px]">
+                            <span className="text-[11px] font-semibold tracking-wide px-2 py-0.5 rounded-md bg-navy-800/10 text-navy-800 dark:text-slate-300 border border-slate-200 dark:border-navy-700 truncate max-w-[130px]">
                               {lead.source && (lead.source.includes('Nacional') || lead.source.includes('Virtual')) ? '💻 Cita Virtual' : lead.source || 'Meta Ads'}
                             </span>
 
-                            <span className={`text-[9.5px] font-bold px-2 py-0.5 rounded-md border flex items-center ${
+                            <span className={`text-[11px] font-semibold tracking-wide px-2 py-0.5 rounded-md border flex items-center ${
                               lead.qualification_level === 'VIP' ? 'bg-gold-500/15 text-gold-500 dark:text-gold-400 border-gold-500/30 font-extrabold' :
                               lead.qualification_level === 'HOT' ? 'bg-gold-500/10 text-gold-500 dark:text-gold-400 border-gold-500/30 font-bold' :
                               lead.qualification_level === 'WARM' ? 'bg-amber-500/10 text-amber-600 dark:text-amber-300 border-amber-500/30' :
@@ -901,14 +901,14 @@ export const KanbanBoard = () => {
                             <span className="font-medium text-slate-600 dark:text-slate-300 truncate max-w-[140px]">
                               🏗️ {lead.interest_product || 'Por definir'}
                             </span>
-                            <span className="font-mono tabular-nums font-bold text-gold-500 dark:text-gold-400 shrink-0">
+                            <span className="font-mono tabular-nums font-semibold text-gold-600 dark:text-gold-400 shrink-0">
                               {lead.estimated_budget ? formatCOP(lead.estimated_budget) : 'Por cotizar'}
                             </span>
                           </div>
 
                           {/* Cita confirmada badge */}
                           {appointment && (
-                            <div className="flex items-center space-x-1.5 text-[9.5px] font-black text-amber-700 dark:text-amber-400 bg-amber-500/15 px-2 py-1 rounded-lg border border-amber-500/30">
+                            <div className="flex items-center space-x-1.5 text-[11px] font-semibold tracking-wide text-amber-700 dark:text-amber-400 bg-amber-500/15 px-2 py-1 rounded-lg border border-amber-500/30">
                               <Calendar className="w-3 h-3 text-amber-500 shrink-0" />
                               <span className="truncate">
                                 Cita: {new Date(appointment.datetime).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
@@ -1062,7 +1062,7 @@ export const KanbanBoard = () => {
 
                           {/* SLA Radar */}
                           <td className="p-3.5">
-                            <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-md border inline-flex items-center space-x-1 ${sla.color}`}>
+                            <span className={`text-[11px] font-semibold tracking-wide tabular-nums px-2 py-0.5 rounded-md border inline-flex items-center space-x-1 ${sla.color}`}>
                               {sla.isUrgent && (
                                 <span className="relative flex h-2 w-2 mr-1">
                                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
@@ -1084,13 +1084,13 @@ export const KanbanBoard = () => {
                           </td>
 
                           {/* Presupuesto */}
-                          <td className="p-3.5 font-mono tabular-nums font-bold text-gold-500 dark:text-gold-400">
+                          <td className="p-3.5 font-mono tabular-nums font-semibold text-gold-600 dark:text-gold-400">
                             {formatCOP(lead.estimated_budget)}
                           </td>
 
                           {/* Calificación */}
                           <td className="p-3.5">
-                            <span className={`text-[9.5px] font-bold px-2 py-0.5 rounded-md border inline-flex items-center ${
+                            <span className={`text-[11px] font-semibold tracking-wide px-2 py-0.5 rounded-md border inline-flex items-center ${
                               lead.qualification_level === 'VIP' ? 'bg-gold-500/15 text-gold-500 dark:text-gold-400 border-gold-500/30 font-extrabold' :
                               lead.qualification_level === 'HOT' ? 'bg-gold-500/10 text-gold-500 dark:text-gold-400 border-gold-500/30 font-bold' :
                               lead.qualification_level === 'WARM' ? 'bg-amber-500/10 text-amber-600 dark:text-amber-300 border-amber-500/30' :
@@ -1162,7 +1162,7 @@ export const KanbanBoard = () => {
               <div>
                 Mostrando <strong className="text-navy-900 dark:text-white">{sortedTableLeads.length}</strong> de <strong className="text-navy-900 dark:text-white">{leads.length}</strong> prospectos
               </div>
-              <div className="font-mono tabular-nums font-bold text-gold-500 dark:text-gold-400">
+              <div className="font-mono tabular-nums font-semibold text-gold-600 dark:text-gold-400">
                 Total Filtrado: {formatCOP(sortedTableLeads.reduce((acc, l) => acc + (l.estimated_budget || 0), 0))}
               </div>
             </div>

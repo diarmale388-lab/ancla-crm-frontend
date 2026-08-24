@@ -100,8 +100,8 @@ export default function AnalyticsView() {
               <Users className="w-6 h-6" />
             </div>
             <div>
-              <span className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold tracking-wider block">Leads Totales</span>
-              <span className="text-2xl font-black text-gold-500">{kpis.total_leads}</span>
+              <span className="text-xs text-slate-500 dark:text-slate-400 uppercase font-semibold tracking-wide block">Leads Totales</span>
+              <span className="text-2xl font-black text-gold-500 tabular-nums">{kpis.total_leads}</span>
             </div>
           </div>
 
@@ -110,8 +110,8 @@ export default function AnalyticsView() {
               <Calendar className="w-6 h-6" />
             </div>
             <div>
-              <span className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold tracking-wider block">Citas Activas</span>
-              <span className="text-2xl font-black text-gold-500">{kpis.active_appointments}</span>
+              <span className="text-xs text-slate-500 dark:text-slate-400 uppercase font-semibold tracking-wide block">Citas Activas</span>
+              <span className="text-2xl font-black text-gold-500 tabular-nums">{kpis.active_appointments}</span>
             </div>
           </div>
 
@@ -120,8 +120,8 @@ export default function AnalyticsView() {
               <Sparkles className="w-6 h-6" />
             </div>
             <div>
-              <span className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold tracking-wider block">Tasa de Piloto IA</span>
-              <span className="text-2xl font-black text-gold-500">{kpis.messages.ai_ratio_pct}%</span>
+              <span className="text-xs text-slate-500 dark:text-slate-400 uppercase font-semibold tracking-wide block">Tasa de Piloto IA</span>
+              <span className="text-2xl font-black text-gold-500 tabular-nums">{kpis.messages.ai_ratio_pct}%</span>
             </div>
           </div>
 
@@ -130,8 +130,8 @@ export default function AnalyticsView() {
               <MessageSquare className="w-6 h-6" />
             </div>
             <div>
-              <span className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold tracking-wider block">Total Mensajes</span>
-              <span className="text-2xl font-black text-gold-500">{kpis.messages.total}</span>
+              <span className="text-xs text-slate-500 dark:text-slate-400 uppercase font-semibold tracking-wide block">Total Mensajes</span>
+              <span className="text-2xl font-black text-gold-500 tabular-nums">{kpis.messages.total}</span>
             </div>
           </div>
         </div>
@@ -159,8 +159,8 @@ export default function AnalyticsView() {
                     <div className="flex items-center justify-between text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 gap-2">
                       <span className="truncate">{idx + 1}. {stage.stage_name}</span>
                       <div className="flex items-center gap-2 flex-shrink-0">
-                        <span className="text-gold-500 font-bold">{sharePct}%</span>
-                        <span className="text-slate-500 dark:text-slate-400 font-medium">{stage.count} leads</span>
+                        <span className="text-gold-500 font-bold tabular-nums">{sharePct}%</span>
+                        <span className="text-slate-500 dark:text-slate-400 font-medium tabular-nums">{stage.count} leads</span>
                       </div>
                     </div>
                     <div className="w-full bg-slate-100 dark:bg-navy-800 h-4 rounded-full overflow-hidden border border-slate-200/80 dark:border-navy-700">
@@ -202,8 +202,8 @@ export default function AnalyticsView() {
                   />
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <span className="text-2xl sm:text-3xl font-black text-gold-500">{kpis.messages.ai_ratio_pct}%</span>
-                  <span className="text-xs text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">Por la IA</span>
+                  <span className="text-2xl sm:text-3xl font-black text-gold-500 tabular-nums">{kpis.messages.ai_ratio_pct}%</span>
+                  <span className="text-[11px] text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wide">Por la IA</span>
                 </div>
               </div>
 
@@ -211,11 +211,11 @@ export default function AnalyticsView() {
               <div className="w-full grid grid-cols-2 gap-3 text-center">
                 <div className="p-3 rounded-xl bg-gold-500/15 border border-gold-500/30">
                   <span className="text-xs text-slate-500 dark:text-slate-400 block font-bold mb-0.5">Piloto IA</span>
-                  <span className="text-sm font-extrabold text-gold-500">{kpis.messages.ai} msgs</span>
+                  <span className="text-sm font-extrabold text-gold-500 tabular-nums">{kpis.messages.ai} msgs</span>
                 </div>
                 <div className="p-3 rounded-xl bg-slate-50 dark:bg-navy-800 border border-slate-200 dark:border-navy-700">
                   <span className="text-xs text-slate-500 dark:text-slate-400 block font-bold mb-0.5">Asesores Humanos</span>
-                  <span className="text-sm font-extrabold text-slate-600 dark:text-slate-300">{kpis.messages.human} msgs</span>
+                  <span className="text-sm font-extrabold text-slate-600 dark:text-slate-300 tabular-nums">{kpis.messages.human} msgs</span>
                 </div>
               </div>
             </div>
@@ -248,9 +248,9 @@ export default function AnalyticsView() {
                   <tr key={adv.advisor_id} className="hover:bg-slate-50/80 dark:hover:bg-navy-800/50 transition-colors">
                     <td className="py-3 px-2 text-slate-800 dark:text-white font-bold">{adv.full_name}</td>
                     <td className="py-3 px-2 capitalize text-slate-600 dark:text-slate-400">{adv.role === 'admin' ? 'Administrador' : 'Asesor'}</td>
-                    <td className="py-3 px-2 text-center font-bold text-gold-500">{adv.assigned_leads}</td>
-                    <td className="py-3 px-2 text-center">{adv.sent_messages}</td>
-                    <td className="py-3 px-2 text-center font-bold text-gold-500">{adv.booked_appointments}</td>
+                    <td className="py-3 px-2 text-center font-bold text-gold-500 tabular-nums">{adv.assigned_leads}</td>
+                    <td className="py-3 px-2 text-center tabular-nums">{adv.sent_messages}</td>
+                    <td className="py-3 px-2 text-center font-bold text-gold-500 tabular-nums">{adv.booked_appointments}</td>
                   </tr>
                 ))}
               </tbody>

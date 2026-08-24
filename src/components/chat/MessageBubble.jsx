@@ -91,14 +91,14 @@ export const MessageBubble = ({ message, onImageClick, onReply, onForward, onEdi
   return (
     <div className={`flex w-full mb-3.5 ${isInternalNote ? 'justify-center' : isMe ? 'justify-end' : 'justify-start'}`}>
       <div 
-        className={`max-w-[70%] rounded-xl shadow-sm relative group transition-all duration-200 border ${
+        className={`max-w-[70%] rounded-2xl shadow-sm relative group transition-all duration-200 ${
           isImage ? 'p-1' : 'px-4 py-2.5'
         } ${
           isInternalNote
-            ? 'bg-amber-50 dark:bg-amber-500/10 border-amber-300 text-amber-800 dark:text-amber-400 w-full rounded-xl text-center'
+            ? 'bg-amber-50 dark:bg-amber-500/10 border border-amber-300 dark:border-amber-500/30 text-amber-800 dark:text-amber-400 w-full text-center'
             : isMe 
-              ? 'bg-navy-800 text-slate-100 border border-navy-700 border-l-2 border-l-gold-500/60 rounded-tr-none'
-              : 'bg-navy-900 text-slate-200 border border-navy-700/60 rounded-tl-none'
+              ? 'bg-slate-100/90 border border-slate-200 text-slate-900 border-l-2 border-l-gold-500/80 dark:bg-navy-800 dark:text-slate-100 dark:border-navy-700 dark:border-l-gold-500/60'
+              : 'bg-white border border-slate-200/80 text-slate-800 dark:bg-navy-900 dark:text-slate-200 dark:border-navy-700/60'
         }`}
       >
         {/* Etiqueta de Nota Interna */}
@@ -118,7 +118,7 @@ export const MessageBubble = ({ message, onImageClick, onReply, onForward, onEdi
 
         {/* Etiqueta del remitente de IA */}
         {isAI && (
-          <span className="flex items-center space-x-1 text-[9px] bg-gold-500/10 text-gold-500 dark:text-gold-400 px-1.5 py-0.5 rounded-full w-max mb-1 font-semibold uppercase tracking-wider border border-gold-500/20">
+          <span className="flex items-center space-x-1 text-[11px] font-semibold tracking-wide bg-gold-500/10 text-gold-600 dark:text-gold-400 px-2 py-0.5 rounded-full w-max mb-1 uppercase border border-gold-500/20">
             <Bot className="w-3 h-3" />
             <span>Chatbot IA</span>
           </span>
@@ -126,8 +126,8 @@ export const MessageBubble = ({ message, onImageClick, onReply, onForward, onEdi
 
         {/* Cita de Respuesta */}
         {isReply && (
-          <div className="mb-2 p-2 border-l-4 border-gold-500/60 bg-black/5 dark:bg-white/5 rounded-r-lg text-[11px] opacity-90 select-none">
-            <span className="font-bold text-gold-500 dark:text-gold-400 block text-[10px]">{replyAuthor}</span>
+          <div className="mb-2 p-2 border-l-4 border-gold-500/60 bg-slate-50 dark:bg-white/5 rounded-r-lg text-[11px] select-none">
+            <span className="font-bold text-gold-600 dark:text-gold-400 block text-[10px]">{replyAuthor}</span>
             <span className="truncate block italic text-slate-500 dark:text-slate-400 mt-0.5">"{replyText}"</span>
           </div>
         )}
@@ -166,9 +166,9 @@ export const MessageBubble = ({ message, onImageClick, onReply, onForward, onEdi
             }
             if (msgTypeLower === 'audio') {
               return (
-                <div className="mt-1 min-w-[240px] rounded-xl border border-navy-700 bg-navy-900 p-2.5">
+                <div className="mt-1 min-w-[240px] rounded-xl border border-slate-200 bg-slate-50 p-2.5 dark:border-navy-700 dark:bg-navy-900">
                   <div className="flex items-center space-x-2 mb-1.5">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-gold-500">Nota de voz</span>
+                    <span className="text-[11px] font-semibold tracking-wide uppercase text-gold-600 dark:text-gold-500">Nota de voz</span>
                   </div>
                   <audio src={mediaUrl} controls className="w-full h-8 accent-gold-500" />
                 </div>
@@ -225,13 +225,13 @@ export const MessageBubble = ({ message, onImageClick, onReply, onForward, onEdi
               );
             }
           }
-          return <p className={`text-sm leading-relaxed whitespace-pre-wrap break-words ${isInternalNote ? 'font-medium italic' : ''}`}>{cleanDisplayText}</p>;
+          return <p className={`text-sm leading-relaxed whitespace-pre-wrap break-words ${isInternalNote ? 'font-medium italic' : isMe ? 'text-slate-900 dark:text-slate-100' : 'text-slate-800 dark:text-slate-200'}`}>{cleanDisplayText}</p>;
         })()}
 
         {/* Timestamp y Status */}
         {!isImage && (
           <div className="flex items-center justify-end space-x-1 mt-1.5 -mb-0.5 select-none">
-            <span className="text-[10px] opacity-60 text-slate-400 dark:text-slate-300">
+            <span className="text-[10px] text-slate-500 dark:text-slate-400">
               {formatTime(message.created_at)}
             </span>
             {isMe && !isInternalNote && getStatusIcon(message.status)}

@@ -22,12 +22,12 @@ const QUALIFICATION_LEVELS = [
 ];
 
 const CALL_RESULTS = [
-  { id: 'INTERESTED', label: 'Contestó / Interesado', icon: '🟢', color: 'bg-gold-500/10 text-gold-700 dark:text-gold-300 border-gold-500/30' },
-  { id: 'RESCHEDULE', label: 'Solicitó Reagendar', icon: '📅', color: 'bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/30' },
-  { id: 'NO_ANSWER', label: 'Sin Respuesta / Buzón', icon: '🔴', color: 'bg-rose-500/10 text-rose-700 dark:text-rose-300 border-rose-500/30' },
-  { id: 'SHOWROOM_CONFIRMED', label: 'Confirmó Showroom', icon: '🏢', color: 'bg-gold-500/10 text-gold-700 dark:text-gold-300 border-gold-500/30' },
-  { id: 'QUOTATION_REQUESTED', label: 'Solicitó Cotización PDF', icon: '📄', color: 'bg-blue-500/10 text-blue-700 dark:text-blue-300 border-blue-500/30' },
-  { id: 'REJECTED', label: 'Descartado / Sin Presupuesto', icon: '❌', color: 'bg-slate-500/10 text-slate-700 dark:text-slate-300 border-slate-500/30' }
+  { id: 'INTERESTED', label: 'Contestó / Interesado', icon: '🟢', color: 'bg-gold-500/10 text-gold-700 dark:text-gold-300 border border-gold-500/30 text-[11px] font-semibold tracking-wide' },
+  { id: 'RESCHEDULE', label: 'Solicitó Reagendar', icon: '📅', color: 'bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/30 text-[11px] font-semibold tracking-wide' },
+  { id: 'NO_ANSWER', label: 'Sin Respuesta / Buzón', icon: '🔴', color: 'bg-rose-500/10 text-rose-700 dark:text-rose-300 border border-rose-500/30 text-[11px] font-semibold tracking-wide' },
+  { id: 'SHOWROOM_CONFIRMED', label: 'Confirmó Showroom', icon: '🏢', color: 'bg-gold-500/10 text-gold-700 dark:text-gold-300 border border-gold-500/30 text-[11px] font-semibold tracking-wide' },
+  { id: 'QUOTATION_REQUESTED', label: 'Solicitó Cotización PDF', icon: '📄', color: 'bg-blue-500/10 text-blue-700 dark:text-blue-300 border border-blue-500/30 text-[11px] font-semibold tracking-wide' },
+  { id: 'REJECTED', label: 'Descartado / Sin Presupuesto', icon: '❌', color: 'bg-slate-500/10 text-slate-700 dark:text-slate-300 border border-slate-500/30 text-[11px] font-semibold tracking-wide' }
 ];
 
 const TIMELINES = [
@@ -393,18 +393,18 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
 
           {/* Fila 2: Track Único Horizontal con Paleta Neutra Controlada (Regla #3 del Video) */}
           <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1 max-w-full text-xs font-semibold whitespace-nowrap">
-            <span className="px-2.5 py-1 rounded-lg bg-gold-500/10 text-gold-700 dark:text-gold-300 border border-gold-500/30 font-bold shrink-0">
+            <span className="px-2.5 py-1 rounded-lg bg-gold-500/10 text-gold-700 dark:text-gold-300 border border-gold-500/30 text-[11px] font-semibold tracking-wide shrink-0">
               🏞️ {lotStatus || 'Buscando Lote'}
             </span>
             {lotCity && (
-              <span className="px-2.5 py-1 rounded-lg bg-slate-200/80 dark:bg-navy-800 text-slate-700 dark:text-slate-300 border border-slate-300/50 dark:border-navy-700 font-semibold shrink-0">
+              <span className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-navy-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-navy-700 text-[11px] font-semibold tracking-wide shrink-0">
                 📍 {lotCity}
               </span>
             )}
-            <span className="px-2.5 py-1 rounded-lg bg-slate-200/80 dark:bg-navy-800 text-slate-700 dark:text-slate-300 border border-slate-300/50 dark:border-navy-700 font-semibold shrink-0">
+            <span className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-navy-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-navy-700 text-[11px] font-semibold tracking-wide shrink-0">
               🏗️ {interestProduct || 'Flex Home 56m²'}
             </span>
-            <span className="px-2.5 py-1 rounded-lg bg-slate-200/80 dark:bg-navy-800 text-slate-700 dark:text-slate-300 border border-slate-300/50 dark:border-navy-700 font-semibold shrink-0">
+            <span className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-navy-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-navy-700 text-[11px] font-semibold tracking-wide shrink-0">
               💼 {clientType || 'Persona Natural'}
             </span>
 
