@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { useSettingsStore } from '../../store/useSettingsStore';
 import { useAuthStore } from '../../store/useAuthStore';
 import { Bot, Key, Check, AlertCircle, Save, Upload, Trash2, FileText, Image as ImageIcon, Video, Plus, Sparkles, BookOpen, Mail, Calendar, Link, Unlink, UserPlus, Smartphone, Download, Share, X } from 'lucide-react';
@@ -335,7 +335,7 @@ export const SettingsView = () => {
   const getFileIcon = (fileType) => {
     if (fileType === 'Imagen') return <ImageIcon className="w-5 h-5 text-blue-500" />;
     if (fileType === 'Audio/Video') return <Video className="w-5 h-5 text-purple-500" />;
-    return <FileText className="w-5 h-5 text-emerald-500" />;
+    return <FileText className="w-5 h-5 text-gold-500" />;
   };
 
   return (
@@ -353,15 +353,15 @@ export const SettingsView = () => {
         <div className="max-w-3xl mx-auto space-y-6">
           
           {/* Tarjeta de Instalación PWA en Dispositivo Móvil / Escritorio */}
-          <div className="bg-gradient-to-r from-emerald-600/15 via-teal-500/10 to-blue-500/10 border border-emerald-500/30 p-5 rounded-3xl shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="bg-gradient-to-r from-navy-900/15 via-gold-500/10 to-navy-800/10 border border-gold-500/30 p-5 rounded-3xl shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="flex items-center space-x-3.5">
-              <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center flex-shrink-0 shadow-inner">
+              <div className="w-12 h-12 rounded-2xl bg-gold-500/20 text-gold-400 flex items-center justify-center flex-shrink-0 shadow-inner">
                 <Smartphone className="w-6 h-6" />
               </div>
               <div>
                 <h3 className="text-sm font-black text-slate-800 dark:text-white flex items-center gap-2">
                   <span>Instalar App en tu Dispositivo</span>
-                  <span className="text-[10px] bg-emerald-500 text-white font-mono px-2 py-0.2 rounded-full font-bold">PWA</span>
+                  <span className="text-[10px] bg-gold-500 text-white font-mono px-2 py-0.2 rounded-full font-bold">PWA</span>
                 </h3>
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 leading-relaxed">
                   Ejecuta el CRM a pantalla completa como una App nativa en tu iPhone, iPad, Android, Windows o Mac.
@@ -372,7 +372,7 @@ export const SettingsView = () => {
             <button
               type="button"
               onClick={handleInstallPwa}
-              className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-black text-xs flex items-center justify-center space-x-2 transition-all shadow-md cursor-pointer shrink-0"
+              className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-navy-900 hover:bg-navy-800 active:scale-95 text-white font-black text-xs flex items-center justify-center space-x-2 transition-all shadow-md cursor-pointer shrink-0"
             >
               <Download className="w-4 h-4" />
               <span>📱 Instalar App en Inicio</span>
@@ -384,7 +384,7 @@ export const SettingsView = () => {
             {/* Tarjeta de entrenamiento de la IA */}
             <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5 p-6 rounded-2xl shadow-sm space-y-4">
               <div className="flex items-center space-x-3 text-slate-800 dark:text-white mb-2">
-                <div className="w-10 h-10 rounded-xl bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-gold-500/10 dark:bg-gold-500/20 text-gold-600 dark:text-gold-400 flex items-center justify-center flex-shrink-0">
                   <Bot className="w-5 h-5" />
                 </div>
                 <div>
@@ -401,7 +401,7 @@ export const SettingsView = () => {
                   value={localPrompt}
                   onChange={(e) => setLocalPrompt(e.target.value)}
                   placeholder="Ej: Somos una consultoría de marketing. Ofrecemos auditoría gratis. La llamada dura 15 min. No atendemos los fines de semana. Precios desde $99..."
-                  className="w-full bg-slate-50 dark:bg-slate-950/40 border border-slate-200 dark:border-white/5 rounded-2xl p-4 text-sm text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:outline-none focus:border-emerald-500/50 min-h-[140px] transition-colors"
+                  className="w-full bg-slate-50 dark:bg-slate-950/40 border border-slate-200 dark:border-white/5 rounded-2xl p-4 text-sm text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:outline-none focus:border-gold-500/50 min-h-[140px] transition-colors"
                   required
                 />
                 <span className="text-[10px] text-slate-400 dark:text-slate-500 mt-1.5 block">
@@ -413,7 +413,7 @@ export const SettingsView = () => {
             {/* Tarjeta de llaves de API */}
             <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5 p-6 rounded-2xl shadow-sm space-y-4">
               <div className="flex items-center space-x-3 text-slate-800 dark:text-white mb-2">
-                <div className="w-10 h-10 rounded-xl bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-gold-500/10 dark:bg-gold-500/20 text-gold-600 dark:text-gold-400 flex items-center justify-center flex-shrink-0">
                   <Key className="w-5 h-5" />
                 </div>
                 <div>
@@ -431,7 +431,7 @@ export const SettingsView = () => {
                   value={localApiKey}
                   onChange={(e) => setLocalApiKey(e.target.value)}
                   placeholder="AIzaSy..."
-                  className="w-full bg-slate-50 dark:bg-slate-950/40 border border-slate-200 dark:border-white/5 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:outline-none focus:border-emerald-500/50 transition-colors"
+                  className="w-full bg-slate-50 dark:bg-slate-950/40 border border-slate-200 dark:border-white/5 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:outline-none focus:border-gold-500/50 transition-colors"
                 />
               </div>
             </div>
@@ -445,7 +445,7 @@ export const SettingsView = () => {
             )}
 
             {success && (
-              <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center space-x-2 text-emerald-600 dark:text-emerald-400 text-xs">
+              <div className="p-3.5 rounded-xl bg-gold-500/10 border border-gold-500/20 flex items-center space-x-2 text-gold-600 dark:text-gold-400 text-xs">
                 <Check className="w-4 h-4" />
                 <span>¡Configuración y entrenamiento de Google Gemini guardados con éxito!</span>
               </div>
@@ -456,7 +456,7 @@ export const SettingsView = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="flex items-center space-x-2 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-semibold py-3 px-6 rounded-xl shadow-md active:scale-[0.98] transition-all disabled:opacity-50"
+                className="flex items-center space-x-2 bg-navy-900 hover:bg-navy-800 text-white font-semibold py-3 px-6 rounded-xl shadow-md active:scale-[0.98] transition-all disabled:opacity-50"
               >
                 <Save className="w-4 h-4" />
                 <span>{loading && !uploading ? 'Guardando...' : 'Guardar Entrenamiento'}</span>
@@ -469,7 +469,7 @@ export const SettingsView = () => {
           <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5 p-6 rounded-2xl shadow-sm space-y-4">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center space-x-3 text-slate-800 dark:text-white">
-                <div className="w-10 h-10 rounded-xl bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-gold-500/10 dark:bg-gold-500/20 text-gold-600 dark:text-gold-400 flex items-center justify-center flex-shrink-0">
                   <BookOpen className="w-5 h-5" />
                 </div>
                 <div>
@@ -537,7 +537,7 @@ export const SettingsView = () => {
           <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5 p-6 rounded-2xl shadow-sm space-y-4">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center space-x-3 text-slate-800 dark:text-white">
-                <div className="w-10 h-10 rounded-xl bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-gold-500/10 dark:bg-gold-500/20 text-gold-600 dark:text-gold-400 flex items-center justify-center flex-shrink-0">
                   <Upload className="w-5 h-5" />
                 </div>
                 <div>
@@ -548,7 +548,7 @@ export const SettingsView = () => {
             </div>
 
             {/* Selector de Archivos (Drag & Drop UI) */}
-            <div className="border-2 border-dashed border-slate-200 dark:border-white/10 rounded-2xl p-6 flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-950/20 relative group hover:border-emerald-500/50 transition-colors">
+            <div className="border-2 border-dashed border-slate-200 dark:border-white/10 rounded-2xl p-6 flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-950/20 relative group hover:border-gold-500/50 transition-colors">
               <input
                 type="file"
                 onChange={handleFileChange}
@@ -556,7 +556,7 @@ export const SettingsView = () => {
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                 disabled={uploading}
               />
-              <Upload className="w-8 h-8 text-slate-400 dark:text-slate-500 group-hover:text-emerald-500 mb-2 transition-colors" />
+              <Upload className="w-8 h-8 text-slate-400 dark:text-slate-500 group-hover:text-gold-500 mb-2 transition-colors" />
               <p className="text-xs font-semibold text-slate-600 dark:text-slate-300">
                 {uploading ? 'Procesando y extrayendo texto con la visión de Google Gemini...' : 'Haz clic o arrastra un archivo aquí'}
               </p>
@@ -567,7 +567,7 @@ export const SettingsView = () => {
 
             {/* Mensaje de éxito de subida */}
             {uploadSuccess && (
-              <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center space-x-2 text-emerald-600 dark:text-emerald-400 text-xs">
+              <div className="p-3 rounded-xl bg-gold-500/10 border border-gold-500/20 flex items-center space-x-2 text-gold-600 dark:text-gold-400 text-xs">
                 <Check className="w-4 h-4" />
                 <span>{uploadSuccess}</span>
               </div>
@@ -673,7 +673,7 @@ export const SettingsView = () => {
                       {pdfTemplateFilename || 'proposal_template.pdf'} (Activo)
                     </span>
                   </div>
-                  <span className="text-[9px] font-bold text-emerald-600 bg-emerald-500/10 px-2 py-0.5 rounded-lg">
+                  <span className="text-[9px] font-bold text-gold-600 bg-gold-500/10 px-2 py-0.5 rounded-lg">
                     Listo para fusionar
                   </span>
                 </div>
@@ -733,7 +733,7 @@ export const SettingsView = () => {
             </div>
 
             {profilePhotoSuccess && (
-              <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold flex items-center space-x-1.5 animate-fade-in">
+              <div className="p-3 rounded-xl bg-gold-500/10 border border-gold-500/20 text-gold-600 dark:text-gold-400 text-xs font-bold flex items-center space-x-1.5 animate-fade-in">
                 <Check className="w-4 h-4" />
                 <span>{profilePhotoSuccess}</span>
               </div>
@@ -814,7 +814,7 @@ export const SettingsView = () => {
             </div>
 
             {googleStatusMsg && (
-              <div className={`p-3.5 rounded-xl text-xs flex items-center space-x-2 font-semibold ${googleStatusMsg.startsWith('Error') ? 'bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400' : 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400'}`}>
+              <div className={`p-3.5 rounded-xl text-xs flex items-center space-x-2 font-semibold ${googleStatusMsg.startsWith('Error') ? 'bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400' : 'bg-gold-500/10 border border-gold-500/20 text-gold-600 dark:text-gold-400'}`}>
                 {googleStatusMsg.startsWith('Error') ? <AlertCircle className="w-4 h-4" /> : <Check className="w-4 h-4" />}
                 <span>{googleStatusMsg}</span>
               </div>
@@ -822,7 +822,7 @@ export const SettingsView = () => {
 
             <div className="p-4 bg-slate-50 dark:bg-dark-950/20 border border-slate-200 dark:border-white/5 rounded-2xl flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <div className={`w-3.5 h-3.5 rounded-full ${googleConnected ? 'bg-emerald-500 animate-pulse' : 'bg-slate-300'}`}></div>
+                <div className={`w-3.5 h-3.5 rounded-full ${googleConnected ? 'bg-gold-500 animate-pulse' : 'bg-slate-300'}`}></div>
                 <div>
                   <span className="text-xs font-bold text-slate-700 dark:text-slate-200">
                     {googleConnected ? 'Estado: Conectado a Google Workspace' : 'Estado: Desconectado de Google'}
@@ -888,7 +888,7 @@ export const SettingsView = () => {
           {/* NUEVA TARJETA: SERVIDOR DE CORREO SMTP */}
           <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5 p-6 rounded-2xl shadow-sm space-y-4">
             <div className="flex items-center space-x-3 text-slate-800 dark:text-white mb-2">
-              <div className="w-10 h-10 rounded-xl bg-teal-500/10 dark:bg-teal-500/20 text-teal-600 dark:text-teal-400 flex items-center justify-center flex-shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-gold-500/10 dark:bg-gold-500/20 text-gold-600 dark:text-gold-400 flex items-center justify-center flex-shrink-0">
                 <Mail className="w-5 h-5" />
               </div>
               <div>
@@ -907,7 +907,7 @@ export const SettingsView = () => {
                   value={localSmtpHost}
                   onChange={(e) => setLocalSmtpHost(e.target.value)}
                   placeholder="smtp.gmail.com"
-                  className="w-full bg-slate-50 dark:bg-slate-950/40 border border-slate-200 dark:border-white/5 rounded-xl px-4 py-2.5 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:border-teal-500/50 transition-colors"
+                  className="w-full bg-slate-50 dark:bg-slate-950/40 border border-slate-200 dark:border-white/5 rounded-xl px-4 py-2.5 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:border-gold-500/50 transition-colors"
                 />
               </div>
 
@@ -920,7 +920,7 @@ export const SettingsView = () => {
                   value={localSmtpPort}
                   onChange={(e) => setLocalSmtpPort(e.target.value)}
                   placeholder="587 o 465"
-                  className="w-full bg-slate-50 dark:bg-slate-950/40 border border-slate-200 dark:border-white/5 rounded-xl px-4 py-2.5 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:border-teal-500/50 transition-colors"
+                  className="w-full bg-slate-50 dark:bg-slate-950/40 border border-slate-200 dark:border-white/5 rounded-xl px-4 py-2.5 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:border-gold-500/50 transition-colors"
                 />
               </div>
 
@@ -933,7 +933,7 @@ export const SettingsView = () => {
                   value={localSmtpUsername}
                   onChange={(e) => setLocalSmtpUsername(e.target.value)}
                   placeholder="correo@ejemplo.com"
-                  className="w-full bg-slate-50 dark:bg-slate-950/40 border border-slate-200 dark:border-white/5 rounded-xl px-4 py-2.5 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:border-teal-500/50 transition-colors"
+                  className="w-full bg-slate-50 dark:bg-slate-950/40 border border-slate-200 dark:border-white/5 rounded-xl px-4 py-2.5 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:border-gold-500/50 transition-colors"
                 />
               </div>
 
@@ -946,7 +946,7 @@ export const SettingsView = () => {
                   value={localSmtpPassword}
                   onChange={(e) => setLocalSmtpPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full bg-slate-50 dark:bg-slate-950/40 border border-slate-200 dark:border-white/5 rounded-xl px-4 py-2.5 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:border-teal-500/50 transition-colors"
+                  className="w-full bg-slate-50 dark:bg-slate-950/40 border border-slate-200 dark:border-white/5 rounded-xl px-4 py-2.5 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:border-gold-500/50 transition-colors"
                 />
               </div>
 
@@ -959,7 +959,7 @@ export const SettingsView = () => {
                   value={localSmtpSenderEmail}
                   onChange={(e) => setLocalSmtpSenderEmail(e.target.value)}
                   placeholder="correo@ejemplo.com"
-                  className="w-full bg-slate-50 dark:bg-slate-950/40 border border-slate-200 dark:border-white/5 rounded-xl px-4 py-2.5 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:border-teal-500/50 transition-colors"
+                  className="w-full bg-slate-50 dark:bg-slate-950/40 border border-slate-200 dark:border-white/5 rounded-xl px-4 py-2.5 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:border-gold-500/50 transition-colors"
                 />
               </div>
 
@@ -972,7 +972,7 @@ export const SettingsView = () => {
                   value={localSmtpSenderName}
                   onChange={(e) => setLocalSmtpSenderName(e.target.value)}
                   placeholder="ANCLA Special Projects"
-                  className="w-full bg-slate-50 dark:bg-slate-950/40 border border-slate-200 dark:border-white/5 rounded-xl px-4 py-2.5 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:border-teal-500/50 transition-colors"
+                  className="w-full bg-slate-50 dark:bg-slate-950/40 border border-slate-200 dark:border-white/5 rounded-xl px-4 py-2.5 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:border-gold-500/50 transition-colors"
                 />
               </div>
             </div>
@@ -990,7 +990,7 @@ export const SettingsView = () => {
                     sender_name: localSmtpSenderName
                   });
                 }}
-                className="flex items-center space-x-2 bg-gradient-to-r from-teal-600 to-emerald-500 hover:from-teal-500 hover:to-emerald-400 text-white font-semibold py-2 px-5 rounded-xl shadow-md text-xs active:scale-[0.98] transition-all"
+                className="flex items-center space-x-2 bg-navy-900 hover:bg-navy-800 text-white font-semibold py-2 px-5 rounded-xl shadow-md text-xs active:scale-[0.98] transition-all"
               >
                 <Save className="w-3.5 h-3.5" />
                 <span>Guardar Configuración SMTP</span>
@@ -1007,7 +1007,7 @@ export const SettingsView = () => {
                   value={testEmailDestination}
                   onChange={(e) => setTestEmailDestination(e.target.value)}
                   placeholder="correo-prueba@destinatario.com"
-                  className="flex-1 bg-slate-50 dark:bg-slate-950/40 border border-slate-200 dark:border-white/5 rounded-xl px-4 py-2 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:border-teal-500/50"
+                  className="flex-1 bg-slate-50 dark:bg-slate-950/40 border border-slate-200 dark:border-white/5 rounded-xl px-4 py-2 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:border-gold-500/50"
                 />
                 <button
                   type="button"
@@ -1041,7 +1041,7 @@ export const SettingsView = () => {
               </div>
 
               {smtpTestSuccess && (
-                <div className="mt-3.5 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-semibold flex items-center space-x-1.5 animate-fade-in">
+                <div className="mt-3.5 p-3 rounded-xl bg-gold-500/10 border border-gold-500/20 text-gold-600 dark:text-gold-400 text-xs font-semibold flex items-center space-x-1.5 animate-fade-in">
                   <Check className="w-4 h-4" />
                   <span>{smtpTestSuccess}</span>
                 </div>
@@ -1119,7 +1119,7 @@ export const SettingsView = () => {
               </form>
 
               {inviteSuccess && (
-                <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-semibold flex items-center space-x-1.5">
+                <div className="p-3.5 rounded-xl bg-gold-500/10 border border-gold-500/20 text-gold-600 dark:text-gold-400 text-xs font-semibold flex items-center space-x-1.5">
                   <Check className="w-4 h-4" />
                   <span>{inviteSuccess}</span>
                 </div>
@@ -1201,7 +1201,7 @@ export const SettingsView = () => {
                   
                   {/* Máscara de recortado de WhatsApp (Circular) */}
                   <div className="absolute inset-0 rounded-full border-[40px] border-slate-950/60 pointer-events-none"></div>
-                  <div className="absolute inset-0 border-2 border-dashed border-emerald-500/80 rounded-full pointer-events-none"></div>
+                  <div className="absolute inset-0 border-2 border-dashed border-gold-500/80 rounded-full pointer-events-none"></div>
                 </div>
 
                 <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-3.5 text-center">
@@ -1218,7 +1218,7 @@ export const SettingsView = () => {
                     step="0.05"
                     value={cropZoom}
                     onChange={(e) => setCropZoom(parseFloat(e.target.value))}
-                    className="flex-1 accent-emerald-500 bg-slate-100 dark:bg-slate-800 rounded-lg h-1.5 cursor-pointer focus:outline-none"
+                    className="flex-1 accent-gold-500 bg-slate-100 dark:bg-slate-800 rounded-lg h-1.5 cursor-pointer focus:outline-none"
                   />
                   <span className="text-[10px] font-bold text-slate-400">3x</span>
                 </div>
@@ -1228,7 +1228,7 @@ export const SettingsView = () => {
                   <button
                     type="button"
                     onClick={handleCropSave}
-                    className="flex-1 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold py-2.5 px-4 rounded-xl text-xs shadow-md transition-all active:scale-[0.98]"
+                    className="flex-1 bg-navy-900 hover:bg-navy-800 text-white font-bold py-2.5 px-4 rounded-xl text-xs shadow-md transition-all active:scale-[0.98]"
                   >
                     Recortar y Guardar
                   </button>
@@ -1250,7 +1250,7 @@ export const SettingsView = () => {
               <div className="bg-[#111b27] border border-white/10 rounded-3xl p-6 max-w-sm w-full shadow-2xl space-y-4 text-white text-center">
                 <div className="flex justify-between items-center border-b border-white/10 pb-3">
                   <div className="flex items-center space-x-2">
-                    <Smartphone className="w-5 h-5 text-emerald-400" />
+                    <Smartphone className="w-5 h-5 text-gold-400" />
                     <h3 className="text-xs font-black uppercase tracking-wider">Instalar App en tu Celular</h3>
                   </div>
                   <button onClick={() => setShowPwaModal(false)} className="text-slate-400 hover:text-white cursor-pointer">
@@ -1264,13 +1264,13 @@ export const SettingsView = () => {
 
                 <div className="p-3.5 bg-black/40 rounded-2xl border border-white/5 space-y-3 text-left text-xs">
                   <div>
-                    <span className="font-bold text-emerald-400 block mb-1">📱 En iPhone / iPad (Safari):</span>
+                    <span className="font-bold text-gold-400 block mb-1">📱 En iPhone / iPad (Safari):</span>
                     <p className="text-slate-300 text-[11px]">
                       Toca el botón <Share className="w-3.5 h-3.5 inline text-blue-400 mx-1" /> <strong>Compartir</strong> y luego pulsa <strong>"Agregar al inicio"</strong>.
                     </p>
                   </div>
                   <div className="border-t border-white/5 pt-2">
-                    <span className="font-bold text-emerald-400 block mb-1">🤖 En Android / Chrome:</span>
+                    <span className="font-bold text-gold-400 block mb-1">🤖 En Android / Chrome:</span>
                     <p className="text-slate-300 text-[11px]">
                       Toca los 3 puntos (⋮) en la esquina superior y selecciona <strong>"Instalar aplicación"</strong> o <strong>"Agregar a la pantalla principal"</strong>.
                     </p>
@@ -1280,7 +1280,7 @@ export const SettingsView = () => {
                 <button
                   type="button"
                   onClick={() => setShowPwaModal(false)}
-                  className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-black rounded-xl text-xs transition-all shadow-md cursor-pointer"
+                  className="w-full py-2.5 bg-navy-900 hover:bg-navy-800 text-white font-black rounded-xl text-xs transition-all shadow-md cursor-pointer"
                 >
                   Entendido
                 </button>

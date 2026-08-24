@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+﻿import React, { useState, useEffect, useMemo } from 'react';
 import { useKanbanStore } from '../../store/useKanbanStore';
 import { useCalendarStore } from '../../store/useCalendarStore';
 import { useChatStore } from '../../store/useChatStore';
@@ -209,7 +209,7 @@ export const KanbanBoard = () => {
         hours: 0, 
         label: '< 24h', 
         isUrgent: false, 
-        color: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20' 
+        color: 'bg-gold-500/10 text-gold-600 dark:text-gold-400 border-gold-500/20' 
       };
     }
 
@@ -227,7 +227,7 @@ export const KanbanBoard = () => {
         hours: diffHours, 
         label: diffHours <= 1 ? 'Hace poco' : `${diffHours}h`, 
         isUrgent: false, 
-        color: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20' 
+        color: 'bg-gold-500/10 text-gold-600 dark:text-gold-400 border-gold-500/20' 
       };
     } else if (diffHours <= 48) {
       return { 

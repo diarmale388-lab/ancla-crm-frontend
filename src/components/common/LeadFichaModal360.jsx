@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { 
   X, Sparkles, Phone, Mail, MapPin, Building2, DollarSign, Calendar as CalendarIcon, 
   FileText, Check, MessageSquare, AlertCircle, Clock, Send, ShieldCheck, Flame, 
@@ -22,10 +22,10 @@ const QUALIFICATION_LEVELS = [
 ];
 
 const CALL_RESULTS = [
-  { id: 'INTERESTED', label: 'Contestó / Interesado', icon: '🟢', color: 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30' },
+  { id: 'INTERESTED', label: 'Contestó / Interesado', icon: '🟢', color: 'bg-gold-500/10 text-gold-700 dark:text-gold-300 border-gold-500/30' },
   { id: 'RESCHEDULE', label: 'Solicitó Reagendar', icon: '📅', color: 'bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/30' },
   { id: 'NO_ANSWER', label: 'Sin Respuesta / Buzón', icon: '🔴', color: 'bg-rose-500/10 text-rose-700 dark:text-rose-300 border-rose-500/30' },
-  { id: 'SHOWROOM_CONFIRMED', label: 'Confirmó Showroom', icon: '🏢', color: 'bg-teal-500/10 text-teal-700 dark:text-teal-300 border-teal-500/30' },
+  { id: 'SHOWROOM_CONFIRMED', label: 'Confirmó Showroom', icon: '🏢', color: 'bg-gold-500/10 text-gold-700 dark:text-gold-300 border-gold-500/30' },
   { id: 'QUOTATION_REQUESTED', label: 'Solicitó Cotización PDF', icon: '📄', color: 'bg-blue-500/10 text-blue-700 dark:text-blue-300 border-blue-500/30' },
   { id: 'REJECTED', label: 'Descartado / Sin Presupuesto', icon: '❌', color: 'bg-slate-500/10 text-slate-700 dark:text-slate-300 border-slate-500/30' }
 ];
@@ -333,7 +333,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
       
       {/* Toast Flotante Central de Guardado Exitoso */}
       {savedSuccess && (
-        <div className="fixed top-8 left-1/2 -translate-x-1/2 z-[9999] bg-emerald-600 dark:bg-emerald-500 text-white px-7 py-3.5 rounded-2xl shadow-2xl flex items-center space-x-3 text-sm font-black animate-fade-in border-2 border-white/20 backdrop-blur-md">
+        <div className="fixed top-8 left-1/2 -translate-x-1/2 z-[9999] bg-navy-900 text-white px-7 py-3.5 rounded-2xl shadow-2xl flex items-center space-x-3 text-sm font-black animate-fade-in border-2 border-white/20 backdrop-blur-md">
           <CheckCircle2 className="w-5 h-5 text-white animate-pulse" />
           <span>🎉 ¡Ficha Técnica 360° y Asesor Guardados con Éxito!</span>
         </div>
@@ -393,7 +393,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
 
           {/* Fila 2: Track Único Horizontal con Paleta Neutra Controlada (Regla #3 del Video) */}
           <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1 max-w-full text-xs font-semibold whitespace-nowrap">
-            <span className="px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 font-bold shrink-0">
+            <span className="px-2.5 py-1 rounded-lg bg-gold-500/10 text-gold-700 dark:text-gold-300 border border-gold-500/30 font-bold shrink-0">
               🏞️ {lotStatus || 'Buscando Lote'}
             </span>
             {lotCity && (
@@ -441,7 +441,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
               onClick={() => setShowDossierModal(true)}
               className="min-h-[44px] px-3 py-2 rounded-lg bg-slate-200/80 dark:bg-navy-800 text-slate-700 dark:text-slate-300 border border-slate-300/50 dark:border-navy-700 font-bold text-xs flex items-center space-x-1 transition-all cursor-pointer shrink-0 hover:bg-slate-300 dark:hover:bg-navy-700"
             >
-              <DollarSign className="w-3.5 h-3.5 text-emerald-500" />
+              <DollarSign className="w-3.5 h-3.5 text-gold-500" />
               <span>Dossier</span>
             </button>
 
@@ -532,7 +532,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                       <Layers className="w-4 h-4 text-gold-500" />
                       <span>Diagnóstico de Proyecto (Pilares ANCLA)</span>
                     </span>
-                    <span className="text-[10px] font-extrabold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+                    <span className="text-[10px] font-extrabold px-2 py-0.5 rounded bg-gold-500/10 text-gold-600 dark:text-gold-400">
                       Clave para Cierre
                     </span>
                   </div>
@@ -798,7 +798,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
               <form onSubmit={handleAddBitacoraNote} className="p-5 rounded-2xl bg-white dark:bg-navy-800 border border-slate-200 dark:border-navy-700 shadow-sm space-y-4">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center space-x-1.5">
-                    <Clock className="w-4 h-4 text-emerald-500" />
+                    <Clock className="w-4 h-4 text-gold-500" />
                     <span>Registrar Nueva Atención Comercial</span>
                   </span>
                 </div>
@@ -889,7 +889,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                       className={`text-[10px] font-bold px-2 py-0.5 rounded-lg border transition-all flex items-center space-x-1 cursor-pointer ${
                         isListening 
                           ? 'bg-rose-500 text-white border-rose-600 animate-pulse'
-                          : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/20'
+                          : 'bg-gold-500/10 text-gold-600 dark:text-gold-400 border-gold-500/30 hover:bg-gold-500/20'
                       }`}
                       title="Habla a tu micrófono para dictar la nota automáticamente"
                     >
@@ -996,7 +996,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
               <div className="p-5 rounded-2xl bg-white dark:bg-navy-800 border border-slate-200 dark:border-navy-700 shadow-sm space-y-4">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-navy-700 pb-3.5">
                   <div className="flex items-center space-x-2">
-                    <ShieldCheck className="w-5 h-5 text-emerald-500" />
+                    <ShieldCheck className="w-5 h-5 text-gold-500" />
                     <div>
                       <span className="text-xs font-black uppercase tracking-wider text-slate-800 dark:text-slate-200 block">
                         Bóveda de Documentación Legal & Custodia
@@ -1046,12 +1046,12 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                       { key: 'camara_comercio', label: 'Cámara de Comercio (Máx. 30 días)', desc: 'Certificado de Existencia y Rep. Legal', icon: Building2, color: 'text-indigo-500', url: docCamaraComercioUrl },
                       { key: 'rut', label: 'RUT de la Empresa (NIT - DIAN)', desc: 'Régimen tributario y facturación', icon: FileText, color: 'text-purple-500', url: docRutUrl },
                       { key: 'rep_legal', label: 'Cédula Representante Legal', desc: 'Identificación oficial del firmante', icon: User, color: 'text-blue-500', url: docRepLegalUrl },
-                      { key: 'comprobante', label: 'Comprobante Anticipo 50%', desc: 'Soporte de pago o transferencia', icon: DollarSign, color: 'text-emerald-500', url: docComprobanteUrl },
+                      { key: 'comprobante', label: 'Comprobante Anticipo 50%', desc: 'Soporte de pago o transferencia', icon: DollarSign, color: 'text-gold-500', url: docComprobanteUrl },
                       { key: 'contrato', label: 'Contrato de Compraventa ANCLA', desc: 'Documento comercial suscrito', icon: ShieldCheck, color: 'text-amber-500', url: docContratoUrl }
                     ] : [
                       { key: 'cedula', label: 'Documento Identidad (Cédula / CE)', desc: 'Identificación oficial del titular', icon: User, color: 'text-blue-500', url: docCedulaUrl },
                       { key: 'rut', label: 'RUT Actualizado (DIAN)', desc: 'Requisito para Facturación Electrónica', icon: FileText, color: 'text-purple-500', url: docRutUrl },
-                      { key: 'comprobante', label: 'Comprobante Anticipo 50%', desc: 'Soporte de pago o transferencia', icon: DollarSign, color: 'text-emerald-500', url: docComprobanteUrl },
+                      { key: 'comprobante', label: 'Comprobante Anticipo 50%', desc: 'Soporte de pago o transferencia', icon: DollarSign, color: 'text-gold-500', url: docComprobanteUrl },
                       { key: 'contrato', label: 'Contrato de Compraventa ANCLA', desc: 'Documento comercial suscrito', icon: ShieldCheck, color: 'text-amber-500', url: docContratoUrl }
                     ];
 
@@ -1161,8 +1161,8 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
         <div className="px-4 sm:px-6 py-4 border-t border-slate-200 dark:border-navy-700 bg-slate-100 dark:bg-navy-900 flex items-center justify-between shrink-0 safe-area-bottom">
           <div>
             {savedSuccess && (
-              <span className="text-xs font-black text-emerald-600 dark:text-emerald-400 flex items-center space-x-1.5 animate-fade-in">
-                <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+              <span className="text-xs font-black text-gold-600 dark:text-gold-400 flex items-center space-x-1.5 animate-fade-in">
+                <CheckCircle2 className="w-4 h-4 text-gold-500" />
                 <span>¡Ficha Técnica 360° Guardada con Éxito!</span>
               </span>
             )}

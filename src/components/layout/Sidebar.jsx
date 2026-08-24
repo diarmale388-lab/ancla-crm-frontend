@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useChatStore } from '../../store/useChatStore';
 import { useThemeStore } from '../../store/useThemeStore';
@@ -230,7 +230,7 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
         {(user?.role === 'admin' || user?.role === 'ADMIN') && (
           <div className="relative w-full flex justify-center group">
             {activeTab === 'ai_approvals' && (
-              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-[32px] bg-amber-500 dark:bg-amber-400 rounded-r-md"></div>
+              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-[32px] bg-gold-500 dark:bg-gold-400 rounded-r-md"></div>
             )}
             <button
               onClick={() => {
@@ -238,7 +238,7 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
               }}
               className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all cursor-pointer relative ${
                 activeTab === 'ai_approvals'
-                  ? 'bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30'
+                  ? 'bg-gold-500/20 text-gold-600 dark:text-gold-400 border border-gold-500/30'
                   : 'text-slate-500 dark:text-slate-400 hover:bg-slate-200 hover:text-navy-900 dark:hover:bg-navy-800 dark:hover:text-white'
               }`}
               title="Bandeja de Aprobación Sofi AI (Candado 1 & 2)"
@@ -289,7 +289,7 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
           onClick={() => setShowPushModal(true)}
           className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all cursor-pointer relative ${
             pushPermission === 'granted'
-              ? 'text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/10'
+              ? 'text-gold-600 dark:text-gold-400 hover:bg-gold-500/10'
               : 'text-gold-500 hover:bg-gold-500/10 animate-pulse'
           }`}
           title={
@@ -352,7 +352,7 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
                 <span className="text-slate-300 font-medium">Permiso en este dispositivo:</span>
                 <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-black uppercase tracking-wider ${
                   pushPermission === 'granted'
-                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                    ? 'bg-gold-500/20 text-gold-300 border border-gold-500/30'
                     : pushPermission === 'denied'
                     ? 'bg-red-500/20 text-red-300 border border-red-500/30'
                     : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
@@ -363,7 +363,7 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
 
               <div className="flex items-center justify-between text-xs">
                 <span className="text-slate-300 font-medium">Servicio WebPush (VAPID):</span>
-                <span className="text-emerald-400 font-bold flex items-center gap-1">
+                <span className="text-gold-400 font-bold flex items-center gap-1">
                   <ShieldCheck className="w-4 h-4" /> Conectado (FCM/APNs)
                 </span>
               </div>
@@ -383,11 +383,11 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
             {testPushStatus && (
               <div className={`p-3 rounded-xl text-xs flex items-start gap-2 ${
                 testPushStatus.status === 'success'
-                  ? 'bg-emerald-500/20 text-emerald-200 border border-emerald-500/40'
+                  ? 'bg-gold-500/20 text-gold-200 border border-gold-500/40'
                   : 'bg-amber-500/20 text-amber-200 border border-amber-500/40'
               }`}>
                 {testPushStatus.status === 'success' ? (
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-4 h-4 text-gold-400 shrink-0 mt-0.5" />
                 ) : (
                   <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
                 )}
@@ -418,7 +418,7 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
                   </>
                 ) : pushPermission === 'granted' ? (
                   <>
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400" /> Re-sincronizar Suscripción Push
+                    <CheckCircle2 className="w-4 h-4 text-gold-400" /> Re-sincronizar Suscripción Push
                   </>
                 ) : (
                   <>

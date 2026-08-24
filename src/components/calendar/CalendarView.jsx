@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { useCalendarStore } from '../../store/useCalendarStore';
 import { useKanbanStore } from '../../store/useKanbanStore';
 import { useChatStore } from '../../store/useChatStore';
@@ -928,7 +928,7 @@ export const CalendarView = () => {
             </div>
 
             {holidayMsg && (
-              <div className="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold flex items-center space-x-2">
+              <div className="p-3.5 rounded-2xl bg-gold-500/10 border border-gold-500/20 text-gold-600 dark:text-gold-400 text-xs font-bold flex items-center space-x-2">
                 <CheckCircle2 className="w-4 h-4" />
                 <span>{holidayMsg}</span>
               </div>
@@ -943,7 +943,7 @@ export const CalendarView = () => {
                 <button
                   type="button"
                   onClick={() => setHolidaySlots('10:00 AM, 10:30 AM, 11:00 AM, 11:30 AM, 12:00 PM')}
-                  className="p-2.5 rounded-xl border text-xs font-semibold text-left bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200 text-emerald-700 hover:bg-emerald-100 transition-all cursor-pointer"
+                  className="p-2.5 rounded-xl border text-xs font-semibold text-left bg-gold-50 dark:bg-gold-500/10 border-gold-200 text-gold-700 hover:bg-gold-50 transition-all cursor-pointer"
                 >
                   🟢 Jornada Mañana (10:00 AM - 12:00 PM)
                 </button>
@@ -995,7 +995,7 @@ export const CalendarView = () => {
               <button
                 type="button"
                 onClick={() => handleSaveHolidayOverride(holidaySlots)}
-                className="px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 shadow-md flex items-center space-x-1.5 cursor-pointer"
+                className="px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-navy-900 hover:bg-navy-800 shadow-md flex items-center space-x-1.5 cursor-pointer"
               >
                 <Save className="w-4 h-4" />
                 <span>Guardar Horario Excepcional</span>
@@ -1024,7 +1024,7 @@ export const CalendarView = () => {
 
             {successMsg ? (
             <div className="flex flex-col items-center justify-center py-12 text-center">
-                <div className="w-12 h-12 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center mb-3 animate-bounce">
+                <div className="w-12 h-12 rounded-full bg-gold-500/10 text-gold-500 flex items-center justify-center mb-3 animate-bounce">
                   <Check className="w-6 h-6" />
                 </div>
                 <p className="text-sm font-semibold text-slate-800 dark:text-white">{successMsg}</p>
@@ -1325,7 +1325,7 @@ export const CalendarView = () => {
 
             {successMsg ? (
               <div className="flex flex-col items-center justify-center py-20 px-4 text-center">
-                <div className="w-14 h-14 rounded-full bg-emerald-500/15 text-emerald-500 flex items-center justify-center mb-3.5 animate-bounce">
+                <div className="w-14 h-14 rounded-full bg-gold-500/15 text-gold-500 flex items-center justify-center mb-3.5 animate-bounce">
                   <Check className="w-7 h-7" />
                 </div>
                 <h4 className="text-base font-bold text-slate-800 dark:text-white mb-1">¡Horarios Actualizados!</h4>

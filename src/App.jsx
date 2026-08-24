@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useAuthStore } from './store/useAuthStore';
 import { useChatStore } from './store/useChatStore';
 import { useThemeStore } from './store/useThemeStore';
@@ -239,8 +239,8 @@ function App() {
             )}
 
             {registerSuccess && (
-              <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 text-xs font-bold mb-4 flex items-center space-x-2">
-                <CheckCircle2 className="w-5 h-5 flex-shrink-0 text-emerald-600" />
+              <div className="p-4 rounded-xl bg-gold-500/10 border border-gold-500/20 text-gold-600 text-xs font-bold mb-4 flex items-center space-x-2">
+                <CheckCircle2 className="w-5 h-5 flex-shrink-0 text-gold-600" />
                 <span>{registerSuccess}</span>
               </div>
             )}

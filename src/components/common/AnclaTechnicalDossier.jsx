@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+﻿import React, { useState, useMemo } from 'react';
 import { 
   X, Building2, Sparkles, Factory, DollarSign, FileText, CheckCircle2, 
   ShieldCheck, ArrowRight, Download, Send, Globe, Sliders, Box, Layers, 
@@ -41,9 +41,9 @@ export const FACADE_THEMES = {
     id: 'GRIS_GRAFITO',
     name: 'Gris Grafito Anodizado & Vidrio Low-E Fumé',
     primaryColor: '#334155',
-    accentColor: '#10b981',
+    accentColor: '#c5a880',
     frameColor: '#0f172a',
-    glassTint: '#059669',
+    glassTint: '#a88a5f',
     badge: '🔘 Gris Grafito',
     description: 'Diseño vanguardista de alta gama con perfiles de aluminio negro y ventanería Low-E reflectiva.'
   }
@@ -248,7 +248,7 @@ export default function AnclaTechnicalDossier({ isOpen, onClose, contact, onSave
         {/* Header Corporativo ANCLA */}
         <div className="px-6 py-4 border-b border-[#e2e8f0] dark:border-[#334155] bg-[#f1f5f9] dark:bg-[#0f172a] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shrink-0">
           <div className="flex items-center space-x-3.5 min-w-0">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-500 text-white flex items-center justify-center shadow-md font-black text-lg shrink-0">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr bg-navy-900 text-white flex items-center justify-center shadow-md font-black text-lg shrink-0">
               ⚓
             </div>
             <div className="min-w-0">
@@ -256,7 +256,7 @@ export default function AnclaTechnicalDossier({ isOpen, onClose, contact, onSave
                 <h2 className="text-sm font-black text-[#0f172a] dark:text-[#f8fafc] tracking-wide truncate">
                   DOSSIER TÉCNICO & COTIZADOR COP
                 </h2>
-                <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 font-mono">
+                <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-gold-500/10 text-gold-600 dark:text-gold-400 border border-gold-500/30 font-mono">
                   COP TABULAR
                 </span>
               </div>
@@ -273,7 +273,7 @@ export default function AnclaTechnicalDossier({ isOpen, onClose, contact, onSave
               className="px-3 py-1.5 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-700 dark:text-purple-300 border border-purple-500/30 font-bold text-xs flex items-center space-x-1.5 transition-all active:scale-95 cursor-pointer"
               title="Generar y copiar link web de propuesta interactiva"
             >
-              {webLinkCopied ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" /> : <Globe className="w-3.5 h-3.5 text-purple-500" />}
+              {webLinkCopied ? <CheckCircle2 className="w-3.5 h-3.5 text-gold-500" /> : <Globe className="w-3.5 h-3.5 text-purple-500" />}
               <span>{webLinkCopied ? '¡Link Copiado!' : 'Link Propuesta Web'}</span>
             </button>
 
@@ -292,7 +292,7 @@ export default function AnclaTechnicalDossier({ isOpen, onClose, contact, onSave
             onClick={() => setActiveTab('comercial')}
             className={`py-3 px-4 text-xs font-black transition-all border-b-2 flex items-center space-x-2 cursor-pointer ${
               activeTab === 'comercial'
-                ? 'border-emerald-500 text-emerald-600 dark:text-emerald-400'
+                ? 'border-gold-500 text-gold-600 dark:text-gold-400'
                 : 'border-transparent text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
             }`}
           >
@@ -304,7 +304,7 @@ export default function AnclaTechnicalDossier({ isOpen, onClose, contact, onSave
             onClick={() => setActiveTab('personalizacion')}
             className={`py-3 px-4 text-xs font-black transition-all border-b-2 flex items-center space-x-2 cursor-pointer ${
               activeTab === 'personalizacion'
-                ? 'border-emerald-500 text-emerald-600 dark:text-emerald-400'
+                ? 'border-gold-500 text-gold-600 dark:text-gold-400'
                 : 'border-transparent text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
             }`}
           >
@@ -316,7 +316,7 @@ export default function AnclaTechnicalDossier({ isOpen, onClose, contact, onSave
             onClick={() => setActiveTab('china_spec')}
             className={`py-3 px-4 text-xs font-black transition-all border-b-2 flex items-center space-x-2 cursor-pointer ${
               activeTab === 'china_spec'
-                ? 'border-emerald-500 text-emerald-600 dark:text-emerald-400'
+                ? 'border-gold-500 text-gold-600 dark:text-gold-400'
                 : 'border-transparent text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
             }`}
           >
@@ -348,7 +348,7 @@ export default function AnclaTechnicalDossier({ isOpen, onClose, contact, onSave
                         onClick={() => setSelectedModelId(p.id)}
                         className={`p-4 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between space-y-2 ${
                           isSelected
-                            ? 'bg-emerald-500/5 dark:bg-[#1e293b] border-emerald-500 shadow-md ring-1 ring-emerald-500/50'
+                            ? 'bg-gold-500/5 dark:bg-[#1e293b] border-gold-500 shadow-md ring-1 ring-gold-500/50'
                             : 'bg-white dark:bg-[#1e293b]/50 border-slate-200 dark:border-[#334155] hover:border-slate-400 shadow-xs'
                         }`}
                       >
@@ -357,7 +357,7 @@ export default function AnclaTechnicalDossier({ isOpen, onClose, contact, onSave
                             <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-mono">
                               {p.id}
                             </span>
-                            <span className="text-xs font-black text-emerald-600 dark:text-emerald-400 tabular-nums font-mono">
+                            <span className="text-xs font-black text-gold-600 dark:text-gold-400 tabular-nums font-mono">
                               {formatCOP(p.base_price_cop)}
                             </span>
                           </div>
@@ -380,7 +380,7 @@ export default function AnclaTechnicalDossier({ isOpen, onClose, contact, onSave
                 <div className="lg:col-span-7 space-y-4">
                   <div className="p-5 rounded-2xl bg-white dark:bg-[#1e293b]/40 border border-slate-200 dark:border-[#334155] space-y-4">
                     <h3 className="text-xs font-black uppercase text-[#0f172a] dark:text-white flex items-center space-x-2">
-                      <Sliders className="w-4 h-4 text-emerald-500" />
+                      <Sliders className="w-4 h-4 text-gold-500" />
                       <span>Configurador de Adicionales & Obras de Implantación</span>
                     </h3>
 
@@ -392,11 +392,11 @@ export default function AnclaTechnicalDossier({ isOpen, onClose, contact, onSave
                             type="checkbox"
                             checked={includeDeck}
                             onChange={(e) => setIncludeDeck(e.target.checked)}
-                            className="rounded text-emerald-500 focus:ring-emerald-500 w-4 h-4 cursor-pointer"
+                            className="rounded text-gold-500 focus:ring-gold-500 w-4 h-4 cursor-pointer"
                           />
                           <span className="text-xs font-bold text-[#0f172a] dark:text-white">Terraza Exterior en Deck WPC de Exportación</span>
                         </label>
-                        <span className="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400 tabular-nums">
+                        <span className="text-xs font-mono font-bold text-gold-600 dark:text-gold-400 tabular-nums">
                           +{formatCOP(calculations.deckTotal)}
                         </span>
                       </div>
@@ -412,7 +412,7 @@ export default function AnclaTechnicalDossier({ isOpen, onClose, contact, onSave
                             step="5"
                             value={deckArea}
                             onChange={(e) => setDeckArea(parseInt(e.target.value) || 10)}
-                            className="flex-1 accent-emerald-500 cursor-pointer"
+                            className="flex-1 accent-gold-500 cursor-pointer"
                           />
                           <span className="text-xs font-mono font-bold text-[#0f172a] dark:text-white min-w-[45px]">{deckArea} m²</span>
                         </div>
@@ -426,7 +426,7 @@ export default function AnclaTechnicalDossier({ isOpen, onClose, contact, onSave
                           type="checkbox"
                           checked={includeSolar}
                           onChange={(e) => setIncludeSolar(e.target.checked)}
-                          className="rounded text-emerald-500 focus:ring-emerald-500 w-4 h-4 cursor-pointer"
+                          className="rounded text-gold-500 focus:ring-gold-500 w-4 h-4 cursor-pointer"
                         />
                         <div>
                           <span className="text-xs font-bold text-[#0f172a] dark:text-white flex items-center space-x-1.5">
@@ -436,7 +436,7 @@ export default function AnclaTechnicalDossier({ isOpen, onClose, contact, onSave
                           <p className="text-[10px] text-slate-400">Inversor híbrido + Batería LiFePO4 de 5kWh</p>
                         </div>
                       </label>
-                      <span className="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400 tabular-nums">
+                      <span className="text-xs font-mono font-bold text-gold-600 dark:text-gold-400 tabular-nums">
                         {includeSolar ? `+${formatCOP(17800000)}` : '$0'}
                       </span>
                     </div>
@@ -466,10 +466,10 @@ export default function AnclaTechnicalDossier({ isOpen, onClose, contact, onSave
                     <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-[#334155] space-y-2">
                       <div className="flex items-center justify-between">
                         <span className="text-xs font-bold text-[#0f172a] dark:text-white flex items-center space-x-1.5">
-                          <Truck className="w-3.5 h-3.5 text-emerald-500" />
+                          <Truck className="w-3.5 h-3.5 text-gold-500" />
                           <span>Flete Terrestre e Instalación en Sitio</span>
                         </span>
-                        <span className="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400 tabular-nums">
+                        <span className="text-xs font-mono font-bold text-gold-600 dark:text-gold-400 tabular-nums">
                           +{formatCOP(calculations.freightTotal)}
                         </span>
                       </div>
@@ -482,7 +482,7 @@ export default function AnclaTechnicalDossier({ isOpen, onClose, contact, onSave
                           step="25"
                           value={freightDistanceKm}
                           onChange={(e) => setFreightDistanceKm(parseInt(e.target.value) || 50)}
-                          className="flex-1 accent-emerald-500 cursor-pointer"
+                          className="flex-1 accent-gold-500 cursor-pointer"
                         />
                         <span className="text-xs font-mono font-bold text-[#0f172a] dark:text-white min-w-[50px] text-right">{freightDistanceKm} km</span>
                       </div>
@@ -493,10 +493,10 @@ export default function AnclaTechnicalDossier({ isOpen, onClose, contact, onSave
 
                 {/* Columna Derecha: Tarjeta de Liquidación Financiera COP (5 Cols) */}
                 <div className="lg:col-span-5 space-y-4">
-                  <div className="p-5 rounded-2xl bg-gradient-to-b from-white to-slate-50 dark:from-[#1e293b] dark:to-[#0f172a] border border-emerald-500/30 shadow-lg space-y-4">
+                  <div className="p-5 rounded-2xl bg-gradient-to-b from-white to-slate-50 dark:from-[#1e293b] dark:to-[#0f172a] border border-gold-500/30 shadow-lg space-y-4">
                     <div className="flex items-center justify-between border-b border-slate-100 dark:border-[#334155] pb-3">
                       <span className="text-xs font-black uppercase text-slate-500 dark:text-slate-400">Liquidación Comercial</span>
-                      <span className="text-xs font-bold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-mono">
+                      <span className="text-xs font-bold px-2 py-0.5 rounded bg-gold-500/10 text-gold-600 dark:text-gold-400 font-mono">
                         Valores en COP
                       </span>
                     </div>
@@ -550,9 +550,9 @@ export default function AnclaTechnicalDossier({ isOpen, onClose, contact, onSave
                     </div>
 
                     {/* Total Final */}
-                    <div className="pt-3 border-t-2 border-emerald-500/40 flex items-center justify-between">
+                    <div className="pt-3 border-t-2 border-gold-500/40 flex items-center justify-between">
                       <span className="text-sm font-black text-[#0f172a] dark:text-white">TOTAL PROPUESTA:</span>
-                      <span className="text-xl font-black text-emerald-600 dark:text-emerald-400 font-mono tabular-nums">
+                      <span className="text-xl font-black text-gold-600 dark:text-gold-400 font-mono tabular-nums">
                         {formatCOP(calculations.totalCOP)}
                       </span>
                     </div>
@@ -570,7 +570,7 @@ export default function AnclaTechnicalDossier({ isOpen, onClose, contact, onSave
                       </div>
                       <div className="flex justify-between font-mono">
                         <span className="text-slate-600 dark:text-slate-300">50% Balanza Final (Contra Entrega):</span>
-                        <span className="font-bold text-teal-600 dark:text-teal-400 tabular-nums">
+                        <span className="font-bold text-gold-600 dark:text-gold-400 tabular-nums">
                           {formatCOP(calculations.balance50)}
                         </span>
                       </div>
@@ -595,7 +595,7 @@ export default function AnclaTechnicalDossier({ isOpen, onClose, contact, onSave
                   <div className="p-6 rounded-2xl bg-white dark:bg-[#1e293b]/50 border border-slate-200 dark:border-[#334155] space-y-4">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-black uppercase text-slate-500 dark:text-slate-400">Acabado Seleccionado</span>
-                      <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                      <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-gold-500/10 text-gold-600 dark:text-gold-400 border border-gold-500/20">
                         {currentFacade.badge}
                       </span>
                     </div>
@@ -637,7 +637,7 @@ export default function AnclaTechnicalDossier({ isOpen, onClose, contact, onSave
                       onClick={() => setFacadeThemeKey(theme.id)}
                       className={`p-3.5 rounded-2xl border text-left transition-all cursor-pointer space-y-1.5 ${
                         facadeThemeKey === theme.id
-                          ? 'border-emerald-500 bg-emerald-500/10 ring-2 ring-emerald-500/30'
+                          ? 'border-gold-500 bg-gold-500/10 ring-2 ring-gold-500/30'
                           : 'border-slate-200 dark:border-white/5 hover:border-slate-300 bg-white dark:bg-[#1e293b]/40'
                       }`}
                     >
@@ -672,7 +672,7 @@ export default function AnclaTechnicalDossier({ isOpen, onClose, contact, onSave
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                   {Object.entries(currentModel.specs_zh || {}).map(([key, val]) => (
                     <div key={key} className="p-3 rounded-xl bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-white/5 space-y-1">
-                      <span className="text-[10px] font-bold uppercase text-emerald-600 dark:text-emerald-400">{key}</span>
+                      <span className="text-[10px] font-bold uppercase text-gold-600 dark:text-gold-400">{key}</span>
                       <p className="font-mono text-[11px] text-slate-700 dark:text-slate-300">{val}</p>
                     </div>
                   ))}
@@ -687,7 +687,7 @@ export default function AnclaTechnicalDossier({ isOpen, onClose, contact, onSave
         <div className="px-6 py-4 border-t border-slate-200 dark:border-[#334155] bg-[#f1f5f9] dark:bg-[#0b0f19] flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
           <div className="text-xs text-slate-500 dark:text-slate-400">
             <span>Propuesta Activa: </span>
-            <strong className="text-[#0f172a] dark:text-white">{currentModel.name} ({currentFacade.badge})</strong> • Total: <strong className="text-emerald-600 dark:text-emerald-400 font-mono">{formatCOP(calculations.totalCOP)} COP</strong>
+            <strong className="text-[#0f172a] dark:text-white">{currentModel.name} ({currentFacade.badge})</strong> • Total: <strong className="text-gold-600 dark:text-gold-400 font-mono">{formatCOP(calculations.totalCOP)} COP</strong>
           </div>
 
           <div className="flex items-center space-x-3">
@@ -717,7 +717,7 @@ export default function AnclaTechnicalDossier({ isOpen, onClose, contact, onSave
                 }
                 onClose();
               }}
-              className="px-6 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 text-white font-black text-xs shadow-md flex items-center space-x-2 cursor-pointer transition-all active:scale-95"
+              className="px-6 py-2.5 rounded-xl bg-gold-500 hover:bg-gold-600 active:bg-gold-600 text-white font-black text-xs shadow-md flex items-center space-x-2 cursor-pointer transition-all active:scale-95"
             >
               <Check className="w-4 h-4" />
               <span>Guardar & Aplicar al Expediente</span>

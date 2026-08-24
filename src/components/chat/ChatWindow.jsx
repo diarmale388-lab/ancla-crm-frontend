@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+﻿import React, { useState, useEffect, useRef } from 'react';
 import { useChatStore } from '../../store/useChatStore';
 import { useCalendarStore } from '../../store/useCalendarStore';
 import { useSettingsStore } from '../../store/useSettingsStore';
@@ -946,7 +946,7 @@ export const ChatWindow = () => {
                 </h3>
                 {activeContact.qualification_level && (
                   <span className={`text-[9px] px-2 py-0.5 rounded-full font-extrabold border shrink-0 hidden sm:inline-block ${
-                    activeContact.qualification_level === 'potencial' ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20' :
+                    activeContact.qualification_level === 'potencial' ? 'bg-gold-500/10 text-gold-600 dark:text-gold-400 border-gold-500/20' :
                     activeContact.qualification_level === 'explorador' ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20' :
                     'bg-slate-500/10 text-slate-500 dark:text-slate-400 border-slate-500/20'
                   }`}>
@@ -966,7 +966,7 @@ export const ChatWindow = () => {
             <button
               type="button"
               onClick={() => setShowFichaModal360(true)}
-              className="px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-extrabold text-[11px] flex items-center space-x-1.5 transition-all active:scale-95 cursor-pointer shadow-sm shrink-0"
+              className="px-2.5 py-1.5 rounded-xl bg-navy-900 hover:bg-navy-800 text-white font-extrabold text-[11px] flex items-center space-x-1.5 transition-all active:scale-95 cursor-pointer shadow-sm shrink-0"
               title="Abrir Ficha Técnica Comercial 360°"
             >
               <Sparkles className="w-3.5 h-3.5" />
@@ -994,22 +994,22 @@ export const ChatWindow = () => {
                     type="button"
                     onClick={() => { setShowMobileHeaderMenu(false); handleTriggerAiResponse(); }}
                     disabled={aiTriggering}
-                    className="w-full text-left px-3 py-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-extrabold flex items-center space-x-2.5 transition-all"
+                    className="w-full text-left px-3 py-2 rounded-xl bg-gold-500/10 hover:bg-gold-500/20 text-gold-600 dark:text-gold-400 font-extrabold flex items-center space-x-2.5 transition-all"
                   >
-                    <Sparkles className="w-4 h-4 text-emerald-500" />
+                    <Sparkles className="w-4 h-4 text-gold-500" />
                     <span>Sofi: Forzar Respuesta IA</span>
                   </button>
 
                   <div className="px-3 py-2 rounded-xl bg-slate-50 dark:bg-white/5 flex items-center justify-between">
                     <span className="flex items-center space-x-2">
-                      <Bot className="w-4 h-4 text-emerald-500" />
+                      <Bot className="w-4 h-4 text-gold-500" />
                       <span>Piloto IA</span>
                     </span>
                     <input
                       type="checkbox"
                       checked={activeContact.chatbot_enabled}
                       onChange={(e) => toggleChatbot(activeContact.id, e.target.checked)}
-                      className="w-7 h-4 accent-emerald-500 rounded cursor-pointer"
+                      className="w-7 h-4 accent-gold-500 rounded cursor-pointer"
                     />
                   </div>
 
@@ -1080,13 +1080,13 @@ export const ChatWindow = () => {
               </div>
 
               <div className="flex items-center space-x-1.5 bg-slate-50 dark:bg-white/5 px-2 py-1.5 rounded-xl border border-slate-200 dark:border-white/5 shrink-0">
-                <Bot className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                <Bot className="w-4 h-4 text-gold-600 dark:text-gold-400 shrink-0" />
                 <span className="text-[10px] font-bold text-slate-600 dark:text-slate-300 hidden lg:inline">Piloto IA</span>
                 <input
                   type="checkbox"
                   checked={activeContact.chatbot_enabled}
                   onChange={(e) => toggleChatbot(activeContact.id, e.target.checked)}
-                  className="w-7 h-4 rounded-full bg-slate-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
+                  className="w-7 h-4 rounded-full bg-slate-300 text-gold-600 focus:ring-gold-500 cursor-pointer"
                 />
               </div>
 
@@ -1096,8 +1096,8 @@ export const ChatWindow = () => {
                 disabled={aiTriggering}
                 className={`flex items-center space-x-1.5 text-[10px] font-bold px-2.5 py-1.5 rounded-xl transition-all shadow-sm shrink-0 ${
                   aiTriggering 
-                    ? 'bg-emerald-700/50 text-white cursor-not-allowed'
-                    : 'bg-emerald-600 hover:bg-emerald-500 text-white active:scale-95 cursor-pointer'
+                    ? 'bg-navy-800/50 text-white cursor-not-allowed'
+                    : 'bg-navy-900 hover:bg-navy-800 text-white active:scale-95 cursor-pointer'
                 }`}
                 title="Fuerza a Sofi IA a responder ahora mismo al último mensaje del cliente"
               >
@@ -1124,7 +1124,7 @@ export const ChatWindow = () => {
                 }}
                 className={`p-2 rounded-xl border transition-all cursor-pointer active:scale-95 ${
                   showMsgSearch
-                    ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400 shadow-sm'
+                    ? 'bg-gold-500/10 border-gold-500/20 text-gold-600 dark:text-gold-400 shadow-sm'
                     : 'bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/5 text-slate-500 hover:bg-slate-100 dark:hover:bg-white/10'
                 }`}
                 title="Buscar mensajes en esta conversación"
@@ -1293,9 +1293,9 @@ export const ChatWindow = () => {
         </div>
 
         {/* BARRA FLOTANTE 'SOFI COPILOTO' CON RESPUESTAS TÉCNICAS 1-CLIC */}
-        <div className="px-3.5 py-2 bg-gradient-to-r from-emerald-500/10 via-teal-500/5 to-purple-500/10 dark:from-emerald-950/40 dark:via-teal-950/25 dark:to-purple-950/30 border-t border-slate-200 dark:border-white/5 flex items-center space-x-2 overflow-x-auto no-scrollbar shadow-inner">
-          <div className="flex items-center space-x-1.5 text-[10px] font-black uppercase text-emerald-600 dark:text-emerald-400 shrink-0 pr-1 select-none">
-            <Sparkles className="w-3.5 h-3.5 text-emerald-500 animate-pulse" />
+        <div className="px-3.5 py-2 bg-gradient-to-r from-gold-500/10 via-navy-900/5 to-purple-500/10 dark:from-navy-950/40 dark:via-navy-900/25 dark:to-purple-950/30 border-t border-slate-200 dark:border-white/5 flex items-center space-x-2 overflow-x-auto no-scrollbar shadow-inner">
+          <div className="flex items-center space-x-1.5 text-[10px] font-black uppercase text-gold-600 dark:text-gold-400 shrink-0 pr-1 select-none">
+            <Sparkles className="w-3.5 h-3.5 text-gold-500 animate-pulse" />
             <span className="hidden sm:inline">Sofi Copiloto:</span>
           </div>
 
@@ -1376,7 +1376,7 @@ export const ChatWindow = () => {
                   }, 30);
                 }
               }}
-              className="px-2.5 py-1 rounded-xl bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-white/10 hover:border-emerald-500/50 hover:bg-emerald-50 dark:hover:bg-emerald-950/50 text-[#0f172a] dark:text-[#f8fafc] text-[11px] font-bold shrink-0 transition-all active:scale-95 shadow-xs cursor-pointer flex items-center space-x-1"
+              className="px-2.5 py-1 rounded-xl bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-white/10 hover:border-gold-500/50 hover:bg-gold-50 dark:hover:bg-gold-500/10 text-[#0f172a] dark:text-[#f8fafc] text-[11px] font-bold shrink-0 transition-all active:scale-95 shadow-xs cursor-pointer flex items-center space-x-1"
               title="Insertar respuesta técnica pre-redactada"
             >
               <span>{pill.label}</span>
@@ -1386,17 +1386,17 @@ export const ChatWindow = () => {
 
         {/* Sugerencias contextuales generadas por Sofi AI */}
         {aiSuggestion && (
-          <div className="p-3 bg-gradient-to-r from-emerald-500/5 to-teal-500/5 border-t border-emerald-500/20 animate-fade-in flex items-center justify-between">
+          <div className="p-3 bg-gradient-to-r from-gold-500/5 to-navy-900/5 border-t border-gold-500/20 animate-fade-in flex items-center justify-between">
             <div className="flex items-start space-x-2 min-w-0 pr-4">
-              <Bot className="w-4.5 h-4.5 text-emerald-600 flex-shrink-0 mt-0.5 animate-bounce" />
+              <Bot className="w-4.5 h-4.5 text-gold-600 flex-shrink-0 mt-0.5 animate-bounce" />
               <div className="min-w-0">
-                <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider block">Sugerencia del Copiloto</span>
+                <span className="text-[10px] font-bold text-gold-600 dark:text-gold-400 uppercase tracking-wider block">Sugerencia del Copiloto</span>
                 <p className="text-xs text-slate-700 dark:text-slate-350 italic truncate">"{aiSuggestion}"</p>
               </div>
             </div>
             <button
               onClick={applyAiSuggestion}
-              className="bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg flex-shrink-0 transition-all cursor-pointer"
+              className="bg-navy-900 hover:bg-navy-800 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg flex-shrink-0 transition-all cursor-pointer"
             >
               Aplicar
             </button>
@@ -1541,7 +1541,7 @@ export const ChatWindow = () => {
                   : 'text-slate-500 dark:text-slate-400 hover:text-slate-750 dark:hover:text-slate-200'
               }`}
             >
-              <Send className="w-3.5 h-3.5 text-emerald-500" />
+              <Send className="w-3.5 h-3.5 text-gold-500" />
               <span>Enviar WhatsApp</span>
             </button>
             <button
@@ -1736,7 +1736,7 @@ export const ChatWindow = () => {
                 className="hidden sm:flex p-2.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/5 text-slate-500 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/10 shrink-0 cursor-pointer"
                 title="Copiloto de IA"
               >
-                <Bot className={`w-4 h-4 ${aiLoading ? 'animate-spin text-emerald-500' : ''}`} />
+                <Bot className={`w-4 h-4 ${aiLoading ? 'animate-spin text-gold-500' : ''}`} />
               </button>
             )}
 
@@ -1745,7 +1745,7 @@ export const ChatWindow = () => {
               type="submit"
               className={`p-2.5 sm:p-3 rounded-xl text-white shadow-md transition-all shrink-0 active:scale-95 cursor-pointer min-w-[44px] min-h-[44px] flex items-center justify-center ${
                 isInternalNote 
-                  ? 'bg-amber-600 hover:bg-amber-500'
+                  ? 'bg-navy-900 hover:bg-navy-800'
                   : 'bg-gradient-to-r from-gold-600 to-gold-400 hover:from-gold-500 hover:to-gold-400 text-navy-950'
               }`}
               title="Enviar Mensaje (Enter)"
@@ -1768,7 +1768,7 @@ export const ChatWindow = () => {
         <div className="p-4 border-b border-slate-200 dark:border-white/5 bg-slate-50/80 dark:bg-slate-900/90 backdrop-blur-md sticky top-0 z-10 space-y-3 flex-shrink-0">
           <div className="flex items-center justify-between">
             <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center space-x-1.5">
-              <User className="w-4 h-4 text-emerald-500" />
+              <User className="w-4 h-4 text-gold-500" />
               <span>Ficha & Herramientas</span>
             </h4>
             <button
@@ -1797,7 +1797,7 @@ export const ChatWindow = () => {
                 <span className="text-xs font-bold text-slate-800 dark:text-white truncate block">
                   {activeContact.first_name ? `${activeContact.first_name} ${activeContact.last_name || ''}`.trim() : activeContact.phone}
                 </span>
-                <span className="text-[10px] font-black text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded font-mono">
+                <span className="text-[10px] font-black text-gold-600 dark:text-gold-400 bg-gold-500/10 px-1.5 py-0.5 rounded font-mono">
                   #{activeContact.id}
                 </span>
               </div>
@@ -1821,7 +1821,7 @@ export const ChatWindow = () => {
               }}
               className={`p-1.5 rounded-lg text-[9.5px] font-bold flex flex-col items-center justify-center border transition-all cursor-pointer ${
                 (activeContact.advisor_status || '').includes('CONTACT_MADE') || (activeContact.advisor_status || '').includes('CONNECTED')
-                  ? 'bg-emerald-600 border-emerald-500 text-white shadow-sm'
+                  ? 'bg-navy-900 border-navy-700 text-white shadow-sm'
                   : 'bg-white dark:bg-slate-800 hover:bg-slate-100 border-slate-200 dark:border-white/5 text-slate-700 dark:text-slate-200'
               }`}
               title="Contacto Realizado"
@@ -1843,7 +1843,7 @@ export const ChatWindow = () => {
               }}
               className={`p-1.5 rounded-lg text-[9.5px] font-bold flex flex-col items-center justify-center border transition-all cursor-pointer ${
                 (activeContact.advisor_status || '').includes('SHOWROOM_VISITED')
-                  ? 'bg-teal-600 border-teal-500 text-white shadow-sm'
+                  ? 'bg-navy-800 border-navy-700 text-white shadow-sm'
                   : 'bg-white dark:bg-slate-800 hover:bg-slate-100 border-slate-200 dark:border-white/5 text-slate-700 dark:text-slate-200'
               }`}
               title="Visita Showroom"
@@ -1887,7 +1887,7 @@ export const ChatWindow = () => {
               }}
               className={`p-1.5 rounded-lg text-[9.5px] font-bold flex flex-col items-center justify-center border transition-all cursor-pointer ${
                 (activeContact.advisor_status || '').includes('NO_ANSWER')
-                  ? 'bg-amber-600 border-amber-500 text-white shadow-sm'
+                  ? 'bg-navy-900 border-navy-700 text-white shadow-sm'
                   : 'bg-white dark:bg-slate-800 hover:bg-slate-100 border-slate-200 dark:border-white/5 text-slate-700 dark:text-slate-200'
               }`}
               title="Sin Respuesta"
@@ -1986,7 +1986,7 @@ export const ChatWindow = () => {
                         await updateContactDetails(activeContact.id, { lot_city: newCity.trim() });
                       }
                     }}
-                    className="text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline flex items-center space-x-1"
+                    className="text-xs font-bold text-gold-600 dark:text-gold-400 hover:underline flex items-center space-x-1"
                   >
                     <span>{activeContact.lot_city || 'Por definir'}</span>
                     <Pencil className="w-3 h-3" />
@@ -2010,10 +2010,10 @@ export const ChatWindow = () => {
               </div>
 
               {/* Selector de Asesor Asignado (Visibilidad Directa) */}
-              <div className="p-3 rounded-xl bg-emerald-500/10 dark:bg-emerald-950/20 border border-emerald-500/20 space-y-1.5 shadow-xs">
+              <div className="p-3 rounded-xl bg-gold-500/10 dark:bg-gold-500/10 border border-gold-500/20 space-y-1.5 shadow-xs">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] text-emerald-600 dark:text-emerald-400 uppercase font-extrabold tracking-wider block">👤 Asesor Asignado</span>
-                  <span className="text-[9px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-1.5 py-0.2 rounded-md">Todos los perfiles</span>
+                  <span className="text-[10px] text-gold-600 dark:text-gold-400 uppercase font-extrabold tracking-wider block">👤 Asesor Asignado</span>
+                  <span className="text-[9px] font-bold text-gold-600 dark:text-gold-400 bg-gold-500/10 px-1.5 py-0.2 rounded-md">Todos los perfiles</span>
                 </div>
                 <select
                   value={activeContact.assigned_user_id || ''}
@@ -2026,7 +2026,7 @@ export const ChatWindow = () => {
                       showToast(`✅ Asesor asignado: ${name}`);
                     }
                   }}
-                  className="w-full bg-white dark:bg-slate-900 border border-emerald-500/30 rounded-xl px-3 py-1.5 text-xs font-bold text-emerald-800 dark:text-emerald-200 cursor-pointer focus:outline-none focus:border-emerald-500"
+                  className="w-full bg-white dark:bg-slate-900 border border-gold-500/30 rounded-xl px-3 py-1.5 text-xs font-bold text-gold-800 dark:text-gold-200 cursor-pointer focus:outline-none focus:border-gold-500"
                 >
                   <option value="">Sin Asignar (Liliana / Admin General)</option>
                   {agents && agents.length > 0 ? (
@@ -2054,7 +2054,7 @@ export const ChatWindow = () => {
               <button
                 type="button"
                 onClick={() => setShowDossierModal(true)}
-                className="w-full py-2.5 px-3 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-black text-xs flex items-center justify-center space-x-2 transition-all cursor-pointer shadow-md active:scale-95"
+                className="w-full py-2.5 px-3 rounded-2xl bg-navy-900 hover:bg-navy-800 text-white font-black text-xs flex items-center justify-center space-x-2 transition-all cursor-pointer shadow-md active:scale-95"
               >
                 <DollarSign className="w-4 h-4" />
                 <span>📑 Abrir Dossier & Cotizador COP (3 Pestañas)</span>
@@ -2063,7 +2063,7 @@ export const ChatWindow = () => {
               <form onSubmit={handleGenerateCustomProposal} className="space-y-3 p-3.5 rounded-2xl bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-white/5 shadow-xs">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-200 block">Cotizador Rápido de Chat</span>
-                  <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 font-mono">COP</span>
+                  <span className="text-[10px] font-bold text-gold-600 dark:text-gold-400 font-mono">COP</span>
                 </div>
                 
                 {/* Selector de Modelos */}
@@ -2117,17 +2117,17 @@ export const ChatWindow = () => {
                 <div className="space-y-2 pt-2 border-t border-slate-100 dark:border-white/5">
                   <label className="flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-300 cursor-pointer">
                     <span>Deck Sintético WPC (+ $5.400.000 COP)</span>
-                    <input type="checkbox" checked={proposalExtraDeck} onChange={(e) => setProposalExtraDeck(e.target.checked)} className="rounded text-emerald-600 w-4 h-4 accent-emerald-500 cursor-pointer" />
+                    <input type="checkbox" checked={proposalExtraDeck} onChange={(e) => setProposalExtraDeck(e.target.checked)} className="rounded text-gold-600 w-4 h-4 accent-gold-500 cursor-pointer" />
                   </label>
 
                   <label className="flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-300 cursor-pointer">
                     <span>Kit Solar Off-Grid (+ $17.800.000 COP)</span>
-                    <input type="checkbox" checked={proposalExtraSolar} onChange={(e) => setProposalExtraSolar(e.target.checked)} className="rounded text-emerald-600 w-4 h-4 accent-emerald-500 cursor-pointer" />
+                    <input type="checkbox" checked={proposalExtraSolar} onChange={(e) => setProposalExtraSolar(e.target.checked)} className="rounded text-gold-600 w-4 h-4 accent-gold-500 cursor-pointer" />
                   </label>
 
                   <label className="flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-300 cursor-pointer">
                     <span>Climatización A.A. (+ $3.200.000 COP)</span>
-                    <input type="checkbox" checked={proposalExtraClima} onChange={(e) => setProposalExtraClima(e.target.checked)} className="rounded text-emerald-600 w-4 h-4 accent-emerald-500 cursor-pointer" />
+                    <input type="checkbox" checked={proposalExtraClima} onChange={(e) => setProposalExtraClima(e.target.checked)} className="rounded text-gold-600 w-4 h-4 accent-gold-500 cursor-pointer" />
                   </label>
                 </div>
 
@@ -2165,12 +2165,12 @@ export const ChatWindow = () => {
                   const totalCOP = subtotal - (subtotal * (disc / 100));
 
                   return (
-                    <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 space-y-1 text-xs font-mono">
+                    <div className="p-2.5 rounded-xl bg-gold-500/10 border border-gold-500/20 space-y-1 text-xs font-mono">
                       <div className="flex justify-between text-slate-600 dark:text-slate-300 text-[11px]">
                         <span>Subtotal Cotizado:</span>
                         <span>${Math.round(subtotal).toLocaleString('es-CO')} COP</span>
                       </div>
-                      <div className="flex justify-between font-black text-emerald-700 dark:text-emerald-300 text-xs border-t border-emerald-500/20 pt-1">
+                      <div className="flex justify-between font-black text-gold-700 dark:text-gold-300 text-xs border-t border-gold-500/20 pt-1">
                         <span>Total Final COP:</span>
                         <span>${Math.round(totalCOP).toLocaleString('es-CO')} COP</span>
                       </div>
@@ -2185,7 +2185,7 @@ export const ChatWindow = () => {
                 )}
 
                 {proposalSuccess && (
-                  <div className="p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-[11px] text-emerald-600 font-bold">
+                  <div className="p-2 rounded-lg bg-gold-500/10 border border-gold-500/20 text-[11px] text-gold-600 font-bold">
                     {proposalSuccess}
                   </div>
                 )}
@@ -2193,7 +2193,7 @@ export const ChatWindow = () => {
                 <button
                   type="submit"
                   disabled={proposalLoading}
-                  className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 px-3 rounded-xl shadow-md text-xs active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center space-x-1.5 cursor-pointer mt-1"
+                  className="w-full bg-navy-900 hover:bg-navy-800 text-white font-bold py-2.5 px-3 rounded-xl shadow-md text-xs active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center space-x-1.5 cursor-pointer mt-1"
                 >
                   {proposalLoading ? (
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -2343,7 +2343,7 @@ export const ChatWindow = () => {
                       onClick={() => handleDateSelect(day)}
                       className={`aspect-square rounded-xl text-xs font-bold transition-all flex flex-col items-center justify-center relative cursor-pointer active:scale-95 ${
                         isSel
-                          ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/25 border-emerald-500'
+                          ? 'bg-navy-900 text-white shadow-md shadow-navy-900/25 border-gold-500'
                           : isPst
                             ? 'text-slate-300 dark:text-slate-700 cursor-not-allowed'
                             : isTdy
@@ -2411,7 +2411,7 @@ export const ChatWindow = () => {
                   type="button"
                   disabled={!selectedCalDateStr}
                   onClick={handleConfirmCalendarBooking}
-                  className="flex-1 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 disabled:opacity-50 text-white font-bold py-2.5 px-3 rounded-xl text-xs cursor-pointer transition-all active:scale-[0.98] shadow-md shadow-emerald-500/10"
+                  className="flex-1 bg-navy-900 hover:bg-navy-800 disabled:opacity-50 text-white font-bold py-2.5 px-3 rounded-xl text-xs cursor-pointer transition-all active:scale-[0.98] shadow-md shadow-gold-500/10"
                 >
                   Agendar Cita
                 </button>
@@ -2474,12 +2474,12 @@ export const ChatWindow = () => {
                   className="w-full text-left py-2.5 px-3 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 flex items-center justify-between transition-colors group cursor-pointer"
                 >
                   <div className="min-w-0 pr-2">
-                    <span className="text-xs font-bold text-slate-800 dark:text-slate-200 block truncate group-hover:text-emerald-500 transition-colors">
+                    <span className="text-xs font-bold text-slate-800 dark:text-slate-200 block truncate group-hover:text-gold-500 transition-colors">
                       {c.first_name ? `${c.first_name} ${c.last_name || ''}` : c.phone}
                     </span>
                     <span className="text-[10px] text-slate-400 font-mono block mt-0.5">{c.phone}</span>
                   </div>
-                  <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-lg group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-sm">
+                  <span className="text-[10px] font-bold text-gold-600 dark:text-gold-400 bg-gold-500/10 px-2.5 py-1 rounded-lg group-hover:bg-navy-900 group-hover:text-white transition-all shadow-sm">
                     Enviar
                   </span>
                 </button>
@@ -2518,7 +2518,7 @@ export const ChatWindow = () => {
 
       {/* Toast Feedback Flotante Universal */}
       {toastFeedback && (
-        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-[9999] bg-emerald-600 dark:bg-emerald-500 text-white px-6 py-3.5 rounded-2xl shadow-2xl flex items-center space-x-3 text-sm font-black animate-fade-in border-2 border-white/20 backdrop-blur-md">
+        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-[9999] bg-navy-900 text-white px-6 py-3.5 rounded-2xl shadow-2xl flex items-center space-x-3 text-sm font-black animate-fade-in border-2 border-white/20 backdrop-blur-md">
           <CheckCircle2 className="w-5 h-5 text-white animate-pulse" />
           <span>{toastFeedback}</span>
         </div>

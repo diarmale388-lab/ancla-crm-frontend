@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { 
   Volume2, 
   Users, 
@@ -125,7 +125,7 @@ export default function BroadcastView() {
       <div className="p-6 border-b border-slate-200 dark:border-white/5 bg-white dark:bg-dark-900/90 backdrop-blur-md flex items-center justify-between glass flex-shrink-0">
         <div>
           <h2 className="text-xl font-bold text-slate-800 dark:text-white flex items-center space-x-2">
-            <Volume2 className="w-5 h-5 text-emerald-500 animate-bounce" />
+            <Volume2 className="w-5 h-5 text-gold-500 animate-bounce" />
             <span>Difusiones de WhatsApp (Broadcasts)</span>
           </h2>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
@@ -147,7 +147,7 @@ export default function BroadcastView() {
                 <select
                   value={selectedStage}
                   onChange={(e) => setSelectedStage(e.target.value)}
-                  className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl px-3.5 py-2.5 text-xs text-slate-855 dark:text-slate-250 focus:outline-none focus:border-emerald-500/50"
+                  className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl px-3.5 py-2.5 text-xs text-slate-855 dark:text-slate-250 focus:outline-none focus:border-gold-500/50"
                 >
                   <option value="">-- Todos los Leads --</option>
                   {stages.map((s) => (
@@ -161,7 +161,7 @@ export default function BroadcastView() {
                 <select
                   value={selectedSource}
                   onChange={(e) => setSelectedSource(e.target.value)}
-                  className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl px-3.5 py-2.5 text-xs text-slate-855 dark:text-slate-250 focus:outline-none focus:border-emerald-500/50"
+                  className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl px-3.5 py-2.5 text-xs text-slate-855 dark:text-slate-250 focus:outline-none focus:border-gold-500/50"
                 >
                   <option value="">-- Todos los Orígenes --</option>
                   <option value="WhatsApp">WhatsApp Orgánico</option>
@@ -175,7 +175,7 @@ export default function BroadcastView() {
                 <select
                   value={selectedInterest}
                   onChange={(e) => setSelectedInterest(e.target.value)}
-                  className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl px-3.5 py-2.5 text-xs text-slate-855 dark:text-slate-250 focus:outline-none focus:border-emerald-500/50 font-medium"
+                  className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl px-3.5 py-2.5 text-xs text-slate-855 dark:text-slate-250 focus:outline-none focus:border-gold-500/50 font-medium"
                 >
                   <option value="">-- Todos los Productos --</option>
                   <option value="Glamping">Glamping / Cápsulas LINVIG</option>
@@ -190,7 +190,7 @@ export default function BroadcastView() {
                 <select
                   value={selectedQualification}
                   onChange={(e) => setSelectedQualification(e.target.value)}
-                  className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl px-3.5 py-2.5 text-xs text-slate-855 dark:text-slate-250 focus:outline-none focus:border-emerald-500/50 font-medium"
+                  className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl px-3.5 py-2.5 text-xs text-slate-855 dark:text-slate-250 focus:outline-none focus:border-gold-500/50 font-medium"
                 >
                   <option value="">-- Todos los Niveles --</option>
                   <option value="potencial">🟢 Alta Intención (Potenciales)</option>
@@ -204,12 +204,12 @@ export default function BroadcastView() {
             <div>
               <label className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block mb-2 flex items-center justify-between">
                 <span>Plantilla Aprobada (WhatsApp Cloud API)</span>
-                <span className="text-[8px] bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold px-1.5 py-0.5 rounded">Obligatorio si es &gt; 24h</span>
+                <span className="text-[8px] bg-gold-500/10 text-gold-600 dark:text-gold-400 font-bold px-1.5 py-0.5 rounded">Obligatorio si es &gt; 24h</span>
               </label>
               <select
                 value={templateName}
                 onChange={(e) => setTemplateName(e.target.value)}
-                className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl px-3.5 py-2.5 text-xs text-slate-855 dark:text-slate-250 focus:outline-none focus:border-emerald-500/50"
+                className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl px-3.5 py-2.5 text-xs text-slate-855 dark:text-slate-250 focus:outline-none focus:border-gold-500/50"
               >
                 <option value="">Ninguno (Texto Libre - Solo contactos recientes)</option>
                 <option value="bienvenida_ancla">bienvenida_ancla (Plantilla de Registro)</option>
@@ -226,7 +226,7 @@ export default function BroadcastView() {
                 value={messageText}
                 onChange={(e) => setMessageText(e.target.value)}
                 rows="4"
-                className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl px-4 py-3 text-xs text-slate-855 dark:text-slate-250 focus:outline-none focus:border-emerald-500/50 leading-relaxed"
+                className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl px-4 py-3 text-xs text-slate-855 dark:text-slate-250 focus:outline-none focus:border-gold-500/50 leading-relaxed"
                 required
               />
             </div>
@@ -244,7 +244,7 @@ export default function BroadcastView() {
                 step="0.5"
                 value={delaySeconds}
                 onChange={(e) => setDelaySeconds(parseFloat(e.target.value))}
-                className="w-full h-1 bg-slate-200 dark:bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-500"
+                className="w-full h-1 bg-slate-200 dark:bg-slate-800 rounded-lg appearance-none cursor-pointer accent-gold-500"
               />
               <span className="text-[9px] text-slate-450 dark:text-slate-500 block mt-1">
                 🕒 Delays mayores a 1.5s previenen que los algoritmos de detección de SPAM de WhatsApp suspendan tu cuenta.
@@ -260,7 +260,7 @@ export default function BroadcastView() {
             )}
 
             {result && (
-              <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs space-y-2">
+              <div className="p-4 rounded-xl bg-gold-500/10 border border-gold-500/20 text-gold-600 dark:text-gold-400 text-xs space-y-2">
                 <div className="flex items-center space-x-2 font-bold">
                   <CheckCircle className="w-4 h-4 flex-shrink-0" />
                   <span>{result.message}</span>
@@ -276,7 +276,7 @@ export default function BroadcastView() {
             <button
               type="submit"
               disabled={loading || !messageText.trim()}
-              className="w-full bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold py-3.5 px-4 rounded-xl shadow-md text-xs active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center space-x-1.5"
+              className="w-full bg-navy-900 hover:bg-navy-800 text-white font-bold py-3.5 px-4 rounded-xl shadow-md text-xs active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center space-x-1.5"
             >
               {loading ? (
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>

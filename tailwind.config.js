@@ -24,14 +24,19 @@ export default {
           700: '#243044', // Bordes e Inputs marcados
         },
         gold: {
-          50: '#fffbeb',
-          400: '#f59e0b', // Oro claro (hover / highlights)
-          500: '#d97706', // Oro elegante (CTA primario / acento de marca)
-          600: '#b45309', // Oro oscuro (active state)
+          50: '#fdf9f3',
+          100: '#f5ede0',
+          200: '#e8dcc8',
+          300: '#d6c3a1',
+          400: '#d6c3a1', // Oro claro (hover / highlights)
+          500: '#c5a880', // Oro Champagne ANCLA (acento de marca)
+          600: '#a88a5f', // Oro oscuro (active state)
+          700: '#8b7350',
+          800: '#6e5c40',
         },
         brand: {
-          emerald: '#10b981', // Reservado como semántico de éxito, no como acento de marca
-          emeraldHover: '#059669',
+          success: '#10b981', // Reservado ÚNICAMENTE para indicador En línea / Activo
+          successHover: '#059669',
           purple: '#7c3aed', // Color Contextual Sofi AI
           purpleSubtle: 'rgba(124, 58, 237, 0.12)',
         }

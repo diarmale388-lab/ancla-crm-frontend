@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+﻿import React, { useState, useEffect, useRef } from 'react';
 import { Terminal, RefreshCw, Trash2 } from 'lucide-react';
 
 export const AuditLogsView = () => {
@@ -89,13 +89,13 @@ export const AuditLogsView = () => {
       {/* Encabezado Adaptativo Día/Noche */}
       <div className="flex items-center justify-between pb-6 border-b border-slate-200 dark:border-slate-800">
         <div className="flex items-center space-x-3">
-          <div className="p-3 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-xl border border-emerald-500/20">
+          <div className="p-3 bg-gold-500/10 text-gold-600 dark:text-gold-400 rounded-xl border border-gold-500/20">
             <Terminal className="w-6 h-6" />
           </div>
           <div>
             <h1 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
               Consola de Auditoría y Diagnóstico en Vivo
-              <span className="text-xs bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 rounded-full border border-emerald-500/30">
+              <span className="text-xs bg-gold-500/20 text-gold-700 dark:text-gold-400 px-2 py-0.5 rounded-full border border-gold-500/30">
                 Live Terminal
               </span>
             </h1>
@@ -110,7 +110,7 @@ export const AuditLogsView = () => {
           <button
             onClick={handleTestConnection}
             disabled={testing}
-            className="flex items-center space-x-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-sm font-medium transition-all shadow-md shadow-emerald-900/20 disabled:opacity-50 cursor-pointer"
+            className="flex items-center space-x-2 px-4 py-2 bg-navy-900 hover:bg-navy-800 text-white rounded-lg text-sm font-medium transition-all shadow-md shadow-navy-900/20 disabled:opacity-50 cursor-pointer"
           >
             <RefreshCw className={`w-4 h-4 ${testing ? 'animate-spin' : ''}`} />
             <span>{testing ? 'Procesando...' : 'Ejecutar Diagnóstico'}</span>
@@ -130,7 +130,7 @@ export const AuditLogsView = () => {
         <button
           onClick={() => setFilter('all')}
           className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer ${
-            filter === 'all' ? 'bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
+            filter === 'all' ? 'bg-gold-500/20 text-gold-700 dark:text-gold-300 border border-gold-500/30' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
           }`}
         >
           Todos ({logs.length})
@@ -174,7 +174,7 @@ export const AuditLogsView = () => {
               <span className={`font-semibold flex-shrink-0 ${
                 log.level === 'error' ? 'text-red-400' :
                 log.level === 'warning' ? 'text-amber-400' :
-                log.level === 'success' ? 'text-emerald-400' : 'text-blue-400'
+                log.level === 'success' ? 'text-gold-400' : 'text-blue-400'
               }`}>
                 {log.level.toUpperCase()}:
               </span>
@@ -188,7 +188,7 @@ export const AuditLogsView = () => {
       {/* Pie de Consola */}
       <div className="mt-4 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 px-2">
         <div className="flex items-center space-x-2">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span className="w-2 h-2 rounded-full bg-gold-500 animate-pulse"></span>
           <span>WebSocket Diagnóstico Activo (Hora Colombia GMT-5)</span>
         </div>
         <span>ANCLA Special Projects • CRM Core Audit v2.0</span>

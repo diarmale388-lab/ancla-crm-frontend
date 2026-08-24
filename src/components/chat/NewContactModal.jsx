@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { X, UserPlus, Phone, Mail, MapPin, Building2, User, Layers, Check } from 'lucide-react';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useChatStore } from '../../store/useChatStore';
@@ -78,7 +78,7 @@ export default function NewContactModal({ isOpen, onClose }) {
         {/* Header del Modal */}
         <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/90 flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-500 text-white flex items-center justify-center shadow-sm">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr bg-navy-900 text-white flex items-center justify-center shadow-sm">
               <UserPlus className="w-5 h-5" />
             </div>
             <div>
@@ -105,7 +105,7 @@ export default function NewContactModal({ isOpen, onClose }) {
                 required
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
-                className="w-full bg-slate-50 dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-bold focus:outline-none focus:border-emerald-500"
+                className="w-full bg-slate-50 dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-bold focus:outline-none focus:border-gold-500"
                 placeholder="Ej: Carlos"
               />
             </div>
@@ -115,7 +115,7 @@ export default function NewContactModal({ isOpen, onClose }) {
                 type="text"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
-                className="w-full bg-slate-50 dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-bold focus:outline-none focus:border-emerald-500"
+                className="w-full bg-slate-50 dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-bold focus:outline-none focus:border-gold-500"
                 placeholder="Ej: Calvache"
               />
             </div>
@@ -129,7 +129,7 @@ export default function NewContactModal({ isOpen, onClose }) {
                 required
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                className="w-full bg-slate-50 dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-mono font-bold focus:outline-none focus:border-emerald-500"
+                className="w-full bg-slate-50 dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-mono font-bold focus:outline-none focus:border-gold-500"
                 placeholder="573001234567"
               />
             </div>
@@ -139,7 +139,7 @@ export default function NewContactModal({ isOpen, onClose }) {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-slate-50 dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-semibold focus:outline-none focus:border-emerald-500"
+                className="w-full bg-slate-50 dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-semibold focus:outline-none focus:border-gold-500"
                 placeholder="correo@ejemplo.com"
               />
             </div>
@@ -147,7 +147,7 @@ export default function NewContactModal({ isOpen, onClose }) {
 
           {/* 4 Pilares de Liliana */}
           <div className="p-4 rounded-2xl bg-slate-50 dark:bg-[#1e293b]/60 border border-slate-200 dark:border-[#334155] space-y-3">
-            <span className="text-[11px] font-black uppercase tracking-wider text-emerald-600 dark:text-emerald-400 flex items-center space-x-1.5">
+            <span className="text-[11px] font-black uppercase tracking-wider text-gold-600 dark:text-gold-400 flex items-center space-x-1.5">
               <Layers className="w-3.5 h-3.5" />
               <span>Diagnóstico Inicial (Requerimientos ANCLA)</span>
             </span>
@@ -210,11 +210,11 @@ export default function NewContactModal({ isOpen, onClose }) {
           </div>
 
           <div>
-            <label className="block text-[10px] font-extrabold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 mb-1">👤 Asesor Comercial Asignado</label>
+            <label className="block text-[10px] font-extrabold uppercase tracking-wider text-gold-600 dark:text-gold-400 mb-1">👤 Asesor Comercial Asignado</label>
             <select
               value={assignedUserId || ''}
               onChange={(e) => setAssignedUserId(e.target.value ? parseInt(e.target.value, 10) : null)}
-              className="w-full bg-emerald-500/10 dark:bg-emerald-950/30 border border-emerald-500/30 rounded-xl px-3 py-2 text-xs font-bold text-emerald-800 dark:text-emerald-200 cursor-pointer"
+              className="w-full bg-gold-500/10 dark:bg-gold-500/10 border border-gold-500/30 rounded-xl px-3 py-2 text-xs font-bold text-gold-800 dark:text-gold-200 cursor-pointer"
             >
               <option value="4">Asesor Comercial ANCLA (asesor@anclaspecialprojects.com)</option>
               <option value="3">Liliana León (Directora Comercial)</option>
@@ -234,7 +234,7 @@ export default function NewContactModal({ isOpen, onClose }) {
             <button
               type="submit"
               disabled={saving}
-              className="px-5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold text-xs shadow-md transition-all active:scale-95 flex items-center space-x-1.5 cursor-pointer"
+              className="px-5 py-2 rounded-xl bg-navy-900 hover:bg-navy-800 text-white font-bold text-xs shadow-md transition-all active:scale-95 flex items-center space-x-1.5 cursor-pointer"
             >
               {saving ? (
                 <span>Guardando...</span>

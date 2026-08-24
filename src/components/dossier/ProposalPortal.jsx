@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+﻿import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { 
   Building2, Sparkles, Sun, Wind, Layers, ShieldCheck, CheckCircle2, 
   Download, Send, ArrowRight, Check, Share2, Eye, Palette, 
@@ -44,9 +44,9 @@ export const FACADE_THEMES = {
     id: 'GRIS_GRAFITO',
     name: 'Gris Grafito Anodizado & Low-E Fumé',
     primaryColor: '#334155',
-    accentColor: '#10b981',
+    accentColor: '#c5a880',
     frameColor: '#0f172a',
-    glassTint: '#34d399',
+    glassTint: '#d6c3a1',
     badge: '🔘 Gris Grafito',
     description: 'Diseño vanguardista de alta gama con perfiles de aluminio negro y ventanería Low-E reflectiva.'
   }
@@ -288,20 +288,20 @@ Me gustaría agendar una cita para revisar la viabilidad en mi terreno y procede
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
           <div className="flex items-center space-x-3">
             {/* Medallón de Acero Pulido ANCLA */}
-            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-tr from-emerald-600 via-teal-500 to-emerald-400 p-0.5 shadow-lg shadow-emerald-500/20 flex items-center justify-center">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-tr from-navy-900 to-navy-800 p-0.5 shadow-lg shadow-gold-500/20 flex items-center justify-center">
               <div className="w-full h-full bg-[#0b0f19] rounded-[14px] flex items-center justify-center">
-                <Building2 className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-400" />
+                <Building2 className="w-5 h-5 sm:w-6 sm:h-6 text-gold-400" />
               </div>
             </div>
             <div>
               <div className="flex items-center space-x-2">
                 <h1 className="text-sm sm:text-base font-black tracking-tight uppercase">ANCLA</h1>
-                <span className="text-[10px] px-2 py-0.5 rounded-full font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                <span className="text-[10px] px-2 py-0.5 rounded-full font-bold bg-gold-500/10 text-gold-600 dark:text-gold-400 border border-gold-500/20">
                   Propuesta Oficial
                 </span>
               </div>
               <p className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium">
-                Special Projects LATAM • Expediente <span className="font-mono font-bold text-emerald-500">ANCLA-{model.id}</span>
+                Special Projects LATAM • Expediente <span className="font-mono font-bold text-gold-500">ANCLA-{model.id}</span>
               </p>
             </div>
           </div>
@@ -316,7 +316,7 @@ Me gustaría agendar una cita para revisar la viabilidad en mi terreno y procede
               }`}
               title="Copiar enlace de esta propuesta"
             >
-              {copiedLink ? <Check className="w-4 h-4 text-emerald-500" /> : <Share2 className="w-4 h-4" />}
+              {copiedLink ? <Check className="w-4 h-4 text-gold-500" /> : <Share2 className="w-4 h-4" />}
               <span className="hidden sm:inline">{copiedLink ? '¡Enlace Copiado!' : 'Compartir'}</span>
             </button>
 
@@ -336,12 +336,12 @@ Me gustaría agendar una cita para revisar la viabilidad en mi terreno y procede
       </header>
 
       {/* Banner Superior de Bienvenida al Cliente */}
-      <div className={`border-b ${themeMode === 'dark' ? 'bg-emerald-500/5 border-emerald-500/10' : 'bg-emerald-50 border-emerald-100'}`}>
+      <div className={`border-b ${themeMode === 'dark' ? 'bg-gold-500/5 border-gold-500/10' : 'bg-gold-50 border-gold-100'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-1">
             <div className="flex items-center space-x-2">
-              <User className="w-4 h-4 text-emerald-500" />
-              <span className="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
+              <User className="w-4 h-4 text-gold-500" />
+              <span className="text-xs font-bold uppercase tracking-wider text-gold-600 dark:text-gold-400">
                 Propuesta Diseñada Exclusivamente Para:
               </span>
             </div>
@@ -367,7 +367,7 @@ Me gustaría agendar una cita para revisar la viabilidad en mi terreno y procede
                 onClick={() => setSelectedModel(prod.id)}
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
                   selectedModel === prod.id
-                    ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/30'
+                    ? 'bg-navy-900 text-white shadow-md shadow-navy-900/30'
                     : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
@@ -393,10 +393,10 @@ Me gustaría agendar una cita para revisar la viabilidad en mi terreno y procede
               {/* Badge de Acabado Activo */}
               <div className="flex items-center justify-between mb-4">
                 <span className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center space-x-1.5">
-                  <Palette className="w-4 h-4 text-emerald-500" />
+                  <Palette className="w-4 h-4 text-gold-500" />
                   <span>Simulador de Acabado Arquitectónico</span>
                 </span>
-                <span className="text-xs font-bold px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
+                <span className="text-xs font-bold px-3 py-1 rounded-full bg-gold-500/10 text-gold-500 border border-gold-500/20">
                   {facade.badge}
                 </span>
               </div>
@@ -492,7 +492,7 @@ Me gustaría agendar una cita para revisar la viabilidad en mi terreno y procede
                       onClick={() => setFacadeKey(theme.id)}
                       className={`p-3 rounded-2xl border text-left transition-all cursor-pointer relative ${
                         facadeKey === theme.id
-                          ? 'border-emerald-500 bg-emerald-500/10 ring-2 ring-emerald-500/30'
+                          ? 'border-gold-500 bg-gold-500/10 ring-2 ring-gold-500/30'
                           : 'border-slate-200 dark:border-white/5 hover:border-slate-300 dark:hover:border-white/20'
                       }`}
                     >
@@ -514,14 +514,14 @@ Me gustaría agendar una cita para revisar la viabilidad en mi terreno y procede
             <div className={`p-6 sm:p-8 rounded-3xl border shadow-xl ${
               themeMode === 'dark' ? 'bg-[#111827]/80 border-white/10' : 'bg-white border-slate-200'
             }`}>
-              <h3 className="text-sm font-bold uppercase tracking-wider mb-4 flex items-center space-x-2 text-emerald-500">
+              <h3 className="text-sm font-bold uppercase tracking-wider mb-4 flex items-center space-x-2 text-gold-500">
                 <ShieldCheck className="w-5 h-5" />
                 <span>Garantías y Especificaciones Constructivas ({model.name})</span>
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {model.specs_highlights.map((spec, i) => (
                   <div key={i} className="flex items-start space-x-2.5 p-3 rounded-2xl bg-black/5 dark:bg-white/5 border border-slate-200 dark:border-white/5 text-xs">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                    <CheckCircle2 className="w-4 h-4 text-gold-500 shrink-0 mt-0.5" />
                     <span className="font-medium text-slate-700 dark:text-slate-300">{spec}</span>
                   </div>
                 ))}
@@ -534,11 +534,11 @@ Me gustaría agendar una cita para revisar la viabilidad en mi terreno y procede
             
             {/* Tarjeta de Cotización Dinámica en COP */}
             <div className={`p-6 sm:p-8 rounded-3xl border shadow-2xl space-y-6 sticky top-24 ${
-              themeMode === 'dark' ? 'bg-[#111827] border-emerald-500/30' : 'bg-white border-emerald-300'
+              themeMode === 'dark' ? 'bg-[#111827] border-gold-500/30' : 'bg-white border-gold-300'
             }`}>
               
               <div className="border-b pb-4 dark:border-white/10">
-                <span className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">
+                <span className="text-[11px] font-bold text-gold-600 dark:text-gold-400 uppercase tracking-wider">
                   Configurador Comercial
                 </span>
                 <h3 className="text-xl font-black">{model.name}</h3>
@@ -562,11 +562,11 @@ Me gustaría agendar una cita para revisar la viabilidad en mi terreno y procede
                         type="checkbox" 
                         checked={includeDeck} 
                         onChange={(e) => setIncludeDeck(e.target.checked)}
-                        className="rounded text-emerald-600 focus:ring-emerald-500 w-4 h-4 cursor-pointer"
+                        className="rounded text-gold-600 focus:ring-gold-500 w-4 h-4 cursor-pointer"
                       />
                       <span>Deck Exterior WPC</span>
                     </label>
-                    <span className="font-mono font-bold text-emerald-600 dark:text-emerald-400 tabular-nums">
+                    <span className="font-mono font-bold text-gold-600 dark:text-gold-400 tabular-nums">
                       +{formatCOP(pricing.deck)}
                     </span>
                   </div>
@@ -580,7 +580,7 @@ Me gustaría agendar una cita para revisar la viabilidad en mi terreno y procede
                         step="5"
                         value={deckArea} 
                         onChange={(e) => setDeckArea(e.target.value)}
-                        className="w-28 accent-emerald-500 cursor-pointer"
+                        className="w-28 accent-gold-500 cursor-pointer"
                       />
                     </div>
                   )}
@@ -593,14 +593,14 @@ Me gustaría agendar una cita para revisar la viabilidad en mi terreno y procede
                       type="checkbox" 
                       checked={includeSolar} 
                       onChange={(e) => setIncludeSolar(e.target.checked)}
-                      className="rounded text-emerald-600 focus:ring-emerald-500 w-4 h-4 cursor-pointer"
+                      className="rounded text-gold-600 focus:ring-gold-500 w-4 h-4 cursor-pointer"
                     />
                     <span className="flex items-center space-x-1">
                       <Sun className="w-3.5 h-3.5 text-amber-500" />
                       <span>Kit Solar Off-Grid (Litio)</span>
                     </span>
                   </label>
-                  <span className="font-mono font-bold text-emerald-600 dark:text-emerald-400 tabular-nums">
+                  <span className="font-mono font-bold text-gold-600 dark:text-gold-400 tabular-nums">
                     +{formatCOP(pricing.solar)}
                   </span>
                 </div>
@@ -613,14 +613,14 @@ Me gustaría agendar una cita para revisar la viabilidad en mi terreno y procede
                         type="checkbox" 
                         checked={includeAC} 
                         onChange={(e) => setIncludeAC(e.target.checked)}
-                        className="rounded text-emerald-600 focus:ring-emerald-500 w-4 h-4 cursor-pointer"
+                        className="rounded text-gold-600 focus:ring-gold-500 w-4 h-4 cursor-pointer"
                       />
                       <span className="flex items-center space-x-1">
                         <Wind className="w-3.5 h-3.5 text-blue-500" />
                         <span>A.A. Inverter 12.000 BTU</span>
                       </span>
                     </label>
-                    <span className="font-mono font-bold text-emerald-600 dark:text-emerald-400 tabular-nums">
+                    <span className="font-mono font-bold text-gold-600 dark:text-gold-400 tabular-nums">
                       +{formatCOP(pricing.ac)}
                     </span>
                   </div>
@@ -633,7 +633,7 @@ Me gustaría agendar una cita para revisar la viabilidad en mi terreno y procede
                             key={num}
                             onClick={() => setAcUnits(num)}
                             className={`px-2 py-0.5 rounded text-[10px] font-bold cursor-pointer ${
-                              acUnits === num ? 'bg-emerald-600 text-white' : 'bg-slate-200 dark:bg-white/10'
+                              acUnits === num ? 'bg-navy-900 text-white' : 'bg-slate-200 dark:bg-white/10'
                             }`}
                           >
                             {num}
@@ -650,7 +650,7 @@ Me gustaría agendar una cita para revisar la viabilidad en mi terreno y procede
                     <span className="font-bold flex items-center space-x-1 text-slate-700 dark:text-slate-300">
                       <span>🚚 Flete e Instalación ({freightKm} km)</span>
                     </span>
-                    <span className="font-mono font-bold text-emerald-600 dark:text-emerald-400 tabular-nums">
+                    <span className="font-mono font-bold text-gold-600 dark:text-gold-400 tabular-nums">
                       +{formatCOP(pricing.freight)}
                     </span>
                   </div>
@@ -661,7 +661,7 @@ Me gustaría agendar una cita para revisar la viabilidad en mi terreno y procede
                     step="20"
                     value={freightKm} 
                     onChange={(e) => setFreightKm(e.target.value)}
-                    className="w-full accent-emerald-500 cursor-pointer"
+                    className="w-full accent-gold-500 cursor-pointer"
                   />
                   <div className="flex justify-between text-[10px] text-slate-400">
                     <span>Eje Cafetero (50km)</span>
@@ -672,15 +672,15 @@ Me gustaría agendar una cita para revisar la viabilidad en mi terreno y procede
               </div>
 
               {/* Total Inversión en Pesos Colombianos (COP) */}
-              <div className="p-5 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-700 text-white shadow-xl space-y-2">
-                <div className="flex justify-between items-center text-xs text-emerald-100 uppercase tracking-wider font-bold">
+              <div className="p-5 rounded-2xl bg-gradient-to-br from-navy-900 to-navy-800 text-white shadow-xl space-y-2">
+                <div className="flex justify-between items-center text-xs text-gold-100 uppercase tracking-wider font-bold">
                   <span>Inversión Total Estimada:</span>
                   <span className="bg-white/20 px-2 py-0.5 rounded text-[10px]">100% COP</span>
                 </div>
                 <div className="text-2xl sm:text-3xl font-black font-mono tracking-tight tabular-nums">
-                  {formatCOP(pricing.total)} <span className="text-sm font-sans font-medium text-emerald-200">COP</span>
+                  {formatCOP(pricing.total)} <span className="text-sm font-sans font-medium text-gold-200">COP</span>
                 </div>
-                <p className="text-[11px] text-emerald-100/90 leading-tight">
+                <p className="text-[11px] text-gold-100/90 leading-tight">
                   Incluye módulos ensamblados, acabados arquitectónicos, flete terrestre e instalación en sitio.
                 </p>
               </div>
@@ -693,10 +693,10 @@ Me gustaría agendar una cita para revisar la viabilidad en mi terreno y procede
                 
                 <div className="flex items-center justify-between text-xs py-1 border-b dark:border-white/5">
                   <span className="flex items-center space-x-1.5 font-medium">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                    <span className="w-2 h-2 rounded-full bg-gold-500"></span>
                     <span>50% Anticipo de Fabricación:</span>
                   </span>
-                  <span className="font-mono font-bold text-emerald-600 dark:text-emerald-400 tabular-nums">
+                  <span className="font-mono font-bold text-gold-600 dark:text-gold-400 tabular-nums">
                     {formatCOP(pricing.anticipo50)}
                   </span>
                 </div>
@@ -715,7 +715,7 @@ Me gustaría agendar una cita para revisar la viabilidad en mi terreno y procede
               {/* Botón de Conversión WhatsApp Directo */}
               <button
                 onClick={handleWhatsAppAction}
-                className="w-full py-4 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-500 hover:from-emerald-500 hover:to-teal-400 text-white font-black text-sm rounded-2xl shadow-xl shadow-emerald-600/30 active:scale-[0.98] transition-all cursor-pointer flex items-center justify-center space-x-2"
+                className="w-full py-4 bg-navy-900 hover:bg-navy-800 text-white font-black text-sm rounded-2xl shadow-xl shadow-navy-900/30 active:scale-[0.98] transition-all cursor-pointer flex items-center justify-center space-x-2"
               >
                 <Send className="w-4 h-4" />
                 <span>Aceptar Propuesta & Agendar Visita</span>
@@ -735,8 +735,8 @@ Me gustaría agendar una cita para revisar la viabilidad en mi terreno y procede
         }`}>
           
           <div className="space-y-1">
-            <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider flex items-center space-x-1.5">
-              <Wrench className="w-4 h-4 text-emerald-500" />
+            <span className="text-xs font-bold text-gold-600 dark:text-gold-400 uppercase tracking-wider flex items-center space-x-1.5">
+              <Wrench className="w-4 h-4 text-gold-500" />
               <span>Guía Técnica para el Cliente</span>
             </span>
             <h3 className="text-xl sm:text-2xl font-black">Requisitos de Obras Civiles en Terreno</h3>
@@ -750,10 +750,10 @@ Me gustaría agendar una cita para revisar la viabilidad en mi terreno y procede
             {/* Requisito 1: Cimentación */}
             <div className={`p-5 rounded-2xl border space-y-3 ${
               openAccordion === 'cimentacion' 
-                ? 'border-emerald-500 bg-emerald-500/5 dark:bg-emerald-500/10' 
+                ? 'border-gold-500 bg-gold-500/5 dark:bg-gold-500/10' 
                 : 'border-slate-200 dark:border-white/5 bg-black/5 dark:bg-white/5'
             }`}>
-              <div className="flex items-center space-x-2 text-emerald-500">
+              <div className="flex items-center space-x-2 text-gold-500">
                 <Layers className="w-5 h-5" />
                 <h4 className="font-bold text-sm">1. Cimentación / Dados</h4>
               </div>
@@ -780,10 +780,10 @@ Me gustaría agendar una cita para revisar la viabilidad en mi terreno y procede
             {/* Requisito 3: Hidrosanitaria */}
             <div className={`p-5 rounded-2xl border space-y-3 ${
               openAccordion === 'hidraulica' 
-                ? 'border-teal-500 bg-teal-500/5 dark:bg-teal-500/10' 
+                ? 'border-gold-500 bg-gold-500/5 dark:bg-gold-500/10' 
                 : 'border-slate-200 dark:border-white/5 bg-black/5 dark:bg-white/5'
             }`}>
-              <div className="flex items-center space-x-2 text-teal-500">
+              <div className="flex items-center space-x-2 text-gold-500">
                 <Droplet className="w-5 h-5" />
                 <h4 className="font-bold text-sm">3. Agua & Desagüe</h4>
               </div>

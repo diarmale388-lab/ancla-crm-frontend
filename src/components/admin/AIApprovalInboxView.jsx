@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useAuthStore } from '../../store/useAuthStore';
 import { 
   ShieldCheck, 
@@ -202,7 +202,7 @@ export const AIApprovalInboxView = () => {
       {/* Cabecera Superior */}
       <div className="p-6 bg-white dark:bg-dark-900 border-b border-slate-200 dark:border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-4 flex-shrink-0">
         <div className="flex items-center space-x-3.5">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-500/20 via-emerald-500/20 to-teal-500/20 border border-amber-500/30 flex items-center justify-center text-amber-500 shadow-sm flex-shrink-0">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-gold-500/20 via-navy-900/20 to-gold-500/20 border border-amber-500/30 flex items-center justify-center text-amber-500 shadow-sm flex-shrink-0">
             <ShieldCheck className="w-6 h-6" />
           </div>
           <div>
@@ -232,7 +232,7 @@ export const AIApprovalInboxView = () => {
           
           <button
             onClick={() => setShowCreateModal(true)}
-            className="flex items-center space-x-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-md shadow-emerald-500/20 transition-all active:scale-95 cursor-pointer"
+            className="flex items-center space-x-2 bg-navy-900 hover:bg-navy-800 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-md shadow-gold-500/20 transition-all active:scale-95 cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             <span>Nueva Directriz Oficial</span>
@@ -263,8 +263,8 @@ export const AIApprovalInboxView = () => {
           onClick={() => setActiveFilter('APPROVED')}
           className={`flex items-center space-x-2 px-4 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
             activeFilter === 'APPROVED'
-              ? 'bg-emerald-600 text-white shadow-md shadow-emerald-500/20'
-              : 'bg-white dark:bg-dark-800 text-slate-600 dark:text-slate-300 hover:bg-emerald-50 dark:hover:bg-emerald-500/10'
+              ? 'bg-navy-900 text-white shadow-md shadow-gold-500/20'
+              : 'bg-white dark:bg-dark-800 text-slate-600 dark:text-slate-300 hover:bg-gold-50 dark:hover:bg-gold-500/10'
           }`}
         >
           <CheckCircle2 className="w-3.5 h-3.5" />
@@ -299,7 +299,7 @@ export const AIApprovalInboxView = () => {
       <div className="flex-1 p-6 overflow-y-auto space-y-4">
         {loading ? (
           <div className="flex flex-col items-center justify-center h-64 text-slate-400 space-y-3">
-            <div className="w-8 h-8 border-3 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
+            <div className="w-8 h-8 border-3 border-gold-500 border-t-transparent rounded-full animate-spin"></div>
             <p className="text-xs font-bold">Consultando directrices oficiales...</p>
           </div>
         ) : filteredApprovals.length === 0 ? (
@@ -329,7 +329,7 @@ export const AIApprovalInboxView = () => {
                   isPending 
                     ? 'border-amber-500/40 dark:border-amber-500/30 bg-gradient-to-r from-amber-500/[0.02] to-transparent' 
                     : isApproved
-                      ? 'border-emerald-500/30 dark:border-emerald-500/20'
+                      ? 'border-gold-500/30 dark:border-gold-500/20'
                       : 'border-slate-200 dark:border-white/5 opacity-75'
                 }`}
               >
@@ -362,7 +362,7 @@ export const AIApprovalInboxView = () => {
                       isPending
                         ? 'bg-amber-500/20 text-amber-600 dark:text-amber-400'
                         : isApproved
-                          ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400'
+                          ? 'bg-gold-500/20 text-gold-600 dark:text-gold-400'
                           : 'bg-red-500/20 text-red-600 dark:text-red-400'
                     }`}>
                       {isPending ? '⏳ Pendiente' : isApproved ? '✅ En Producción' : '❌ Descartada'}
@@ -389,8 +389,8 @@ export const AIApprovalInboxView = () => {
                   )}
                 </div>
 
-                <div className="mb-4 p-3.5 bg-emerald-500/5 dark:bg-emerald-500/[0.03] rounded-xl border border-emerald-500/20">
-                  <div className="text-[11px] font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider mb-1 flex items-center space-x-1.5">
+                <div className="mb-4 p-3.5 bg-gold-500/5 dark:bg-gold-500/[0.03] rounded-xl border border-gold-500/20">
+                  <div className="text-[11px] font-bold text-gold-700 dark:text-gold-400 uppercase tracking-wider mb-1 flex items-center space-x-1.5">
                     <MessageSquareQuote className="w-3.5 h-3.5" />
                     <span>Respuesta Oficial Autorizada para Sofi AI:</span>
                   </div>
@@ -425,7 +425,7 @@ export const AIApprovalInboxView = () => {
                         <button
                           onClick={() => handleApprove(item.id, { topic: editTopic, question: editQuestion, answer: editAnswer })}
                           disabled={actionLoading === item.id}
-                          className="px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold flex items-center space-x-1.5 shadow-sm cursor-pointer"
+                          className="px-3.5 py-1.5 rounded-lg bg-navy-900 hover:bg-navy-800 text-white font-bold flex items-center space-x-1.5 shadow-sm cursor-pointer"
                         >
                           <Save className="w-3.5 h-3.5" />
                           <span>Guardar y Aprobar</span>
@@ -467,7 +467,7 @@ export const AIApprovalInboxView = () => {
                             <button
                               onClick={() => handleApprove(item.id)}
                               disabled={actionLoading === item.id}
-                              className="px-4 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold flex items-center space-x-1.5 shadow-md shadow-emerald-500/20 cursor-pointer active:scale-95"
+                              className="px-4 py-1.5 rounded-lg bg-navy-900 hover:bg-navy-800 text-white font-bold flex items-center space-x-1.5 shadow-md shadow-gold-500/20 cursor-pointer active:scale-95"
                             >
                               <CheckCircle2 className="w-4 h-4" />
                               <span>Aprobar para Sofi AI</span>
@@ -479,7 +479,7 @@ export const AIApprovalInboxView = () => {
                           <button
                             onClick={() => handleApprove(item.id)}
                             disabled={actionLoading === item.id}
-                            className="px-3 py-1.5 rounded-lg bg-emerald-600/20 border border-emerald-500/40 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-600 hover:text-white font-bold cursor-pointer transition-all"
+                            className="px-3 py-1.5 rounded-lg bg-navy-900/20 border border-gold-500/40 text-gold-600 dark:text-gold-400 hover:bg-navy-900 hover:text-white font-bold cursor-pointer transition-all"
                           >
                             Reactivar y Aprobar
                           </button>
@@ -499,7 +499,7 @@ export const AIApprovalInboxView = () => {
           <div className="bg-white dark:bg-dark-900 border border-slate-200 dark:border-white/10 rounded-2xl w-full max-w-lg shadow-2xl p-6">
             <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-white/5 mb-4">
               <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-xl bg-gold-500/10 text-gold-500 flex items-center justify-center">
                   <Plus className="w-5 h-5" />
                 </div>
                 <h3 className="text-base font-bold text-slate-900 dark:text-white">
@@ -568,7 +568,7 @@ export const AIApprovalInboxView = () => {
                 <button
                   type="submit"
                   disabled={creating}
-                  className="px-5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold flex items-center space-x-1.5 shadow-md shadow-emerald-500/20 cursor-pointer"
+                  className="px-5 py-2 rounded-xl bg-navy-900 hover:bg-navy-800 text-white text-xs font-bold flex items-center space-x-1.5 shadow-md shadow-gold-500/20 cursor-pointer"
                 >
                   {creating ? (
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />

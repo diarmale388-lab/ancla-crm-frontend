@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useChatStore } from '../../store/useChatStore';
 import { useSettingsStore } from '../../store/useSettingsStore';
 import { useAuthStore } from '../../store/useAuthStore';
@@ -401,7 +401,7 @@ export const ContactList = () => {
               </div>
               <button
                 onClick={() => { setActiveFilter('potencial'); setShowFilterDropdown(false); }}
-                className="w-full px-2.5 py-1.5 text-left rounded-lg font-bold flex items-center justify-between hover:bg-emerald-50 dark:hover:bg-emerald-950/30 text-emerald-700 dark:text-emerald-300"
+                className="w-full px-2.5 py-1.5 text-left rounded-lg font-bold flex items-center justify-between hover:bg-gold-50 dark:hover:bg-gold-500/10 text-gold-700 dark:text-gold-300"
               >
                 <span>🟢 Potencial / Caliente</span>
                 {activeFilter === 'potencial' && <Check className="w-3.5 h-3.5" />}
@@ -426,7 +426,7 @@ export const ContactList = () => {
               </div>
               <button
                 onClick={() => { setActiveFilter('whatsapp'); setShowFilterDropdown(false); }}
-                className="w-full px-2.5 py-1.5 text-left rounded-lg font-bold flex items-center justify-between hover:bg-emerald-50 dark:hover:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400"
+                className="w-full px-2.5 py-1.5 text-left rounded-lg font-bold flex items-center justify-between hover:bg-gold-50 dark:hover:bg-gold-500/10 text-gold-600 dark:text-gold-400"
               >
                 <span>💬 WhatsApp</span>
                 {activeFilter === 'whatsapp' && <Check className="w-3.5 h-3.5" />}
@@ -548,7 +548,7 @@ export const ContactList = () => {
                         {contact.qualification_level && (
                           <span 
                             className={`text-[8px] px-1 py-0.5 rounded-full font-extrabold ${
-                              contact.qualification_level === 'potencial' ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20' :
+                              contact.qualification_level === 'potencial' ? 'bg-gold-500/10 text-gold-600 dark:text-gold-400 border border-gold-500/20' :
                               contact.qualification_level === 'explorador' ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20' :
                               'bg-slate-500/10 text-slate-500 dark:text-slate-400 border border-slate-500/20'
                             }`}

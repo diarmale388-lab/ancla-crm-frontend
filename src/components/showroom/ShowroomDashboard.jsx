@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useChatStore } from '../../store/useChatStore';
 import {
   Building,
@@ -241,7 +241,7 @@ export const ShowroomDashboard = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 print:hidden">
         {[
           { label: 'Total Filtrados', value: statTotal, suffix: 'contactos', accent: 'before:bg-gold-500' },
-          { label: 'Presenciales Showroom', value: statPresencial, suffix: 'visitas', accent: 'before:bg-emerald-500' },
+          { label: 'Presenciales Showroom', value: statPresencial, suffix: 'visitas', accent: 'before:bg-gold-500' },
           { label: 'Asesorías Virtuales', value: statVirtual, suffix: 'llamadas', accent: 'before:bg-sky-500' },
           { label: 'Clientes con Lote', value: statLote, suffix: 'lotes', accent: 'before:bg-gold-400' },
         ].map((stat) => (

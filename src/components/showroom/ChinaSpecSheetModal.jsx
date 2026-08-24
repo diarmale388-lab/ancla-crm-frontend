@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { X, Factory, Ship, ShieldCheck, Download, FileText, CheckCircle2, AlertTriangle, Paperclip } from 'lucide-react';
 
 export default function ChinaSpecSheetModal({ isOpen, onClose, contact, deal }) {
@@ -128,15 +128,15 @@ export default function ChinaSpecSheetModal({ isOpen, onClose, contact, deal }) 
                       <FileText className="w-4 h-4 text-blue-500" />
                       <span>Packing_List_Export_ANCLA.pdf</span>
                     </span>
-                    <button className="text-emerald-500 font-bold hover:underline">Descargar</button>
+                    <button className="text-gold-500 font-bold hover:underline">Descargar</button>
                   </div>
 
                   <div className="flex items-center justify-between p-2.5 rounded-xl bg-white dark:bg-dark-900 border border-slate-200 dark:border-white/5 text-xs">
                     <span className="font-semibold text-slate-700 dark:text-slate-300 flex items-center space-x-2">
-                      <ShieldCheck className="w-4 h-4 text-emerald-500" />
+                      <ShieldCheck className="w-4 h-4 text-gold-500" />
                       <span>Factory_Inspection_Certificate.pdf</span>
                     </span>
-                    <button className="text-emerald-500 font-bold hover:underline">Descargar</button>
+                    <button className="text-gold-500 font-bold hover:underline">Descargar</button>
                   </div>
                 </div>
               </div>

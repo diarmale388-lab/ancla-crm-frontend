@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { X, Send, Sparkles, Mail, FileText, Check, AlertCircle } from 'lucide-react';
 
 export default function EmailPreviewModal({ isOpen, onClose, contact, pdfPath, initialSubject, initialBody, onConfirmSend }) {
@@ -49,7 +49,7 @@ export default function EmailPreviewModal({ isOpen, onClose, contact, pdfPath, i
 
         {/* Notificaciones */}
         {successMsg && (
-          <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold flex items-center space-x-2">
+          <div className="p-3 rounded-xl bg-gold-500/10 border border-gold-500/20 text-gold-600 dark:text-gold-400 text-xs font-bold flex items-center space-x-2">
             <Check className="w-4 h-4 shrink-0" />
             <span>{successMsg}</span>
           </div>
@@ -114,7 +114,7 @@ export default function EmailPreviewModal({ isOpen, onClose, contact, pdfPath, i
             type="button"
             disabled={sending || !contact.email}
             onClick={handleSend}
-            className="px-5 py-2.5 rounded-xl bg-brand-emerald hover:bg-brand-emeraldHover text-white font-bold text-xs shadow-md transition-all flex items-center space-x-2 disabled:opacity-50 cursor-pointer"
+            className="px-5 py-2.5 rounded-xl bg-navy-900 hover:bg-navy-800 text-white font-bold text-xs shadow-md transition-all flex items-center space-x-2 disabled:opacity-50 cursor-pointer"
           >
             {sending ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div> : <><Send className="w-4 h-4" /><span>Confirmar & Despachar Correo</span></>}
           </button>

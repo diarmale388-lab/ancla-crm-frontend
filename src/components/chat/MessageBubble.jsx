@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Check, CheckCheck, AlertCircle, Bot, Lock, CornerUpLeft, Forward, Pencil, Trash2, FileText, Download, FileSpreadsheet } from 'lucide-react';
 import { useChatStore } from '../../store/useChatStore';
 import { buildAuthenticatedMediaUrl } from '../../utils/media';
@@ -209,7 +209,7 @@ export const MessageBubble = ({ message, onImageClick, onReply, onForward, onEdi
                     className="flex items-center space-x-3 bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/15 p-2.5 rounded-xl border border-black/10 dark:border-white/10 transition-all group/doc"
                   >
                     <div className="w-9 h-9 rounded-lg bg-rose-500/10 dark:bg-rose-500/20 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0">
-                      {isPdf ? <FileText className="w-5 h-5" /> : isExcel ? <FileSpreadsheet className="w-5 h-5 text-emerald-600" /> : <FileText className="w-5 h-5 text-blue-600" />}
+                      {isPdf ? <FileText className="w-5 h-5" /> : isExcel ? <FileSpreadsheet className="w-5 h-5 text-gold-600" /> : <FileText className="w-5 h-5 text-blue-600" />}
                     </div>
                     <div className="min-w-0 flex-1">
                       <span className="text-xs font-bold text-slate-800 dark:text-slate-100 truncate block group-hover/doc:text-gold-500 transition-colors">

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+﻿import React, { useState, useEffect, useRef } from 'react';
 import { X, Download, ZoomIn, ZoomOut, RotateCw, RefreshCw, ChevronLeft, ChevronRight } from 'lucide-react';
 
 export const ImageViewerModal = ({ 
@@ -133,7 +133,7 @@ export const ImageViewerModal = ({
           <span className="text-xs font-black tracking-wide text-slate-200 uppercase">
             Visualizador de Archivos
           </span>
-          <span className="text-[10.5px] font-mono px-2 py-0.5 rounded-md bg-white/10 text-emerald-400 font-bold">
+          <span className="text-[10.5px] font-mono px-2 py-0.5 rounded-md bg-white/10 text-gold-400 font-bold">
             {Math.round(zoom * 100)}%
           </span>
           {rotation > 0 && (
@@ -188,7 +188,7 @@ export const ImageViewerModal = ({
             download="whatsapp_imagen.jpg"
             target="_blank"
             rel="noreferrer"
-            className="p-2 rounded-xl bg-emerald-600/80 hover:bg-emerald-500 text-white transition-all cursor-pointer active:scale-95 flex items-center space-x-1.5 text-xs font-bold px-3"
+            className="p-2 rounded-xl bg-navy-900/90 hover:bg-navy-800 text-white transition-all cursor-pointer active:scale-95 flex items-center space-x-1.5 text-xs font-bold px-3"
             title="Descargar imagen en alta calidad"
           >
             <Download className="w-4 h-4" />
@@ -271,7 +271,7 @@ export const ImageViewerModal = ({
                 onClick={() => onNavigate && onNavigate(imgUrl)}
                 className={`w-12 h-12 sm:w-14 sm:h-14 object-cover rounded-xl cursor-pointer transition-all duration-200 border-2 ${
                   isActive 
-                    ? 'border-emerald-500 scale-105 shadow-md shadow-emerald-500/20 opacity-100 ring-2 ring-emerald-500/30' 
+                    ? 'border-gold-500 scale-105 shadow-md shadow-gold-500/20 opacity-100 ring-2 ring-gold-500/30' 
                     : 'border-white/10 opacity-50 hover:opacity-90 hover:scale-100'
                 }`}
                 alt={`Miniatura ${i + 1}`}

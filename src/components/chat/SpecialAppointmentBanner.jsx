@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Sparkles, Calendar, Clock, CheckCircle2, XCircle, ArrowRight, ShieldCheck, AlertCircle } from 'lucide-react';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useChatStore } from '../../store/useChatStore';
@@ -117,7 +117,7 @@ export default function SpecialAppointmentBanner({ contact, onActionSuccess }) {
   };
 
   return (
-    <div className="mx-3.5 mt-2.5 mb-1.5 p-3.5 rounded-2xl bg-gradient-to-r from-amber-500/15 via-emerald-500/10 to-teal-500/15 border-2 border-amber-500/30 dark:border-amber-400/30 shadow-md animate-fade-in text-slate-800 dark:text-slate-100">
+    <div className="mx-3.5 mt-2.5 mb-1.5 p-3.5 rounded-2xl bg-gradient-to-r from-gold-500/15 via-navy-900/10 to-gold-500/10 border-2 border-amber-500/30 dark:border-amber-400/30 shadow-md animate-fade-in text-slate-800 dark:text-slate-100">
       
       {/* Encabezado VIP */}
       <div className="flex items-center justify-between gap-2 mb-2">
@@ -148,7 +148,7 @@ export default function SpecialAppointmentBanner({ contact, onActionSuccess }) {
             type="button"
             disabled={loading || !isAdmin}
             onClick={() => handleApprove()}
-            className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white text-xs font-black flex items-center space-x-1.5 shadow-sm transition-all cursor-pointer disabled:opacity-50"
+            className="px-3.5 py-1.5 rounded-xl bg-navy-900 hover:bg-navy-800 active:bg-navy-950 text-white text-xs font-black flex items-center space-x-1.5 shadow-sm transition-all cursor-pointer disabled:opacity-50"
           >
             <CheckCircle2 className="w-3.5 h-3.5" />
             <span>{loading ? 'Procesando...' : '✅ Aceptar Cita VIP'}</span>
@@ -159,7 +159,7 @@ export default function SpecialAppointmentBanner({ contact, onActionSuccess }) {
             type="button"
             disabled={loading || !isAdmin}
             onClick={() => setShowCounterPicker(true)}
-            className="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold flex items-center space-x-1.5 shadow-sm transition-all cursor-pointer disabled:opacity-50"
+            className="px-3 py-1.5 rounded-xl bg-navy-900 hover:bg-navy-800 text-white text-xs font-bold flex items-center space-x-1.5 shadow-sm transition-all cursor-pointer disabled:opacity-50"
           >
             <Calendar className="w-3.5 h-3.5" />
             <span>🗓️ Proponer Otra Fecha/Hora</span>
@@ -212,7 +212,7 @@ export default function SpecialAppointmentBanner({ contact, onActionSuccess }) {
             <button
               type="submit"
               disabled={loading}
-              className="px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black shadow-xs cursor-pointer"
+              className="px-3 py-1 rounded-lg bg-navy-900 hover:bg-navy-800 text-white text-xs font-black shadow-xs cursor-pointer"
             >
               {loading ? 'Enviando...' : 'Enviar Propuesta al Cliente'}
             </button>
@@ -228,7 +228,7 @@ export default function SpecialAppointmentBanner({ contact, onActionSuccess }) {
       )}
 
       {statusMessage && (
-        <div className="mt-2 text-xs font-bold text-emerald-600 dark:text-emerald-400 flex items-center space-x-1.5">
+        <div className="mt-2 text-xs font-bold text-gold-600 dark:text-gold-400 flex items-center space-x-1.5">
           <CheckCircle2 className="w-3.5 h-3.5" />
           <span>{statusMessage}</span>
         </div>
