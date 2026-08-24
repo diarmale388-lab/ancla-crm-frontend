@@ -329,7 +329,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-0 sm:p-5 overflow-hidden animate-fade-in font-sans">
+    <div className="fixed inset-0 bg-navy-950/80 backdrop-blur-md z-50 flex items-end sm:items-center justify-center p-0 sm:p-5 overflow-hidden animate-fade-in font-sans">
       
       {/* Toast Flotante Central de Guardado Exitoso */}
       {savedSuccess && (
@@ -339,24 +339,29 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
         </div>
       )}
 
-      {/* Contenedor Principal con Dual Theme: #f8fafc en Claro / #0b0f19 en Oscuro */}
-      <div className="bg-[#f8fafc] dark:bg-[#0b0f19] border-0 sm:border border-[#e2e8f0] dark:border-[#334155] rounded-none sm:rounded-3xl w-full max-w-5xl h-full sm:h-[92vh] max-h-[100dvh] sm:max-h-[880px] flex flex-col shadow-2xl overflow-hidden text-[#0f172a] dark:text-[#f8fafc] transition-colors relative">
+      {/* Contenedor Principal: full-screen móvil / modal centrado desktop — Paleta ANCLA Navy/Oro */}
+      <div className="bg-slate-50 dark:bg-navy-950 border-0 sm:border border-slate-200 dark:border-navy-700 rounded-t-3xl sm:rounded-3xl w-full max-w-5xl h-[96dvh] sm:h-[92vh] max-h-[100dvh] sm:max-h-[880px] flex flex-col shadow-2xl overflow-hidden text-slate-900 dark:text-slate-100 transition-colors relative">
         
+        {/* Indicador drag handle — bottom-sheet móvil */}
+        <div className="sm:hidden flex justify-center pt-2 pb-0 shrink-0">
+          <div className="w-10 h-1 rounded-full bg-navy-700" />
+        </div>
+
         {/* 1. HEADER COMPACTO TIPO APP PWA NATIVA (2 FILAS MÁXIMO) */}
-        <div className="px-3.5 sm:px-6 py-2.5 sm:py-3 border-b border-[#e2e8f0] dark:border-[#334155] bg-[#f1f5f9] dark:bg-[#0f172a] flex flex-col gap-2 shrink-0">
+        <div className="px-3.5 sm:px-6 py-2.5 sm:py-3 border-b border-slate-200 dark:border-navy-700 bg-slate-100 dark:bg-navy-900 flex flex-col gap-2 shrink-0">
           
           {/* Fila 1: Datos Principales (Izquierda) + Acciones Principales (Derecha) */}
           <div className="flex items-center justify-between gap-2 min-w-0">
             <div className="flex items-center space-x-2 min-w-0">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-500 text-white font-black text-xs sm:text-base flex items-center justify-center shadow-sm shrink-0">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-gradient-to-tr from-gold-600 to-gold-500 text-navy-950 font-black text-xs sm:text-base flex items-center justify-center shadow-sm shrink-0">
                 {contact.first_name ? contact.first_name[0].toUpperCase() : 'C'}
               </div>
               <div className="min-w-0">
                 <div className="flex items-center space-x-1.5">
-                  <h3 className="text-xs sm:text-base font-black text-[#0f172a] dark:text-[#f8fafc] truncate">
+                  <h3 className="text-xs sm:text-base font-black text-slate-900 dark:text-slate-100 truncate">
                     {contact.first_name || 'Prospecto'} {contact.last_name || ''}
                   </h3>
-                  <span className="text-[9px] font-mono tabular-nums font-bold px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 shrink-0">
+                  <span className="text-[9px] font-mono tabular-nums font-bold px-1.5 py-0.5 rounded bg-slate-200 dark:bg-navy-800 text-slate-700 dark:text-slate-300 shrink-0">
                     #{contact.id}
                   </span>
                 </div>
@@ -371,7 +376,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
               <button
                 type="button"
                 onClick={handleOpenCrmChat}
-                className="px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 text-white font-bold text-xs flex items-center space-x-1 shadow-sm transition-all active:scale-95 cursor-pointer"
+                className="min-h-[44px] px-3 py-2 rounded-xl bg-gradient-to-r from-gold-600 to-gold-500 hover:from-gold-500 hover:to-gold-400 text-navy-950 font-bold text-xs flex items-center space-x-1 shadow-sm shadow-gold-500/20 transition-all active:scale-95 cursor-pointer"
               >
                 <MessageCircle className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline">Chat CRM</span>
@@ -379,7 +384,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
 
               <button
                 onClick={onClose}
-                className="p-1.5 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 transition-all cursor-pointer"
+                className="min-h-[44px] min-w-[44px] p-2 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-navy-800 transition-all cursor-pointer flex items-center justify-center"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -392,20 +397,20 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
               🏞️ {lotStatus || 'Buscando Lote'}
             </span>
             {lotCity && (
-              <span className="px-2.5 py-1 rounded-lg bg-slate-200/80 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300/50 dark:border-slate-700 font-semibold shrink-0">
+              <span className="px-2.5 py-1 rounded-lg bg-slate-200/80 dark:bg-navy-800 text-slate-700 dark:text-slate-300 border border-slate-300/50 dark:border-navy-700 font-semibold shrink-0">
                 📍 {lotCity}
               </span>
             )}
-            <span className="px-2.5 py-1 rounded-lg bg-slate-200/80 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300/50 dark:border-slate-700 font-semibold shrink-0">
+            <span className="px-2.5 py-1 rounded-lg bg-slate-200/80 dark:bg-navy-800 text-slate-700 dark:text-slate-300 border border-slate-300/50 dark:border-navy-700 font-semibold shrink-0">
               🏗️ {interestProduct || 'Flex Home 56m²'}
             </span>
-            <span className="px-2.5 py-1 rounded-lg bg-slate-200/80 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300/50 dark:border-slate-700 font-semibold shrink-0">
+            <span className="px-2.5 py-1 rounded-lg bg-slate-200/80 dark:bg-navy-800 text-slate-700 dark:text-slate-300 border border-slate-300/50 dark:border-navy-700 font-semibold shrink-0">
               💼 {clientType || 'Persona Natural'}
             </span>
 
             {/* Asesor Selector Pill */}
             <div 
-              className="flex items-center space-x-1.5 bg-slate-200/80 dark:bg-slate-800 border border-slate-300/50 dark:border-slate-700 rounded-lg px-2.5 py-1 shrink-0"
+              className="flex items-center space-x-1.5 bg-slate-200/80 dark:bg-navy-800 border border-slate-300/50 dark:border-navy-700 rounded-lg px-2.5 py-1 shrink-0"
               title="Asignar Asesor Comercial (Disponible para todos los perfiles)"
             >
               <span className="text-xs font-bold text-slate-600 dark:text-slate-400">👤 Asesor:</span>
@@ -414,17 +419,17 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                 onChange={(e) => setAssignedUserId(e.target.value ? parseInt(e.target.value, 10) : null)}
                 className="bg-transparent text-xs font-bold text-slate-800 dark:text-white focus:outline-none max-w-[150px] truncate cursor-pointer"
               >
-                <option value="" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white">Sin Asignar (Liliana / Admin)</option>
+                <option value="" className="bg-white dark:bg-navy-900 text-slate-800 dark:text-white">Sin Asignar (Liliana / Admin)</option>
                 {agents && agents.length > 0 ? (
                   agents.map((ag) => (
-                    <option key={ag.id} value={ag.id} className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white">
+                    <option key={ag.id} value={ag.id} className="bg-white dark:bg-navy-900 text-slate-800 dark:text-white">
                       {ag.full_name || ag.email} {ag.role ? `(${ag.role})` : ''}
                     </option>
                   ))
                 ) : (
                   <>
-                    <option value="3" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white">Liliana León (Directora)</option>
-                    <option value="4" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-white">Asesor Comercial ANCLA</option>
+                    <option value="3" className="bg-white dark:bg-navy-900 text-slate-800 dark:text-white">Liliana León (Directora)</option>
+                    <option value="4" className="bg-white dark:bg-navy-900 text-slate-800 dark:text-white">Asesor Comercial ANCLA</option>
                   </>
                 )}
               </select>
@@ -434,7 +439,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
             <button
               type="button"
               onClick={() => setShowDossierModal(true)}
-              className="px-2.5 py-1 rounded-lg bg-slate-200/80 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300/50 dark:border-slate-700 font-bold text-xs flex items-center space-x-1 transition-all cursor-pointer shrink-0 hover:bg-slate-300 dark:hover:bg-slate-700"
+              className="min-h-[44px] px-3 py-2 rounded-lg bg-slate-200/80 dark:bg-navy-800 text-slate-700 dark:text-slate-300 border border-slate-300/50 dark:border-navy-700 font-bold text-xs flex items-center space-x-1 transition-all cursor-pointer shrink-0 hover:bg-slate-300 dark:hover:bg-navy-700"
             >
               <DollarSign className="w-3.5 h-3.5 text-emerald-500" />
               <span>Dossier</span>
@@ -443,7 +448,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
             <button
               type="button"
               onClick={() => setShowChinaSpecs(true)}
-              className="px-2.5 py-1 rounded-lg bg-slate-200/80 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300/50 dark:border-slate-700 font-bold text-xs flex items-center space-x-1 transition-all cursor-pointer shrink-0 hover:bg-slate-300 dark:hover:bg-slate-700"
+              className="min-h-[44px] px-3 py-2 rounded-lg bg-slate-200/80 dark:bg-navy-800 text-slate-700 dark:text-slate-300 border border-slate-300/50 dark:border-navy-700 font-bold text-xs flex items-center space-x-1 transition-all cursor-pointer shrink-0 hover:bg-slate-300 dark:hover:bg-navy-700"
             >
               <Factory className="w-3.5 h-3.5 text-indigo-400" />
               <span>China</span>
@@ -452,7 +457,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
         </div>
 
         {/* 2. BARRA DE 3 PESTAÑAS PRINCIPALES (COMPACTA Y SIN SCROLL CHAOS) */}
-        <div className="px-3 sm:px-6 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0f172a] flex items-center space-x-1 shrink-0 overflow-x-auto no-scrollbar">
+        <div className="px-3 sm:px-6 border-b border-slate-200 dark:border-navy-700 bg-white dark:bg-navy-900 flex items-center space-x-1 shrink-0 overflow-x-auto no-scrollbar">
           {[
             { id: 'perfil', label: 'Perfil & Requerimientos', icon: User },
             { id: 'resumen_ia', label: 'Resumen IA & Historial', icon: Sparkles },
@@ -465,13 +470,13 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                 key={tab.id}
                 type="button"
                 onClick={() => setActiveTab(tab.id)}
-                className={`py-3 px-3 sm:px-4 text-xs font-black flex items-center space-x-1.5 border-b-2 transition-all whitespace-nowrap cursor-pointer ${
+                className={`min-h-[44px] py-3 px-3 sm:px-4 text-xs font-black flex items-center space-x-1.5 border-b-2 transition-all whitespace-nowrap cursor-pointer ${
                   isActive
-                    ? 'border-emerald-500 text-emerald-600 dark:text-emerald-400'
+                    ? 'border-gold-500 text-gold-400 bg-gold-500/10'
                     : 'border-transparent text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
                 }`}
               >
-                <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-emerald-500' : 'text-slate-400'}`} />
+                <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-gold-500' : 'text-slate-400'}`} />
                 <span>{tab.label}</span>
               </button>
             );
@@ -488,14 +493,14 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
             <div className="space-y-5 animate-fade-in">
               
               {/* Bloque 1A: Selector Segmentado Unificado de Clasificación Comercial */}
-              <div className="p-4 rounded-2xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-[#334155] shadow-sm space-y-2.5">
+              <div className="p-4 rounded-2xl bg-white dark:bg-navy-800 border border-slate-200 dark:border-navy-700 shadow-sm space-y-2.5">
                 <span className="text-[11px] font-black uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center space-x-1.5">
-                  <Flame className="w-3.5 h-3.5 text-emerald-500" />
+                  <Flame className="w-3.5 h-3.5 text-gold-500" />
                   <span>Clasificación Comercial 1-Clic</span>
                 </span>
                 
                 {/* Selector Segmentado Unificado (Flex-Wrap Adaptativo de Alta Legibilidad sin Cortes) */}
-                <div className="bg-slate-100 dark:bg-slate-800/60 p-1.5 rounded-xl flex flex-wrap gap-1.5">
+                <div className="bg-slate-100 dark:bg-navy-800/60 p-1.5 rounded-xl flex flex-wrap gap-1.5">
                   {QUALIFICATION_LEVELS.map((lvl) => {
                     const isSelected = qualificationLevel === lvl.id;
                     return (
@@ -503,9 +508,9 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                         key={lvl.id}
                         type="button"
                         onClick={() => setQualificationLevel(lvl.id)}
-                        className={`flex-1 min-w-[65px] sm:min-w-[80px] py-1.5 px-2 rounded-lg text-xs font-bold flex items-center justify-center space-x-1 transition-all cursor-pointer select-none ${
+                        className={`flex-1 min-w-[65px] sm:min-w-[80px] min-h-[44px] py-1.5 px-2 rounded-lg text-xs font-bold flex items-center justify-center space-x-1 transition-all cursor-pointer select-none ${
                           isSelected 
-                            ? 'bg-white dark:bg-[#182235] text-[#0f172a] dark:text-[#f8fafc] shadow-xs ring-1 ring-emerald-500/50 font-black' 
+                            ? 'bg-white dark:bg-navy-800 text-slate-900 dark:text-slate-100 shadow-xs ring-1 ring-gold-500/50 font-black' 
                             : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
                         }`}
                       >
@@ -521,10 +526,10 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 
                 {/* Columna Izquierda: LOS 4 PILARES COMERCIALES DE ANCLA (RESPUESTAS DE LILIANA) */}
-                <div className="p-5 rounded-2xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-[#334155] shadow-sm space-y-3.5">
+                <div className="p-5 rounded-2xl bg-white dark:bg-navy-800 border border-slate-200 dark:border-navy-700 shadow-sm space-y-3.5">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center space-x-2">
-                      <Layers className="w-4 h-4 text-emerald-500" />
+                      <Layers className="w-4 h-4 text-gold-500" />
                       <span>Diagnóstico de Proyecto (Pilares ANCLA)</span>
                     </span>
                     <span className="text-[10px] font-extrabold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
@@ -538,7 +543,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                     <select
                       value={lotStatus || 'Por definir'}
                       onChange={(e) => setLotStatus(e.target.value)}
-                      className="w-full bg-slate-50 dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-black text-[#0f172a] dark:text-[#f8fafc] cursor-pointer focus:border-emerald-500"
+                      className="w-full bg-slate-50 dark:bg-navy-800 border border-slate-200 dark:border-navy-700 rounded-xl px-3 py-2 text-xs font-black text-slate-900 dark:text-slate-100 cursor-pointer focus:border-gold-500"
                     >
                       <option value="Por definir">❓ Por definir / Sin especificar</option>
                       <option value="Sí, ya tengo">✅ Sí, ya tiene lote propio listo</option>
@@ -555,7 +560,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                       type="text"
                       value={lotCity}
                       onChange={(e) => setLotCity(e.target.value)}
-                      className="w-full bg-slate-50 dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-bold text-[#0f172a] dark:text-[#f8fafc] focus:outline-none focus:border-emerald-500"
+                      className="w-full bg-slate-50 dark:bg-navy-800 border border-slate-200 dark:border-navy-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 dark:text-slate-100 focus:outline-none focus:border-gold-500"
                       placeholder="Ej: Armenia, Subachoque, Nemocón, Rionegro, Melgar"
                     />
                   </div>
@@ -566,7 +571,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                     <select
                       value={interestProduct || 'Por definir'}
                       onChange={(e) => setInterestProduct(e.target.value)}
-                      className="w-full bg-slate-50 dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-black text-[#0f172a] dark:text-[#f8fafc] cursor-pointer focus:border-emerald-500"
+                      className="w-full bg-slate-50 dark:bg-navy-800 border border-slate-200 dark:border-navy-700 rounded-xl px-3 py-2 text-xs font-black text-slate-900 dark:text-slate-100 cursor-pointer focus:border-gold-500"
                     >
                       <option value="Por definir">❓ Por definir / En evaluación</option>
                       <option value="Flex Home EXP-36">🏠 Flex Home EXP-36 (36m² - $118.800.000 COP)</option>
@@ -588,7 +593,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                     <select
                       value={clientType || 'Por definir'}
                       onChange={(e) => setClientType(e.target.value)}
-                      className="w-full bg-slate-50 dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-black text-[#0f172a] dark:text-[#f8fafc] cursor-pointer focus:border-emerald-500"
+                      className="w-full bg-slate-50 dark:bg-navy-800 border border-slate-200 dark:border-navy-700 rounded-xl px-3 py-2 text-xs font-black text-slate-900 dark:text-slate-100 cursor-pointer focus:border-gold-500"
                     >
                       <option value="Por definir">❓ Por definir</option>
                       <option value="Persona Natural">🏠 Persona Natural (Vivienda Propia / Campestre)</option>
@@ -601,20 +606,20 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                 {/* Columna Derecha: Evaluación Financiera & Datos de Contacto */}
                 <div className="space-y-4 flex flex-col justify-between">
                   {/* Tarjeta Financiera */}
-                  <div className="p-5 rounded-2xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-[#334155] shadow-sm space-y-3.5">
+                  <div className="p-5 rounded-2xl bg-white dark:bg-navy-800 border border-slate-200 dark:border-navy-700 shadow-sm space-y-3.5">
                     <span className="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center space-x-2">
-                      <DollarSign className="w-4 h-4 text-emerald-500" />
+                      <DollarSign className="w-4 h-4 text-gold-500" />
                       <span>Evaluación Financiera & Cotizaciones ($COP)</span>
                     </span>
 
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
                         <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1">Presupuesto ($ COP)</label>
                         <input
                           type="number"
                           value={estimatedBudget}
                           onChange={(e) => setEstimatedBudget(e.target.value)}
-                          className="w-full bg-slate-50 dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-mono tabular-nums font-bold text-[#0f172a] dark:text-[#f8fafc] focus:outline-none focus:border-emerald-500"
+                          className="w-full bg-slate-50 dark:bg-navy-800 border border-slate-200 dark:border-navy-700 rounded-xl px-3 py-2 text-xs font-mono tabular-nums font-bold text-slate-900 dark:text-slate-100 focus:outline-none focus:border-gold-500"
                           placeholder="Ej: 150000000"
                         />
                       </div>
@@ -624,7 +629,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                           type="number"
                           value={quotedValue}
                           onChange={(e) => setQuotedValue(e.target.value)}
-                          className="w-full bg-slate-50 dark:bg-[#182235] border border-emerald-500/40 rounded-xl px-3 py-2 text-xs font-mono tabular-nums font-black text-emerald-600 dark:text-emerald-400 focus:outline-none focus:border-emerald-500"
+                          className="w-full bg-slate-50 dark:bg-navy-800 border border-gold-500/40 rounded-xl px-3 py-2 text-xs font-mono tabular-nums font-black text-gold-600 dark:text-gold-400 focus:outline-none focus:border-gold-500"
                           placeholder="Ej: 78500000"
                         />
                       </div>
@@ -637,7 +642,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                           type="url"
                           value={proposalPdfUrl}
                           onChange={(e) => setProposalPdfUrl(e.target.value)}
-                          className="flex-1 bg-slate-50 dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-semibold text-[#0f172a] dark:text-[#f8fafc] focus:outline-none focus:border-emerald-500"
+                          className="flex-1 bg-slate-50 dark:bg-navy-800 border border-slate-200 dark:border-navy-700 rounded-xl px-3 py-2 text-xs font-semibold text-slate-900 dark:text-slate-100 focus:outline-none focus:border-gold-500"
                           placeholder="https://anclaspecialprojects.com/cotizacion.pdf"
                         />
                         {proposalPdfUrl && (
@@ -645,7 +650,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                             href={proposalPdfUrl}
                             target="_blank"
                             rel="noreferrer"
-                            className="px-3 py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold flex items-center justify-center shrink-0 hover:bg-emerald-500"
+                            className="min-h-[44px] px-3 py-2 bg-gradient-to-r from-gold-600 to-gold-500 hover:from-gold-500 hover:to-gold-400 text-navy-950 rounded-xl text-xs font-bold flex items-center justify-center shrink-0 shadow-sm shadow-gold-500/20"
                           >
                             <ExternalLink className="w-3.5 h-3.5" />
                           </a>
@@ -655,20 +660,20 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                   </div>
 
                   {/* Tarjeta de Contacto Directo */}
-                  <div className="p-5 rounded-2xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-[#334155] shadow-sm space-y-3">
+                  <div className="p-5 rounded-2xl bg-white dark:bg-navy-800 border border-slate-200 dark:border-navy-700 shadow-sm space-y-3">
                     <span className="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center space-x-2">
-                      <User className="w-4 h-4 text-emerald-500" />
+                      <User className="w-4 h-4 text-gold-500" />
                       <span>Datos Directos del Titular</span>
                     </span>
 
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
                         <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1">Nombre</label>
                         <input
                           type="text"
                           value={firstName}
                           onChange={(e) => setFirstName(e.target.value)}
-                          className="w-full bg-slate-50 dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-bold text-[#0f172a] dark:text-[#f8fafc]"
+                          className="w-full bg-slate-50 dark:bg-navy-800 border border-slate-200 dark:border-navy-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 dark:text-slate-100"
                         />
                       </div>
                       <div>
@@ -677,19 +682,19 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                           type="text"
                           value={lastName}
                           onChange={(e) => setLastName(e.target.value)}
-                          className="w-full bg-slate-50 dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-bold text-[#0f172a] dark:text-[#f8fafc]"
+                          className="w-full bg-slate-50 dark:bg-navy-800 border border-slate-200 dark:border-navy-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 dark:text-slate-100"
                         />
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
                         <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1">Teléfono</label>
                         <input
                           type="text"
                           value={phone}
                           onChange={(e) => setPhone(e.target.value)}
-                          className="w-full bg-slate-50 dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-mono font-bold text-[#0f172a] dark:text-[#f8fafc]"
+                          className="w-full bg-slate-50 dark:bg-navy-800 border border-slate-200 dark:border-navy-700 rounded-xl px-3 py-2 text-xs font-mono font-bold text-slate-900 dark:text-slate-100"
                         />
                       </div>
                       <div>
@@ -698,7 +703,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                           type="email"
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
-                          className="w-full bg-slate-50 dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-semibold text-[#0f172a] dark:text-[#f8fafc]"
+                          className="w-full bg-slate-50 dark:bg-navy-800 border border-slate-200 dark:border-navy-700 rounded-xl px-3 py-2 text-xs font-semibold text-slate-900 dark:text-slate-100"
                         />
                       </div>
                     </div>
@@ -709,14 +714,14 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
               </div>
 
               {/* Bloque 1C: Selectores de Viabilidad Comercial */}
-              <div className="p-4 rounded-2xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-[#334155] shadow-sm">
+              <div className="p-4 rounded-2xl bg-white dark:bg-navy-800 border border-slate-200 dark:border-navy-700 shadow-sm">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                   <div>
                     <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1">¿Respondió al Contacto?</label>
                     <select
                       value={contactResponseStatus}
                       onChange={(e) => setContactResponseStatus(e.target.value)}
-                      className="w-full bg-white dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-bold text-[#0f172a] dark:text-[#f8fafc] cursor-pointer"
+                      className="w-full bg-white dark:bg-navy-800 border border-slate-200 dark:border-navy-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 dark:text-slate-100 cursor-pointer"
                     >
                       <option value="ANSWERED">🟢 Sí respondió / Atendido</option>
                       <option value="NO_ANSWER">🟡 Sin respuesta / Buzón</option>
@@ -729,7 +734,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                     <select
                       value={hasConfirmedBudget ? 'true' : 'false'}
                       onChange={(e) => setHasConfirmedBudget(e.target.value === 'true')}
-                      className="w-full bg-white dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-bold text-[#0f172a] dark:text-[#f8fafc] cursor-pointer"
+                      className="w-full bg-white dark:bg-navy-800 border border-slate-200 dark:border-navy-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 dark:text-slate-100 cursor-pointer"
                     >
                       <option value="true">✅ Sí, presupuesto verificado</option>
                       <option value="false">❌ No / En trámite de crédito</option>
@@ -741,7 +746,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                     <select
                       value={commercialViability}
                       onChange={(e) => setCommercialViability(e.target.value)}
-                      className="w-full bg-white dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-bold text-[#0f172a] dark:text-[#f8fafc] cursor-pointer"
+                      className="w-full bg-white dark:bg-navy-800 border border-slate-200 dark:border-navy-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 dark:text-slate-100 cursor-pointer"
                     >
                       <option value="HIGH">🟢 Alta Viabilidad (Prioridad)</option>
                       <option value="MEDIUM">🟡 Media (En Evaluación)</option>
@@ -773,14 +778,14 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                     type="button"
                     onClick={handleGenerateAiSummary}
                     disabled={generatingAiSummary}
-                    className="px-3.5 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs flex items-center space-x-1.5 shadow-sm transition-all cursor-pointer disabled:opacity-50"
+                    className="min-h-[44px] px-3.5 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs flex items-center space-x-1.5 shadow-sm transition-all cursor-pointer disabled:opacity-50"
                   >
                     <RefreshCw className={`w-3.5 h-3.5 ${generatingAiSummary ? 'animate-spin' : ''}`} />
                     <span>{generatingAiSummary ? 'Analizando Chat...' : 'Actualizar Resumen IA'}</span>
                   </button>
                 </div>
 
-                <div className="text-xs font-medium text-[#0f172a] dark:text-[#f8fafc] whitespace-pre-line leading-relaxed bg-white dark:bg-[#182235] p-4 rounded-xl border border-purple-500/20 shadow-inner">
+                <div className="text-xs font-medium text-slate-900 dark:text-slate-100 whitespace-pre-line leading-relaxed bg-white dark:bg-navy-800 p-4 rounded-xl border border-purple-500/20 shadow-inner">
                   {qualificationNotes || (
                     <span className="text-slate-400 italic">
                       Presiona "Actualizar Resumen IA" para analizar la conversación de WhatsApp y generar los puntos clave de este cliente.
@@ -790,7 +795,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
               </div>
 
               {/* Bloque 2B: Registro Interactivo de Atención (Bitácora Pro) */}
-              <form onSubmit={handleAddBitacoraNote} className="p-5 rounded-2xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-[#334155] shadow-sm space-y-4">
+              <form onSubmit={handleAddBitacoraNote} className="p-5 rounded-2xl bg-white dark:bg-navy-800 border border-slate-200 dark:border-navy-700 shadow-sm space-y-4">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center space-x-1.5">
                     <Clock className="w-4 h-4 text-emerald-500" />
@@ -812,10 +817,10 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                         key={t.id}
                         type="button"
                         onClick={() => setNewNoteType(t.id)}
-                        className={`p-2 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
+                        className={`min-h-[44px] p-2 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
                           newNoteType === t.id
                             ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-950 border-slate-900 font-black shadow-sm'
-                            : 'bg-white dark:bg-[#182235] border-slate-200 dark:border-[#2e3b52] text-slate-600 dark:text-slate-300 hover:bg-slate-100'
+                            : 'bg-white dark:bg-navy-800 border-slate-200 dark:border-navy-700 text-slate-600 dark:text-slate-300 hover:bg-slate-100'
                         }`}
                       >
                         {t.label}
@@ -833,10 +838,10 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                         key={res.id}
                         type="button"
                         onClick={() => setCallResult(res.id)}
-                        className={`p-2 rounded-xl border text-xs font-bold flex items-center space-x-1.5 transition-all cursor-pointer ${
+                        className={`min-h-[44px] p-2 rounded-xl border text-xs font-bold flex items-center space-x-1.5 transition-all cursor-pointer ${
                           callResult === res.id
-                            ? `${res.color} shadow-sm ring-1 ring-emerald-500/50 scale-[1.01]`
-                            : 'bg-white dark:bg-[#182235] border-slate-200 dark:border-[#2e3b52] text-slate-600 dark:text-slate-300 hover:bg-slate-100'
+                            ? `${res.color} shadow-sm ring-1 ring-gold-500/50 scale-[1.01]`
+                            : 'bg-white dark:bg-navy-800 border-slate-200 dark:border-navy-700 text-slate-600 dark:text-slate-300 hover:bg-slate-100'
                         }`}
                       >
                         <span>{res.icon}</span>
@@ -853,7 +858,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                     <select
                       value={detectedObjection}
                       onChange={(e) => setDetectedObjection(e.target.value)}
-                      className="w-full bg-white dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-bold text-[#0f172a] dark:text-[#f8fafc] cursor-pointer"
+                      className="w-full bg-white dark:bg-navy-800 border border-slate-200 dark:border-navy-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 dark:text-slate-100 cursor-pointer"
                     >
                       {OBJECTIONS.map(obj => (
                         <option key={obj.id} value={obj.id}>{obj.icon} {obj.label}</option>
@@ -866,7 +871,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                     <select
                       value={nextAction}
                       onChange={(e) => setNextAction(e.target.value)}
-                      className="w-full bg-white dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-bold text-[#0f172a] dark:text-[#f8fafc] cursor-pointer"
+                      className="w-full bg-white dark:bg-navy-800 border border-slate-200 dark:border-navy-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 dark:text-slate-100 cursor-pointer"
                     >
                       {NEXT_ACTIONS.map(act => (
                         <option key={act.id} value={act.id}>{act.icon} {act.label}</option>
@@ -897,14 +902,14 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                     onChange={(e) => setNewNoteContent(e.target.value)}
                     rows={2}
                     placeholder="Escribe o dicta detalles clave de la llamada o atención..."
-                    className="w-full bg-white dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl p-3 text-xs font-medium text-[#0f172a] dark:text-[#f8fafc] focus:outline-none focus:border-emerald-500 resize-none"
+                    className="w-full bg-white dark:bg-navy-800 border border-slate-200 dark:border-navy-700 rounded-xl p-3 text-xs font-medium text-slate-900 dark:text-slate-100 focus:outline-none focus:border-gold-500 resize-none"
                   />
                 </div>
 
                 <div className="flex justify-end">
                   <button
                     type="submit"
-                    className="px-4 py-2 bg-slate-900 dark:bg-emerald-500 hover:bg-slate-800 dark:hover:bg-emerald-600 text-white font-bold rounded-xl text-xs flex items-center space-x-1.5 shadow-sm transition-all cursor-pointer"
+                    className="min-h-[44px] px-4 py-2 bg-navy-900 dark:bg-gold-500 hover:bg-navy-800 dark:hover:bg-gold-400 text-white dark:text-navy-950 font-bold rounded-xl text-xs flex items-center space-x-1.5 shadow-sm transition-all cursor-pointer"
                   >
                     <Send className="w-3.5 h-3.5" />
                     <span>Guardar Nota en Bitácora</span>
@@ -919,24 +924,24 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                 </span>
 
                 {bitacoraNotes.length === 0 ? (
-                  <p className="text-xs text-slate-400 italic text-center py-6 bg-white dark:bg-[#1e293b] rounded-2xl border border-slate-200 dark:border-[#334155]">
+                  <p className="text-xs text-slate-400 italic text-center py-6 bg-white dark:bg-navy-800 rounded-2xl border border-slate-200 dark:border-navy-700">
                     No hay atenciones registradas aún para este prospecto.
                   </p>
                 ) : (
-                  <div className="relative pl-6 space-y-4 before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200 dark:before:bg-slate-800">
+                  <div className="relative pl-6 space-y-4 before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200 dark:before:bg-navy-700">
                     {bitacoraNotes.map((n) => {
                       const resObj = CALL_RESULTS.find(r => r.id === n.call_result);
                       const objObj = OBJECTIONS.find(o => o.id === n.detected_objection);
                       const nextObj = NEXT_ACTIONS.find(a => a.id === n.next_action);
 
                       return (
-                        <div key={n.id} className="relative p-4 rounded-2xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-[#334155] space-y-2 shadow-sm">
+                        <div key={n.id} className="relative p-4 rounded-2xl bg-white dark:bg-navy-800 border border-slate-200 dark:border-navy-700 space-y-2 shadow-sm">
                           {/* Punto conector de la línea de tiempo */}
-                          <div className="absolute -left-[23px] top-4 w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-white dark:border-[#0b0f19] shadow-xs" />
+                          <div className="absolute -left-[23px] top-4 w-3.5 h-3.5 rounded-full bg-gold-500 border-2 border-white dark:border-navy-950 shadow-xs" />
 
-                          <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
+                          <div className="flex items-center justify-between border-b border-slate-100 dark:border-navy-700 pb-2">
                             <div className="flex items-center space-x-2">
-                              <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                              <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-slate-100 dark:bg-navy-800 text-slate-700 dark:text-slate-300">
                                 {n.note_type}
                               </span>
                               <span className="text-xs font-bold text-slate-600 dark:text-slate-300">
@@ -967,7 +972,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                         </div>
 
                         {n.content && (
-                          <p className="text-xs text-[#0f172a] dark:text-[#f8fafc] font-medium whitespace-pre-line pt-1">
+                          <p className="text-xs text-slate-900 dark:text-slate-100 font-medium whitespace-pre-line pt-1">
                             {n.content}
                           </p>
                         )}
@@ -988,8 +993,8 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
             <div className="space-y-5 animate-fade-in">
               
               {/* Bóveda de Documentos Legales y Pagos (Dinámica: Persona Natural vs Jurídica) */}
-              <div className="p-5 rounded-2xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-[#334155] shadow-sm space-y-4">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-[#334155] pb-3.5">
+              <div className="p-5 rounded-2xl bg-white dark:bg-navy-800 border border-slate-200 dark:border-navy-700 shadow-sm space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-navy-700 pb-3.5">
                   <div className="flex items-center space-x-2">
                     <ShieldCheck className="w-5 h-5 text-emerald-500" />
                     <div>
@@ -1003,13 +1008,13 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                   </div>
 
                   {/* Selector Toggle Persona Natural vs Persona Jurídica */}
-                  <div className="flex items-center bg-slate-100 dark:bg-[#182235] p-1 rounded-xl border border-slate-200 dark:border-[#2e3b52] self-start sm:self-auto">
+                  <div className="flex items-center bg-slate-100 dark:bg-navy-800 p-1 rounded-xl border border-slate-200 dark:border-navy-700 self-start sm:self-auto">
                     <button
                       type="button"
                       onClick={() => setClientType('Persona Natural')}
-                      className={`px-3 py-1 rounded-lg text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer ${
+                      className={`min-h-[44px] px-3 py-1 rounded-lg text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer ${
                         clientType !== 'Persona Jurídica' && clientType !== 'Empresa' && clientType !== 'Inversionista'
-                          ? 'bg-white dark:bg-emerald-600 text-emerald-600 dark:text-white shadow-xs'
+                          ? 'bg-white dark:bg-gold-500 text-gold-600 dark:text-navy-950 shadow-xs'
                           : 'text-slate-500 hover:text-slate-800 dark:text-slate-400'
                       }`}
                     >
@@ -1020,9 +1025,9 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                     <button
                       type="button"
                       onClick={() => setClientType('Persona Jurídica')}
-                      className={`px-3 py-1 rounded-lg text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer ${
+                      className={`min-h-[44px] px-3 py-1 rounded-lg text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer ${
                         clientType === 'Persona Jurídica' || clientType === 'Empresa' || clientType === 'Inversionista'
-                          ? 'bg-white dark:bg-emerald-600 text-emerald-600 dark:text-white shadow-xs'
+                          ? 'bg-white dark:bg-gold-500 text-gold-600 dark:text-navy-950 shadow-xs'
                           : 'text-slate-500 hover:text-slate-800 dark:text-slate-400'
                       }`}
                     >
@@ -1056,9 +1061,9 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                       const hasDoc = !!doc.url;
 
                       return (
-                        <div key={doc.key} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3.5 rounded-2xl bg-white dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] gap-2 shadow-xs transition-all hover:border-slate-300 dark:hover:border-slate-600">
+                        <div key={doc.key} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3.5 rounded-2xl bg-white dark:bg-navy-800 border border-slate-200 dark:border-navy-700 gap-2 shadow-xs transition-all hover:border-slate-300 dark:hover:border-slate-600">
                           <div className="flex items-center space-x-2.5 min-w-0">
-                            <div className={`p-2 rounded-xl bg-slate-50 dark:bg-dark-900 border border-slate-100 dark:border-slate-800 ${doc.color} shrink-0`}>
+                            <div className={`p-2 rounded-xl bg-slate-50 dark:bg-navy-900 border border-slate-100 dark:border-navy-700 ${doc.color} shrink-0`}>
                               <DocIcon className="w-4 h-4" />
                             </div>
                             <div className="min-w-0">
@@ -1075,7 +1080,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                                 href={doc.url.startsWith('http') ? doc.url : `${API_URL}/media/${doc.url}`}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="px-2.5 py-1 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-bold text-[10px] flex items-center space-x-1 transition-all"
+                                className="min-h-[44px] px-3 py-2 rounded-xl bg-gold-500/10 hover:bg-gold-500/20 text-gold-600 dark:text-gold-400 font-bold text-[10px] flex items-center space-x-1 transition-all"
                                 title="Ver / Descargar archivo"
                               >
                                 <ExternalLink className="w-3 h-3" />
@@ -1083,12 +1088,12 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                               </a>
                             )}
 
-                            <label className={`px-2.5 py-1 rounded-xl font-bold text-[10px] flex items-center space-x-1 cursor-pointer transition-all ${
+                            <label className={`min-h-[44px] px-3 py-2 rounded-xl font-bold text-[10px] flex items-center space-x-1 cursor-pointer transition-all ${
                               isUploading 
-                                ? 'bg-slate-200 dark:bg-slate-800 text-slate-400' 
+                                ? 'bg-slate-200 dark:bg-navy-800 text-slate-400' 
                                 : hasDoc 
-                                ? 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300'
-                                : 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-xs'
+                                ? 'bg-slate-100 hover:bg-slate-200 dark:bg-navy-800 dark:hover:bg-navy-700 text-slate-600 dark:text-slate-300'
+                                : 'bg-gradient-to-r from-gold-600 to-gold-500 hover:from-gold-500 hover:to-gold-400 text-navy-950 shadow-sm shadow-gold-500/20'
                             }`}>
                               <Upload className="w-3 h-3" />
                               <span>{isUploading ? 'Subiendo...' : hasDoc ? 'Reemplazar' : 'Subir'}</span>
@@ -1108,7 +1113,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
               </div>
 
               {/* Personalizaciones y Acabados de Fábrica */}
-              <div className="p-5 rounded-2xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-[#334155] shadow-sm space-y-3.5">
+              <div className="p-5 rounded-2xl bg-white dark:bg-navy-800 border border-slate-200 dark:border-navy-700 shadow-sm space-y-3.5">
                 <span className="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center space-x-2">
                   <Layers className="w-4 h-4 text-indigo-500" />
                   <span>Especificaciones de Acabados & Personalización</span>
@@ -1121,7 +1126,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                       type="text"
                       value={exteriorColor}
                       onChange={(e) => setExteriorColor(e.target.value)}
-                      className="w-full bg-white dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-bold text-[#0f172a] dark:text-[#f8fafc]"
+                      className="w-full bg-white dark:bg-navy-800 border border-slate-200 dark:border-navy-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 dark:text-slate-100"
                     />
                   </div>
 
@@ -1131,7 +1136,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                       type="text"
                       value={interiorWalls}
                       onChange={(e) => setInteriorWalls(e.target.value)}
-                      className="w-full bg-white dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-bold text-[#0f172a] dark:text-[#f8fafc]"
+                      className="w-full bg-white dark:bg-navy-800 border border-slate-200 dark:border-navy-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 dark:text-slate-100"
                     />
                   </div>
 
@@ -1141,7 +1146,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                       type="text"
                       value={flooringType}
                       onChange={(e) => setFlooringType(e.target.value)}
-                      className="w-full bg-white dark:bg-[#182235] border border-slate-200 dark:border-[#2e3b52] rounded-xl px-3 py-2 text-xs font-bold text-[#0f172a] dark:text-[#f8fafc]"
+                      className="w-full bg-white dark:bg-navy-800 border border-slate-200 dark:border-navy-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 dark:text-slate-100"
                     />
                   </div>
                 </div>
@@ -1153,7 +1158,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
         </div>
 
         {/* 4. FOOTER CON BOTÓN ESMERALDA Y NOTIFICACIÓN */}
-        <div className="px-6 py-4 border-t border-slate-200 dark:border-slate-800 bg-[#f1f5f9] dark:bg-[#0f172a] flex items-center justify-between shrink-0">
+        <div className="px-4 sm:px-6 py-4 border-t border-slate-200 dark:border-navy-700 bg-slate-100 dark:bg-navy-900 flex items-center justify-between shrink-0 safe-area-bottom">
           <div>
             {savedSuccess && (
               <span className="text-xs font-black text-emerald-600 dark:text-emerald-400 flex items-center space-x-1.5 animate-fade-in">
@@ -1167,17 +1172,17 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs hover:bg-slate-200 dark:hover:bg-slate-800 transition-all cursor-pointer"
+              className="min-h-[44px] px-4 py-2.5 rounded-xl border border-slate-200 dark:border-navy-700 text-slate-700 dark:text-slate-300 font-bold text-xs hover:bg-slate-200 dark:hover:bg-navy-800 transition-all cursor-pointer"
             >
               Cerrar
             </button>
             
-            {/* Botón Principal Guardar en Verde Esmeralda */}
+            {/* Botón Principal Guardar — Gradiente Dorado ANCLA */}
             <button
               type="button"
               onClick={handleSave360}
               disabled={saving}
-              className="px-6 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 text-white font-black text-xs shadow-md transition-all active:scale-95 cursor-pointer flex items-center space-x-2 disabled:opacity-50"
+              className="min-h-[44px] px-6 py-2.5 rounded-xl bg-gradient-to-r from-gold-600 to-gold-500 hover:from-gold-500 hover:to-gold-400 text-navy-950 font-bold text-xs shadow-lg shadow-gold-500/20 transition-all active:scale-95 cursor-pointer flex items-center space-x-2 disabled:opacity-50"
             >
               {saving ? (
                 <span>Guardando...</span>

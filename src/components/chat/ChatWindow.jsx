@@ -833,7 +833,7 @@ export const ChatWindow = () => {
 
   if (!selectedContactId || !activeContact) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center p-8 bg-[#f8f9fa] dark:bg-[#0b141a] text-slate-600 dark:text-slate-300 select-none border-l border-slate-200 dark:border-[#222e35] h-full transition-colors duration-300">
+      <div className="flex-1 flex flex-col items-center justify-center p-8 bg-slate-50 dark:bg-navy-950 text-slate-600 dark:text-slate-300 select-none border-l border-slate-200 dark:border-navy-700 h-full transition-colors duration-300">
         <div className="flex flex-col items-center max-w-md text-center space-y-7">
           {/* Premium Corporate Logo branding */}
           <div className="flex flex-col items-center space-y-4">
@@ -844,7 +844,7 @@ export const ChatWindow = () => {
                 alt="ANCLA Special Projects" 
               />
             </div>
-            <div className="w-12 h-1 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full mt-2"></div>
+            <div className="w-12 h-1 bg-gradient-to-r from-gold-600 to-gold-400 rounded-full mt-2"></div>
           </div>
 
           {/* Text Descriptions */}
@@ -876,9 +876,9 @@ export const ChatWindow = () => {
                   alert("Agregando contacto: " + phone);
                 }
               }} 
-              className="flex items-center space-x-2 hover:text-[#00a884] transition-colors cursor-pointer"
+              className="flex items-center space-x-2 hover:text-gold-500 transition-colors cursor-pointer"
             >
-              <svg className="w-4 h-4 text-[#667781]" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z" />
               </svg>
               <span>Añadir contacto</span>
@@ -890,24 +890,24 @@ export const ChatWindow = () => {
   }
 
   return (
-    <div className="flex-1 flex h-full overflow-hidden bg-slate-50 dark:bg-dark-950 relative w-full">
+    <div className="flex-1 flex h-full overflow-hidden bg-slate-50 dark:bg-navy-950 relative w-full">
       
       {/* 2/3: Ventana de Chat Principal */}
       <div 
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
-        className="flex-1 min-w-0 min-h-0 flex flex-col h-full bg-white dark:bg-dark-900 border-r border-slate-200 dark:border-white/5 overflow-hidden relative"
+        className="flex-1 min-w-0 min-h-0 flex flex-col h-full bg-white dark:bg-navy-950 border-r border-slate-200 dark:border-navy-700 overflow-hidden relative"
       >
         {isDragging && (
-          <div className="absolute inset-0 bg-emerald-600/10 dark:bg-emerald-500/25 border-4 border-dashed border-emerald-500 backdrop-blur-xs flex flex-col items-center justify-center z-30 pointer-events-none animate-fade-in">
-            <Upload className="w-12 h-12 text-emerald-600 dark:text-emerald-400 mb-2 animate-bounce" />
-            <p className="text-sm font-bold text-emerald-800 dark:text-emerald-300">Arrastra y suelta tu archivo aquí para enviarlo</p>
+          <div className="absolute inset-0 bg-gold-500/10 dark:bg-gold-500/15 border-4 border-dashed border-gold-500 backdrop-blur-xs flex flex-col items-center justify-center z-30 pointer-events-none animate-fade-in">
+            <Upload className="w-12 h-12 text-gold-500 dark:text-gold-400 mb-2 animate-bounce" />
+            <p className="text-sm font-bold text-gold-600 dark:text-gold-400">Arrastra y suelta tu archivo aquí para enviarlo</p>
           </div>
         )}
         
         {/* Header del Chat */}
-        <div className="p-3.5 sm:p-4 border-b border-slate-200 dark:border-white/5 bg-white dark:bg-dark-900/90 flex items-center justify-between gap-2 select-none">
+        <div className="p-3.5 sm:p-4 border-b border-slate-200 dark:border-navy-700 bg-white dark:bg-navy-950/90 flex items-center justify-between gap-2 select-none">
           <div className="flex items-center min-w-0 flex-1 mr-2 overflow-hidden">
             {/* Botón de Atrás (solo móvil/tablet) */}
             <button
@@ -917,7 +917,7 @@ export const ChatWindow = () => {
                   document.body.classList.remove('has-active-chat');
                 }
               }}
-              className="md:hidden p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 mr-2 flex-shrink-0 active:scale-95 transition-all cursor-pointer"
+              className="md:hidden p-2 rounded-xl bg-gold-500/10 border border-gold-500/20 text-gold-500 dark:text-gold-400 mr-2 flex-shrink-0 active:scale-95 transition-all cursor-pointer"
               title="Volver a los chats"
             >
               <ArrowLeft className="w-5 h-5" />
@@ -931,8 +931,8 @@ export const ChatWindow = () => {
                   alt="Perfil"
                 />
               ) : (
-                <div className="w-9 h-9 rounded-full bg-[#dfe5e7] dark:bg-slate-700 flex items-end justify-center overflow-hidden border border-slate-200 dark:border-white/10 flex-shrink-0 select-none">
-                  <svg className="w-7 h-7 text-[#a9b7be] dark:text-slate-500" fill="currentColor" viewBox="0 0 24 24">
+                <div className="w-9 h-9 rounded-full bg-slate-200 dark:bg-navy-800 flex items-end justify-center overflow-hidden border border-slate-200 dark:border-navy-700 flex-shrink-0 select-none">
+                  <svg className="w-7 h-7 text-slate-400 dark:text-slate-500" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                   </svg>
                 </div>
@@ -1149,21 +1149,21 @@ export const ChatWindow = () => {
 
         {/* Buscador de mensajes tipo WhatsApp (dentro del chat) */}
         {showMsgSearch && (
-          <div className="bg-[#f0f2f5] dark:bg-[#111b21] px-4 py-2.5 border-b border-slate-200 dark:border-white/5 flex items-center justify-between animate-fade-in shadow-inner z-10">
+          <div className="bg-slate-50 dark:bg-navy-950 px-4 py-2.5 border-b border-slate-200 dark:border-navy-700 flex items-center justify-between animate-fade-in shadow-inner z-10">
             <div className="relative flex-1 mr-3">
-              <Search className="absolute left-3 top-2.5 w-4 h-4 text-[#667781]" />
+              <Search className="absolute left-3 top-2.5 w-4 h-4 text-slate-400" />
               <input
                 type="text"
                 placeholder="Buscar mensaje en este chat..."
                 value={msgSearchTerm}
                 onChange={(e) => setMsgSearchTerm(e.target.value)}
                 autoFocus
-                className="w-full bg-white dark:bg-[#202c33] border border-slate-300 dark:border-white/10 rounded-lg pl-9 pr-8 py-1.5 text-xs text-slate-800 dark:text-white placeholder-[#667781] focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-all"
+                className="w-full bg-white dark:bg-navy-800 border border-navy-700/30 dark:border-navy-700 rounded-lg pl-9 pr-8 py-1.5 text-base md:text-sm text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-gold-500 transition-all"
               />
               {msgSearchTerm && (
                 <button
                   onClick={() => setMsgSearchTerm('')}
-                  className="absolute right-2.5 top-2 text-[#667781] hover:text-[#3b4a54] dark:hover:text-white cursor-pointer"
+                  className="absolute right-2.5 top-2 text-slate-400 hover:text-slate-700 dark:hover:text-white cursor-pointer"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -1190,7 +1190,7 @@ export const ChatWindow = () => {
         <div 
           ref={chatContainerRef} 
           onScroll={handleChatScroll}
-          className={`flex-1 overflow-y-auto p-4 space-y-4 bg-[#efeae2] dark:bg-[#0b141a] bg-opacity-95 bg-[radial-gradient(#e5ddd5_1px,transparent_1px)] dark:bg-[radial-gradient(#1f2c34_1px,transparent_1px)] [background-size:16px_16px] transition-opacity duration-300 relative ${
+          className={`flex-1 overflow-y-auto p-4 space-y-4 bg-slate-100 dark:bg-navy-950 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] dark:bg-[radial-gradient(#243044_1px,transparent_1px)] [background-size:16px_16px] transition-opacity duration-300 relative ${
             showRightSidebar ? 'lg:opacity-100 opacity-60' : 'opacity-100'
           }`}
         >
@@ -1225,7 +1225,7 @@ export const ChatWindow = () => {
               <div key={group.header + '_' + gIdx} className="space-y-3 relative">
                 {/* Cabecera de Fecha Flotante Estilo WhatsApp (Sticky por sección: nunca colisiona) */}
                 <div className="sticky top-2 z-10 flex justify-center py-1 select-none pointer-events-none">
-                  <span className="bg-white/95 dark:bg-[#182229]/95 backdrop-blur-md text-[#54656f] dark:text-[#8696a0] text-[10.5px] font-black tracking-wider uppercase px-3 py-1 rounded-lg shadow-sm border border-slate-200/80 dark:border-white/10">
+                  <span className="bg-white/95 dark:bg-navy-900/95 backdrop-blur-md text-slate-600 dark:text-slate-400 text-[10.5px] font-black tracking-wider uppercase px-3 py-1 rounded-lg shadow-sm border border-slate-200/80 dark:border-navy-700">
                     {group.header}
                   </span>
                 </div>
@@ -1260,17 +1260,17 @@ export const ChatWindow = () => {
           {/* Animación "IA Redactando..." */}
           {isTyping && (
             <div className="flex justify-start items-end space-x-2 animate-fade-in">
-              <div className="w-8 h-8 rounded-full bg-emerald-500/10 text-emerald-600 flex items-center justify-center flex-shrink-0">
+              <div className="w-8 h-8 rounded-full bg-gold-500/10 text-gold-500 flex items-center justify-center flex-shrink-0">
                 <Bot className="w-4 h-4" />
               </div>
-              <div className="p-3.5 rounded-2xl bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-350 max-w-[70%] border border-emerald-500/10">
+              <div className="p-3.5 rounded-2xl bg-navy-800 text-slate-100 max-w-[70%] border border-navy-700 border-l-2 border-l-gold-500/60">
                 <div className="flex items-center space-x-2 text-xs">
                   <div className="flex space-x-1">
-                    <span className="w-1.5 h-1.5 bg-emerald-600 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
-                    <span className="w-1.5 h-1.5 bg-emerald-600 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
-                    <span className="w-1.5 h-1.5 bg-emerald-600 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+                    <span className="w-1.5 h-1.5 bg-gold-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
+                    <span className="w-1.5 h-1.5 bg-gold-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
+                    <span className="w-1.5 h-1.5 bg-gold-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
                   </div>
-                  <span className="italic font-medium">IA de ANCLA está redactando...</span>
+                  <span className="italic font-medium text-slate-300">IA de ANCLA está redactando...</span>
                 </div>
               </div>
             </div>
@@ -1283,7 +1283,7 @@ export const ChatWindow = () => {
             <button
               type="button"
               onClick={() => scrollToBottom('smooth')}
-              className="sticky bottom-3 ml-auto mr-1 px-3.5 py-1.5 rounded-full bg-emerald-600/95 hover:bg-emerald-500 text-white text-[11px] font-black shadow-xl flex items-center space-x-1.5 transition-all animate-bounce cursor-pointer border border-emerald-400/50 z-30 backdrop-blur-md"
+              className="sticky bottom-3 ml-auto mr-1 px-3.5 py-1.5 rounded-full bg-gold-500/95 hover:bg-gold-400 text-navy-950 text-[11px] font-black shadow-xl flex items-center space-x-1.5 transition-all animate-bounce cursor-pointer border border-gold-400/50 z-30 backdrop-blur-md"
               title="Desplazar al último mensaje"
             >
               <ChevronDown className="w-3.5 h-3.5" />
@@ -1719,10 +1719,10 @@ export const ChatWindow = () => {
                     }
                   }
                 }}
-                className={`w-full min-h-[44px] max-h-[180px] border rounded-xl px-3.5 py-2.5 text-sm leading-relaxed focus:outline-none transition-all resize-none overflow-y-auto ${
+                className={`w-full min-h-[44px] max-h-[180px] border rounded-xl px-3.5 py-2.5 text-base md:text-sm leading-relaxed focus:outline-none transition-all resize-none overflow-y-auto ${
                   isInternalNote 
                     ? 'bg-amber-500/5 border-amber-300 focus:border-amber-500 text-slate-800 dark:text-amber-100'
-                    : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-white/5 text-slate-855 dark:text-white focus:border-emerald-500/50'
+                    : 'bg-slate-50 dark:bg-navy-800 border-slate-200 dark:border-navy-700 text-slate-800 dark:text-white focus:border-gold-500/50'
                 }`}
               />
             </div>
@@ -1746,7 +1746,7 @@ export const ChatWindow = () => {
               className={`p-2.5 sm:p-3 rounded-xl text-white shadow-md transition-all shrink-0 active:scale-95 cursor-pointer min-w-[44px] min-h-[44px] flex items-center justify-center ${
                 isInternalNote 
                   ? 'bg-amber-600 hover:bg-amber-500'
-                  : 'bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400'
+                  : 'bg-gradient-to-r from-gold-600 to-gold-400 hover:from-gold-500 hover:to-gold-400 text-navy-950'
               }`}
               title="Enviar Mensaje (Enter)"
             >
@@ -1787,7 +1787,7 @@ export const ChatWindow = () => {
               {activeContact.avatar_url ? (
                 <img src={activeContact.avatar_url} className="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-white/10" alt="Avatar" />
               ) : (
-                <div className="w-10 h-10 rounded-full bg-[#dfe5e7] dark:bg-slate-700 flex items-center justify-center font-bold text-slate-500 text-xs">
+                <div className="w-10 h-10 rounded-full bg-slate-200 dark:bg-navy-800 flex items-center justify-center font-bold text-slate-500 text-xs">
                   {activeContact.first_name ? activeContact.first_name[0] : 'U'}
                 </div>
               )}

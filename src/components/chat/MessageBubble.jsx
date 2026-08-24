@@ -66,7 +66,7 @@ export const MessageBubble = ({ message, onImageClick, onReply, onForward, onEdi
       return <Check className="w-3.5 h-3.5 text-slate-500" />;
     }
     if (status === 'delivered' || status === 'read') {
-      return <CheckCheck className={`w-3.5 h-3.5 ${status === 'read' ? 'text-sky-400' : 'text-slate-400'}`} />;
+      return <CheckCheck className={`w-3.5 h-3.5 ${status === 'read' ? 'text-gold-400' : 'text-slate-400'}`} />;
     }
     if (status === 'failed') {
       return <AlertCircle className="w-3.5 h-3.5 text-red-500" title="Error al enviar" />;
@@ -97,10 +97,8 @@ export const MessageBubble = ({ message, onImageClick, onReply, onForward, onEdi
           isInternalNote
             ? 'bg-amber-50 dark:bg-amber-500/10 border-amber-300 text-amber-800 dark:text-amber-400 w-full rounded-xl text-center'
             : isMe 
-              ? isAI 
-                ? 'bg-[#efeaff] dark:bg-[#2e1065]/60 border-[#efeaff]/40 dark:border-[#2e1065]/40 text-[#2e1065] dark:text-[#f5f3ff] rounded-tr-none'
-                : 'bg-[#d9fdd3] dark:bg-[#005c4b] border-[#d9fdd3] dark:border-[#005c4b] text-[#111b21] dark:text-[#e9edef] rounded-tr-none'
-              : 'bg-white dark:bg-[#202c33] border-white dark:border-[#202c33] text-[#111b21] dark:text-[#f0f2f5] rounded-tl-none'
+              ? 'bg-navy-800 text-slate-100 border border-navy-700 border-l-2 border-l-gold-500/60 rounded-tr-none'
+              : 'bg-navy-900 text-slate-200 border border-navy-700/60 rounded-tl-none'
         }`}
       >
         {/* Etiqueta de Nota Interna */}
@@ -120,7 +118,7 @@ export const MessageBubble = ({ message, onImageClick, onReply, onForward, onEdi
 
         {/* Etiqueta del remitente de IA */}
         {isAI && (
-          <span className="flex items-center space-x-1 text-[9px] bg-purple-200/50 dark:bg-purple-500/20 text-purple-700 dark:text-purple-300 px-1.5 py-0.5 rounded-full w-max mb-1 font-semibold uppercase tracking-wider">
+          <span className="flex items-center space-x-1 text-[9px] bg-gold-500/10 text-gold-500 dark:text-gold-400 px-1.5 py-0.5 rounded-full w-max mb-1 font-semibold uppercase tracking-wider border border-gold-500/20">
             <Bot className="w-3 h-3" />
             <span>Chatbot IA</span>
           </span>
@@ -128,8 +126,8 @@ export const MessageBubble = ({ message, onImageClick, onReply, onForward, onEdi
 
         {/* Cita de Respuesta */}
         {isReply && (
-          <div className="mb-2 p-2 border-l-4 border-emerald-500/70 bg-black/5 dark:bg-white/5 rounded-r-lg text-[11px] opacity-90 select-none">
-            <span className="font-bold text-emerald-600 dark:text-emerald-400 block text-[10px]">{replyAuthor}</span>
+          <div className="mb-2 p-2 border-l-4 border-gold-500/60 bg-black/5 dark:bg-white/5 rounded-r-lg text-[11px] opacity-90 select-none">
+            <span className="font-bold text-gold-500 dark:text-gold-400 block text-[10px]">{replyAuthor}</span>
             <span className="truncate block italic text-slate-500 dark:text-slate-400 mt-0.5">"{replyText}"</span>
           </div>
         )}
@@ -168,8 +166,11 @@ export const MessageBubble = ({ message, onImageClick, onReply, onForward, onEdi
             }
             if (msgTypeLower === 'audio') {
               return (
-                <div className="mt-1 min-w-[240px]">
-                  <audio src={mediaUrl} controls className="w-full h-8" />
+                <div className="mt-1 min-w-[240px] rounded-xl border border-navy-700 bg-navy-900 p-2.5">
+                  <div className="flex items-center space-x-2 mb-1.5">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-gold-500">Nota de voz</span>
+                  </div>
+                  <audio src={mediaUrl} controls className="w-full h-8 accent-gold-500" />
                 </div>
               );
             }
@@ -211,14 +212,14 @@ export const MessageBubble = ({ message, onImageClick, onReply, onForward, onEdi
                       {isPdf ? <FileText className="w-5 h-5" /> : isExcel ? <FileSpreadsheet className="w-5 h-5 text-emerald-600" /> : <FileText className="w-5 h-5 text-blue-600" />}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <span className="text-xs font-bold text-slate-800 dark:text-slate-100 truncate block group-hover/doc:text-emerald-600 transition-colors">
+                      <span className="text-xs font-bold text-slate-800 dark:text-slate-100 truncate block group-hover/doc:text-gold-500 transition-colors">
                         {docName}
                       </span>
                       <span className="text-[10px] text-slate-400 dark:text-slate-400 font-medium block">
                         {isPdf ? 'Documento PDF' : isExcel ? 'Hoja de Cálculo' : 'Archivo adjunto'} • Clic para ver
                       </span>
                     </div>
-                    <Download className="w-4 h-4 text-slate-400 group-hover/doc:text-emerald-500 shrink-0" />
+                    <Download className="w-4 h-4 text-slate-400 group-hover/doc:text-gold-500 shrink-0" />
                   </a>
                 </div>
               );
@@ -239,13 +240,13 @@ export const MessageBubble = ({ message, onImageClick, onReply, onForward, onEdi
 
         {/* Panel de Acciones Rápidas en Hover */}
         {!isInternalNote && (
-          <div className={`opacity-0 group-hover:opacity-100 transition-opacity duration-200 absolute ${
+          <div className={`opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-200 absolute ${
             isMe ? 'right-full mr-2' : 'left-full ml-2'
-          } top-2 flex items-center space-x-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/10 rounded-xl p-1.5 shadow-lg z-10 select-none`}>
+          } top-2 flex items-center space-x-1 bg-white dark:bg-navy-800 border border-navy-700 rounded-xl p-1.5 shadow-lg z-10 select-none`}>
             {/* Responder */}
             <button 
               onClick={() => onReply(message)} 
-              className="p-1 text-slate-500 hover:text-emerald-500 hover:bg-slate-100 dark:hover:bg-white/5 rounded transition-colors cursor-pointer"
+              className="p-1.5 min-w-[36px] min-h-[36px] flex items-center justify-center text-slate-500 hover:text-gold-500 hover:bg-slate-100 dark:hover:bg-navy-700 rounded-lg transition-colors cursor-pointer"
               title="Responder"
             >
               <CornerUpLeft className="w-3.5 h-3.5" />
@@ -253,7 +254,7 @@ export const MessageBubble = ({ message, onImageClick, onReply, onForward, onEdi
             {/* Reenviar */}
             <button 
               onClick={() => onForward(message)} 
-              className="p-1 text-slate-500 hover:text-blue-500 hover:bg-slate-100 dark:hover:bg-white/5 rounded transition-colors cursor-pointer"
+              className="p-1.5 min-w-[36px] min-h-[36px] flex items-center justify-center text-slate-500 hover:text-gold-400 hover:bg-slate-100 dark:hover:bg-navy-700 rounded-lg transition-colors cursor-pointer"
               title="Reenviar"
             >
               <Forward className="w-3.5 h-3.5" />
@@ -262,7 +263,7 @@ export const MessageBubble = ({ message, onImageClick, onReply, onForward, onEdi
             {isMe && (message.message_type || '').toLowerCase() === 'text' && (
               <button 
                 onClick={() => onEdit(message)} 
-                className="p-1 text-slate-500 hover:text-amber-500 hover:bg-slate-100 dark:hover:bg-white/5 rounded transition-colors cursor-pointer"
+                className="p-1.5 min-w-[36px] min-h-[36px] flex items-center justify-center text-slate-500 hover:text-gold-400 hover:bg-slate-100 dark:hover:bg-navy-700 rounded-lg transition-colors cursor-pointer"
                 title="Editar"
               >
                 <Pencil className="w-3.5 h-3.5" />
@@ -271,7 +272,7 @@ export const MessageBubble = ({ message, onImageClick, onReply, onForward, onEdi
             {/* Eliminar */}
             <button 
               onClick={() => onDelete(message.id)} 
-              className="p-1 text-slate-400 hover:text-red-500 hover:bg-red-500/10 rounded transition-colors cursor-pointer"
+              className="p-1.5 min-w-[36px] min-h-[36px] flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors cursor-pointer"
               title="Eliminar"
             >
               <Trash2 className="w-3.5 h-3.5" />

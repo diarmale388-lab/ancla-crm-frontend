@@ -174,10 +174,10 @@ export const ContactList = () => {
   };
 
   return (
-    <div className="w-full bg-white dark:bg-dark-900 border-r border-slate-200 dark:border-white/5 flex flex-col h-full transition-colors duration-300">
+    <div className="w-full bg-white dark:bg-navy-950 border-r border-slate-200 dark:border-navy-700 flex flex-col h-full transition-colors duration-300">
       
-      {/* WhatsApp Web Header Section (Theme Aware) */}
-      <div className="bg-[#f0f2f5] dark:bg-[#111b21] px-4 pt-4 pb-3 flex flex-col space-y-3 flex-shrink-0 select-none border-b border-slate-200 dark:border-white/5">
+      {/* Header Section — Paleta ANCLA Luxury */}
+      <div className="bg-slate-50 dark:bg-navy-950 px-4 pt-4 pb-3 flex flex-col space-y-3 flex-shrink-0 select-none border-b border-slate-200 dark:border-navy-700">
         
         {/* Brand Logo and Action Icons */}
         <div className="flex items-center justify-between">
@@ -187,13 +187,13 @@ export const ContactList = () => {
             className="h-10 w-auto object-contain mix-blend-multiply dark:invert dark:mix-blend-screen select-none"
           />
 
-          <div className="flex items-center space-x-2 text-[#54656f] dark:text-slate-300 relative">
+          <div className="flex items-center space-x-2 text-slate-600 dark:text-slate-300 relative">
             
             {/* BOTÓN PROMINENTE DE INSTALAR APP EN MÓVIL (Únicamente visible en navegador móvil si NO está instalada aún) */}
             {!isStandalone && (
               <button
                 onClick={handleInstallApp}
-                className="md:hidden flex items-center space-x-1 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white text-[10.5px] font-extrabold px-2.5 py-1.5 rounded-full shadow-md active:scale-95 transition-all cursor-pointer mr-1"
+                className="md:hidden flex items-center space-x-1 bg-gradient-to-r from-gold-600 to-gold-400 hover:from-gold-500 hover:to-gold-400 text-navy-950 text-[10.5px] font-extrabold px-2.5 py-1.5 rounded-full shadow-md active:scale-95 transition-all cursor-pointer mr-1"
                 title="Instalar App ANCLA CRM en tu Celular"
               >
                 <span>📲 Instalar App</span>
@@ -213,7 +213,7 @@ export const ContactList = () => {
                   store.requestNotificationPermission();
                 }
               }}
-              className="p-1.5 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 text-emerald-600 dark:text-emerald-400 cursor-pointer transition-colors"
+              className="p-1.5 rounded-full hover:bg-slate-200 dark:hover:bg-navy-800 text-gold-500 dark:text-gold-400 cursor-pointer transition-colors"
               title="Activar Notificaciones Push VAPID en Celular (Pantalla Bloqueada)"
             >
               <Bell className="w-5 h-5 animate-bounce" />
@@ -231,7 +231,7 @@ export const ContactList = () => {
             {/* 2. Botón Agregar Cliente */}
             <button 
               onClick={() => setShowNewContactModal(true)}
-              className="hover:bg-slate-200 dark:hover:bg-slate-800 p-1.5 rounded-full cursor-pointer transition-colors text-emerald-600 dark:text-emerald-400"
+              className="hover:bg-slate-200 dark:hover:bg-navy-800 p-1.5 rounded-full cursor-pointer transition-colors text-gold-500 dark:text-gold-400"
               title="Agregar Nuevo Cliente / Prospecto"
             >
               <UserPlus className="w-5 h-5" />
@@ -248,14 +248,14 @@ export const ContactList = () => {
 
             {/* Menú Desplegable Flotante */}
             {showMenuDropdown && (
-              <div className="absolute right-0 top-9 w-56 bg-white dark:bg-[#111b21] border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl py-2 z-50 animate-fade-in font-sans">
+              <div className="absolute right-0 top-9 w-56 bg-white dark:bg-navy-950 border border-slate-200 dark:border-navy-700 rounded-2xl shadow-2xl py-2 z-50 animate-fade-in font-sans">
                 {!isStandalone && (
                   <button
                     onClick={() => {
                       handleInstallApp();
                       setShowMenuDropdown(false);
                     }}
-                    className="w-full px-4 py-2.5 text-left text-xs font-black flex items-center space-x-2.5 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 transition-colors"
+                    className="w-full px-4 py-2.5 text-left text-xs font-black flex items-center space-x-2.5 text-gold-500 dark:text-gold-400 hover:bg-gold-500/10 dark:hover:bg-gold-500/10 transition-colors"
                   >
                     <span className="text-sm">📲</span>
                     <span>Instalar App en Celular</span>
@@ -280,7 +280,7 @@ export const ContactList = () => {
                   }}
                   className="w-full px-4 py-2 text-left text-xs font-bold flex items-center space-x-2.5 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                 >
-                  <RefreshCw className="w-4 h-4 text-emerald-500" />
+                  <RefreshCw className="w-4 h-4 text-gold-500" />
                   <span>Refrescar Prospectos</span>
                 </button>
 
@@ -303,18 +303,18 @@ export const ContactList = () => {
 
         {/* Buscador de Chats */}
         <div className="relative">
-          <Search className="absolute left-3.5 top-2.5 w-4 h-4 text-[#667781]" />
+          <Search className="absolute left-3.5 top-2.5 w-4 h-4 text-slate-400" />
           <input
             type="text"
             placeholder="Buscar chat o contenido de mensaje..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-[#f0f2f5] dark:bg-[#202c33] border-none rounded-lg pl-11 pr-8 py-2 text-[13px] text-[#3b4a54] dark:text-white placeholder-[#667781] focus:outline-none transition-all"
+            className="w-full bg-slate-100 dark:bg-navy-800 border border-navy-700/30 dark:border-navy-700 rounded-lg pl-11 pr-8 py-2 text-base md:text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-gold-500 transition-all"
           />
           {searchTerm && (
             <button
               onClick={() => setSearchTerm('')}
-              className="absolute right-2.5 top-2.5 text-[#667781] hover:text-[#3b4a54] dark:hover:text-white cursor-pointer"
+              className="absolute right-2.5 top-2.5 text-slate-400 hover:text-slate-700 dark:hover:text-white cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
@@ -328,8 +328,8 @@ export const ContactList = () => {
               onClick={() => setActiveFilter('all')}
               className={`px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
                 activeFilter === 'all'
-                  ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 shadow-2xs border border-emerald-300/40 dark:border-emerald-500/30'
-                  : 'bg-[#f0f2f5] dark:bg-[#202c33] text-[#54656f] dark:text-[#8696a0] hover:bg-[#e1e3e6] dark:hover:bg-[#2a3942]'
+                  ? 'bg-gold-500/10 text-gold-500 dark:text-gold-400 shadow-2xs border border-gold-500/30'
+                  : 'bg-slate-100 dark:bg-navy-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-navy-700'
               }`}
             >
               Todos
@@ -339,14 +339,14 @@ export const ContactList = () => {
               onClick={() => setActiveFilter(activeFilter === 'unread' ? 'all' : 'unread')}
               className={`px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-bold whitespace-nowrap transition-all flex items-center space-x-1.5 cursor-pointer ${
                 activeFilter === 'unread'
-                  ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 shadow-2xs border border-emerald-300/40 dark:border-emerald-500/30'
-                  : 'bg-[#f0f2f5] dark:bg-[#202c33] text-[#54656f] dark:text-[#8696a0] hover:bg-[#e1e3e6] dark:hover:bg-[#2a3942]'
+                  ? 'bg-gold-500/10 text-gold-500 dark:text-gold-400 shadow-2xs border border-gold-500/30'
+                  : 'bg-slate-100 dark:bg-navy-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-navy-700'
               }`}
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              <span className="w-1.5 h-1.5 rounded-full bg-gold-500"></span>
               <span>No leídos</span>
               {unreadCount > 0 && (
-                <span className="ml-1 px-1.5 py-0.2 rounded-full text-[9px] font-black bg-emerald-600 text-white">
+                <span className="ml-1 px-1.5 py-0.2 rounded-full text-[9px] font-black bg-gold-500 text-navy-950">
                   {unreadCount}
                 </span>
               )}
@@ -356,11 +356,11 @@ export const ContactList = () => {
               onClick={() => setActiveFilter(activeFilter === 'ia' ? 'all' : 'ia')}
               className={`px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-bold whitespace-nowrap transition-all flex items-center space-x-1 cursor-pointer ${
                 activeFilter === 'ia'
-                  ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 shadow-2xs border border-emerald-300/40 dark:border-emerald-500/30'
-                  : 'bg-[#f0f2f5] dark:bg-[#202c33] text-[#54656f] dark:text-[#8696a0] hover:bg-[#e1e3e6] dark:hover:bg-[#2a3942]'
+                  ? 'bg-gold-500/10 text-gold-500 dark:text-gold-400 shadow-2xs border border-gold-500/30'
+                  : 'bg-slate-100 dark:bg-navy-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-navy-700'
               }`}
             >
-              <Bot className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+              <Bot className="w-3.5 h-3.5 text-gold-500 dark:text-gold-400" />
               <span className="hidden sm:inline">Piloto IA</span>
               <span className="sm:hidden">IA</span>
             </button>
@@ -369,8 +369,8 @@ export const ContactList = () => {
               onClick={() => setActiveFilter(activeFilter === 'human' ? 'all' : 'human')}
               className={`px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-bold whitespace-nowrap transition-all flex items-center space-x-1 cursor-pointer ${
                 activeFilter === 'human'
-                  ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 shadow-2xs border border-emerald-300/40 dark:border-emerald-500/30'
-                  : 'bg-[#f0f2f5] dark:bg-[#202c33] text-[#54656f] dark:text-[#8696a0] hover:bg-[#e1e3e6] dark:hover:bg-[#2a3942]'
+                  ? 'bg-gold-500/10 text-gold-500 dark:text-gold-400 shadow-2xs border border-gold-500/30'
+                  : 'bg-slate-100 dark:bg-navy-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-navy-700'
               }`}
             >
               <User className="w-3.5 h-3.5 text-indigo-500" />
@@ -382,8 +382,8 @@ export const ContactList = () => {
               onClick={() => setShowFilterDropdown(!showFilterDropdown)}
               className={`p-1.5 rounded-full cursor-pointer transition-all ${
                 showFilterDropdown || ['potencial', 'explorador', 'curioso', 'whatsapp', 'instagram'].includes(activeFilter)
-                  ? 'bg-emerald-600 text-white shadow-xs'
-                  : 'bg-[#f0f2f5] dark:bg-[#202c33] text-[#54656f] dark:text-[#8696a0] hover:bg-[#e1e3e6] dark:hover:bg-[#2a3942]'
+                  ? 'bg-gold-500 text-navy-950 shadow-xs'
+                  : 'bg-slate-100 dark:bg-navy-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-navy-700'
               }`}
               title="Filtros Avanzados (Calificación y Canales)"
             >
@@ -395,7 +395,7 @@ export const ContactList = () => {
 
           {/* Menú Flotante de Filtros Avanzados */}
           {showFilterDropdown && (
-            <div className="absolute right-0 top-9 w-52 bg-white dark:bg-[#111b21] border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-2 z-50 animate-fade-in font-sans text-xs space-y-1">
+            <div className="absolute right-0 top-9 w-52 bg-white dark:bg-navy-950 border border-slate-200 dark:border-navy-700 rounded-2xl shadow-2xl p-2 z-50 animate-fade-in font-sans text-xs space-y-1">
               <div className="px-2 py-1 text-[10px] font-black uppercase tracking-wider text-slate-400 border-b border-slate-100 dark:border-white/5">
                 Calificación del Lead
               </div>
@@ -456,7 +456,7 @@ export const ContactList = () => {
       <div className="flex-1 overflow-y-auto divide-y divide-slate-100 dark:divide-white/5">
         {loading && contacts.length === 0 ? (
           <div className="flex items-center justify-center p-8 space-x-2">
-            <div className="w-5 h-5 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
+            <div className="w-5 h-5 border-2 border-gold-500 border-t-transparent rounded-full animate-spin"></div>
             <span className="text-sm text-slate-400">Cargando chats...</span>
           </div>
         ) : error ? (
@@ -479,10 +479,10 @@ export const ContactList = () => {
                 <div
                   key={contact.id}
                   onClick={() => fetchMessages(contact.id)}
-                  className={`py-3 px-3.5 sm:py-2.5 sm:px-3 flex items-center space-x-3 cursor-pointer transition-all duration-200 border-l-4 ${
+                  className={`py-3 px-3.5 sm:py-2.5 sm:px-3 flex items-center space-x-3 cursor-pointer transition-all duration-200 ${
                     isSelected 
-                      ? 'bg-slate-100 dark:bg-slate-800/80 border-emerald-500' 
-                      : 'border-transparent hover:bg-slate-50 dark:hover:bg-slate-850/30'
+                      ? 'bg-gold-500/10 border-r-2 border-gold-500' 
+                      : 'border-r-2 border-transparent hover:bg-slate-50 dark:hover:bg-navy-800/40'
                   }`}
                 >
                   {/* Avatar (Estilo WhatsApp Nativo) */}
@@ -494,16 +494,16 @@ export const ContactList = () => {
                         alt={initials}
                       />
                     ) : (
-                      <div className="w-11 h-11 sm:w-9.5 sm:h-9.5 rounded-full bg-[#dfe5e7] dark:bg-slate-700 flex items-end justify-center overflow-hidden border border-slate-200 dark:border-white/10 flex-shrink-0 select-none">
-                        <svg className="w-9 h-9 sm:w-8 sm:h-8 text-[#a9b7be] dark:text-slate-500" fill="currentColor" viewBox="0 0 24 24">
+                      <div className="w-11 h-11 sm:w-9.5 sm:h-9.5 rounded-full bg-slate-200 dark:bg-navy-800 flex items-end justify-center overflow-hidden border border-slate-200 dark:border-navy-700 flex-shrink-0 select-none">
+                        <svg className="w-9 h-9 sm:w-8 sm:h-8 text-slate-400 dark:text-slate-500" fill="currentColor" viewBox="0 0 24 24">
                           <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                         </svg>
                       </div>
                     )}
                     {/* Icono de Canal (WhatsApp / Instagram) */}
                     <span className={`absolute -bottom-0.5 -right-0.5 p-0.5 rounded-full text-white border ${
-                      isInstagram ? 'bg-gradient-to-tr from-purple-600 to-pink-500' : 'bg-emerald-500'
-                    } border-white dark:border-dark-900`}>
+                      isInstagram ? 'bg-gradient-to-tr from-purple-600 to-pink-500' : 'bg-gold-500'
+                    } border-white dark:border-navy-950`}>
                       {isInstagram ? (
                         <svg className="w-3 h-3 sm:w-2.5 sm:h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                           <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
@@ -528,13 +528,13 @@ export const ContactList = () => {
                       <div className="flex flex-col items-end justify-center">
                         <span className={`text-[10px] sm:text-[9px] ${
                           isContactUnread(contact) 
-                            ? 'text-emerald-600 dark:text-emerald-400 font-black' 
+                            ? 'text-gold-500 dark:text-gold-400 font-black' 
                             : 'text-slate-400 dark:text-slate-500 font-medium'
                         }`}>
                           {formatMessageTime(contact.last_message_time)}
                         </span>
                         {isContactUnread(contact) && (
-                          <span className="mt-1 px-1.5 py-0.2 rounded-full text-[9px] font-black bg-emerald-600 text-white shadow-xs flex items-center justify-center animate-pulse" title="Mensaje pendiente">
+                          <span className="mt-1 px-1.5 py-0.2 rounded-full text-[9px] font-black bg-gold-500 text-navy-950 shadow-xs flex items-center justify-center animate-pulse" title="Mensaje pendiente">
                             1
                           </span>
                         )}
@@ -570,7 +570,7 @@ export const ContactList = () => {
                         {/* Indicador de Estado del Chatbot de IA */}
                         {contact.chatbot_enabled && (
                           <span 
-                            className="flex items-center space-x-0.5 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[8px] px-1 py-0.5 rounded-full font-medium"
+                            className="flex items-center space-x-0.5 bg-gold-500/10 text-gold-500 dark:text-gold-400 text-[8px] px-1 py-0.5 rounded-full font-medium border border-gold-500/20"
                             title="Chatbot de IA Activo"
                           >
                             <Bot className="w-2 h-2" />

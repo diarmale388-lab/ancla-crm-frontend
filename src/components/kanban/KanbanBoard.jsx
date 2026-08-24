@@ -502,23 +502,23 @@ export const KanbanBoard = () => {
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-[#f8fafc] dark:bg-[#0b0f19] text-[#0f172a] dark:text-[#f8fafc] overflow-hidden select-none transition-colors duration-300 font-sans">
+    <div className="flex-1 flex flex-col h-full bg-slate-50 dark:bg-navy-950 text-navy-900 dark:text-slate-100 overflow-hidden select-none transition-colors duration-300 font-sans">
       
       {/* 1. ENCABEZADO PRINCIPAL & SWITCH DUAL KANBAN / TABLA */}
       {/* 1. ENCABEZADO PRINCIPAL & SWITCH DUAL KANBAN / TABLA (ADAPTATIVO Y COMPACTO EN MÓVIL) */}
-      <div className="p-3 sm:p-5 border-b border-slate-200 dark:border-white/5 bg-white/90 dark:bg-[#0f172a]/90 backdrop-blur-md flex flex-col space-y-3 flex-shrink-0 shadow-xs select-none">
+      <div className="p-3 sm:p-5 border-b border-navy-700/30 dark:border-navy-700 bg-white/90 dark:bg-navy-900/90 backdrop-blur-md flex flex-col space-y-3 flex-shrink-0 shadow-xs select-none">
         
         {/* Fila 1: Título, Botón Filtros Móvil, Switcher de Vista y Botones de Acción */}
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center space-x-2 sm:space-x-3 min-w-0">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center shadow-md text-slate-950 font-black shrink-0">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-gradient-to-tr from-gold-600 to-gold-400 flex items-center justify-center shadow-md text-navy-950 font-black shrink-0">
               <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <div className="min-w-0">
-              <h2 className="text-xs sm:text-base font-black text-[#0f172a] dark:text-white tracking-tight flex items-center space-x-1.5 truncate">
+              <h2 className="text-xs sm:text-base font-black text-navy-900 dark:text-white tracking-tight flex items-center space-x-1.5 truncate">
                 <span>Pipeline 360°</span>
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 font-bold uppercase tracking-wider hidden sm:inline-block">
-                  Linear Style
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-gold-500/10 text-gold-500 dark:text-gold-400 border border-gold-500/20 font-bold uppercase tracking-wider hidden sm:inline-block">
+                  ANCLA
                 </span>
               </h2>
               <p className="text-xs text-slate-500 dark:text-slate-400 truncate hidden sm:block">
@@ -532,45 +532,45 @@ export const KanbanBoard = () => {
             <button
               type="button"
               onClick={() => setShowMobileFilters(prev => !prev)}
-              className="sm:hidden px-2.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold text-xs flex items-center space-x-1 border border-slate-200 dark:border-slate-700 cursor-pointer active:scale-95 transition-all"
+              className="sm:hidden px-2.5 py-1.5 rounded-xl bg-navy-800/10 dark:bg-navy-800 text-slate-700 dark:text-slate-200 font-bold text-xs flex items-center space-x-1 border border-navy-700/30 dark:border-navy-700 cursor-pointer active:scale-95 transition-all min-h-[36px]"
             >
-              <SlidersHorizontal className="w-3.5 h-3.5 text-emerald-500" />
+              <SlidersHorizontal className="w-3.5 h-3.5 text-gold-500" />
               <span>{showMobileFilters ? 'Ocultar' : 'Filtros'}</span>
             </button>
 
             {/* MÓDULO 4: SELECTOR DUAL DE VISTA (TABLERO KANBAN ↔ TABLA EJECUTIVA) */}
-            <div className="bg-slate-100 dark:bg-slate-800/80 p-0.5 sm:p-1 rounded-xl flex items-center space-x-0.5 border border-slate-200 dark:border-white/5 shadow-2xs">
+            <div className="bg-navy-800/10 dark:bg-navy-800/80 p-0.5 sm:p-1 rounded-xl flex items-center space-x-0.5 border border-navy-700/30 dark:border-navy-700 shadow-2xs">
               <button
                 type="button"
                 onClick={() => setViewMode('kanban')}
-                className={`px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg text-xs font-bold flex items-center space-x-1 transition-all cursor-pointer ${
+                className={`px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg text-xs font-bold flex items-center space-x-1 transition-all cursor-pointer min-h-[36px] ${
                   viewMode === 'kanban'
-                    ? 'bg-white dark:bg-[#0b0f19] text-[#0f172a] dark:text-white shadow-xs font-black'
-                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                    ? 'bg-white dark:bg-navy-950 text-navy-900 dark:text-white shadow-xs font-black'
+                    : 'text-slate-500 dark:text-slate-400 hover:text-navy-900 dark:hover:text-white'
                 }`}
                 title="Tablero Kanban"
               >
-                <KanbanSquare className="w-3.5 h-3.5 text-emerald-500" />
+                <KanbanSquare className="w-3.5 h-3.5 text-gold-500" />
                 <span className="hidden sm:inline">Kanban</span>
               </button>
               <button
                 type="button"
                 onClick={() => setViewMode('table')}
-                className={`px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg text-xs font-bold flex items-center space-x-1 transition-all cursor-pointer ${
+                className={`px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg text-xs font-bold flex items-center space-x-1 transition-all cursor-pointer min-h-[36px] ${
                   viewMode === 'table'
-                    ? 'bg-white dark:bg-[#0b0f19] text-[#0f172a] dark:text-white shadow-xs font-black'
-                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                    ? 'bg-white dark:bg-navy-950 text-navy-900 dark:text-white shadow-xs font-black'
+                    : 'text-slate-500 dark:text-slate-400 hover:text-navy-900 dark:hover:text-white'
                 }`}
                 title="Tabla Ejecutiva"
               >
-                <List className="w-3.5 h-3.5 text-indigo-500" />
+                <List className="w-3.5 h-3.5 text-gold-400" />
                 <span className="hidden sm:inline">Tabla</span>
               </button>
             </div>
 
             <button
               onClick={() => { fetchLeads(); fetchStages(); fetchAppointments(); }}
-              className="p-1.5 sm:p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-all cursor-pointer"
+              className="p-1.5 sm:p-2 rounded-xl bg-navy-800/10 hover:bg-navy-800/20 dark:bg-navy-800 dark:hover:bg-navy-700 text-slate-600 dark:text-slate-300 transition-all cursor-pointer min-h-[36px] min-w-[36px] flex items-center justify-center"
               title="Refrescar datos"
             >
               <RefreshCw className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
@@ -583,8 +583,8 @@ export const KanbanBoard = () => {
           
           {/* Fila 2: Barra de KPIs en Tiempo Real */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-3">
-            <div className="bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-white/5 p-2.5 sm:p-3 rounded-2xl flex items-center space-x-2.5 sm:space-x-3 shadow-xs">
-              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
+            <div className="bg-white dark:bg-navy-800 border border-navy-700/30 dark:border-navy-700 p-2.5 sm:p-3 rounded-2xl flex items-center space-x-2.5 sm:space-x-3 shadow-xs">
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gold-500/10 text-gold-500 dark:text-gold-400 flex items-center justify-center shrink-0">
                 <User className="w-4 h-4" />
               </div>
               <div className="min-w-0">
@@ -593,33 +593,33 @@ export const KanbanBoard = () => {
               </div>
             </div>
 
-            <div className="bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-white/5 p-2.5 sm:p-3 rounded-2xl flex items-center space-x-2.5 sm:space-x-3 shadow-xs">
-              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+            <div className="bg-white dark:bg-navy-800 border border-navy-700/30 dark:border-navy-700 p-2.5 sm:p-3 rounded-2xl flex items-center space-x-2.5 sm:space-x-3 shadow-xs">
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gold-500/10 text-gold-500 dark:text-gold-400 flex items-center justify-center shrink-0">
                 <DollarSign className="w-4 h-4" />
               </div>
               <div className="min-w-0">
                 <span className="text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider block">Valor Proyectado</span>
-                <span className="text-xs sm:text-sm font-black text-emerald-600 dark:text-emerald-400 leading-tight font-mono tabular-nums truncate block">{formatCOP(kpis.projectedValue)}</span>
+                <span className="text-xs sm:text-sm font-black text-gold-500 dark:text-gold-400 leading-tight font-mono tabular-nums truncate block">{formatCOP(kpis.projectedValue)}</span>
               </div>
             </div>
 
-            <div className="bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-white/5 p-2.5 sm:p-3 rounded-2xl flex items-center space-x-2.5 sm:space-x-3 shadow-xs">
-              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+            <div className="bg-white dark:bg-navy-800 border border-navy-700/30 dark:border-navy-700 p-2.5 sm:p-3 rounded-2xl flex items-center space-x-2.5 sm:space-x-3 shadow-xs">
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gold-500/10 text-gold-400 flex items-center justify-center shrink-0">
                 <Calendar className="w-4 h-4" />
               </div>
               <div className="min-w-0">
                 <span className="text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider block">Citas del Mes</span>
-                <span className="text-xs sm:text-sm font-black text-amber-600 dark:text-amber-400 leading-tight font-mono tabular-nums">{kpis.confirmedApptsThisMonth} agendadas</span>
+                <span className="text-xs sm:text-sm font-black text-gold-400 leading-tight font-mono tabular-nums">{kpis.confirmedApptsThisMonth} agendadas</span>
               </div>
             </div>
 
-            <div className="bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-white/5 p-2.5 sm:p-3 rounded-2xl flex items-center space-x-2.5 sm:space-x-3 shadow-xs">
-              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0">
+            <div className="bg-white dark:bg-navy-800 border border-navy-700/30 dark:border-navy-700 p-2.5 sm:p-3 rounded-2xl flex items-center space-x-2.5 sm:space-x-3 shadow-xs">
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gold-500/10 text-gold-500 dark:text-gold-400 flex items-center justify-center shrink-0">
                 <Award className="w-4 h-4" />
               </div>
               <div className="min-w-0">
                 <span className="text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider block">Conversión</span>
-                <span className="text-xs sm:text-sm font-black text-purple-600 dark:text-purple-400 leading-tight font-mono tabular-nums">{kpis.conversionRate}% ({kpis.wonLeads})</span>
+                <span className="text-xs sm:text-sm font-black text-gold-500 dark:text-gold-400 leading-tight font-mono tabular-nums">{kpis.conversionRate}% ({kpis.wonLeads})</span>
               </div>
             </div>
           </div>
@@ -634,7 +634,7 @@ export const KanbanBoard = () => {
                   placeholder="Buscar prospecto, teléfono..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-xl pl-8 pr-7 py-1.5 text-xs text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:border-emerald-500"
+                  className="w-full bg-navy-800/10 dark:bg-navy-800 border border-navy-700/30 dark:border-navy-700 rounded-xl pl-8 pr-7 py-1.5 text-xs text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:border-gold-500"
                 />
                 {searchQuery && (
                   <button 
@@ -654,7 +654,7 @@ export const KanbanBoard = () => {
                     ? 'bg-rose-600 text-white border-rose-500 shadow-md font-black ring-2 ring-rose-500/50 animate-pulse'
                     : urgentLeadsCount > 0
                     ? 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/30 hover:bg-rose-500/20'
-                    : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-white/5'
+                    : 'bg-navy-800/10 dark:bg-navy-800 text-slate-500 dark:text-slate-400 border-navy-700/30 dark:border-navy-700'
                 }`}
                 title="Filtrar prospectos sin contacto por más de 48 horas"
               >
@@ -667,7 +667,7 @@ export const KanbanBoard = () => {
               <select
                 value={filterAdvisor}
                 onChange={(e) => setFilterAdvisor(e.target.value)}
-                className="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-white/5 text-slate-700 dark:text-slate-200 text-xs font-semibold rounded-xl px-2.5 py-1.5 focus:outline-none cursor-pointer"
+                className="bg-navy-800/10 dark:bg-navy-800 border border-navy-700/30 dark:border-navy-700 text-slate-700 dark:text-slate-200 text-xs font-semibold rounded-xl px-2.5 py-1.5 focus:outline-none cursor-pointer"
               >
                 <option value="ALL">👤 Asesores</option>
                 {uniqueAdvisors.map(([id, name]) => (
@@ -678,7 +678,7 @@ export const KanbanBoard = () => {
               <select
                 value={filterProduct}
                 onChange={(e) => setFilterProduct(e.target.value)}
-                className="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-white/5 text-slate-700 dark:text-slate-200 text-xs font-semibold rounded-xl px-2.5 py-1.5 focus:outline-none cursor-pointer"
+                className="bg-navy-800/10 dark:bg-navy-800 border border-navy-700/30 dark:border-navy-700 text-slate-700 dark:text-slate-200 text-xs font-semibold rounded-xl px-2.5 py-1.5 focus:outline-none cursor-pointer"
               >
                 <option value="ALL">🏗️ Proyecto</option>
                 <option value="Flex Home">Flex Home</option>
@@ -690,7 +690,7 @@ export const KanbanBoard = () => {
               <select
                 value={filterLotStatus}
                 onChange={(e) => setFilterLotStatus(e.target.value)}
-                className="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-white/5 text-slate-700 dark:text-slate-200 text-xs font-semibold rounded-xl px-2.5 py-1.5 focus:outline-none cursor-pointer"
+                className="bg-navy-800/10 dark:bg-navy-800 border border-navy-700/30 dark:border-navy-700 text-slate-700 dark:text-slate-200 text-xs font-semibold rounded-xl px-2.5 py-1.5 focus:outline-none cursor-pointer"
               >
                 <option value="ALL">🗺️ Estado de Lote</option>
                 <option value="Lote Propio">Lote Propio</option>
@@ -700,7 +700,7 @@ export const KanbanBoard = () => {
               <select
                 value={filterDateRange}
                 onChange={(e) => setFilterDateRange(e.target.value)}
-                className="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-white/5 text-slate-700 dark:text-slate-200 text-xs font-semibold rounded-xl px-2.5 py-1.5 focus:outline-none cursor-pointer"
+                className="bg-navy-800/10 dark:bg-navy-800 border border-navy-700/30 dark:border-navy-700 text-slate-700 dark:text-slate-200 text-xs font-semibold rounded-xl px-2.5 py-1.5 focus:outline-none cursor-pointer"
               >
                 <option value="ALL">📅 Fechas</option>
                 <option value="TODAY">📅 Registrados Hoy</option>
@@ -749,15 +749,15 @@ export const KanbanBoard = () => {
                   key={stage.id}
                   type="button"
                   onClick={() => setActiveMobileStageId(stage.id)}
-                  className={`flex-shrink-0 px-3.5 py-2 rounded-xl text-xs font-bold flex items-center space-x-2 transition-all cursor-pointer ${
+                  className={`flex-shrink-0 px-3.5 py-2 rounded-xl text-xs font-bold flex items-center space-x-2 transition-all cursor-pointer min-h-[36px] ${
                     isCurrent
-                      ? 'bg-emerald-600 text-white shadow-md'
-                      : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-white/5'
+                      ? 'bg-gradient-to-r from-gold-600 to-gold-500 text-navy-950 shadow-md'
+                      : 'bg-white dark:bg-navy-800 text-slate-700 dark:text-slate-300 border border-navy-700/30 dark:border-navy-700'
                   }`}
                 >
                   <span className="truncate max-w-[120px]">{stage.name}</span>
                   <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-mono font-black ${
-                    isCurrent ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+                    isCurrent ? 'bg-navy-950/20 text-navy-950' : 'bg-navy-800/10 dark:bg-navy-800 text-slate-600 dark:text-slate-300'
                   }`}>
                     {count}
                   </span>
@@ -780,21 +780,21 @@ export const KanbanBoard = () => {
                 onDragOver={(e) => handleDragOver(e, stage.id)}
                 onDragLeave={handleDragLeave}
                 onDrop={(e) => handleDrop(e, stage.id)}
-                className={`w-full md:w-80 flex-shrink-0 bg-slate-100 dark:bg-slate-900/60 rounded-3xl p-3.5 flex-col max-h-[calc(100vh-230px)] border transition-all duration-200 ${
+                className={`w-full md:w-80 flex-shrink-0 bg-navy-800/10 dark:bg-navy-900/60 rounded-3xl p-3.5 flex-col max-h-[calc(100vh-230px)] border transition-all duration-200 ${
                   isCurrentMobile ? 'flex' : 'hidden md:flex'
                 } ${
                   dragOverStageId === stage.id
-                    ? 'border-emerald-500 ring-2 ring-emerald-500 shadow-xl shadow-[#10b981]/20 bg-emerald-500/10 dark:bg-emerald-950/40 scale-[1.01]'
-                    : 'border-slate-200 dark:border-white/5 shadow-2xs'
+                    ? 'border-gold-500 ring-2 ring-gold-500/50 shadow-xl shadow-gold-500/20 bg-gold-500/10 dark:bg-navy-800 scale-[1.01]'
+                    : 'border-navy-700/30 dark:border-navy-700 shadow-2xs'
                 }`}
               >
                 {/* MÓDULO 3: CABECERA DE COLUMNA COMO MINI-DASHBOARD */}
-                <div className="p-3 bg-white dark:bg-[#1e293b] rounded-2xl border border-slate-200 dark:border-white/5 space-y-2 mb-3 shadow-xs">
+                <div className="p-3 bg-white dark:bg-navy-800 rounded-2xl border border-navy-700/30 dark:border-navy-700 space-y-2 mb-3 shadow-xs">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-xs font-black text-slate-800 dark:text-white uppercase tracking-wider truncate">
+                    <h3 className="text-xs font-black text-navy-900 dark:text-white uppercase tracking-wider truncate">
                       {stage.name}
                     </h3>
-                    <span className="text-xs font-extrabold px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-full font-mono tabular-nums">
+                    <span className="text-xs font-extrabold px-2 py-0.5 bg-gold-500/10 text-gold-500 dark:text-gold-400 rounded-full font-mono tabular-nums border border-gold-500/20">
                       {stageLeads.length}
                     </span>
                   </div>
@@ -804,16 +804,16 @@ export const KanbanBoard = () => {
                     <span className="font-bold text-slate-500 dark:text-slate-400">
                       {formatCOP(stageTotalValue)}
                     </span>
-                    <span className="px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold border border-emerald-500/20">
+                    <span className="px-1.5 py-0.5 rounded bg-gold-500/10 text-gold-500 dark:text-gold-400 font-bold border border-gold-500/20">
                       {prob}% Prob.
                     </span>
                   </div>
 
                   {/* Barra de Progreso de Volumen Ocupado */}
                   <div className="space-y-1 pt-0.5">
-                    <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                    <div className="w-full bg-navy-800/20 dark:bg-navy-800 rounded-full h-1.5 overflow-hidden">
                       <div 
-                        className="bg-gradient-to-r from-emerald-500 to-teal-400 h-full rounded-full transition-all duration-300"
+                        className="bg-gradient-to-r from-gold-600 to-gold-400 h-full rounded-full transition-all duration-300"
                         style={{ width: `${Math.min(100, occupancyPct)}%` }}
                       />
                     </div>
@@ -844,14 +844,14 @@ export const KanbanBoard = () => {
                           onDragStart={(e) => handleDragStart(e, lead.id)}
                           onDragEnd={handleDragEnd}
                           onClick={() => setSelectedLeadForModal(lead)}
-                          className="bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-white/5 hover:border-emerald-500/40 dark:hover:border-emerald-500/30 p-3 rounded-2xl shadow-xs hover:shadow-md transition-all duration-200 cursor-pointer group space-y-2 relative overflow-hidden"
+                          className="bg-white dark:bg-navy-800 border border-navy-700/30 dark:border-navy-700 hover:border-gold-500/40 dark:hover:border-gold-500/30 p-3 rounded-2xl shadow-xs hover:shadow-md transition-all duration-200 cursor-pointer group space-y-2 relative overflow-hidden"
                         >
                           {/* MÓDULO 1: RADAR SLA EN ESQUINA DE TARJETA */}
                           <div className="flex items-start justify-between pl-1">
                             <div className="min-w-0 pr-2">
                               <h4 
                                 onClick={() => setSelectedLeadForModal(lead)}
-                                className="text-xs font-semibold text-slate-900 dark:text-white leading-snug truncate hover:text-emerald-500 cursor-pointer"
+                                className="text-xs font-semibold text-navy-900 dark:text-white leading-snug truncate hover:text-gold-500 cursor-pointer"
                               >
                                 {fullName}
                               </h4>
@@ -876,20 +876,20 @@ export const KanbanBoard = () => {
 
                           {/* Badges de Campaña y Calificación */}
                           <div className="flex flex-wrap items-center gap-1.5 pl-1">
-                            <span className="text-[9.5px] font-bold px-2 py-0.5 rounded-md bg-purple-500/10 text-purple-700 dark:text-purple-300 border border-purple-500/20 truncate max-w-[130px]">
+                            <span className="text-[9.5px] font-bold px-2 py-0.5 rounded-md bg-navy-800/10 text-navy-800 dark:text-slate-300 border border-navy-700/30 truncate max-w-[130px]">
                               {lead.source && (lead.source.includes('Nacional') || lead.source.includes('Virtual')) ? '💻 Cita Virtual' : lead.source || 'Meta Ads'}
                             </span>
 
                             <span className={`text-[9.5px] font-bold px-2 py-0.5 rounded-md border flex items-center ${
-                              lead.qualification_level === 'VIP' ? 'bg-purple-500/10 text-purple-600 dark:text-purple-300 border-purple-500/30 font-extrabold' :
-                              lead.qualification_level === 'HOT' ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-300 border-emerald-500/30 font-bold' :
+                              lead.qualification_level === 'VIP' ? 'bg-gold-500/15 text-gold-500 dark:text-gold-400 border-gold-500/30 font-extrabold' :
+                              lead.qualification_level === 'HOT' ? 'bg-gold-500/10 text-gold-500 dark:text-gold-400 border-gold-500/30 font-bold' :
                               lead.qualification_level === 'WARM' ? 'bg-amber-500/10 text-amber-600 dark:text-amber-300 border-amber-500/30' :
-                              'bg-slate-500/10 text-slate-600 dark:text-slate-400 border-slate-500/20'
+                              'bg-navy-800/10 text-slate-600 dark:text-slate-400 border-navy-700/30'
                             }`}>
                               {lead.qualification_level === 'VIP' && (
                                 <span className="relative flex h-2 w-2 mr-1 shrink-0">
-                                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
-                                  <span className="relative inline-flex rounded-full h-2 w-2 bg-purple-600"></span>
+                                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gold-400 opacity-75"></span>
+                                  <span className="relative inline-flex rounded-full h-2 w-2 bg-gold-500"></span>
                                 </span>
                               )}
                               <span>{lead.qualification_level || 'WARM'}</span>
@@ -897,11 +897,11 @@ export const KanbanBoard = () => {
                           </div>
 
                           {/* Modelo + Presupuesto Tabular */}
-                          <div className="flex items-center justify-between pl-1 pt-1 border-t border-slate-100 dark:border-white/5 text-[11px]">
+                          <div className="flex items-center justify-between pl-1 pt-1 border-t border-navy-700/20 dark:border-navy-700 text-[11px]">
                             <span className="font-medium text-slate-600 dark:text-slate-300 truncate max-w-[140px]">
                               🏗️ {lead.interest_product || 'Por definir'}
                             </span>
-                            <span className="font-mono tabular-nums font-bold text-emerald-600 dark:text-emerald-400 shrink-0">
+                            <span className="font-mono tabular-nums font-bold text-gold-500 dark:text-gold-400 shrink-0">
                               {lead.estimated_budget ? formatCOP(lead.estimated_budget) : 'Por cotizar'}
                             </span>
                           </div>
@@ -916,8 +916,8 @@ export const KanbanBoard = () => {
                             </div>
                           )}
 
-                          {/* Botones en Hover */}
-                          <div className="pt-2 border-t border-slate-100 dark:border-white/5 hidden group-hover:flex items-center justify-between gap-1 animate-fade-in transition-all duration-200">
+                          {/* Botones de Acción Rápida — siempre visibles en táctil, hover en desktop */}
+                          <div className="pt-2 border-t border-navy-700/20 dark:border-navy-700 flex md:hidden md:group-hover:flex items-center justify-between gap-1 animate-fade-in transition-all duration-200">
                             <button
                               type="button"
                               onClick={(e) => {
@@ -925,7 +925,7 @@ export const KanbanBoard = () => {
                                 fetchMessages(lead.id);
                                 setActiveTab('chats');
                               }}
-                              className="flex-1 py-1 px-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-bold text-[10px] rounded-lg transition-all flex items-center justify-center space-x-1 cursor-pointer"
+                              className="flex-1 min-h-[36px] py-1 px-1.5 bg-gold-500/10 hover:bg-gold-500/20 text-gold-500 dark:text-gold-400 font-bold text-[10px] rounded-lg transition-all flex items-center justify-center space-x-1 cursor-pointer"
                               title="Abrir Chat WhatsApp"
                             >
                               <MessageCircle className="w-3 h-3" />
@@ -938,7 +938,7 @@ export const KanbanBoard = () => {
                                 e.stopPropagation();
                                 setSelectedLeadForAppointment(lead);
                               }}
-                              className="flex-1 py-1 px-1.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-600 dark:text-amber-400 font-bold text-[10px] rounded-lg transition-all flex items-center justify-center space-x-1 cursor-pointer"
+                              className="flex-1 min-h-[36px] py-1 px-1.5 bg-gold-500/10 hover:bg-gold-500/20 text-gold-400 font-bold text-[10px] rounded-lg transition-all flex items-center justify-center space-x-1 cursor-pointer"
                               title="Agendar Cita"
                             >
                               <Calendar className="w-3 h-3" />
@@ -951,7 +951,7 @@ export const KanbanBoard = () => {
                                 e.stopPropagation();
                                 setSelectedLeadForDossier(lead);
                               }}
-                              className="py-1 px-1.5 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 font-bold text-[10px] rounded-lg transition-all flex items-center justify-center space-x-1 cursor-pointer"
+                              className="min-h-[36px] py-1 px-1.5 bg-navy-800/10 hover:bg-navy-800/20 dark:bg-navy-800 dark:hover:bg-navy-700 text-gold-500 dark:text-gold-400 font-bold text-[10px] rounded-lg transition-all flex items-center justify-center space-x-1 cursor-pointer"
                               title="Abrir Dossier Cotizador USD"
                             >
                               <DollarSign className="w-3 h-3" />
@@ -964,7 +964,7 @@ export const KanbanBoard = () => {
                                 e.stopPropagation();
                                 setSelectedLeadForModal(lead);
                               }}
-                              className="py-1 px-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-[10px] rounded-lg transition-all flex items-center justify-center cursor-pointer"
+                              className="min-h-[36px] py-1 px-1.5 bg-navy-800/10 hover:bg-navy-800/20 dark:bg-navy-800 dark:hover:bg-navy-700 text-slate-700 dark:text-slate-200 font-bold text-[10px] rounded-lg transition-all flex items-center justify-center cursor-pointer"
                               title="Ver Ficha 360°"
                             >
                               <ExternalLink className="w-3 h-3" />
@@ -988,26 +988,26 @@ export const KanbanBoard = () => {
         /* VISTA 2: TABLA EJECUTIVA (DENSE DATA GRID)                                */
         /* ========================================================================= */
         <div className="flex-1 overflow-y-auto p-5 space-y-4">
-          <div className="bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-white/5 rounded-3xl shadow-sm overflow-hidden">
+          <div className="bg-white dark:bg-navy-800 border border-navy-700/30 dark:border-navy-700 rounded-3xl shadow-sm overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs border-collapse font-sans">
                 <thead>
-                  <tr className="bg-slate-50 dark:bg-[#0f172a] text-[10px] font-black uppercase text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-white/5">
-                    <th onClick={() => handleSort('name')} className="p-3.5 cursor-pointer hover:text-emerald-500 transition-colors">
+                  <tr className="bg-navy-800/10 dark:bg-navy-900 text-[10px] font-black uppercase text-slate-500 dark:text-slate-400 border-b border-navy-700/30 dark:border-navy-700">
+                    <th onClick={() => handleSort('name')} className="p-3.5 cursor-pointer hover:text-gold-500 transition-colors">
                       <div className="flex items-center space-x-1">
                         <span>Cliente</span>
                         <ArrowUpDown className="w-3 h-3" />
                       </div>
                     </th>
                     <th className="p-3.5">Etapa Pipeline</th>
-                    <th onClick={() => handleSort('sla')} className="p-3.5 cursor-pointer hover:text-emerald-500 transition-colors">
+                    <th onClick={() => handleSort('sla')} className="p-3.5 cursor-pointer hover:text-gold-500 transition-colors">
                       <div className="flex items-center space-x-1">
                         <span>SLA Inactividad</span>
                         <ArrowUpDown className="w-3 h-3" />
                       </div>
                     </th>
                     <th className="p-3.5">Modelo & Lote</th>
-                    <th onClick={() => handleSort('budget')} className="p-3.5 cursor-pointer hover:text-emerald-500 transition-colors">
+                    <th onClick={() => handleSort('budget')} className="p-3.5 cursor-pointer hover:text-gold-500 transition-colors">
                       <div className="flex items-center space-x-1">
                         <span>Presupuesto ($COP)</span>
                         <ArrowUpDown className="w-3 h-3" />
@@ -1032,13 +1032,13 @@ export const KanbanBoard = () => {
                       const currentStage = stages.find(s => s.id === lead.pipeline_stage_id);
 
                       return (
-                        <tr key={lead.id} className="hover:bg-slate-50 dark:hover:bg-white/5 transition-colors">
+                        <tr key={lead.id} className="hover:bg-navy-800/5 dark:hover:bg-navy-800/20 transition-colors">
                           
                           {/* Cliente */}
                           <td className="p-3.5 font-medium">
                             <div 
                               onClick={() => setSelectedLeadForModal(lead)}
-                              className="font-bold text-[#0f172a] dark:text-white hover:text-emerald-500 cursor-pointer truncate max-w-[180px]"
+                              className="font-bold text-navy-900 dark:text-white hover:text-gold-500 cursor-pointer truncate max-w-[180px]"
                             >
                               {fullName}
                             </div>
@@ -1052,7 +1052,7 @@ export const KanbanBoard = () => {
                             <select
                               value={lead.pipeline_stage_id || ''}
                               onChange={(e) => moveLead(lead.id, parseInt(e.target.value, 10))}
-                              className="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-white/10 rounded-lg px-2 py-1 text-[11px] font-bold text-[#0f172a] dark:text-[#f8fafc] cursor-pointer"
+                              className="bg-navy-800/10 dark:bg-navy-800 border border-navy-700/30 dark:border-navy-700 rounded-lg px-2 py-1 text-[11px] font-bold text-navy-900 dark:text-slate-100 cursor-pointer"
                             >
                               {stages.map(s => (
                                 <option key={s.id} value={s.id}>{s.name}</option>
@@ -1084,17 +1084,17 @@ export const KanbanBoard = () => {
                           </td>
 
                           {/* Presupuesto */}
-                          <td className="p-3.5 font-mono tabular-nums font-bold text-emerald-600 dark:text-emerald-400">
+                          <td className="p-3.5 font-mono tabular-nums font-bold text-gold-500 dark:text-gold-400">
                             {formatCOP(lead.estimated_budget)}
                           </td>
 
                           {/* Calificación */}
                           <td className="p-3.5">
                             <span className={`text-[9.5px] font-bold px-2 py-0.5 rounded-md border inline-flex items-center ${
-                              lead.qualification_level === 'VIP' ? 'bg-purple-500/10 text-purple-600 dark:text-purple-300 border-purple-500/30 font-extrabold' :
-                              lead.qualification_level === 'HOT' ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-300 border-emerald-500/30 font-bold' :
+                              lead.qualification_level === 'VIP' ? 'bg-gold-500/15 text-gold-500 dark:text-gold-400 border-gold-500/30 font-extrabold' :
+                              lead.qualification_level === 'HOT' ? 'bg-gold-500/10 text-gold-500 dark:text-gold-400 border-gold-500/30 font-bold' :
                               lead.qualification_level === 'WARM' ? 'bg-amber-500/10 text-amber-600 dark:text-amber-300 border-amber-500/30' :
-                              'bg-slate-500/10 text-slate-600 dark:text-slate-400 border-slate-500/20'
+                              'bg-navy-800/10 text-slate-600 dark:text-slate-400 border-navy-700/30'
                             }`}>
                               {lead.qualification_level || 'WARM'}
                             </span>
@@ -1114,7 +1114,7 @@ export const KanbanBoard = () => {
                                   fetchMessages(lead.id);
                                   setActiveTab('chats');
                                 }}
-                                className="p-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 transition-all"
+                                className="p-1.5 min-h-[36px] min-w-[36px] rounded-lg bg-gold-500/10 hover:bg-gold-500/20 text-gold-500 dark:text-gold-400 transition-all"
                                 title="Abrir Chat"
                               >
                                 <MessageCircle className="w-3.5 h-3.5" />
@@ -1123,7 +1123,7 @@ export const KanbanBoard = () => {
                               <button
                                 type="button"
                                 onClick={() => setSelectedLeadForAppointment(lead)}
-                                className="p-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-600 dark:text-amber-400 transition-all"
+                                className="p-1.5 min-h-[36px] min-w-[36px] rounded-lg bg-gold-500/10 hover:bg-gold-500/20 text-gold-400 transition-all"
                                 title="Agendar Cita"
                               >
                                 <Calendar className="w-3.5 h-3.5" />
@@ -1132,7 +1132,7 @@ export const KanbanBoard = () => {
                               <button
                                 type="button"
                                 onClick={() => setSelectedLeadForDossier(lead)}
-                                className="p-1.5 rounded-lg bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 transition-all"
+                                className="p-1.5 min-h-[36px] min-w-[36px] rounded-lg bg-navy-800/10 hover:bg-navy-800/20 dark:bg-navy-800 dark:hover:bg-navy-700 text-gold-500 dark:text-gold-400 transition-all"
                                 title="Dossier Cotizador USD"
                               >
                                 <DollarSign className="w-3.5 h-3.5" />
@@ -1141,7 +1141,7 @@ export const KanbanBoard = () => {
                               <button
                                 type="button"
                                 onClick={() => setSelectedLeadForModal(lead)}
-                                className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-all"
+                                className="p-1.5 min-h-[36px] min-w-[36px] rounded-lg bg-navy-800/10 hover:bg-navy-800/20 dark:bg-navy-800 dark:hover:bg-navy-700 text-slate-600 dark:text-slate-300 transition-all"
                                 title="Ficha 360°"
                               >
                                 <ExternalLink className="w-3.5 h-3.5" />
@@ -1158,11 +1158,11 @@ export const KanbanBoard = () => {
             </div>
 
             {/* Resumen al pie de la tabla */}
-            <div className="p-4 bg-slate-50 dark:bg-[#0f172a] border-t border-slate-200 dark:border-white/5 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 dark:text-slate-400 gap-2">
+            <div className="p-4 bg-navy-800/10 dark:bg-navy-900 border-t border-navy-700/30 dark:border-navy-700 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 dark:text-slate-400 gap-2">
               <div>
-                Mostrando <strong className="text-[#0f172a] dark:text-white">{sortedTableLeads.length}</strong> de <strong className="text-[#0f172a] dark:text-white">{leads.length}</strong> prospectos
+                Mostrando <strong className="text-navy-900 dark:text-white">{sortedTableLeads.length}</strong> de <strong className="text-navy-900 dark:text-white">{leads.length}</strong> prospectos
               </div>
-              <div className="font-mono tabular-nums font-bold text-emerald-600 dark:text-emerald-400">
+              <div className="font-mono tabular-nums font-bold text-gold-500 dark:text-gold-400">
                 Total Filtrado: {formatCOP(sortedTableLeads.reduce((acc, l) => acc + (l.estimated_budget || 0), 0))}
               </div>
             </div>
@@ -1226,11 +1226,11 @@ export const KanbanBoard = () => {
 
       {/* Modal Cita Rápida */}
       {selectedLeadForAppointment && (
-        <div className="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in font-sans">
-          <div className="bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-white/10 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4 text-[#0f172a] dark:text-[#f8fafc]">
-            <div className="flex items-center justify-between border-b border-slate-100 dark:border-white/5 pb-3">
+        <div className="fixed inset-0 bg-navy-950/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in font-sans">
+          <div className="bg-white dark:bg-navy-800 border border-navy-700/30 dark:border-navy-700 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4 text-navy-900 dark:text-slate-100">
+            <div className="flex items-center justify-between border-b border-navy-700/20 dark:border-navy-700 pb-3">
               <div className="flex items-center space-x-2">
-                <Calendar className="w-5 h-5 text-amber-500" />
+                <Calendar className="w-5 h-5 text-gold-500" />
                 <h3 className="text-sm font-black uppercase tracking-wider">
                   Agendar Cita Rápida
                 </h3>
@@ -1247,7 +1247,7 @@ export const KanbanBoard = () => {
             </div>
 
             <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-              Cliente: <strong className="text-[#0f172a] dark:text-white">{selectedLeadForAppointment.first_name} {selectedLeadForAppointment.last_name || ''}</strong> ({selectedLeadForAppointment.phone})
+              Cliente: <strong className="text-navy-900 dark:text-white">{selectedLeadForAppointment.first_name} {selectedLeadForAppointment.last_name || ''}</strong> ({selectedLeadForAppointment.phone})
             </p>
 
             {appointmentError && (
@@ -1258,7 +1258,7 @@ export const KanbanBoard = () => {
             )}
 
             {appointmentSuccess && (
-              <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-600 dark:text-emerald-400 flex items-center space-x-2">
+              <div className="p-3 rounded-xl bg-gold-500/10 border border-gold-500/20 text-xs text-gold-500 dark:text-gold-400 flex items-center space-x-2">
                 <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
                 <span>{appointmentSuccess}</span>
               </div>
@@ -1274,7 +1274,7 @@ export const KanbanBoard = () => {
                   value={appointmentDateTime}
                   onChange={(e) => setAppointmentDateTime(e.target.value)}
                   required
-                  className="w-full bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-xs font-bold text-[#0f172a] dark:text-white focus:outline-none"
+                  className="w-full bg-navy-800/10 dark:bg-navy-900 border border-navy-700/30 dark:border-navy-700 rounded-xl px-4 py-2.5 text-xs font-bold text-navy-900 dark:text-white focus:outline-none focus:border-gold-500"
                 />
               </div>
 
@@ -1285,7 +1285,7 @@ export const KanbanBoard = () => {
                 <select
                   value={appointmentAdvisorId}
                   onChange={(e) => setAppointmentAdvisorId(e.target.value)}
-                  className="w-full bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-xs font-bold text-[#0f172a] dark:text-white focus:outline-none cursor-pointer"
+                  className="w-full bg-navy-800/10 dark:bg-navy-900 border border-navy-700/30 dark:border-navy-700 rounded-xl px-4 py-2.5 text-xs font-bold text-navy-900 dark:text-white focus:outline-none focus:border-gold-500 cursor-pointer"
                 >
                   <option value="">Mi Usuario Actual</option>
                   {uniqueAdvisors.map(([id, name]) => (
@@ -1303,7 +1303,7 @@ export const KanbanBoard = () => {
                   onChange={(e) => setAppointmentNotes(e.target.value)}
                   placeholder="Ej. Presentación catálogo Flex Home en Showroom..."
                   rows="2"
-                  className="w-full bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-white/10 rounded-xl p-3 text-xs text-[#0f172a] dark:text-white focus:outline-none resize-none"
+                  className="w-full bg-navy-800/10 dark:bg-navy-900 border border-navy-700/30 dark:border-navy-700 rounded-xl p-3 text-xs text-navy-900 dark:text-white focus:outline-none focus:border-gold-500 resize-none"
                 ></textarea>
               </div>
 
@@ -1311,7 +1311,7 @@ export const KanbanBoard = () => {
                 <button
                   type="submit"
                   disabled={bookingAppointment || !appointmentDateTime}
-                  className="flex-1 bg-amber-500 hover:bg-amber-400 disabled:opacity-50 text-slate-950 font-black py-2.5 rounded-xl text-xs transition-all shadow-md cursor-pointer flex items-center justify-center space-x-1.5"
+                  className="flex-1 bg-gradient-to-r from-gold-600 to-gold-500 hover:from-gold-500 hover:to-gold-400 disabled:opacity-50 text-navy-950 font-black py-2.5 rounded-xl text-xs transition-all shadow-md shadow-gold-500/20 cursor-pointer flex items-center justify-center space-x-1.5 min-h-[36px]"
                 >
                   {bookingAppointment ? (
                     <div className="w-4 h-4 border-2 border-slate-950 border-t-transparent rounded-full animate-spin"></div>
@@ -1329,7 +1329,7 @@ export const KanbanBoard = () => {
                     setSelectedLeadForAppointment(null);
                     setPendingStageMove(null);
                   }}
-                  className="py-2.5 px-4 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold rounded-xl text-xs transition-all cursor-pointer"
+                  className="py-2.5 px-4 bg-navy-800/10 hover:bg-navy-800/20 dark:bg-navy-800 dark:hover:bg-navy-700 text-slate-700 dark:text-slate-200 font-bold rounded-xl text-xs transition-all cursor-pointer min-h-[36px]"
                 >
                   Cancelar
                 </button>
