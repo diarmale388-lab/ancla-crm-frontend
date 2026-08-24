@@ -68,9 +68,8 @@ export const useAuthStore = create((set, get) => ({
         },
       });
 
-      if (response.status === 401) {
-        // Únicamente si el backend responde 401 explícito (token verdaderamente caducado)
-        console.warn("Token expirado (401). Cerrando sesión.");
+      if (response.status === 401 || response.status === 400) {
+        console.warn("Token expirado o usuario inactivo (401/400). Cerrando sesión.");
         get().logout();
         return;
       }
