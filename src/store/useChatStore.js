@@ -29,6 +29,7 @@ export const useChatStore = create((set, get) => ({
   wsConnected: false,
   loading: false,
   error: null,
+  messagesError: null,
   socket: null,
   typingContacts: {}, // Guarda los IDs de los contactos donde la IA está escribiendo: { contact_id: boolean }
   activeTab: 'chats',
@@ -53,7 +54,7 @@ export const useChatStore = create((set, get) => ({
       if (!response.ok) throw new Error('Error al obtener los contactos');
 
       const data = await response.json();
-      set({ contacts: data, loading: false });
+      set({ contacts: data, loading: false, error: null });
     } catch (err) {
       if (!isSilent) set({ error: err.message, loading: false });
     }
@@ -61,9 +62,9 @@ export const useChatStore = create((set, get) => ({
 
   fetchMessages: async (contactId, isSilent = false) => {
     const token = useAuthStore.getState().token;
-    if (!token) return;
+    if (!token || !contactId) return;
 
-    if (!isSilent) set({ selectedContactId: contactId, loading: true, error: null });
+    if (!isSilent) set({ selectedContactId: contactId, loading: true, messagesError: null });
     try {
       const response = await fetch(`${API_URL}/chats/${contactId}/messages`, {
         headers: {
@@ -71,7 +72,10 @@ export const useChatStore = create((set, get) => ({
         },
       });
 
-      if (!response.ok) throw new Error('Error al obtener el historial');
+      if (!response.ok) {
+        set({ messages: [], loading: false });
+        return;
+      }
 
       const data = await response.json();
       
@@ -89,9 +93,9 @@ export const useChatStore = create((set, get) => ({
         }
       }
 
-      set({ messages: data, loading: false });
+      set({ messages: Array.isArray(data) ? data : [], loading: false, messagesError: null });
     } catch (err) {
-      if (!isSilent) set({ error: err.message, loading: false });
+      if (!isSilent) set({ messagesError: err.message, loading: false });
     }
   },
 
