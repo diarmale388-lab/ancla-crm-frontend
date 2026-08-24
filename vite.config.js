@@ -14,9 +14,14 @@ export default defineConfig({
         main: resolve(__dirname, 'index.source.html')
       },
       output: {
-        entryFileNames: `assets/[name]-${Date.now()}.js`,
-        chunkFileNames: `assets/[name]-${Date.now()}.js`,
-        assetFileNames: `assets/[name]-${Date.now()}[extname]`
+        // Hash de contenido nativo de Vite: el nombre del archivo solo cambia si su
+        // contenido cambia. Evita acumular un par de archivos nuevo en cada build
+        // (antes se usaba Date.now(), que generaba un nombre distinto SIEMPRE,
+        // incluso si el contenido era idéntico) y permite cachear agresivamente
+        // los bundles que no cambiaron entre despliegues.
+        entryFileNames: `assets/[name]-[hash].js`,
+        chunkFileNames: `assets/[name]-[hash].js`,
+        assetFileNames: `assets/[name]-[hash][extname]`
       }
     }
   }

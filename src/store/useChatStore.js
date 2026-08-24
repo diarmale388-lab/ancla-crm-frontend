@@ -97,22 +97,6 @@ export const useChatStore = create((set, get) => ({
 
   pollingIntervalId: null,
 
-  // Polling silencioso de respaldo cada 2.5 segundos para garantizar 100% de actualización en tiempo real
-  startSilentPolling: () => {
-    const existing = get().pollingIntervalId;
-    if (existing) clearInterval(existing);
-
-    const interval = setInterval(() => {
-      get().fetchContacts(true);
-      const activeId = get().selectedContactId;
-      if (activeId) {
-        get().fetchMessages(activeId, true);
-      }
-    }, 2500);
-
-    set({ pollingIntervalId: interval });
-  },
-
   stopSilentPolling: () => {
     const existing = get().pollingIntervalId;
     if (existing) {
@@ -492,6 +476,9 @@ export const useChatStore = create((set, get) => ({
       ws.onopen = () => {
         console.log('WebSocket bidireccional conectado exitosamente a:', wsUrl);
         set({ wsConnected: true, lastHeartbeat: Date.now() });
+        // El WebSocket ya es la fuente de verdad en tiempo real: detener el
+        // polling de respaldo si estaba activo por una desconexión previa.
+        get().stopSilentPolling();
 
         // Heartbeat Ping cada 5 segundos para mantener la conexión viva y detectar caídas rápidamente
         clearInterval(pingInterval);
@@ -1013,41 +1000,30 @@ export const useChatStore = create((set, get) => ({
     }
   },
 
+  // Polling silencioso de respaldo: única definición (evita duplicidad/carreras).
+  // Solo debe operar como red de seguridad mientras el WebSocket esté caído;
+  // en cuanto la conexión en tiempo real se restablece (ws.onopen ->
+  // stopSilentPolling), este intervalo se detiene automáticamente.
   startSilentPolling: () => {
     if (get().pollingIntervalId) return;
-    const interval = setInterval(async () => {
-      const token = useAuthStore.getState().token;
-      if (!token) return;
+    const token = useAuthStore.getState().token;
+    if (!token) return;
 
-      const selectedId = get().selectedContactId;
-      if (selectedId) {
-        try {
-          const res = await fetch(`${API_URL}/chats/${selectedId}/messages`, {
-            headers: { 'Authorization': `Bearer ${token}` }
-          });
-          if (res.ok) {
-            const freshMsgs = await res.json();
-            set((state) => {
-              if (state.selectedContactId !== selectedId) return state;
-              if (freshMsgs.length !== state.messages.length) {
-                return { messages: freshMsgs };
-              }
-              return state;
-            });
-          }
-        } catch (e) {}
+    const interval = setInterval(() => {
+      // Salvaguarda adicional: si el WebSocket ya está activo, no tiene
+      // sentido seguir consultando por polling; se detiene a sí mismo.
+      if (get().wsConnected) {
+        get().stopSilentPolling();
+        return;
       }
-      // Refrescar contactos silenciosamente
-      try {
-        const cRes = await fetch(`${API_URL}/chats/contacts`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        if (cRes.ok) {
-          const freshContacts = await cRes.json();
-          set({ contacts: freshContacts });
-        }
-      } catch (e) {}
+
+      get().fetchContacts(true);
+      const activeId = get().selectedContactId;
+      if (activeId) {
+        get().fetchMessages(activeId, true);
+      }
     }, 3000);
+
     set({ pollingIntervalId: interval });
   },
 

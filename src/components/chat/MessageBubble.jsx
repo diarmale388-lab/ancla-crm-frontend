@@ -1,6 +1,7 @@
 import React from 'react';
 import { Check, CheckCheck, AlertCircle, Bot, Lock, CornerUpLeft, Forward, Pencil, Trash2, FileText, Download, FileSpreadsheet } from 'lucide-react';
 import { useChatStore } from '../../store/useChatStore';
+import { buildAuthenticatedMediaUrl } from '../../utils/media';
 
 export const MessageBubble = ({ message, onImageClick, onReply, onForward, onEdit, onDelete }) => {
   const isMe = message.sender_type === 'user' || message.sender_type === 'ai';
@@ -140,7 +141,7 @@ export const MessageBubble = ({ message, onImageClick, onReply, onForward, onEdi
             const mediaId = mediaIdMatch[1];
             const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
             const baseUrl = import.meta.env.VITE_API_URL || (isLocal ? 'http://localhost:8001/api/v1' : 'https://ancla-crm-backend-production.up.railway.app/api/v1');
-            const mediaUrl = `${baseUrl}/chats/media/${mediaId}`;
+            const mediaUrl = buildAuthenticatedMediaUrl(`${baseUrl}/chats/media/${mediaId}`);
             
             const msgTypeLower = (message.message_type || '').toLowerCase();
             

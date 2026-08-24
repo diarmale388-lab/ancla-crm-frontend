@@ -10,6 +10,7 @@ import AnclaTechnicalDossier from '../common/AnclaTechnicalDossier';
 import SpecialAppointmentBanner from './SpecialAppointmentBanner';
 import { MessageBubble } from './MessageBubble';
 import { ImageViewerModal } from './ImageViewerModal';
+import { buildAuthenticatedMediaUrl } from '../../utils/media';
 import { Send, Bot, WifiOff, MessageCircle, Sparkles, User, Phone, Mail, Calendar, Check, ChevronDown, BookOpen, Clock, Lock, Trash2, ShieldAlert, ArrowLeft, CornerUpLeft, Forward, Pencil, X, Download, Smile, Paperclip, Upload, Search, DollarSign, MoreVertical, Bold, Italic, Strikethrough, Code, Copy, Scissors, Clipboard, Video, CheckSquare, Wrench } from 'lucide-react';
 
 const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
@@ -59,10 +60,7 @@ export const ChatWindow = () => {
   } = useKanbanStore();
 
   const currentUser = useAuthStore(state => state.user);
-  const userRole = String(currentUser?.role || '').toLowerCase();
-  const userEmail = String(currentUser?.email || '').toLowerCase();
-  const userName = String(currentUser?.full_name || '').toLowerCase();
-  const isAdmin = !currentUser || userRole === 'admin' || userRole.includes('admin') || userEmail.includes('diarmale388') || userEmail.includes('liliana') || userName.includes('diarmale388') || userName.includes('liliana') || currentUser?.id === 5 || currentUser?.id === 3 || currentUser?.id === 6;
+  const isAdmin = currentUser?.role === 'admin';
 
   const [inputMessage, setInputMessage] = useState('');
   const [aiLoading, setAiLoading] = useState(false);
@@ -185,7 +183,7 @@ export const ChatWindow = () => {
     .map(msg => {
       const match = (msg.content || '').match(/\[Media ID:\s*([^\]]+)\]/);
       if (match) {
-        return `${API_URL}/chats/media/${match[1]}`;
+        return buildAuthenticatedMediaUrl(`${API_URL}/chats/media/${match[1]}`);
       }
       if ((msg.content || '').startsWith('http')) return msg.content;
       return null;

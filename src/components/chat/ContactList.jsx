@@ -96,10 +96,7 @@ export const ContactList = () => {
 
   const filteredContacts = contacts.filter((c) => {
     // 0. Aislamiento RBAC por Rol: Asesores comerciales sólo ven sus contactos asignados
-    const userRole = String(currentUser?.role || '').toLowerCase();
-    const userEmail = String(currentUser?.email || '').toLowerCase();
-    const userName = String(currentUser?.full_name || '').toLowerCase();
-    const isAdmin = !currentUser || userRole === 'admin' || userRole.includes('admin') || userEmail.includes('diarmale388') || userEmail.includes('liliana') || userName.includes('diarmale388') || userName.includes('liliana') || currentUser?.id === 5 || currentUser?.id === 3 || currentUser?.id === 6;
+    const isAdmin = currentUser?.role === 'admin';
     if (currentUser && !isAdmin && c.assigned_user_id && c.assigned_user_id !== currentUser.id) {
       return false;
     }

@@ -69,10 +69,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
   const [activeTab, setActiveTab] = useState('perfil');
 
   const currentUser = useAuthStore(state => state.user);
-  const userRole = String(currentUser?.role || '').toLowerCase();
-  const userEmail = String(currentUser?.email || '').toLowerCase();
-  const userName = String(currentUser?.full_name || '').toLowerCase();
-  const isAdmin = !currentUser || userRole === 'admin' || userRole.includes('admin') || userEmail.includes('diarmale388') || userEmail.includes('liliana') || userName.includes('diarmale388') || userName.includes('liliana') || currentUser?.id === 5 || currentUser?.id === 3 || currentUser?.id === 6;
+  const isAdmin = currentUser?.role === 'admin';
 
   // Estados Formulario Ficha 360°
   const [firstName, setFirstName] = useState(contact.first_name || '');

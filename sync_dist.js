@@ -30,12 +30,17 @@ if (htmlContent) {
 }
 
 // 2. Sincronizar dist/assets a root assets
+// IMPORTANTE: se limpia rootAssets antes de copiar. Antes este paso solo agregaba
+// archivos nuevos sin borrar los builds anteriores, acumulando cientos de bundles
+// .js/.css huérfanos con el tiempo (ver auditoría de seguridad). Con hash de contenido
+// (vite.config.js) + limpieza aquí, assets/ siempre refleja únicamente el build actual.
 const distAssets = path.join(distDir, 'assets');
 const rootAssets = path.join(rootDir, 'assets');
 if (fs.existsSync(distAssets)) {
-  if (!fs.existsSync(rootAssets)) {
-    fs.mkdirSync(rootAssets, { recursive: true });
+  if (fs.existsSync(rootAssets)) {
+    fs.rmSync(rootAssets, { recursive: true, force: true });
   }
+  fs.mkdirSync(rootAssets, { recursive: true });
   fs.cpSync(distAssets, rootAssets, { recursive: true });
 }
 

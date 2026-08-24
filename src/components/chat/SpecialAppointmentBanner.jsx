@@ -11,8 +11,7 @@ export default function SpecialAppointmentBanner({ contact, onActionSuccess }) {
 
   const token = useAuthStore(state => state.token);
   const currentUser = useAuthStore(state => state.user);
-  const userRole = String(currentUser?.role || '').toLowerCase();
-  const isAdmin = !currentUser || userRole === 'admin' || userRole.includes('admin') || currentUser?.id === 3 || currentUser?.id === 5 || currentUser?.id === 6;
+  const isAdmin = currentUser?.role === 'admin';
 
   const [loading, setLoading] = useState(false);
   const [showCounterPicker, setShowCounterPicker] = useState(false);
