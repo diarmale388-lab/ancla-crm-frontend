@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   X, Sparkles, Phone, Mail, MapPin, Building2, DollarSign, Calendar as CalendarIcon, 
   FileText, Check, MessageSquare, AlertCircle, Clock, Send, ShieldCheck, Flame, 
@@ -12,6 +12,27 @@ import AnclaTechnicalDossier from './AnclaTechnicalDossier';
 
 const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
 const API_URL = import.meta.env.VITE_API_URL || (isLocal ? 'http://localhost:8001/api/v1' : 'https://ancla-crm-backend-production.up.railway.app/api/v1');
+
+const formatBogotaDateTime = (dateStr) => {
+  if (!dateStr) return '';
+  let isoStr = String(dateStr);
+  if (!isoStr.endsWith('Z') && !/[+-]\d{2}:\d{2}$/.test(isoStr)) {
+    isoStr += 'Z';
+  }
+  try {
+    const d = new Date(isoStr);
+    return d.toLocaleString('es-CO', {
+      timeZone: 'America/Bogota',
+      day: 'numeric',
+      month: 'short',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    });
+  } catch (e) {
+    return dateStr;
+  }
+};
 
 const QUALIFICATION_LEVELS = [
   { id: 'VIP', label: 'VIP Alta Intención', icon: '🚀' },
@@ -265,7 +286,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
           next_action: nextAction,
           next_action_date: nextActionDate,
           content: newNoteContent,
-          author_name: "Liliana / Asesor"
+          author_name: currentUser?.full_name || (isAdmin ? "Liliana León" : "Asesor Comercial")
         })
       });
       if (res.ok) {
@@ -949,7 +970,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                               </span>
                             </div>
                             <span className="text-[11px] font-mono tabular-nums text-slate-400 font-bold">
-                              📅 {new Date(n.created_at).toLocaleString('es-ES', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                              📅 {formatBogotaDateTime(n.created_at)}
                             </span>
                           </div>
 
