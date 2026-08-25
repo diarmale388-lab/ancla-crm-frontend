@@ -31,6 +31,87 @@ const addDaysISO = (isoDate, days) => {
   return `${yy}-${mm}-${dd}`;
 };
 
+// ─────────────────────────────────────────────────────────────
+// Filtro de Fecha Avanzado (Presets Enterprise + Rango Personalizado)
+// ─────────────────────────────────────────────────────────────
+const getMonthBoundsISO = (isoDate) => {
+  const [y, m] = isoDate.split('-').map(Number);
+  const first = `${y}-${String(m).padStart(2, '0')}-01`;
+  const lastDay = new Date(y, m, 0).getDate();
+  const last = `${y}-${String(m).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`;
+  return [first, last];
+};
+
+const getPrevMonthBoundsISO = (isoDate) => {
+  const [y, m] = isoDate.split('-').map(Number);
+  const prev = new Date(y, m - 2, 1);
+  return getMonthBoundsISO(`${prev.getFullYear()}-${String(prev.getMonth() + 1).padStart(2, '0')}-01`);
+};
+
+const getYearBoundsISO = (isoDate) => {
+  const y = isoDate.slice(0, 4);
+  return [`${y}-01-01`, `${y}-12-31`];
+};
+
+// Resuelve el rango [desde, hasta] (YYYY-MM-DD, hora Colombia) según el preset activo.
+// Retorna null cuando el preset es "Todo el Histórico" (sin filtro de fecha).
+const computeDateRange = (preset, customFrom, customTo, today) => {
+  switch (preset) {
+    case 'HOY': return [today, today];
+    case 'AYER': { const y = addDaysISO(today, -1); return [y, y]; }
+    case 'ULTIMOS_7': return [addDaysISO(today, -6), today];
+    case 'ESTE_MES': return getMonthBoundsISO(today);
+    case 'MES_ANTERIOR': return getPrevMonthBoundsISO(today);
+    case 'ESTE_ANIO': return getYearBoundsISO(today);
+    case 'PERSONALIZADO': return [customFrom || '0000-01-01', customTo || '9999-12-31'];
+    default: return null;
+  }
+};
+
+// Convierte cualquier timestamp (o fecha pura YYYY-MM-DD) a fecha ISO en hora de
+// Bogotá, para comparar contra los rangos de fecha de forma consistente.
+const toBogotaISODate = (dateStr) => {
+  if (!dateStr) return null;
+  const raw = String(dateStr);
+  if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) return raw;
+  let isoStr = raw;
+  if (!isoStr.endsWith('Z') && !/[+-]\d{2}:\d{2}$/.test(isoStr)) isoStr += 'Z';
+  const d = new Date(isoStr);
+  if (isNaN(d.getTime())) return null;
+  const bogota = new Date(d.toLocaleString('en-US', { timeZone: 'America/Bogota' }));
+  const y = bogota.getFullYear();
+  const m = String(bogota.getMonth() + 1).padStart(2, '0');
+  const day = String(bogota.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+};
+
+const nowBogotaStamp = () => {
+  const now = new Date();
+  const bogota = new Date(now.toLocaleString('en-US', { timeZone: 'America/Bogota' }));
+  const y = bogota.getFullYear();
+  const m = String(bogota.getMonth() + 1).padStart(2, '0');
+  const d = String(bogota.getDate()).padStart(2, '0');
+  const hh = String(bogota.getHours()).padStart(2, '0');
+  const mm = String(bogota.getMinutes()).padStart(2, '0');
+  return `${y}-${m}-${d}_${hh}${mm}`;
+};
+
+const DATE_FIELD_OPTIONS = [
+  { value: 'INGRESO', label: '📅 Por Fecha de Ingreso' },
+  { value: 'PROXIMO', label: '⏰ Por Fecha de Próximo Seguimiento' }
+];
+
+const getDateRangePresets = (year) => [
+  { value: 'TODO', label: '⚡ Todo el Histórico' },
+  { value: 'HOY', label: '📅 Hoy' },
+  { value: 'AYER', label: '🗓️ Ayer' },
+  { value: 'ULTIMOS_7', label: '⏳ Últimos 7 Días' },
+  { value: 'ESTE_MES', label: '📊 Este Mes' },
+  { value: 'MES_ANTERIOR', label: '🗓️ Mes Anterior' },
+  { value: 'ESTE_ANIO', label: `🎯 Este Año (${year})` },
+  { value: 'PERSONALIZADO', label: '🔧 Rango Personalizado' }
+];
+
 const formatDateBogota = (dateStr, withTime = false) => {
   if (!dateStr) return null;
   const raw = String(dateStr);
@@ -186,6 +267,10 @@ export default function ExecutiveFollowUpView() {
   const [advisorFilter, setAdvisorFilter] = useState('TODOS');
   const [projectFilter, setProjectFilter] = useState('TODOS');
   const [urgencyFilter, setUrgencyFilter] = useState('TODOS');
+  const [dateFilterField, setDateFilterField] = useState('INGRESO');
+  const [dateRangePreset, setDateRangePreset] = useState('TODO');
+  const [customDateFrom, setCustomDateFrom] = useState('');
+  const [customDateTo, setCustomDateTo] = useState('');
   const [selectedLead, setSelectedLead] = useState(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -226,31 +311,48 @@ export default function ExecutiveFollowUpView() {
         __observationsIsNew: observations.isNew,
         __advisorName: resolveAdvisorName(c.assigned_user_name),
         __lastContactDate: c.last_message_time || c.created_at,
-        __lastContactChannel: c.last_message_sender ? (c.last_message_sender === 'contact' || c.last_message_sender === 'CONTACT' ? 'Cliente' : 'Asesor/IA') : null
+        __lastContactChannel: c.last_message_sender ? (c.last_message_sender === 'contact' || c.last_message_sender === 'CONTACT' ? 'Cliente' : 'Asesor/IA') : null,
+        __createdAtISO: toBogotaISODate(c.created_at)
       };
     });
   }, [contacts, today, stageMap]);
 
-  // ── KPIs Gerenciales ──
+  // ── Filtro de Fecha Avanzado (Presets + Rango Personalizado) ──
+  const activeDateRange = useMemo(
+    () => computeDateRange(dateRangePreset, customDateFrom, customDateTo, today),
+    [dateRangePreset, customDateFrom, customDateTo, today]
+  );
+
+  const dateFilteredRows = useMemo(() => {
+    if (!activeDateRange) return enrichedRows;
+    const [from, to] = activeDateRange;
+    return enrichedRows.filter(r => {
+      const dateVal = dateFilterField === 'PROXIMO' ? r.__nextActionDate : r.__createdAtISO;
+      if (!dateVal) return false;
+      return dateVal >= from && dateVal <= to;
+    });
+  }, [enrichedRows, activeDateRange, dateFilterField]);
+
+  // ── KPIs Gerenciales (recalculados en tiempo real según el rango de fecha activo) ──
   const kpis = useMemo(() => {
     let vencidos = 0, hoy = 0, pipelineTotal = 0;
-    enrichedRows.forEach(r => {
+    dateFilteredRows.forEach(r => {
       if (r.__urgency === 'VENCIDO') vencidos++;
       if (r.__urgency === 'HOY') hoy++;
       pipelineTotal += r.__quotedEffective || 0;
     });
     return {
-      total: enrichedRows.length,
+      total: dateFilteredRows.length,
       vencidos,
       hoy,
       pipelineTotal
     };
-  }, [enrichedRows]);
+  }, [dateFilteredRows]);
 
   // ── Filtros combinados ──
   const filteredRows = useMemo(() => {
     const term = search.trim().toLowerCase();
-    return enrichedRows.filter(r => {
+    return dateFilteredRows.filter(r => {
       if (term) {
         const haystack = `${r.first_name || ''} ${r.last_name || ''} ${r.phone || ''} ${r.email || ''} ${r.lot_city || ''}`.toLowerCase();
         if (!haystack.includes(term)) return false;
@@ -264,7 +366,7 @@ export default function ExecutiveFollowUpView() {
       if (urgencyFilter === 'SIN_PROXIMO_PASO' && r.__urgency !== 'SIN_FECHA') return false;
       return true;
     });
-  }, [enrichedRows, search, advisorFilter, projectFilter, urgencyFilter, today, weekLimit]);
+  }, [dateFilteredRows, search, advisorFilter, projectFilter, urgencyFilter, today, weekLimit]);
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
@@ -273,37 +375,52 @@ export default function ExecutiveFollowUpView() {
   };
 
   const handleExportCsv = () => {
-    // Blindaje: la exportación a Excel/CSV con datos de los 622+ prospectos es
+    // Blindaje: la exportación a Excel/CSV con datos de los prospectos es
     // exclusiva de Dirección Comercial y Administradores.
     if (!authorized) return;
+
     const headers = [
-      'Fecha Ingreso', 'Nombre', 'Telefono', 'Correo', 'Ciudad', 'Proyecto',
-      'Ultimo Contacto', 'Proximo Seguimiento', 'Valor Propuesta (COP)', 'Estado', 'Observaciones', 'Asesor'
+      'FECHA INGRESO', 'NOMBRE CLIENTE', 'TELÉFONO', 'ENLACE WHATSAPP', 'CORREO',
+      'CIUDAD / MUNICIPIO', 'PROYECTO INTERÉS', 'ÚLTIMO CONTACTO', 'FECHA PRÓXIMO SEGUIMIENTO',
+      'ESTADO SEGUIMIENTO', 'VALOR PROPUESTA (COP)', 'ETAPA COMERCIAL', 'OBSERVACIONES BITÁCORA',
+      'ASESOR RESPONSABLE'
     ];
+    const VALOR_COL_INDEX = 10;
+
+    // Limpia saltos de línea, retornos de carro y comillas para no quebrar las filas del CSV
     const escapeCsv = (val) => {
-      const s = String(val ?? '').replace(/"/g, '""');
+      const s = String(val ?? '').replace(/\r?\n/g, ' ').replace(/"/g, '""').trim();
       return `"${s}"`;
     };
+
     const rows = filteredRows.map(r => [
       formatDateBogota(r.created_at) || '',
-      `${r.first_name || ''} ${r.last_name || ''}`.trim(),
+      `${r.first_name || ''} ${r.last_name || ''}`.trim() || 'Sin Nombre',
       r.phone || '',
+      r.phone ? `https://wa.me/${cleanPhoneForWhatsapp(r.phone)}` : '',
       r.email || '',
       r.lot_city || '',
       r.__project,
       formatDateBogota(r.__lastContactDate) || '',
       r.__nextActionDate ? formatDateBogota(r.__nextActionDate) : 'Sin fecha',
-      r.__quotedEffective || 0,
+      URGENCY_LABEL[r.__urgency],
+      Math.round(r.__quotedEffective || 0),
       r.__stageName,
-      (r.__observationsText || '').replace(/\n/g, ' '),
+      r.__observationsText || '',
       r.__advisorName
     ]);
-    const csvContent = [headers, ...rows].map(row => row.map(escapeCsv).join(',')).join('\n');
+
+    // Columna de Valor Propuesta se deja sin comillas para que Excel la reconozca como número
+    const csvContent = [headers, ...rows]
+      .map(row => row.map((val, idx) => (idx === VALOR_COL_INDEX ? String(val) : escapeCsv(val))).join(','))
+      .join('\r\n');
+
+    // BOM UTF-8 obligatorio para compatibilidad 100% nativa con tildes/eñes en Excel
     const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `seguimiento_comercial_${today}.csv`;
+    link.download = `ANCLA_Seguimiento_Comercial_${nowBogotaStamp()}.csv`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -453,9 +570,54 @@ export default function ExecutiveFollowUpView() {
             ]}
           />
 
-          {(search || advisorFilter !== 'TODOS' || projectFilter !== 'TODOS' || urgencyFilter !== 'TODOS') && (
+          {/* ═══ Filtro de Fecha Avanzado: Campo + Preset + Rango Personalizado ═══ */}
+          <div className="w-px h-6 bg-slate-200 dark:bg-navy-700 shrink-0" />
+
+          <SelectFilter
+            value={dateFilterField}
+            onChange={setDateFilterField}
+            options={DATE_FIELD_OPTIONS}
+          />
+
+          <SelectFilter
+            value={dateRangePreset}
+            onChange={setDateRangePreset}
+            options={getDateRangePresets(Number(today.slice(0, 4)))}
+          />
+
+          {dateRangePreset === 'PERSONALIZADO' && (
+            <div className="flex items-center gap-1.5 shrink-0 bg-slate-100 dark:bg-navy-800 border border-slate-200 dark:border-navy-700 rounded-xl px-2.5 py-1.5">
+              <label className="text-[10px] font-bold text-slate-500 dark:text-slate-400 whitespace-nowrap">Desde</label>
+              <input
+                type="date"
+                value={customDateFrom}
+                onChange={(e) => setCustomDateFrom(e.target.value)}
+                max={customDateTo || undefined}
+                className="bg-transparent text-[11px] font-bold text-slate-700 dark:text-slate-200 focus:outline-none cursor-pointer"
+              />
+              <label className="text-[10px] font-bold text-slate-500 dark:text-slate-400 whitespace-nowrap">Hasta</label>
+              <input
+                type="date"
+                value={customDateTo}
+                onChange={(e) => setCustomDateTo(e.target.value)}
+                min={customDateFrom || undefined}
+                className="bg-transparent text-[11px] font-bold text-slate-700 dark:text-slate-200 focus:outline-none cursor-pointer"
+              />
+            </div>
+          )}
+
+          {(search || advisorFilter !== 'TODOS' || projectFilter !== 'TODOS' || urgencyFilter !== 'TODOS' || dateRangePreset !== 'TODO') && (
             <button
-              onClick={() => { setSearch(''); setAdvisorFilter('TODOS'); setProjectFilter('TODOS'); setUrgencyFilter('TODOS'); }}
+              onClick={() => {
+                setSearch('');
+                setAdvisorFilter('TODOS');
+                setProjectFilter('TODOS');
+                setUrgencyFilter('TODOS');
+                setDateFilterField('INGRESO');
+                setDateRangePreset('TODO');
+                setCustomDateFrom('');
+                setCustomDateTo('');
+              }}
               className="flex items-center gap-1 px-2.5 py-2 rounded-xl text-[11px] font-bold text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-navy-800 transition-all cursor-pointer shrink-0"
             >
               <X className="w-3 h-3" /> Limpiar
