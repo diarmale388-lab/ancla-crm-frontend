@@ -410,9 +410,10 @@ export default function ExecutiveFollowUpView() {
       r.__advisorName
     ]);
 
-    // Columna de Valor Propuesta se deja sin comillas para que Excel la reconozca como número
-    const csvContent = [headers, ...rows]
-      .map(row => row.map((val, idx) => (idx === VALOR_COL_INDEX ? String(val) : escapeCsv(val))).join(','))
+    // Usar punto y coma (;) y directiva 'sep=;' para que Microsoft Excel (Windows Colombia/Latinoamérica)
+    // reconozca y separe automáticamente cada dato en sus respectivas columnas A, B, C, D...
+    const csvContent = 'sep=;\r\n' + [headers, ...rows]
+      .map(row => row.map((val, idx) => (idx === VALOR_COL_INDEX ? String(val) : escapeCsv(val))).join(';'))
       .join('\r\n');
 
     // BOM UTF-8 obligatorio para compatibilidad 100% nativa con tildes/eñes en Excel
