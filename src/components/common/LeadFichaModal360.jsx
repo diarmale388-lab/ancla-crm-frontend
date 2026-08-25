@@ -72,6 +72,38 @@ const NEXT_ACTIONS = [
   { id: 'WAIT_CLIENT', label: 'Esperar Respuesta Cliente', icon: '⏳' }
 ];
 
+const QUICK_NOTE_SNIPPETS = [
+  {
+    id: 'lote_propio',
+    label: '🏞️ Lote Propio',
+    text: '• Cliente cuenta con terreno/lote propio con escrituras.',
+    syncLot: 'Lote propio (con escrituras)'
+  },
+  {
+    id: 'flex_home',
+    label: '🏗️ Interés Flex Home',
+    text: '• Interesado en modelo residencial modular Flex Home.',
+    syncProduct: 'Flex Home (Residencial)'
+  },
+  {
+    id: 'capsula_living',
+    label: '⛺ Interés Cápsula Living',
+    text: '• Interesado en suites modulares Cápsulas Living.',
+    syncProduct: 'Cápsula Living (Glamping)'
+  },
+  {
+    id: 'cotizacion_enviada',
+    label: '📑 Cotización Enviada',
+    text: '• Se compartió catálogo y cotización preliminar por WhatsApp.'
+  },
+  {
+    id: 'buscando_lote',
+    label: '⏳ Buscando Lote',
+    text: '• Cliente en búsqueda activa de terreno o lote en la zona.',
+    syncLot: 'En búsqueda de lote'
+  }
+];
+
 export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
   if (!contact) return null;
 
@@ -203,6 +235,33 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
     }
   };
 
+  const handleApplySnippet = (snippet) => {
+    setNewNoteContent(prev => {
+      if (prev.includes(snippet.text)) {
+        return prev.replace(snippet.text, '').replace(/\n\n+/g, '\n').trim();
+      } else {
+        return prev ? `${prev}\n${snippet.text}` : snippet.text;
+      }
+    });
+
+    // Sincronización bidireccional automática con Perfil & Requerimientos (Pestaña 1)
+    if (snippet.syncLot) {
+      setLotStatus(snippet.syncLot);
+    }
+    if (snippet.syncProduct) {
+      setInterestProduct(snippet.syncProduct);
+    }
+  };
+
+  const setQuickDate = (daysAhead) => {
+    const d = new Date();
+    d.setDate(d.getDate() + daysAhead);
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    setNextActionDate(`${yyyy}-${mm}-${dd}`);
+  };
+
   // Estados auxiliares
   const [generatingAiSummary, setGeneratingAiSummary] = useState(false);
   const [savedSuccess, setSavedSuccess] = useState(false);
@@ -278,6 +337,8 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
           construction_timeline: constructionTimeline || null,
           next_action: nextAction || null,
           next_action_date: nextActionDate || null,
+          lot_status: lotStatus,
+          interest_product: interestProduct,
           content: newNoteContent,
           author_name: currentUser?.full_name || (isAdmin ? "Liliana León" : "Asesor Comercial")
         })
@@ -289,6 +350,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
         setNextAction('');
         setNextActionDate('');
         fetchBitacora();
+        if (onRefresh) onRefresh();
       }
     } catch (err) {
       console.error("Error guardando nota de bitácora:", err);
@@ -805,24 +867,68 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                   </div>
                 </div>
 
-                {/* Próximo Paso / Compromiso */}
-                <div>
-                  <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1">Próximo Paso / Compromiso Comercial</label>
-                  <select
-                    value={nextAction}
-                    onChange={(e) => setNextAction(e.target.value)}
-                    className="w-full bg-white dark:bg-navy-800 border border-slate-200 dark:border-navy-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 dark:text-slate-100 cursor-pointer"
-                  >
-                    <option value="">-- Seleccionar Próximo Paso (Opcional) --</option>
-                    {NEXT_ACTIONS.map(act => (
-                      <option key={act.id} value={act.id}>{act.icon} {act.label}</option>
-                    ))}
-                  </select>
+                {/* Próximo Paso & Fecha de Seguimiento */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1">Próximo Paso / Compromiso Comercial</label>
+                    <select
+                      value={nextAction}
+                      onChange={(e) => setNextAction(e.target.value)}
+                      className="w-full bg-white dark:bg-navy-800 border border-slate-200 dark:border-navy-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 dark:text-slate-100 cursor-pointer"
+                    >
+                      <option value="">-- Seleccionar Próximo Paso (Opcional) --</option>
+                      {NEXT_ACTIONS.map(act => (
+                        <option key={act.id} value={act.id}>{act.icon} {act.label}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500">Fecha de Próximo Seguimiento</label>
+                      <div className="flex items-center space-x-1">
+                        <button
+                          type="button"
+                          onClick={() => setQuickDate(1)}
+                          className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-100 dark:bg-navy-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-navy-600 cursor-pointer"
+                          title="Fijar para mañana"
+                        >
+                          Mañana
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setQuickDate(3)}
+                          className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-100 dark:bg-navy-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-navy-600 cursor-pointer"
+                          title="Fijar en 3 días"
+                        >
+                          En 3 días
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setQuickDate(7)}
+                          className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-100 dark:bg-navy-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-navy-600 cursor-pointer"
+                          title="Fijar en 1 semana"
+                        >
+                          En 1 sem
+                        </button>
+                      </div>
+                    </div>
+                    <input
+                      type="date"
+                      value={nextActionDate}
+                      onChange={(e) => setNextActionDate(e.target.value)}
+                      className="w-full bg-white dark:bg-navy-800 border border-slate-200 dark:border-navy-700 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-900 dark:text-slate-100 cursor-pointer"
+                    />
+                  </div>
                 </div>
 
+                {/* Notas Detalladas & Chips de Inserción Rápida con Auto-Sync */}
                 <div>
-                  <div className="flex items-center justify-between mb-1">
-                    <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500">Notas Detalladas</label>
+                  <div className="flex flex-wrap items-center justify-between gap-1 mb-1.5">
+                    <div className="flex items-center space-x-1.5">
+                      <label className="text-[10px] font-extrabold uppercase tracking-wider text-slate-500">Notas & Resumen</label>
+                      <span className="text-[10px] text-slate-400 font-medium">(Toca para insertar):</span>
+                    </div>
                     <button
                       type="button"
                       onClick={handleVoiceDictation}
@@ -837,11 +943,34 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                       <span>{isListening ? 'Escuchando Voz...' : 'Dictar por Voz'}</span>
                     </button>
                   </div>
+
+                  {/* Chips Rápidos */}
+                  <div className="flex flex-wrap gap-1.5 mb-2">
+                    {QUICK_NOTE_SNIPPETS.map(snip => {
+                      const isApplied = newNoteContent.includes(snip.text);
+                      return (
+                        <button
+                          key={snip.id}
+                          type="button"
+                          onClick={() => handleApplySnippet(snip)}
+                          className={`text-[10px] font-bold px-2.5 py-1 rounded-lg border transition-all cursor-pointer flex items-center space-x-1 ${
+                            isApplied
+                              ? 'bg-gold-500/15 border-gold-500 text-gold-700 dark:text-gold-300 shadow-xs ring-1 ring-gold-500/40'
+                              : 'bg-slate-50 dark:bg-navy-800/80 border-slate-200 dark:border-navy-700 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-navy-700'
+                          }`}
+                        >
+                          <span>{snip.label}</span>
+                          {isApplied && <span className="text-[9px] ml-0.5 text-gold-600 dark:text-gold-400">✓</span>}
+                        </button>
+                      );
+                    })}
+                  </div>
+
                   <textarea
                     value={newNoteContent}
                     onChange={(e) => setNewNoteContent(e.target.value)}
                     rows={2}
-                    placeholder="Escribe o dicta detalles clave de la llamada o atención..."
+                    placeholder="Escribe o dicta detalles clave de la atención, o toca los chips de arriba para insertar..."
                     className="w-full bg-white dark:bg-navy-800 border border-slate-200 dark:border-navy-700 rounded-xl p-3 text-xs font-medium text-slate-900 dark:text-slate-100 focus:outline-none focus:border-gold-500 resize-none"
                   />
                 </div>
