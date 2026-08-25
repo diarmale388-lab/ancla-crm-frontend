@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuthStore } from './store/useAuthStore';
 import { useChatStore } from './store/useChatStore';
 import { useThemeStore } from './store/useThemeStore';
@@ -205,7 +205,17 @@ function App() {
     return <CommercialProposalView />;
   }
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated || !user) {
+    if (loading && !user) {
+      return (
+        <div className="min-h-screen bg-navy-950 text-slate-100 flex items-center justify-center font-sans">
+          <div className="flex flex-col items-center gap-3">
+            <div className="w-10 h-10 border-3 border-gold-500 border-t-transparent rounded-full animate-spin"></div>
+            <p className="text-xs font-bold text-slate-400">Verificando sesión segura...</p>
+          </div>
+        </div>
+      );
+    }
     return (
       <div className="min-h-screen bg-navy-950 text-slate-100 flex items-center justify-center p-3 sm:p-6 lg:p-10 relative overflow-hidden font-sans select-none">
         {/* Luces volumétricas decorativas de fondo */}

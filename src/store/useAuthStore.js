@@ -36,13 +36,14 @@ export const useAuthStore = create((set, get) => ({
       }
 
       localStorage.setItem('token', data.access_token);
-      set({ token: data.access_token, isAuthenticated: true, loading: false, error: null });
+      set({ token: data.access_token, isAuthenticated: true, error: null });
       
-      // Intentar obtener el perfil sin bloquear el login si hay lag de red
-      get().fetchProfile();
+      // Obtener el perfil inmediatamente para que el dashboard cargue sin demoras
+      await get().fetchProfile();
+      set({ loading: false });
       return true;
     } catch (err) {
-      set({ error: err.message, loading: false, isAuthenticated: false });
+      set({ error: err.message, loading: false, isAuthenticated: false, user: null });
       return false;
     }
   },
@@ -51,13 +52,13 @@ export const useAuthStore = create((set, get) => ({
     try {
       localStorage.removeItem('token');
     } catch (e) {}
-    set({ token: null, user: null, isAuthenticated: false, error: null });
+    set({ token: null, user: null, isAuthenticated: false, error: null, loading: false });
   },
 
   fetchProfile: async () => {
     const { token } = get();
     if (!token) {
-      set({ isAuthenticated: false, user: null });
+      set({ isAuthenticated: false, user: null, loading: false });
       return;
     }
 
@@ -68,8 +69,8 @@ export const useAuthStore = create((set, get) => ({
         },
       });
 
-      if (response.status === 401 || response.status === 400) {
-        console.warn("Token expirado o usuario inactivo (401/400). Cerrando sesión.");
+      if (response.status === 401 || response.status === 400 || response.status === 403) {
+        console.warn("Token expirado o inválido. Cerrando sesión limpia.");
         get().logout();
         return;
       }
@@ -77,21 +78,22 @@ export const useAuthStore = create((set, get) => ({
       if (response.ok) {
         const data = await response.json();
         set({ user: data, isAuthenticated: true, loading: false });
+      } else {
+        get().logout();
       }
     } catch (err) {
-      console.warn("Lag o micro-interrupción de red en celular. Manteniendo sesión activa:", err);
-      // En celulares, mantener la sesión activa aunque falle la red momentáneamente
-      set({ loading: false, isAuthenticated: true });
+      console.warn("Error conectando con /auth/me:", err);
+      set({ loading: false });
     }
   },
 
   checkAuth: async () => {
     const token = localStorage.getItem('token');
     if (token) {
-      set({ token, isAuthenticated: true });
+      set({ token, isAuthenticated: true, loading: true });
       await get().fetchProfile();
     } else {
-      set({ isAuthenticated: false, user: null });
+      set({ isAuthenticated: false, user: null, loading: false });
     }
   }
 }));
