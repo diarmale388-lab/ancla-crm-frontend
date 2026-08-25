@@ -165,10 +165,10 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
   // Bitácora de Atención Comercial (Pestaña 2)
   const [bitacoraNotes, setBitacoraNotes] = useState([]);
   const [newNoteContent, setNewNoteContent] = useState('');
-  const [newNoteType, setNewNoteType] = useState('LLAMADA');
-  const [callResult, setCallResult] = useState('INTERESTED');
+  const [newNoteType, setNewNoteType] = useState(null);
+  const [callResult, setCallResult] = useState(null);
   const [constructionTimeline, setConstructionTimeline] = useState('1_TO_3_MONTHS');
-  const [nextAction, setNextAction] = useState('RECALL');
+  const [nextAction, setNextAction] = useState('');
   const [nextActionDate, setNextActionDate] = useState('');
   const [loadingBitacora, setLoadingBitacora] = useState(false);
   const [isListening, setIsListening] = useState(false);
@@ -264,7 +264,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
 
   const handleAddBitacoraNote = async (e) => {
     e.preventDefault();
-    if (!newNoteContent.trim() && !callResult) return;
+    if (!newNoteContent.trim() && !callResult && !newNoteType) return;
     try {
       const res = await fetch(`${API_URL}/chats/${contact.id}/bitacora`, {
         method: 'POST',
@@ -273,17 +273,20 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          note_type: newNoteType,
-          call_result: callResult,
-          construction_timeline: constructionTimeline,
-          next_action: nextAction,
-          next_action_date: nextActionDate,
+          note_type: newNoteType || 'LLAMADA',
+          call_result: callResult || null,
+          construction_timeline: constructionTimeline || null,
+          next_action: nextAction || null,
+          next_action_date: nextActionDate || null,
           content: newNoteContent,
           author_name: currentUser?.full_name || (isAdmin ? "Liliana León" : "Asesor Comercial")
         })
       });
       if (res.ok) {
         setNewNoteContent('');
+        setNewNoteType(null);
+        setCallResult(null);
+        setNextAction('');
         setNextActionDate('');
         fetchBitacora();
       }
@@ -767,11 +770,11 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                       <button
                         key={t.id}
                         type="button"
-                        onClick={() => setNewNoteType(t.id)}
+                        onClick={() => setNewNoteType(prev => prev === t.id ? null : t.id)}
                         className={`min-h-[44px] p-2 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
                           newNoteType === t.id
-                            ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-950 border-slate-900 font-black shadow-sm'
-                            : 'bg-white dark:bg-navy-800 border-slate-200 dark:border-navy-700 text-slate-600 dark:text-slate-300 hover:bg-slate-100'
+                            ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-950 border-slate-900 font-black shadow-sm ring-2 ring-gold-500/50'
+                            : 'bg-white dark:bg-navy-800 border-slate-200 dark:border-navy-700 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-navy-700'
                         }`}
                       >
                         {t.label}
@@ -788,11 +791,11 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                       <button
                         key={res.id}
                         type="button"
-                        onClick={() => setCallResult(res.id)}
+                        onClick={() => setCallResult(prev => prev === res.id ? null : res.id)}
                         className={`min-h-[44px] p-2 rounded-xl border text-xs font-bold flex items-center space-x-1.5 transition-all cursor-pointer ${
                           callResult === res.id
-                            ? `${res.color} shadow-sm ring-1 ring-gold-500/50 scale-[1.01]`
-                            : 'bg-white dark:bg-navy-800 border-slate-200 dark:border-navy-700 text-slate-600 dark:text-slate-300 hover:bg-slate-100'
+                            ? `${res.color} shadow-sm ring-2 ring-gold-500/60 scale-[1.01]`
+                            : 'bg-white dark:bg-navy-800 border-slate-200 dark:border-navy-700 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-navy-700'
                         }`}
                       >
                         <span>{res.icon}</span>
@@ -810,6 +813,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                     onChange={(e) => setNextAction(e.target.value)}
                     className="w-full bg-white dark:bg-navy-800 border border-slate-200 dark:border-navy-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 dark:text-slate-100 cursor-pointer"
                   >
+                    <option value="">-- Seleccionar Próximo Paso (Opcional) --</option>
                     {NEXT_ACTIONS.map(act => (
                       <option key={act.id} value={act.id}>{act.icon} {act.label}</option>
                     ))}
