@@ -56,14 +56,13 @@ const TIMELINES = [
   { id: '6_PLUS_MONTHS', label: 'Más de 6 Meses', icon: '⏳' }
 ];
 
-const OBJECTIONS = [
-  { id: 'NONE', label: 'Sin Objeciones / Todo Claro', icon: '✅' },
-  { id: 'BUDGET', label: 'Presupuesto / Precio', icon: '💰' },
-  { id: 'NO_LOT', label: 'Buscando Terreno / Lote', icon: '🏞️' },
-  { id: 'FREIGHT_DISTANCE', label: 'Flete / Distancia', icon: '🚚' },
-  { id: 'PERMITS', label: 'Licencias / Permisos', icon: '📑' },
-  { id: 'TIMELINE', label: 'Tiempos de Entrega', icon: '⏳' }
-];
+const NOTE_TYPE_LABELS = {
+  'LLAMADA': '📞 Llamada',
+  'VIRTUAL': '💻 Asesoría Virtual',
+  'SHOWROOM': '🏢 Showroom Armenia',
+  'VISITA_TERRENO': '📍 Visita a Terreno / Externa',
+  'SEGUIMIENTO': '📍 Visita a Terreno / Externa'
+};
 
 const NEXT_ACTIONS = [
   { id: 'RECALL', label: 'Volver a Llamar', icon: '📞' },
@@ -169,7 +168,6 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
   const [newNoteType, setNewNoteType] = useState('LLAMADA');
   const [callResult, setCallResult] = useState('INTERESTED');
   const [constructionTimeline, setConstructionTimeline] = useState('1_TO_3_MONTHS');
-  const [detectedObjection, setDetectedObjection] = useState('NONE');
   const [nextAction, setNextAction] = useState('RECALL');
   const [nextActionDate, setNextActionDate] = useState('');
   const [loadingBitacora, setLoadingBitacora] = useState(false);
@@ -278,7 +276,6 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
           note_type: newNoteType,
           call_result: callResult,
           construction_timeline: constructionTimeline,
-          detected_objection: detectedObjection,
           next_action: nextAction,
           next_action_date: nextActionDate,
           content: newNoteContent,
@@ -765,7 +762,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                       { id: 'LLAMADA', label: '📞 Llamada' },
                       { id: 'VIRTUAL', label: '💻 Asesoría Virtual' },
                       { id: 'SHOWROOM', label: '🏢 Showroom Armenia' },
-                      { id: 'SEGUIMIENTO', label: '📝 Nota Interna' }
+                      { id: 'VISITA_TERRENO', label: '📍 Visita a Terreno / Externa' }
                     ].map(t => (
                       <button
                         key={t.id}
@@ -785,7 +782,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
 
                 {/* Resultado 1-Clic */}
                 <div>
-                  <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1.5">Resultado de la Llamada</label>
+                  <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1.5">Resultado de la Atención</label>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                     {CALL_RESULTS.map(res => (
                       <button
@@ -805,33 +802,18 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                   </div>
                 </div>
 
-                {/* Grid Objeción y Próxima Acción */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1">Objeción Detectada</label>
-                    <select
-                      value={detectedObjection}
-                      onChange={(e) => setDetectedObjection(e.target.value)}
-                      className="w-full bg-white dark:bg-navy-800 border border-slate-200 dark:border-navy-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 dark:text-slate-100 cursor-pointer"
-                    >
-                      {OBJECTIONS.map(obj => (
-                        <option key={obj.id} value={obj.id}>{obj.icon} {obj.label}</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1">Próximo Paso / Compromiso</label>
-                    <select
-                      value={nextAction}
-                      onChange={(e) => setNextAction(e.target.value)}
-                      className="w-full bg-white dark:bg-navy-800 border border-slate-200 dark:border-navy-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 dark:text-slate-100 cursor-pointer"
-                    >
-                      {NEXT_ACTIONS.map(act => (
-                        <option key={act.id} value={act.id}>{act.icon} {act.label}</option>
-                      ))}
-                    </select>
-                  </div>
+                {/* Próximo Paso / Compromiso */}
+                <div>
+                  <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1">Próximo Paso / Compromiso Comercial</label>
+                  <select
+                    value={nextAction}
+                    onChange={(e) => setNextAction(e.target.value)}
+                    className="w-full bg-white dark:bg-navy-800 border border-slate-200 dark:border-navy-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 dark:text-slate-100 cursor-pointer"
+                  >
+                    {NEXT_ACTIONS.map(act => (
+                      <option key={act.id} value={act.id}>{act.icon} {act.label}</option>
+                    ))}
+                  </select>
                 </div>
 
                 <div>
@@ -885,7 +867,6 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                   <div className="relative pl-6 space-y-4 before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200 dark:before:bg-navy-700">
                     {bitacoraNotes.map((n) => {
                       const resObj = CALL_RESULTS.find(r => r.id === n.call_result);
-                      const objObj = OBJECTIONS.find(o => o.id === n.detected_objection);
                       const nextObj = NEXT_ACTIONS.find(a => a.id === n.next_action);
 
                       return (
@@ -896,7 +877,7 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                           <div className="flex items-center justify-between border-b border-slate-100 dark:border-navy-700 pb-2">
                             <div className="flex items-center space-x-2">
                               <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-slate-100 dark:bg-navy-800 text-slate-700 dark:text-slate-300">
-                                {n.note_type}
+                                {NOTE_TYPE_LABELS[n.note_type] || n.note_type}
                               </span>
                               <span className="text-xs font-bold text-slate-600 dark:text-slate-300">
                                 👤 {n.author_name}
@@ -911,11 +892,6 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                           {resObj && (
                             <span className={`px-2 py-0.5 rounded-md border ${resObj.color}`}>
                               {resObj.icon} {resObj.label}
-                            </span>
-                          )}
-                          {objObj && (
-                            <span className="px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/30">
-                              {objObj.icon} {objObj.label}
                             </span>
                           )}
                           {nextObj && (
