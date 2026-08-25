@@ -12,6 +12,7 @@ import AnalyticsView from './components/analytics/AnalyticsView';
 import BroadcastView from './components/broadcast/BroadcastView';
 import { AuditLogsView } from './components/admin/AuditLogsView';
 import { ShowroomDashboard } from './components/showroom/ShowroomDashboard';
+import ExecutiveFollowUpView from './components/followup/ExecutiveFollowUpView';
 import { AIApprovalInboxView } from './components/admin/AIApprovalInboxView';
 import ProposalPortal from './components/dossier/ProposalPortal';
 import { CommercialProposalView } from './components/CommercialProposalView';
@@ -537,7 +538,7 @@ function App() {
         )}
 
         {activeTab === 'showroom' && (
-          <ShowroomDashboard />
+          <ExecutiveFollowUpView />
         )}
       </div>
     </div>

@@ -14,7 +14,7 @@ import {
   BarChart3,
   Volume2,
   Terminal,
-  Building,
+  ClipboardCheck,
   Download,
   Smartphone,
   X,
@@ -203,7 +203,7 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
           </div>
         )}
 
-        {/* Botón de Showroom Armenia */}
+        {/* Botón de Seguimiento Comercial (Control Gerencial) */}
         <div className="relative w-full flex justify-center group">
           {activeTab === 'showroom' && (
             <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-[32px] bg-gold-500 rounded-r-md"></div>
@@ -217,9 +217,9 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
                 ? 'bg-gold-500/10 border border-gold-500/20 text-gold-600 dark:text-gold-400'
                 : 'text-slate-500 dark:text-slate-400 hover:bg-slate-200 hover:text-navy-900 dark:hover:bg-navy-800 dark:hover:text-white'
             }`}
-            title="Showroom Armenia"
+            title="Seguimiento Comercial"
           >
-            <Building className="w-5 h-5" />
+            <ClipboardCheck className="w-5 h-5" />
           </button>
         </div>
       </div>
@@ -557,7 +557,7 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
           <span className="text-[10px] tracking-tight mt-1">Citas</span>
         </button>
 
-        {/* Pestaña 4: 🏠 Showroom */}
+        {/* Pestaña 4: 📋 Seguimiento Comercial */}
         <button
           type="button"
           onClick={() => setActiveTab('showroom')}
@@ -565,8 +565,8 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
             activeTab === 'showroom' ? 'text-gold-600 dark:text-gold-400 font-black' : 'text-slate-500 dark:text-slate-400 font-medium'
           }`}
         >
-          <Building className="w-5 h-5" />
-          <span className="text-[10px] tracking-tight mt-1">Showroom</span>
+          <ClipboardCheck className="w-5 h-5" />
+          <span className="text-[10px] tracking-tight mt-1">Seguimiento</span>
         </button>
 
         {/* Pestaña 5: 👤 Perfil / Ajustes (Solo Admin) */}
