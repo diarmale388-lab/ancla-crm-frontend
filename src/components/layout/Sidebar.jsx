@@ -203,25 +203,27 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
           </div>
         )}
 
-        {/* Botón de Seguimiento Comercial (Control Gerencial) */}
-        <div className="relative w-full flex justify-center group">
-          {activeTab === 'showroom' && (
-            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-[32px] bg-gold-500 rounded-r-md"></div>
-          )}
-          <button
-            onClick={() => {
-              setActiveTab('showroom');
-            }}
-            className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all cursor-pointer relative ${
-              activeTab === 'showroom'
-                ? 'bg-gold-500/10 border border-gold-500/20 text-gold-600 dark:text-gold-400'
-                : 'text-slate-500 dark:text-slate-400 hover:bg-slate-200 hover:text-navy-900 dark:hover:bg-navy-800 dark:hover:text-white'
-            }`}
-            title="Seguimiento Comercial"
-          >
-            <ClipboardCheck className="w-5 h-5" />
-          </button>
-        </div>
+        {/* Botón de Seguimiento Comercial (Control Gerencial) - EXCLUSIVO Dirección Comercial & Admins */}
+        {(user?.role === 'admin' || user?.role === 'ADMIN') && (
+          <div className="relative w-full flex justify-center group">
+            {activeTab === 'showroom' && (
+              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-[32px] bg-gold-500 rounded-r-md"></div>
+            )}
+            <button
+              onClick={() => {
+                setActiveTab('showroom');
+              }}
+              className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all cursor-pointer relative ${
+                activeTab === 'showroom'
+                  ? 'bg-gold-500/10 border border-gold-500/20 text-gold-600 dark:text-gold-400'
+                  : 'text-slate-500 dark:text-slate-400 hover:bg-slate-200 hover:text-navy-900 dark:hover:bg-navy-800 dark:hover:text-white'
+              }`}
+              title="Seguimiento Comercial"
+            >
+              <ClipboardCheck className="w-5 h-5" />
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Sección Inferior (Ajustes, Perfil y Cerrar Sesión) */}
@@ -557,17 +559,19 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
           <span className="text-[10px] tracking-tight mt-1">Citas</span>
         </button>
 
-        {/* Pestaña 4: 📋 Seguimiento Comercial */}
-        <button
-          type="button"
-          onClick={() => setActiveTab('showroom')}
-          className={`flex flex-col items-center justify-center flex-1 min-h-[44px] py-1.5 transition-all cursor-pointer ${
-            activeTab === 'showroom' ? 'text-gold-600 dark:text-gold-400 font-black' : 'text-slate-500 dark:text-slate-400 font-medium'
-          }`}
-        >
-          <ClipboardCheck className="w-5 h-5" />
-          <span className="text-[10px] tracking-tight mt-1">Seguimiento</span>
-        </button>
+        {/* Pestaña 4: 📋 Seguimiento Comercial - EXCLUSIVO Dirección Comercial & Admins */}
+        {(user?.role === 'admin' || user?.role === 'ADMIN') && (
+          <button
+            type="button"
+            onClick={() => setActiveTab('showroom')}
+            className={`flex flex-col items-center justify-center flex-1 min-h-[44px] py-1.5 transition-all cursor-pointer ${
+              activeTab === 'showroom' ? 'text-gold-600 dark:text-gold-400 font-black' : 'text-slate-500 dark:text-slate-400 font-medium'
+            }`}
+          >
+            <ClipboardCheck className="w-5 h-5" />
+            <span className="text-[10px] tracking-tight mt-1">Seguimiento</span>
+          </button>
+        )}
 
         {/* Pestaña 5: 👤 Perfil / Ajustes (Solo Admin) */}
         {(user?.role === 'admin' || user?.role === 'ADMIN') && (

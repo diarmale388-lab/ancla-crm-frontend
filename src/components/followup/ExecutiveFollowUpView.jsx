@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useAuthStore } from '../../store/useAuthStore';
 import { useChatStore } from '../../store/useChatStore';
 import { useKanbanStore } from '../../store/useKanbanStore';
 import LeadFichaModal360 from '../common/LeadFichaModal360';
 import {
   Users, AlertTriangle, CalendarClock, Wallet, Search, ChevronDown,
   Download, RefreshCw, MessageCircle, Mail, MapPin, DollarSign,
-  ClipboardCheck, X, Loader2
+  ClipboardCheck, X, Loader2, ShieldAlert
 } from 'lucide-react';
 
 // ─────────────────────────────────────────────────────────────
@@ -165,7 +166,15 @@ const URGENCY_LABEL = {
   SIN_FECHA: 'Sin fecha'
 };
 
+// Blindaje RBAC: "Seguimiento Comercial" es EXCLUSIVO para Dirección Comercial y Administradores.
+// Ningún asesor comercial (rol no-admin) puede visualizar este panel de control gerencial.
+const isDireccionOAdmin = (role) => {
+  const r = String(role || '').toLowerCase();
+  return r === 'admin';
+};
+
 export default function ExecutiveFollowUpView() {
+  const user = useAuthStore(state => state.user);
   const contacts = useChatStore(state => state.contacts);
   const fetchContacts = useChatStore(state => state.fetchContacts);
   const fetchAgents = useChatStore(state => state.fetchAgents);
@@ -180,11 +189,14 @@ export default function ExecutiveFollowUpView() {
   const [selectedLead, setSelectedLead] = useState(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
+  const authorized = isDireccionOAdmin(user?.role);
+
   useEffect(() => {
+    if (!authorized) return;
     fetchContacts();
     fetchAgents();
     fetchStages();
-  }, []);
+  }, [authorized]);
 
   const today = useMemo(() => todayBogotaISO(), []);
   const weekLimit = useMemo(() => addDaysISO(today, 7), [today]);
@@ -261,6 +273,9 @@ export default function ExecutiveFollowUpView() {
   };
 
   const handleExportCsv = () => {
+    // Blindaje: la exportación a Excel/CSV con datos de los 622+ prospectos es
+    // exclusiva de Dirección Comercial y Administradores.
+    if (!authorized) return;
     const headers = [
       'Fecha Ingreso', 'Nombre', 'Telefono', 'Correo', 'Ciudad', 'Proyecto',
       'Ultimo Contacto', 'Proximo Seguimiento', 'Valor Propuesta (COP)', 'Estado', 'Observaciones', 'Asesor'
@@ -295,6 +310,26 @@ export default function ExecutiveFollowUpView() {
     URL.revokeObjectURL(url);
   };
 
+  // Blindaje de acceso: los asesores comerciales (rol no-admin) jamás deben
+  // poder renderizar el panel de Seguimiento Comercial, sin importar cómo
+  // hayan llegado a esta pestaña (deep-link, estado persistido, etc).
+  if (!authorized) {
+    return (
+      <div className="flex-1 flex flex-col items-center justify-center h-full min-h-0 bg-slate-50 dark:bg-navy-950 p-8 text-center gap-3 font-sans">
+        <div className="w-14 h-14 rounded-2xl bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-500 dark:text-red-400">
+          <ShieldAlert className="w-7 h-7" />
+        </div>
+        <h2 className="text-base font-black text-slate-800 dark:text-white tracking-tight">
+          Acceso Restringido para Dirección Comercial
+        </h2>
+        <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm font-semibold">
+          Este panel de Control Gerencial y Auditoría de Asesores es exclusivo para la
+          Directora Comercial y Administradores del sistema.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="flex-1 flex flex-col h-full min-h-0 overflow-hidden bg-slate-50 dark:bg-navy-950 transition-colors duration-300 font-sans">
       {/* ═══ Cabecera ═══ */}
@@ -324,14 +359,16 @@ export default function ExecutiveFollowUpView() {
               <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing || loading ? 'animate-spin' : ''}`} />
               <span className="hidden sm:inline">Actualizar</span>
             </button>
-            <button
-              onClick={handleExportCsv}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-black bg-gradient-to-r from-gold-600 to-gold-500 hover:from-gold-500 hover:to-gold-400 text-navy-950 shadow-md shadow-gold-500/20 transition-all active:scale-[0.97] cursor-pointer"
-              title="Exportar a Excel (CSV)"
-            >
-              <Download className="w-3.5 h-3.5" />
-              <span>Exportar Excel</span>
-            </button>
+            {authorized && (
+              <button
+                onClick={handleExportCsv}
+                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-black bg-gradient-to-r from-gold-600 to-gold-500 hover:from-gold-500 hover:to-gold-400 text-navy-950 shadow-md shadow-gold-500/20 transition-all active:scale-[0.97] cursor-pointer"
+                title="Exportar a Excel (CSV)"
+              >
+                <Download className="w-3.5 h-3.5" />
+                <span>Exportar Excel</span>
+              </button>
+            )}
           </div>
         </div>
 
