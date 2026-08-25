@@ -734,50 +734,6 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
 
               </div>
 
-              {/* Bloque 1C: Selectores de Viabilidad Comercial */}
-              <div className="p-4 rounded-2xl bg-white dark:bg-navy-800 border border-slate-200 dark:border-navy-700 shadow-sm">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  <div>
-                    <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1">¿Respondió al Contacto?</label>
-                    <select
-                      value={contactResponseStatus}
-                      onChange={(e) => setContactResponseStatus(e.target.value)}
-                      className="w-full bg-white dark:bg-navy-800 border border-slate-200 dark:border-navy-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 dark:text-slate-100 cursor-pointer"
-                    >
-                      <option value="ANSWERED">🟢 Sí respondió / Atendido</option>
-                      <option value="NO_ANSWER">🟡 Sin respuesta / Buzón</option>
-                      <option value="BUSY">🔴 Ocupado / Reagendar</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1">Presupuesto Confirmado</label>
-                    <select
-                      value={hasConfirmedBudget ? 'true' : 'false'}
-                      onChange={(e) => setHasConfirmedBudget(e.target.value === 'true')}
-                      className="w-full bg-white dark:bg-navy-800 border border-slate-200 dark:border-navy-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 dark:text-slate-100 cursor-pointer"
-                    >
-                      <option value="true">✅ Sí, presupuesto verificado</option>
-                      <option value="false">❌ No / En trámite de crédito</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1">Viabilidad de Cierre</label>
-                    <select
-                      value={commercialViability}
-                      onChange={(e) => setCommercialViability(e.target.value)}
-                      className="w-full bg-white dark:bg-navy-800 border border-slate-200 dark:border-navy-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 dark:text-slate-100 cursor-pointer"
-                    >
-                      <option value="HIGH">🟢 Alta Viabilidad (Prioridad)</option>
-                      <option value="MEDIUM">🟡 Media (En Evaluación)</option>
-                      <option value="LOW">🔴 Baja (Objeción fuerte)</option>
-                      <option value="CLOSED">⏹️ Cerrado / Descartado</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-
             </div>
           )}
 
