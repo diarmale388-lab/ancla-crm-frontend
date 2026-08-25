@@ -446,21 +446,21 @@ export default function ExecutiveFollowUpView() {
         <>
           {/* ═══ PC: Tabla de Datos de Alta Densidad con Columnas Congeladas ═══ */}
           <div className="hidden md:block flex-1 overflow-auto min-h-0 custom-scrollbar">
-            <table className="w-full text-left border-collapse font-sans">
+            <table className="min-w-full text-left border-collapse font-sans">
               <thead>
                 <tr className="bg-slate-100 dark:bg-navy-900 text-[10px] font-black uppercase tracking-wider text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-navy-700">
-                  <th className="sticky top-0 left-0 z-30 bg-slate-100 dark:bg-navy-900 border-r border-slate-200 dark:border-navy-700 px-3 py-2.5 whitespace-nowrap">Fecha Ingreso</th>
-                  <th className="sticky top-0 left-[110px] z-30 bg-slate-100 dark:bg-navy-900 border-r border-slate-200 dark:border-navy-700 px-3 py-2.5 whitespace-nowrap">Cliente</th>
-                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-navy-900 px-3 py-2.5 whitespace-nowrap">Teléfono</th>
-                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-navy-900 px-3 py-2.5 whitespace-nowrap">Correo</th>
-                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-navy-900 px-3 py-2.5 whitespace-nowrap">Ciudad</th>
-                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-navy-900 px-3 py-2.5 whitespace-nowrap">Proyecto</th>
-                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-navy-900 px-3 py-2.5 whitespace-nowrap">Último Contacto</th>
-                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-navy-900 px-3 py-2.5 whitespace-nowrap">Próximo Seguimiento</th>
-                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-navy-900 px-3 py-2.5 whitespace-nowrap">Valor Propuesta</th>
-                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-navy-900 px-3 py-2.5 whitespace-nowrap">Estado</th>
-                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-navy-900 px-3 py-2.5 whitespace-nowrap min-w-[220px]">Observaciones</th>
-                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-navy-900 px-3 py-2.5 whitespace-nowrap">Asesor</th>
+                  <th className="sticky top-0 left-0 z-30 bg-slate-100 dark:bg-navy-900 border-r border-slate-200 dark:border-navy-700 px-3 py-2.5 whitespace-nowrap w-[105px] min-w-[105px]">Fecha Ingreso</th>
+                  <th className="sticky top-0 left-[105px] z-30 bg-slate-100 dark:bg-navy-900 border-r border-slate-200 dark:border-navy-700 px-3 py-2.5 whitespace-nowrap w-[160px] min-w-[160px]">Cliente</th>
+                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-navy-900 px-3 py-2.5 whitespace-nowrap w-[135px] min-w-[135px]">Teléfono</th>
+                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-navy-900 px-3 py-2.5 whitespace-nowrap w-[160px] min-w-[160px]">Correo</th>
+                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-navy-900 px-3 py-2.5 whitespace-nowrap w-[130px] min-w-[130px]">Ciudad</th>
+                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-navy-900 px-3 py-2.5 whitespace-nowrap w-[120px] min-w-[120px]">Proyecto</th>
+                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-navy-900 px-3 py-2.5 whitespace-nowrap w-[120px] min-w-[120px]">Último Contacto</th>
+                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-navy-900 px-3 py-2.5 whitespace-nowrap w-[140px] min-w-[140px]">Próximo Seguimiento</th>
+                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-navy-900 px-3 py-2.5 whitespace-nowrap w-[130px] min-w-[130px]">Valor Propuesta</th>
+                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-navy-900 px-3 py-2.5 whitespace-nowrap w-[120px] min-w-[120px]">Estado</th>
+                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-navy-900 px-3 py-2.5 whitespace-nowrap w-[260px] min-w-[200px]">Observaciones</th>
+                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-navy-900 px-3 py-2.5 whitespace-nowrap w-[140px] min-w-[140px]">Asesor</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-navy-800">
@@ -470,22 +470,22 @@ export default function ExecutiveFollowUpView() {
                     onClick={() => setSelectedLead(row)}
                     className="text-xs text-slate-700 dark:text-slate-200 hover:bg-gold-500/5 dark:hover:bg-navy-800/40 cursor-pointer transition-colors"
                   >
-                    <td className="sticky left-0 z-20 bg-white dark:bg-navy-900 border-r border-slate-200 dark:border-navy-700 px-3 py-2.5 whitespace-nowrap text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+                    <td className="sticky left-0 z-20 bg-white dark:bg-navy-900 border-r border-slate-200 dark:border-navy-700 px-3 py-2.5 whitespace-nowrap text-[11px] font-semibold text-slate-500 dark:text-slate-400 w-[105px]">
                       {formatDateBogota(row.created_at) || '—'}
                     </td>
 
-                    <td className="sticky left-[110px] z-20 bg-white dark:bg-navy-900 border-r border-slate-200 dark:border-navy-700 shadow-sm px-3 py-2.5 whitespace-nowrap">
-                      <div className="flex items-center gap-2 min-w-[160px]">
+                    <td className="sticky left-[105px] z-20 bg-white dark:bg-navy-900 border-r border-slate-200 dark:border-navy-700 shadow-sm px-3 py-2.5 whitespace-nowrap w-[160px]">
+                      <div className="flex items-center gap-2">
                         <div className="w-7 h-7 rounded-full bg-navy-800 dark:bg-navy-700 border border-gold-500/30 text-gold-400 flex items-center justify-center text-[10px] font-black uppercase shrink-0">
                           {getInitials(row)}
                         </div>
-                        <span className="font-bold text-slate-800 dark:text-white truncate max-w-[140px]">
+                        <span className="font-bold text-slate-800 dark:text-white truncate max-w-[110px]">
                           {`${row.first_name || ''} ${row.last_name || ''}`.trim() || 'Sin Nombre'}
                         </span>
                       </div>
                     </td>
 
-                    <td className="px-3 py-2.5 whitespace-nowrap">
+                    <td className="px-3 py-2.5 whitespace-nowrap w-[135px]">
                       <div className="flex items-center gap-1.5">
                         <span className="font-mono text-[11px]">{row.phone}</span>
                         <a
@@ -501,9 +501,9 @@ export default function ExecutiveFollowUpView() {
                       </div>
                     </td>
 
-                    <td className="px-3 py-2.5 whitespace-nowrap max-w-[160px] truncate">
+                    <td className="px-3 py-2.5 whitespace-nowrap w-[160px] max-w-[160px] truncate">
                       {row.email ? (
-                        <span className="text-[11px]">{row.email}</span>
+                        <span className="text-[11px] truncate block max-w-[145px]" title={row.email}>{row.email}</span>
                       ) : (
                         <span className="text-[11px] italic text-slate-400 flex items-center gap-1">
                           <Mail className="w-3 h-3" /> No registrado
@@ -511,51 +511,51 @@ export default function ExecutiveFollowUpView() {
                       )}
                     </td>
 
-                    <td className="px-3 py-2.5 whitespace-nowrap">
-                      <span className="flex items-center gap-1 text-[11px]">
+                    <td className="px-3 py-2.5 whitespace-nowrap w-[130px] max-w-[130px] truncate">
+                      <span className="flex items-center gap-1 text-[11px] truncate" title={row.lot_city || ''}>
                         <MapPin className="w-3 h-3 text-slate-400 shrink-0" />
-                        {row.lot_city || '—'}
+                        <span className="truncate">{row.lot_city || '—'}</span>
                       </span>
                     </td>
 
-                    <td className="px-3 py-2.5 whitespace-nowrap">
+                    <td className="px-3 py-2.5 whitespace-nowrap w-[120px]">
                       <span className={`px-2 py-0.5 rounded-full text-[10px] font-black ${PROJECT_BADGE_STYLES[row.__project]}`}>
                         {row.__project}
                       </span>
                     </td>
 
-                    <td className="px-3 py-2.5 whitespace-nowrap text-[11px] text-slate-500 dark:text-slate-400">
+                    <td className="px-3 py-2.5 whitespace-nowrap text-[11px] text-slate-500 dark:text-slate-400 w-[120px]">
                       {formatDateBogota(row.__lastContactDate) || '—'}
                       {row.__lastContactChannel && (
                         <div className="text-[9.5px] uppercase font-bold text-slate-400 dark:text-slate-500">{row.__lastContactChannel}</div>
                       )}
                     </td>
 
-                    <td className="px-3 py-2.5 whitespace-nowrap">
+                    <td className="px-3 py-2.5 whitespace-nowrap w-[140px]">
                       <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-black ${URGENCY_STYLES[row.__urgency]}`}>
                         <span className={`w-1.5 h-1.5 rounded-full ${URGENCY_DOT[row.__urgency]}`}></span>
                         {row.__nextActionDate ? formatDateBogota(row.__nextActionDate) : URGENCY_LABEL[row.__urgency]}
                       </span>
                     </td>
 
-                    <td className="px-3 py-2.5 whitespace-nowrap">
+                    <td className="px-3 py-2.5 whitespace-nowrap w-[130px]">
                       <span className="flex items-center gap-1 font-bold text-slate-700 dark:text-slate-200">
                         {row.__quotedEffective > 0 && <DollarSign className="w-3 h-3 text-gold-500 shrink-0" />}
                         {formatCOP(row.__quotedEffective)}
                       </span>
                     </td>
 
-                    <td className="px-3 py-2.5 whitespace-nowrap max-w-[140px] truncate text-[11px] font-semibold">
+                    <td className="px-3 py-2.5 whitespace-nowrap w-[120px] max-w-[120px] truncate text-[11px] font-semibold" title={row.__stageName}>
                       {row.__stageName}
                     </td>
 
-                    <td className="px-3 py-2.5 max-w-[240px]">
-                      <span className={`text-[11px] line-clamp-2 ${row.__observationsIsNew ? 'italic text-slate-400' : 'text-slate-500 dark:text-slate-400'}`}>
+                    <td className="px-3 py-2.5 w-[260px] max-w-[260px]">
+                      <span className={`text-[11px] line-clamp-2 ${row.__observationsIsNew ? 'italic text-slate-400' : 'text-slate-500 dark:text-slate-400'}`} title={row.__observationsText}>
                         {row.__observationsText.slice(0, 140)}
                       </span>
                     </td>
 
-                    <td className="px-3 py-2.5 whitespace-nowrap">
+                    <td className="px-3 py-2.5 whitespace-nowrap w-[140px]">
                       <span className={`px-2 py-0.5 rounded-full text-[10px] font-black ${
                         isCommercialAdvisorName(row.__advisorName) && row.assigned_user_id
                           ? 'bg-navy-800/10 dark:bg-navy-700 text-navy-800 dark:text-slate-200 border border-navy-700/20'
