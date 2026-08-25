@@ -7,8 +7,6 @@ import {
 } from 'lucide-react';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useChatStore } from '../../store/useChatStore';
-import ChinaSpecSheetModal from '../showroom/ChinaSpecSheetModal';
-import AnclaTechnicalDossier from './AnclaTechnicalDossier';
 
 const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
 const API_URL = import.meta.env.VITE_API_URL || (isLocal ? 'http://localhost:8001/api/v1' : 'https://ancla-crm-backend-production.up.railway.app/api/v1');
@@ -211,8 +209,6 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
   const [generatingAiSummary, setGeneratingAiSummary] = useState(false);
   const [savedSuccess, setSavedSuccess] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [showChinaSpecs, setShowChinaSpecs] = useState(false);
-  const [showDossierModal, setShowDossierModal] = useState(false);
 
   useEffect(() => {
     fetchBitacora();
@@ -455,25 +451,6 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
                 )}
               </select>
             </div>
-
-            {/* Botones Secundarios */}
-            <button
-              type="button"
-              onClick={() => setShowDossierModal(true)}
-              className="min-h-[44px] px-3 py-2 rounded-lg bg-slate-200/80 dark:bg-navy-800 text-slate-700 dark:text-slate-300 border border-slate-300/50 dark:border-navy-700 font-bold text-xs flex items-center space-x-1 transition-all cursor-pointer shrink-0 hover:bg-slate-300 dark:hover:bg-navy-700"
-            >
-              <DollarSign className="w-3.5 h-3.5 text-gold-500" />
-              <span>Dossier</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setShowChinaSpecs(true)}
-              className="min-h-[44px] px-3 py-2 rounded-lg bg-slate-200/80 dark:bg-navy-800 text-slate-700 dark:text-slate-300 border border-slate-300/50 dark:border-navy-700 font-bold text-xs flex items-center space-x-1 transition-all cursor-pointer shrink-0 hover:bg-slate-300 dark:hover:bg-navy-700"
-            >
-              <Factory className="w-3.5 h-3.5 text-indigo-400" />
-              <span>China</span>
-            </button>
           </div>
         </div>
 
@@ -1172,33 +1149,6 @@ export default function LeadFichaModal360({ contact, onClose, onRefresh }) {
             </button>
           </div>
         </div>
-
-        {/* SUB-MODALES */}
-        {showChinaSpecs && (
-          <ChinaSpecSheetModal
-            isOpen={showChinaSpecs}
-            contact={contact}
-            onClose={() => setShowChinaSpecs(false)}
-          />
-        )}
-
-        {showDossierModal && (
-          <AnclaTechnicalDossier
-            isOpen={showDossierModal}
-            contact={contact}
-            onClose={() => setShowDossierModal(false)}
-            onSaveDossier={(dossierData) => {
-              const valCOP = dossierData.totalCOP || dossierData.totalUSD;
-              if (dossierData.modelName) setInterestProduct(dossierData.modelName);
-              if (valCOP) setQuotedValue(valCOP);
-              if (dossierData.exteriorColor) {
-                const formattedTotal = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(valCOP);
-                const dep50 = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(valCOP * 0.5);
-                setProposalNotes(`Modelo: ${dossierData.modelName} | Total: ${formattedTotal} COP (50% Anticipo: ${dep50} / 50% Balanza: ${dep50}) | Acabados: ${dossierData.exteriorColor}`);
-              }
-            }}
-          />
-        )}
 
       </div>
     </div>
